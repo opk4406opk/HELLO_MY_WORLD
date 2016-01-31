@@ -3,53 +3,8 @@ using System.Collections;
 
 public class ModifyTerrain : MonoBehaviour
 {
-
+    [SerializeField]
     private World world;
-    private GameObject cameraGO;
-
-    void Start()
-    {
-
-        world = gameObject.GetComponent("World") as World;
-        cameraGO = GameObject.FindGameObjectWithTag("MainCamera");
-
-    }
-
-    void Update()
-    {
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            ReplaceBlockCursor(0);
-        }
-
-        if (Input.GetMouseButtonDown(1))
-        {
-            AddBlockCursor(255);
-        }
-        LoadChunks(GameObject.FindGameObjectWithTag("Player").transform.position, 32, 48);
-
-    }
-
-    public void LoadChunks(Vector3 playerPos, float distToLoad, float distToUnload)
-    {
-        for (int x = 0; x < world.chunks.GetLength(0); x++)
-        {
-            for (int z = 0; z < world.chunks.GetLength(2); z++)
-            {
-                float dist = Vector2.Distance(new Vector2(x * world.chunkSize, z * world.chunkSize), new Vector2(playerPos.x, playerPos.z));
-                if (dist < distToLoad)
-                {
-                    if (world.chunks[x, 0, z] == null) world.GenColumn(x, z);
-                }
-                else if (dist > distToUnload)
-                {
-                    if (world.chunks[x, 0, z] != null) world.UnloadColumn(x, z);
-                }
-            }
-        }
-
-    }
 
     public void ReplaceBlockCursor(byte block)
     {
@@ -65,7 +20,6 @@ public class ModifyTerrain : MonoBehaviour
         //Adds the block specified where the mouse cursor is pointing
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-
         if (Physics.Raycast(ray, out hit)) AddBlockAt(hit, block);
     }
 

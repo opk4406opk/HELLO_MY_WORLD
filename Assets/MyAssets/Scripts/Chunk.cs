@@ -4,9 +4,11 @@ using System.Collections.Generic;
 
 public class Chunk : MonoBehaviour
 {
-
-    public GameObject worldGO;
-    private World world;
+    private World _world;
+    public World world
+    {
+        set { _world = value; }
+    }
 
     private List<Vector3> newVertices = new List<Vector3>();
     private List<int> newTriangles = new List<int>();
@@ -40,17 +42,12 @@ public class Chunk : MonoBehaviour
             update = false;
         }
     }
-    // Use this for initialization
+
     void Start()
     {
-
-        world = worldGO.GetComponent("World") as World;
         mesh = GetComponent<MeshFilter>().mesh;
         col = GetComponent<MeshCollider>();
-
         GenerateMesh();
-
-
     }
 
 
@@ -67,12 +64,26 @@ public class Chunk : MonoBehaviour
                     //This code will run for every block in the chunk
                     if (Block(x, y, z) != 0)
                     {
+                        //if (Block(x, y + 1, z) == 0) CubeTop(x, y, z, Block(x, y, z));
+                        //if (Block(x, y - 1, z) == 0) CubeBot(x, y, z, Block(x, y, z));
+                        //if (Block(x + 1, y, z) == 0) CubeEast(x, y, z, Block(x, y, z));
+                        //if (Block(x - 1, y, z) == 0) CubeWest(x, y, z, Block(x, y, z));
+                        //if (Block(x, y, z + 1) == 0) CubeNorth(x, y, z, Block(x, y, z));
+                        //if (Block(x, y, z - 1) == 0) CubeSouth(x, y, z, Block(x, y, z));
+
                         if (Block(x, y + 1, z) == 0) CubeTop(x, y, z, Block(x, y, z));
                         if (Block(x, y - 1, z) == 0) CubeBot(x, y, z, Block(x, y, z));
-                        if (Block(x + 1, y, z) == 0) CubeEast(x, y, z, Block(x, y, z));
-                        if (Block(x - 1, y, z) == 0) CubeWest(x, y, z, Block(x, y, z));
                         if (Block(x, y, z + 1) == 0) CubeNorth(x, y, z, Block(x, y, z));
                         if (Block(x, y, z - 1) == 0) CubeSouth(x, y, z, Block(x, y, z));
+                        CubeEast(x, y, z, Block(x, y, z));
+                        CubeWest(x, y, z, Block(x, y, z));
+
+                        //CubeTop(x, y, z, Block(x, y, z));
+                        //CubeBot(x, y, z, Block(x, y, z));
+                        //CubeEast(x, y, z, Block(x, y, z));
+                        //CubeWest(x, y, z, Block(x, y, z));
+                        //CubeNorth(x, y, z, Block(x, y, z));
+                        //CubeSouth(x, y, z, Block(x, y, z));
                     }
 
                 }
@@ -84,7 +95,7 @@ public class Chunk : MonoBehaviour
 
     private byte Block(int x, int y, int z)
     {
-        return world.Block(x + chunkX, y + chunkY, z + chunkZ);
+        return _world.Block(x + chunkX, y + chunkY, z + chunkZ);
     }
 
     private void CubeTop(int x, int y, int z, byte block)
