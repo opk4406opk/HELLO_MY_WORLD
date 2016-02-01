@@ -13,26 +13,27 @@ public class World : MonoBehaviour
     {
         get { return _chunks; }
     }
-	public int chunkSize = 16;
+	
     
     // 월드의 모든 블록성질을 저장하는 배열.
 	public byte[,,] data;
 
-    [SerializeField]
-	private int worldX = 16;
-    [SerializeField]
-    private int worldY = 16;
-    [SerializeField]
-    private int worldZ = 16;
+	private int worldX = 0;
+    private int worldY = 0;
+    private int worldZ = 0;
+    private int chunkSize = 0;
+    private int chunkOffsetX = 0;
+    private int chunkOffsetZ = 0;
 
     private IEnumerator loadProcessRoutine;
     private readonly float INTERVAL_TIME = 1.0f;
 
-    private int chunkOffsetX = 0;
-    private int chunkOffsetZ = 0;
-
     public void Init(int offsetX, int offsetZ)
 	{
+        worldX = GameWorldConfig.worldX;
+        worldY = GameWorldConfig.worldY;
+        worldZ = GameWorldConfig.worldZ;
+        chunkSize = GameWorldConfig.chunkSize;
         chunkOffsetX = offsetX;
         chunkOffsetZ = offsetZ;
 
@@ -57,7 +58,7 @@ public class World : MonoBehaviour
         {
             for (int z = 0; z < _chunks.GetLength(2); z++)
             {
-                float dist = Vector2.Distance(new Vector2(x * chunkSize, z * chunkSize), new Vector2(playerPos.x, playerPos.z));
+                float dist = Vector2.Distance(new Vector2((x+chunkOffsetX) * chunkSize, (z+chunkOffsetZ) * chunkSize), new Vector2(playerPos.x, playerPos.z));
                 if (dist < distToLoad)
                 {
                     if (_chunks[x, 0, z] == null) GenColumn(x, z);
@@ -83,7 +84,6 @@ public class World : MonoBehaviour
             newChunk.transform.parent = gameObject.transform;
             _chunks[x, y, z] = newChunk.GetComponent("Chunk") as Chunk;
             _chunks[x, y, z].world = gameObject.GetComponent("World") as World;
-            _chunks[x, y, z].chunkSize = chunkSize;
             _chunks[x, y, z].chunkX = x * chunkSize;
             _chunks[x, y, z].chunkY = y * chunkSize;
             _chunks[x, y, z].chunkZ = z * chunkSize;

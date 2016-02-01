@@ -27,7 +27,7 @@ public class Chunk : MonoBehaviour
 
     private int faceCount;
 
-    public int chunkSize = 16;
+    private int chunkSize = 0;
 
     public int chunkX;
     public int chunkY;
@@ -45,6 +45,7 @@ public class Chunk : MonoBehaviour
 
     void Start()
     {
+        chunkSize = GameWorldConfig.chunkSize;
         mesh = GetComponent<MeshFilter>().mesh;
         col = GetComponent<MeshCollider>();
         GenerateMesh();
