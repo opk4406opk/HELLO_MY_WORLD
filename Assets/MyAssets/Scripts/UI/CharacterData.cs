@@ -7,27 +7,27 @@ public class CharacterData : MonoBehaviour {
     public string chName
     {
         set { _chName = value; }
-        //get { return _chName; }
+        get { return _chName; }
     }
     private int _chLevel;
     public int chLevel
     {
         set { _chLevel = value; }
-        //get { return _chLevel; }
+        get { return _chLevel; }
     }
 
     private string _detailScript;
     public string detailScript
     {
         set { _detailScript = value; }
-        //get { return _detailScript; }
+        get { return _detailScript; }
     }
 
     private string _chType;
     public string chType
     {
         set { _chType = value; }
-        //get { return _chType; }
+        get { return _chType; }
     }
 
     private string _chFaceName;

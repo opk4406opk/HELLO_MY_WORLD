@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class ChSelectManager : MonoBehaviour
 {
@@ -20,6 +21,19 @@ public class ChSelectManager : MonoBehaviour
         CreateChCard();
     }
 
+    private EventDelegate OnClickChCard;
+    private void ClickChCard(CharacterData chData)
+    {
+        SceneManager.LoadSceneAsync("popup_chInfo", LoadSceneMode.Additive);
+
+        GameObject sceneToSceneData = GameObject.Find("SceneToScene_datas");
+        sceneToSceneData.GetComponent<SceneToScene_Data>().Init();
+        sceneToSceneData.GetComponent<SceneToScene_Data>().SetData("chName", chData.chName);
+        sceneToSceneData.GetComponent<SceneToScene_Data>().SetData("chLevel", chData.chLevel.ToString());
+        sceneToSceneData.GetComponent<SceneToScene_Data>().SetData("chType", chData.chType);
+        sceneToSceneData.GetComponent<SceneToScene_Data>().SetData("detailScript", chData.detailScript);
+    }
+    
     private void LoadChDatas()
     {
         jsonDataSheet = new List<Dictionary<string, string>>();
@@ -48,8 +62,15 @@ public class ChSelectManager : MonoBehaviour
             chData.chFaceName = tmpStr;
             chData.InitData();
 
+            //chCard set OnClick Event
+            OnClickChCard = new EventDelegate(this, "ClickChCard");
+            OnClickChCard.parameters[0].value = chData;
+            newChCard.GetComponent<UIButton>().onClick.Add(OnClickChCard);
+
             //chCard parenting
-            NGUITools.AddChild(uiGridObj, newChCard);
+            newChCard.transform.parent = uiGridObj.transform;
+            newChCard.transform.localScale = new Vector3(1, 1, 1);
+            newChCard.transform.localPosition = new Vector3(0, 0, 0);
             uiGridObj.GetComponent<UIGrid>().Reposition();
         }
     }
