@@ -1,0 +1,33 @@
+ [
+     {"chName":"FireFighter",
+	 "chType":"citizen",
+	 "chLevel":"1",
+	 "detailScript":"It's good",
+	 "chFaceTextureName":"RT_FireFighter_00"
+	 }, 
+	 {"chName":"Gang",
+	 "chType":"citizen",
+	 "chLevel":"1",
+	 "detailScript":"It's good",
+	 "chFaceTextureName":"RT_Gang_01"
+	 }, 
+	 {"chName":"Police",
+	 "chType":"citizen",
+	 "chLevel":"1",
+	 "detailScript":"It's good",
+	 "chFaceTextureName":"RT_Police_02"
+	 }, 
+	 {"chName":"Sheriff",
+	 "chType":"citizen",
+	 "chLevel":"1",
+	 "detailScript":"It's good",
+	 "chFaceTextureName":"RT_Sheriff_03"
+	 }, 
+	 {"chName":"Trucker",
+	 "chType":"citizen",
+	 "chLevel":"1",
+	 "detailScript":"It's good",
+	 "chFaceTextureName":"RT_Trucker_04"
+	 }
+     
+ ]
