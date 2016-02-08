@@ -6,7 +6,7 @@ public class MainMenuManager : MonoBehaviour {
 
     public void ClickStart()
     {
-        SceneManager.LoadSceneAsync("");
+        SceneManager.LoadSceneAsync("SelectCharacter");
     }
 
     public void ClickLoad()
@@ -21,6 +21,7 @@ public class MainMenuManager : MonoBehaviour {
 
     public void ClickExit()
     {
+        Application.Quit();
     }
      
 }

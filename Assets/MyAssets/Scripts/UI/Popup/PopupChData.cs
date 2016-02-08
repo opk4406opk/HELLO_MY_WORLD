@@ -46,13 +46,24 @@ public class PopupChData : MonoBehaviour
 
     public void ClickExit()
     {
-        StartCoroutine(PopupExitProcess());        
+        StartCoroutine(PopupExitProcess());
+    }
+    public void ClickGameStart()
+    {
+        StartCoroutine(GameLoadingProcess());
+    }
+
+    private IEnumerator GameLoadingProcess()
+    {
+        ScaleDownEffect();
+        yield return new WaitForSeconds(0.2f);
+        SceneManager.LoadSceneAsync("GameLoading");
     }
 
     private IEnumerator PopupExitProcess()
     {
         ScaleDownEffect();
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.2f);
         SceneManager.UnloadScene("popup_chInfo");
     }
 

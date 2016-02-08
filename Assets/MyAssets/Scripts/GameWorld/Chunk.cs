@@ -8,6 +8,7 @@ public class Chunk : MonoBehaviour
     public World world
     {
         set { _world = value; }
+        get { return _world; }
     }
 
     private List<Vector3> newVertices = new List<Vector3>();
@@ -18,9 +19,7 @@ public class Chunk : MonoBehaviour
     private float tUnit = 0.0625f;
     private Vector2 tStone = new Vector2(0, 14);
     private Vector2 tGrass = new Vector2(0, 15);
-    private Vector2 tDirt = new Vector2(0, 4);
     private Vector2 tGrassTop = new Vector2(0, 15);
-    private Vector2 tWater = new Vector2(0, 1);
 
     private Mesh mesh;
     private MeshCollider col;
@@ -29,17 +28,33 @@ public class Chunk : MonoBehaviour
 
     private int chunkSize = 0;
 
-    public int chunkX;
-    public int chunkY;
-    public int chunkZ;
-    public bool update;
+    private int _chunkX;
+    public int chunkX
+    {
+        set { _chunkX = value; }
+    }
+    private int _chunkY;
+    public int chunkY
+    {
+        set { _chunkY = value; }
+    }
+    private int _chunkZ;
+    public int chunkZ
+    {
+        set { _chunkZ = value; }
+    }
+    private bool _update;
+    public bool update
+    {
+        set { _update = value; }
+    }
 
     void LateUpdate()
     {
-        if (update)
+        if (_update)
         {
             GenerateMesh();
-            update = false;
+            _update = false;
         }
     }
 
@@ -96,7 +111,7 @@ public class Chunk : MonoBehaviour
 
     private byte Block(int x, int y, int z)
     {
-        return _world.Block(x + chunkX, y + chunkY, z + chunkZ);
+        return _world.Block(x + _chunkX, y + _chunkY, z + _chunkZ);
     }
 
     private void CubeTop(int x, int y, int z, byte block)

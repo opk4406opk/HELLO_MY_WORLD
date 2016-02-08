@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class GameWorldConfig
 {
-    private static int _worldX = 256;
+    private static int _worldX = 64;
     public static int worldX
     {
         get { return _worldX; }
@@ -14,7 +14,7 @@ public class GameWorldConfig
     {
         get { return _worldY; }
     }
-    private static int _worldZ = 256;
+    private static int _worldZ = 64;
     public static int worldZ
     {
         get { return _worldZ; }
@@ -23,6 +23,16 @@ public class GameWorldConfig
     public static int chunkSize
     {
         get { return _chunkSize; }
+    }
+    private static int _offsetX = _worldX / _chunkSize;
+    public static int offsetX
+    {
+        get { return _offsetX; }
+    }
+    private static int _offsetZ = _worldZ / _chunkSize;
+    public static int offsetZ
+    {
+        get { return _offsetZ; }
     }
 }
 
@@ -52,6 +62,12 @@ public class SubWorldDataFile
         jsonDataSheet[idx].TryGetValue(str, out value);
         return int.Parse(value);
     }
+    public string GetWorldName(int idx, string str)
+    {
+        string value;
+        jsonDataSheet[idx].TryGetValue(str, out value);
+        return value;
+    }
 
     private void AccessData(JSONObject jsonObj)
     {
@@ -75,14 +91,10 @@ public class SubWorldDataFile
     }
 }
 
-    public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    private int offsetX = GameWorldConfig.worldX / GameWorldConfig.chunkSize;
-    private int offsetZ = GameWorldConfig.worldZ / GameWorldConfig.chunkSize;
     private int MAX_SUB_WORLD = 0;
-
-    private List<GameObject> list_SubWorlds = new List<GameObject>();
-
+    private Dictionary<string, World> worldDictionary = new Dictionary<string, World>();
     private SubWorldDataFile subWorldData;
 
     [SerializeField]
@@ -96,6 +108,7 @@ public class SubWorldDataFile
     
     void Start ()
     {
+
         subWorldData = new SubWorldDataFile();
         MAX_SUB_WORLD = subWorldData.maxSubWorld;
         CreateGameWorld();
@@ -105,17 +118,19 @@ public class SubWorldDataFile
     {
         for (int idx = 0; idx < MAX_SUB_WORLD; ++idx)
         {
-            int subWorldPosX = subWorldData.GetPosValue(idx, "X") * offsetX;
-            int subWorldPosZ = subWorldData.GetPosValue(idx, "Z") * offsetZ;
+            int subWorldPosX = subWorldData.GetPosValue(idx, "X") * GameWorldConfig.offsetX;
+            int subWorldPosZ = subWorldData.GetPosValue(idx, "Z") * GameWorldConfig.offsetZ;
+            string subWorldName = subWorldData.GetWorldName(idx, "WORLD_NAME");
 
             GameObject newSubWorld = Instantiate(worldPrefab, new Vector3(0, 0, 0),
                 new Quaternion(0, 0, 0, 0)) as GameObject;
             newSubWorld.GetComponent<World>().chunkPrefab = chunkPrefab;
             newSubWorld.GetComponent<World>().playerTrans = playerTrans;
             newSubWorld.GetComponent<World>().Init(subWorldPosX, subWorldPosZ);
-            newSubWorld.name = "SUB_WORLD_" + idx.ToString();
+            newSubWorld.name = subWorldName; 
             newSubWorld.transform.parent = worldGroupTrans;
-            list_SubWorlds.Add(newSubWorld);
+            //add world.
+            worldDictionary.Add(subWorldName, newSubWorld.GetComponent<World>());
         }
     }
 	
