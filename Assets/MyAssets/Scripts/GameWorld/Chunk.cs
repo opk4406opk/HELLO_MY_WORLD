@@ -15,11 +15,13 @@ public class Chunk : MonoBehaviour
     private List<int> newTriangles = new List<int>();
     private List<Vector2> newUV = new List<Vector2>();
 
-    // 256 x 256 tile 기준. 1tile 이 차지하는 텍스처 좌표값.  16/256
+    // 256 x 256 tile 기준. 1tile(16pixel) 이 차지하는 텍스처 좌표값.  16/256
     private float tUnit = 0.0625f;
     private Vector2 tStone = new Vector2(0, 14);
     private Vector2 tGrass = new Vector2(0, 15);
     private Vector2 tGrassTop = new Vector2(0, 15);
+
+    private Vector2 texturePos;
 
     private Mesh mesh;
     private MeshCollider col;
@@ -49,6 +51,8 @@ public class Chunk : MonoBehaviour
         set { _update = value; }
     }
 
+    private TileDataFile worldTileData;
+
     void LateUpdate()
     {
         if (_update)
@@ -58,15 +62,14 @@ public class Chunk : MonoBehaviour
         }
     }
 
-    void Start()
+    public void Init(TileDataFile tileDataFile)
     {
+        worldTileData = tileDataFile;
         chunkSize = GameWorldConfig.chunkSize;
         mesh = GetComponent<MeshFilter>().mesh;
         col = GetComponent<MeshCollider>();
         GenerateMesh();
     }
-
-
 
     private void GenerateMesh()
     {
@@ -86,20 +89,12 @@ public class Chunk : MonoBehaviour
                         //if (Block(x - 1, y, z) == 0) CubeWest(x, y, z, Block(x, y, z));
                         //if (Block(x, y, z + 1) == 0) CubeNorth(x, y, z, Block(x, y, z));
                         //if (Block(x, y, z - 1) == 0) CubeSouth(x, y, z, Block(x, y, z));
-
                         if (Block(x, y + 1, z) == 0) CubeTop(x, y, z, Block(x, y, z));
                         if (Block(x, y - 1, z) == 0) CubeBot(x, y, z, Block(x, y, z));
                         CubeNorth(x, y, z, Block(x, y, z));
                         CubeSouth(x, y, z, Block(x, y, z));
                         CubeEast(x, y, z, Block(x, y, z));
                         CubeWest(x, y, z, Block(x, y, z));
-
-                        //CubeTop(x, y, z, Block(x, y, z));
-                        //CubeBot(x, y, z, Block(x, y, z));
-                        //CubeEast(x, y, z, Block(x, y, z));
-                        //CubeWest(x, y, z, Block(x, y, z));
-                        //CubeNorth(x, y, z, Block(x, y, z));
-                        //CubeSouth(x, y, z, Block(x, y, z));
                     }
 
                 }
@@ -121,11 +116,12 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y, z));
         newVertices.Add(new Vector3(x, y, z));
 
-        Vector2 texturePos = new Vector2(0, 0);
+        string tileName = worldTileData.GetTileName(Block(x, y, z));
+        TileData tileData = worldTileData.GetTileData(tileName);
 
-        if (Block(x, y, z) == 1) texturePos = tStone;
-        else if (Block(x, y, z) == 2) texturePos = tGrassTop;
-       
+        texturePos.x = tileData.posX;
+        texturePos.y = tileData.posY;
+
         Cube(texturePos);
     }
 
@@ -137,10 +133,11 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x, y, z + 1));
         newVertices.Add(new Vector3(x, y - 1, z + 1));
 
-        Vector2 texturePos = new Vector2(0, 0);
+        string tileName = worldTileData.GetTileName(Block(x, y, z));
+        TileData tileData = worldTileData.GetTileData(tileName);
 
-        if (Block(x, y, z) == 1) texturePos = tStone;
-        else if (Block(x, y, z) == 2) texturePos = tGrassTop;
+        texturePos.x = tileData.posX;
+        texturePos.y = tileData.posY;
 
         Cube(texturePos);
 
@@ -154,10 +151,11 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y, z + 1));
         newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
 
-        Vector2 texturePos = new Vector2(0, 0);
+        string tileName = worldTileData.GetTileName(Block(x, y, z));
+        TileData tileData = worldTileData.GetTileData(tileName);
 
-        if (Block(x, y, z) == 1) texturePos = tStone;
-        else if (Block(x, y, z) == 2) texturePos = tGrassTop;
+        texturePos.x = tileData.posX;
+        texturePos.y = tileData.posY;
 
         Cube(texturePos);
 
@@ -171,10 +169,11 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y, z));
         newVertices.Add(new Vector3(x + 1, y - 1, z));
 
-        Vector2 texturePos = new Vector2(0, 0);
+        string tileName = worldTileData.GetTileName(Block(x, y, z));
+        TileData tileData = worldTileData.GetTileData(tileName);
 
-        if (Block(x, y, z) == 1) texturePos = tStone;
-        else if (Block(x, y, z) == 2) texturePos = tGrassTop;
+        texturePos.x = tileData.posX;
+        texturePos.y = tileData.posY;
 
         Cube(texturePos);
 
@@ -188,10 +187,11 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x, y, z));
         newVertices.Add(new Vector3(x, y - 1, z));
 
-        Vector2 texturePos = new Vector2(0, 0);
+        string tileName = worldTileData.GetTileName(Block(x, y, z));
+        TileData tileData = worldTileData.GetTileData(tileName);
 
-        if (Block(x, y, z) == 1) texturePos = tStone;
-        else if (Block(x, y, z) == 2) texturePos = tGrassTop;
+        texturePos.x = tileData.posX;
+        texturePos.y = tileData.posY;
 
         Cube(texturePos);
 
@@ -205,10 +205,11 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
         newVertices.Add(new Vector3(x, y - 1, z + 1));
 
-        Vector2 texturePos = new Vector2(0, 0);
+        string tileName = worldTileData.GetTileName(Block(x, y, z));
+        TileData tileData = worldTileData.GetTileData(tileName);
 
-        if (Block(x, y, z) == 1) texturePos = tStone;
-        else if (Block(x, y, z) == 2) texturePos = tGrassTop;
+        texturePos.x = tileData.posX;
+        texturePos.y = tileData.posY;
 
         Cube(texturePos);
 

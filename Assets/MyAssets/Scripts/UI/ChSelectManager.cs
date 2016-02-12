@@ -27,7 +27,7 @@ public class ChSelectManager : MonoBehaviour
         SceneManager.LoadSceneAsync("popup_chInfo", LoadSceneMode.Additive);
 
         GameObject sceneToSceneData = GameObject.Find("SceneToScene_datas");
-        sceneToSceneData.GetComponent<SceneToScene_Data>().Init();
+        sceneToSceneData.GetComponent<SceneToScene_Data>().ClearElement();
         sceneToSceneData.GetComponent<SceneToScene_Data>().SetData("chName", chData.chName);
         sceneToSceneData.GetComponent<SceneToScene_Data>().SetData("chLevel", chData.chLevel.ToString());
         sceneToSceneData.GetComponent<SceneToScene_Data>().SetData("chType", chData.chType);

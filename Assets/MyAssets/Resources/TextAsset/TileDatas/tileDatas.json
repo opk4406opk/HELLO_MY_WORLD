@@ -1,0 +1,9 @@
+{
+	"NONE"       : {"posX":"0", "posY":"0", "type":"0"},
+	"GRASS"       : {"posX":"0", "posY":"15", "type":"1"},
+	"STONE_BIG"   : {"posX":"0", "posY":"14", "type":"2"},
+	"STONE_SMALL" : {"posX":"1", "posY":"14", "type":"3"},
+	"SAND"        : {"posX":"0", "posY":"4", "type":"4"},
+	"RED_STONE"   : {"posX":"0", "posY":"1", "type":"5"},
+	"WOOD"        : {"posX":"2", "posY":"15", "type":"6"}
+}

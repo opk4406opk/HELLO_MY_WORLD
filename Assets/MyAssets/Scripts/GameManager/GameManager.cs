@@ -36,66 +36,15 @@ public class GameWorldConfig
     }
 }
 
-public class SubWorldDataFile
-{
-    private JSONObject subWorldJsonObj;
-    private TextAsset jsonFile;
-    private List<Dictionary<string, string>> jsonDataSheet;
-    
-    private int _maxSubWorld = 0;
-    public int maxSubWorld
-    {
-        get { return _maxSubWorld; }
-    }
-
-    public SubWorldDataFile()
-    {
-        jsonDataSheet = new List<Dictionary<string, string>>();
-        jsonFile = Resources.Load("TextAsset/SubWorldDefaultData/subworld_default") as TextAsset;
-        subWorldJsonObj = new JSONObject(jsonFile.text);
-        AccessData(subWorldJsonObj);
-    }
-
-    public int GetPosValue(int idx, string str)
-    {
-        string value;
-        jsonDataSheet[idx].TryGetValue(str, out value);
-        return int.Parse(value);
-    }
-    public string GetWorldName(int idx, string str)
-    {
-        string value;
-        jsonDataSheet[idx].TryGetValue(str, out value);
-        return value;
-    }
-
-    private void AccessData(JSONObject jsonObj)
-    {
-        switch (jsonObj.type)
-        {
-            case JSONObject.Type.OBJECT:
-                //to do
-                break;
-            case JSONObject.Type.ARRAY:
-                _maxSubWorld = jsonObj.Count;
-                for (int idx = 0; idx < jsonObj.Count; ++idx)
-                {
-                    jsonDataSheet.Add(jsonObj.list[idx].ToDictionary());
-                }
-                break;
-            default:
-                Debug.Log("Json Level Data Sheet Access ERROR");
-                break;
-        }
-
-    }
-}
-
 public class GameManager : MonoBehaviour
 {
     private int MAX_SUB_WORLD = 0;
     private Dictionary<string, World> worldDictionary = new Dictionary<string, World>();
+
+    [SerializeField]
     private SubWorldDataFile subWorldData;
+    [SerializeField]
+    private TileDataFile tileData;
 
     [SerializeField]
     private GameObject chunkPrefab;
@@ -103,13 +52,22 @@ public class GameManager : MonoBehaviour
     private GameObject worldPrefab;
     [SerializeField]
     private Transform worldGroupTrans;
-    [SerializeField]
     private Transform playerTrans;
+
+    [SerializeField]
+    private PlayerManager playerManager;
     
     void Start ()
     {
+        //player Init
+        playerManager.Init();
+        playerTrans = playerManager.gamePlayer.transform;
 
-        subWorldData = new SubWorldDataFile();
+        //GameData Init
+        tileData.Init();
+        subWorldData.Init();
+        
+
         MAX_SUB_WORLD = subWorldData.maxSubWorld;
         CreateGameWorld();
     }
@@ -126,7 +84,7 @@ public class GameManager : MonoBehaviour
                 new Quaternion(0, 0, 0, 0)) as GameObject;
             newSubWorld.GetComponent<World>().chunkPrefab = chunkPrefab;
             newSubWorld.GetComponent<World>().playerTrans = playerTrans;
-            newSubWorld.GetComponent<World>().Init(subWorldPosX, subWorldPosZ);
+            newSubWorld.GetComponent<World>().Init(subWorldPosX, subWorldPosZ, tileData);
             newSubWorld.name = subWorldName; 
             newSubWorld.transform.parent = worldGroupTrans;
             //add world.

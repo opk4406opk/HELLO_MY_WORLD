@@ -18,7 +18,7 @@ public class SceneToScene_Data : MonoBehaviour {
         _gameDatas.Add(key, value);
     }
 
-    public void Init()
+    public void ClearElement()
     {
         _gameDatas.Clear();
     }

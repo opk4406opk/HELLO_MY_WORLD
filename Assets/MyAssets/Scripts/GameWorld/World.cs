@@ -19,9 +19,11 @@ public class World : MonoBehaviour
     {
         get { return _chunkGroup; }
     }
-    
-    // 월드의 모든 블록성질을 저장하는 배열.
-	public byte[,,] worldBlockData;
+
+    ///<summary>
+    /// 월드의 모든 블록(타일Type값)성질을 저장하는 배열.
+    ///</summary>
+    public byte[,,] worldBlockData;
 
 	private int worldX = 0;
     private int worldY = 0;
@@ -42,8 +44,11 @@ public class World : MonoBehaviour
     private IEnumerator loadProcessRoutine;
     private readonly float INTERVAL_LOAD_TIME = 1.0f;
 
-    public void Init(int offsetX, int offsetZ)
+    private TileDataFile worldTileDataFile;
+
+    public void Init(int offsetX, int offsetZ, TileDataFile tileDataFile)
 	{
+        worldTileDataFile = tileDataFile;
         worldX = GameWorldConfig.worldX;
         worldY = GameWorldConfig.worldY;
         worldZ = GameWorldConfig.worldZ;
@@ -74,6 +79,7 @@ public class World : MonoBehaviour
                 float dist = Vector2.Distance(new Vector2((x + _chunkOffsetX) * chunkSize,
                         (z + _chunkOffsetZ) * chunkSize),
                         new Vector2(_playerTrans.position.x, _playerTrans.position.z));
+
                 if (dist < distToLoad)
                 {
                     if (_chunkGroup[x, 0, z] == null) GenColumn(x, z);
@@ -100,6 +106,7 @@ public class World : MonoBehaviour
             _chunkGroup[x, y, z].chunkX = x * chunkSize;
             _chunkGroup[x, y, z].chunkY = y * chunkSize;
             _chunkGroup[x, y, z].chunkZ = z * chunkSize;
+            _chunkGroup[x, y, z].Init(worldTileDataFile);
         }
 	}
 
@@ -126,8 +133,8 @@ public class World : MonoBehaviour
 
                 for (int y = 0; y < worldY; y++)
                 {
-                    if (y <= stone) worldBlockData[x, y, z] = 1;
-                    else if (y <= dirt + stone) worldBlockData[x, y, z] = 2;
+                    if (y <= stone) worldBlockData[x, y, z] = (byte)worldTileDataFile.GetTileData("STONE_BIG").type;
+                    else if (y <= dirt + stone) worldBlockData[x, y, z] = (byte)worldTileDataFile.GetTileData("GRASS").type;
                 }
             }
         }

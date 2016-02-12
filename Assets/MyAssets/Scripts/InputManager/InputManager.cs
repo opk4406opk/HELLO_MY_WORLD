@@ -16,8 +16,6 @@ public class InputManager : MonoBehaviour {
 
 	void Update ()
     {
-
-        
         if (Input.GetMouseButtonDown(0)) // left
         {
             screenToWorldRay = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -29,7 +27,6 @@ public class InputManager : MonoBehaviour {
                     Color.green, 2);
                 modifyTerrian.AddBlockCursor(rayHit, 1);
             }
-           
         }
         else if (Input.GetMouseButtonDown(1)) // right
         {
@@ -40,11 +37,9 @@ public class InputManager : MonoBehaviour {
                 Debug.DrawLine(screenToWorldRay.origin,
                     screenToWorldRay.origin + (screenToWorldRay.direction * rayHit.distance),
                     Color.green, 2);
-                modifyTerrian.ReplaceBlockCursor(rayHit, 255);
+                modifyTerrian.ReplaceBlockCursor(rayHit, 0);
             }
-           
         }
-        
     }
 
    
