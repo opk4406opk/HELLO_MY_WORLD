@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class InputManager : MonoBehaviour {
 
@@ -13,10 +14,10 @@ public class InputManager : MonoBehaviour {
         NONE = 0,
         CREATE = 1,
         DELETE = 2,
-        ATTACK = 3
+        ATTACK = 3,
+        INVEN_OPEN = 4
     }
     private INPUT_STATE inputState = INPUT_STATE.NONE;
-
     private bool isInput = false;
     
     void Start()
@@ -27,7 +28,8 @@ public class InputManager : MonoBehaviour {
 	void Update ()
     {
         ChkInputState();
-        if (ChkRayHit()) InputProcess();
+        MouseInputProcess();
+        KeyBoardInputProcess();
     }
 
     private void ChkInputState()
@@ -41,6 +43,10 @@ public class InputManager : MonoBehaviour {
         {
             isInput = true;
             inputState = INPUT_STATE.DELETE;
+        }
+        else if(Input.GetKeyDown(KeyCode.I))
+        {
+            inputState = INPUT_STATE.INVEN_OPEN;
         }
         else
         {
@@ -57,8 +63,10 @@ public class InputManager : MonoBehaviour {
         return Physics.Raycast(screenToWorldRay, out rayHit);
     }
 
-    private void InputProcess()
+    private void MouseInputProcess()
     {
+        if (ChkRayHit() == false) return;
+
         InitModifyProcess();
         switch (inputState)
         {
@@ -73,6 +81,19 @@ public class InputManager : MonoBehaviour {
                     screenToWorldRay.origin + (screenToWorldRay.direction * rayHit.distance),
                     Color.green, 2);
                 modifyTerrian.ReplaceBlockCursor(rayHit, 0);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void KeyBoardInputProcess()
+    {
+        switch (inputState)
+        {
+            case INPUT_STATE.INVEN_OPEN:
+                inputState = INPUT_STATE.NONE;
+                SceneManager.LoadSceneAsync("popup_inventory", LoadSceneMode.Additive);
                 break;
             default:
                 break;

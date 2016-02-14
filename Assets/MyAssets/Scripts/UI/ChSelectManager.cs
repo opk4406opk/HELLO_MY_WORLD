@@ -71,8 +71,9 @@ public class ChSelectManager : MonoBehaviour
             newChCard.transform.parent = uiGridObj.transform;
             newChCard.transform.localScale = new Vector3(1, 1, 1);
             newChCard.transform.localPosition = new Vector3(0, 0, 0);
-            uiGridObj.GetComponent<UIGrid>().Reposition();
+            
         }
+        uiGridObj.GetComponent<UIGrid>().Reposition();
     }
 
     private void AccessData(JSONObject jsonObj)

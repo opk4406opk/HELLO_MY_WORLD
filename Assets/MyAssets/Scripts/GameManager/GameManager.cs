@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
     private SubWorldDataFile subWorldData;
     [SerializeField]
     private TileDataFile tileData;
+    [SerializeField]
+    private ItemDataFile itemData;
 
     [SerializeField]
     private GameObject chunkPrefab;
@@ -64,6 +66,7 @@ public class GameManager : MonoBehaviour
         playerTrans = playerManager.gamePlayer.transform;
 
         //GameData Init
+        itemData.Init();
         tileData.Init();
         subWorldData.Init();
         

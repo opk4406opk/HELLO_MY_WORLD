@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Tile 데이터를 주고받기 위한 내부 통신용 구조체.
 /// </summary>
-public struct TileData
+public struct TileInfo
 {
     public string name;
     public int posX;
@@ -23,7 +23,7 @@ public class TileDataFile : MonoBehaviour {
     private Dictionary<string, Dictionary<string, string>> jsonDataSheet;
     private Dictionary<int, string> typeToNameSheet;
 
-    private TileData tileData;
+    private TileInfo tileData;
 
     public void Init ()
     {
@@ -34,7 +34,7 @@ public class TileDataFile : MonoBehaviour {
         AccessData(tileDataJsonObj);
     }
 
-    public TileData GetTileData(string _tileName)
+    public TileInfo GetTileData(string _tileName)
     {
         if (_tileName == null) Debug.Log("ERROR_tileName is NULL");
 

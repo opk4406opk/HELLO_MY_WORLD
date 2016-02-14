@@ -1,0 +1,8 @@
+{
+	"element_gold"       : {"type":"0", "detail":"this is gold item" },
+	"element_silver"       : {"type":"0", "detail":"this is sliver item" },
+	"element_iron"       : {"type":"0", "detail":"this is iron item" },
+	"element_stone"       : {"type":"0", "detail":"this is stone item" },
+	"element_wood"       : {"type":"0", "detail":"this is wood item" },
+	"element_dark_stone"       : {"type":"0", "detail":"very secret material.." }
+}

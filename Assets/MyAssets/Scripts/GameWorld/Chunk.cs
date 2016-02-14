@@ -117,7 +117,7 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x, y, z));
 
         string tileName = worldTileData.GetTileName(Block(x, y, z));
-        TileData tileData = worldTileData.GetTileData(tileName);
+        TileInfo tileData = worldTileData.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;
@@ -134,7 +134,7 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x, y - 1, z + 1));
 
         string tileName = worldTileData.GetTileName(Block(x, y, z));
-        TileData tileData = worldTileData.GetTileData(tileName);
+        TileInfo tileData = worldTileData.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;
@@ -152,7 +152,7 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
 
         string tileName = worldTileData.GetTileName(Block(x, y, z));
-        TileData tileData = worldTileData.GetTileData(tileName);
+        TileInfo tileData = worldTileData.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;
@@ -170,7 +170,7 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y - 1, z));
 
         string tileName = worldTileData.GetTileName(Block(x, y, z));
-        TileData tileData = worldTileData.GetTileData(tileName);
+        TileInfo tileData = worldTileData.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;
@@ -188,7 +188,7 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x, y - 1, z));
 
         string tileName = worldTileData.GetTileName(Block(x, y, z));
-        TileData tileData = worldTileData.GetTileData(tileName);
+        TileInfo tileData = worldTileData.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;
@@ -206,7 +206,7 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x, y - 1, z + 1));
 
         string tileName = worldTileData.GetTileName(Block(x, y, z));
-        TileData tileData = worldTileData.GetTileData(tileName);
+        TileInfo tileData = worldTileData.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;

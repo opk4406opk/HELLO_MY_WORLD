@@ -33,7 +33,7 @@ public class PlayerManager : MonoBehaviour {
     private void CreateProcess()
     {
         string chName;
-        sceneToSceneData.gameDatas.TryGetValue("chName", out chName);
+        sceneToSceneData.gameChDatas.TryGetValue("chName", out chName);
         switch(chName)
         {
             case "FireFighter":

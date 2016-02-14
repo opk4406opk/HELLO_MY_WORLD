@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Mono.Data.Sqlite;
+using System.Data;
 
 public class PopupChData : MonoBehaviour
 {
@@ -48,8 +50,33 @@ public class PopupChData : MonoBehaviour
     {
         StartCoroutine(PopupExitProcess());
     }
+
+    private delegate void del_InsertNewUserInfo();
     public void ClickGameStart()
     {
+        del_InsertNewUserInfo InsertInfo = () =>
+        {
+            string conn = "URI=file:" + Application.dataPath +
+               "/MyAssets/Resources/GameUserDB/userDB.db";
+
+            IDbConnection dbconn = new SqliteConnection(conn);
+            IDbCommand dbcmd = dbconn.CreateCommand();
+            dbconn.Open(); //Open connection to the database.
+
+            string sqlQuery =
+            "INSERT INTO USER_INFO(name, level, type) " +
+            "VALUES(" + "'" + chName.text + "'" + ", " +
+            "'" + chLevel.text + "'" + ", " +
+            "'" + chType.text + "'" + ")";
+
+            dbcmd.CommandText = sqlQuery;
+            dbcmd.ExecuteNonQuery();
+
+            dbcmd.Dispose();
+            dbconn.Close();
+        };
+        InsertInfo();
+
         StartCoroutine(GameLoadingProcess());
     }
 
@@ -71,13 +98,13 @@ public class PopupChData : MonoBehaviour
     {
         GameObject sceneToSceneData = GameObject.Find("SceneToScene_datas");
         string data;
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameDatas.TryGetValue("chName", out data);
+        sceneToSceneData.GetComponent<SceneToScene_Data>().gameChDatas.TryGetValue("chName", out data);
         chName.text = data;
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameDatas.TryGetValue("chLevel", out data);
+        sceneToSceneData.GetComponent<SceneToScene_Data>().gameChDatas.TryGetValue("chLevel", out data);
         chLevel.text = data;
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameDatas.TryGetValue("chType", out data);
+        sceneToSceneData.GetComponent<SceneToScene_Data>().gameChDatas.TryGetValue("chType", out data);
         chType.text = data;
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameDatas.TryGetValue("detailScript", out data);
+        sceneToSceneData.GetComponent<SceneToScene_Data>().gameChDatas.TryGetValue("detailScript", out data);
         chDetailScript.text = data;
 
     }
