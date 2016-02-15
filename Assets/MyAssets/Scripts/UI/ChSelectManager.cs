@@ -21,8 +21,8 @@ public class ChSelectManager : MonoBehaviour
         CreateChCard();
     }
 
-    private EventDelegate OnClickChCard;
-    private void ClickChCard(CharacterData chData)
+    private EventDelegate Ed_OnClickChCard;
+    private void OnClickChCard(CharacterData chData)
     {
         SceneManager.LoadSceneAsync("popup_chInfo", LoadSceneMode.Additive);
 
@@ -63,9 +63,9 @@ public class ChSelectManager : MonoBehaviour
             chData.InitData();
 
             //chCard set OnClick Event
-            OnClickChCard = new EventDelegate(this, "ClickChCard");
-            OnClickChCard.parameters[0].value = chData;
-            newChCard.GetComponent<UIButton>().onClick.Add(OnClickChCard);
+            Ed_OnClickChCard = new EventDelegate(this, "OnClickChCard");
+            Ed_OnClickChCard.parameters[0].value = chData;
+            newChCard.GetComponent<UIButton>().onClick.Add(Ed_OnClickChCard);
 
             //chCard parenting
             newChCard.transform.parent = uiGridObj.transform;

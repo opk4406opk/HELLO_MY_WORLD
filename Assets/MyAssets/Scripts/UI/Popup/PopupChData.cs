@@ -19,6 +19,9 @@ public class PopupChData : MonoBehaviour
 
     void Start()
     {
+        Scene thisScene = SceneManager.GetSceneByName("popup_chInfo");
+        SceneManager.SetActiveScene(thisScene);
+
         SetData();
         ScaleUpEffect();
     }

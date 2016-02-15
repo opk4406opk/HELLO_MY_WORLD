@@ -1,0 +1,66 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class BlockSelector : MonoBehaviour {
+
+    private TileDataFile tileDataFile;
+    [SerializeField]
+    private GameObject blockPrefab;
+    [SerializeField]
+    private GameObject uiGridObj;
+
+    private int maxSelectBlocks = 0;
+    private string curSelectBlockName;
+    private byte _curSelectBlockType;
+    public byte curSelectBlockType
+    {
+        get { return _curSelectBlockType; }
+    }
+
+	public void Init(TileDataFile _tileDataFile)
+    {
+        tileDataFile = _tileDataFile;
+        maxSelectBlocks = tileDataFile.tileNameList.Count;
+        //default : grass block;
+        curSelectBlockName = "GRASS";
+        _curSelectBlockType = 1;
+
+        CreateSelectBlock();
+    }
+	
+    private void CreateSelectBlock()
+    {
+        for (int idx = 0; idx < maxSelectBlocks; ++idx)
+        {
+            GameObject newBlock = Instantiate(blockPrefab,
+               new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
+
+            newBlock.SetActive(true);
+            //item parenting
+            newBlock.transform.parent = uiGridObj.transform;
+            newBlock.transform.localScale = new Vector3(1, 1, 1);
+            newBlock.transform.localPosition = new Vector3(0, 0, 0);
+
+            Ed_OnSelectBlock = new EventDelegate(this, "OnSelectBlock");
+            Ed_OnSelectBlock.parameters[0].value = tileDataFile.tileNameList[idx];
+            newBlock.GetComponent<UIButton>().onClick.Add(Ed_OnSelectBlock);
+
+            BlockData block = newBlock.GetComponent<BlockData>();
+            block.Init(tileDataFile.tileNameList[idx]);
+        }
+        uiGridObj.GetComponent<UIGrid>().Reposition();
+    }
+
+    private EventDelegate Ed_OnSelectBlock;
+    private void OnSelectBlock(string name)
+    {
+        curSelectBlockName = name;
+        CalcBlockType();
+    }
+
+    private void CalcBlockType()
+    {
+       TileInfo tileData = tileDataFile.GetTileData(curSelectBlockName);
+        _curSelectBlockType = (byte)tileData.type;    
+    }
+}

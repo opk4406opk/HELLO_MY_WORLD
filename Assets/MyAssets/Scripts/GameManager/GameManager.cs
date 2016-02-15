@@ -58,6 +58,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private PlayerManager playerManager;
+
+    [SerializeField]
+    private BlockSelector blockSelector;
     
     void Start ()
     {
@@ -69,7 +72,10 @@ public class GameManager : MonoBehaviour
         itemData.Init();
         tileData.Init();
         subWorldData.Init();
-        
+
+        //InGameUI Init
+        blockSelector.Init(tileData);
+
 
         MAX_SUB_WORLD = subWorldData.maxSubWorld;
         CreateGameWorld();

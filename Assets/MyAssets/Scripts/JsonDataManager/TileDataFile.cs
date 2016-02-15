@@ -23,15 +23,24 @@ public class TileDataFile : MonoBehaviour {
     private Dictionary<string, Dictionary<string, string>> jsonDataSheet;
     private Dictionary<int, string> typeToNameSheet;
 
+    private List<string> _tileNameList;
+    public List<string> tileNameList
+    {
+        get { return _tileNameList; }
+    }
+    
     private TileInfo tileData;
 
     public void Init ()
     {
+        _tileNameList = new List<string>();
         typeToNameSheet = new Dictionary<int, string>();
         jsonDataSheet = new Dictionary<string, Dictionary<string, string>>();
         jsonFile = Resources.Load("TextAsset/TileDatas/tileDatas") as TextAsset;
         tileDataJsonObj = new JSONObject(jsonFile.text);
+
         AccessData(tileDataJsonObj);
+        SetTileNameList();
     }
 
     public TileInfo GetTileData(string _tileName)
@@ -86,6 +95,15 @@ public class TileDataFile : MonoBehaviour {
             default:
                 Debug.Log("Json Level Data Sheet Access ERROR");
                 break;
+        }
+    }
+
+    private void SetTileNameList()
+    {
+        // 1번의 경우 NONE 이므로, 0번 인덱스는 제외.
+        for(int idx = 1; idx < tileDataJsonObj.Count; ++idx)
+        {
+            _tileNameList.Add(tileDataJsonObj.keys[idx]);
         }
     }
 }

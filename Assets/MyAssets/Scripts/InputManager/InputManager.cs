@@ -7,6 +7,9 @@ public class InputManager : MonoBehaviour {
     [SerializeField]
     private ModifyTerrain modifyTerrian;
 
+    [SerializeField]
+    private BlockSelector blockSelector;
+
     private Ray screenToWorldRay;
     private RaycastHit rayHit;
     private enum INPUT_STATE
@@ -18,11 +21,11 @@ public class InputManager : MonoBehaviour {
         INVEN_OPEN = 4
     }
     private INPUT_STATE inputState = INPUT_STATE.NONE;
-    private bool isInput = false;
     
-    void Start()
+    
+    public void Init()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        // to do
     }
 
 	void Update ()
@@ -36,12 +39,12 @@ public class InputManager : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
-            isInput = true;
+            if (ChkRayHit() == false) return;
             inputState = INPUT_STATE.CREATE;
         }
         else if (Input.GetMouseButtonDown(1))
         {
-            isInput = true;
+            if (ChkRayHit() == false) return;
             inputState = INPUT_STATE.DELETE;
         }
         else if(Input.GetKeyDown(KeyCode.I))
@@ -50,33 +53,39 @@ public class InputManager : MonoBehaviour {
         }
         else
         {
-            isInput = false;
             inputState = INPUT_STATE.NONE;
         }
     }
 
     private bool ChkRayHit()
     {
-        if (isInput == false) return false;
-
         screenToWorldRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        return Physics.Raycast(screenToWorldRay, out rayHit);
+        if (Physics.Raycast(screenToWorldRay, out rayHit) &&
+            (rayHit.transform.CompareTag("Chunk")))
+        {
+            Debug.Log("hit : " + rayHit.transform.name);
+            return true;
+        }
+        else
+            return false;
+       
     }
 
     private void MouseInputProcess()
     {
-        if (ChkRayHit() == false) return;
-
-        InitModifyProcess();
         switch (inputState)
         {
             case INPUT_STATE.CREATE:
+                InitModifyProcess();
+                inputState = INPUT_STATE.NONE;
                 Debug.DrawLine(screenToWorldRay.origin,
                     screenToWorldRay.origin + (screenToWorldRay.direction * rayHit.distance),
                     Color.green, 2);
-                modifyTerrian.AddBlockCursor(rayHit, 4);
+                modifyTerrian.AddBlockCursor(rayHit, blockSelector.curSelectBlockType);
                 break;
             case INPUT_STATE.DELETE:
+                InitModifyProcess();
+                inputState = INPUT_STATE.NONE;
                 Debug.DrawLine(screenToWorldRay.origin,
                     screenToWorldRay.origin + (screenToWorldRay.direction * rayHit.distance),
                     Color.green, 2);
@@ -93,7 +102,8 @@ public class InputManager : MonoBehaviour {
         {
             case INPUT_STATE.INVEN_OPEN:
                 inputState = INPUT_STATE.NONE;
-                SceneManager.LoadSceneAsync("popup_inventory", LoadSceneMode.Additive);
+                if (SceneManager.GetSceneByName("popup_inventory").isLoaded == false)
+                    SceneManager.LoadSceneAsync("popup_inventory", LoadSceneMode.Additive);
                 break;
             default:
                 break;
@@ -105,7 +115,4 @@ public class InputManager : MonoBehaviour {
         World world = rayHit.transform.GetComponent<Chunk>().world;
         modifyTerrian.world = world;
     }
-    
-    
-
 }

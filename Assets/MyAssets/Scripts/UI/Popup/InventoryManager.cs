@@ -15,11 +15,8 @@ public class InventoryManager : MonoBehaviour {
     private GameObject popupObj;
 
     private readonly int defaultItemSlot = 50;
-    private List<ItemData> _itemSlotList = new List<ItemData>();
-    private List<ItemData> itemSlotList
-    {
-        get { return _itemSlotList; }
-    }
+    private List<ItemData> itemSlotList = new List<ItemData>();
+    
     // DB에서 추출한 유저 아이템정보를 담아두는 리스트.
     private List<USER_ITEM> userItemList = new List<USER_ITEM>();
 
@@ -27,6 +24,9 @@ public class InventoryManager : MonoBehaviour {
 
     void Start ()
     {
+        Scene thisScene = SceneManager.GetSceneByName("popup_inventory");
+        SceneManager.SetActiveScene(thisScene);
+
         GameObject obj = GameObject.Find("ItemDataFile");
         gameItemDataFile = obj.GetComponent<ItemDataFile>();
 
@@ -82,7 +82,7 @@ public class InventoryManager : MonoBehaviour {
             newItem.transform.localScale = new Vector3(1, 1, 1);
             newItem.transform.localPosition = new Vector3(0, 0, 0);
            
-            _itemSlotList.Add(newItem.GetComponent<ItemData>());
+            itemSlotList.Add(newItem.GetComponent<ItemData>());
         }
         uiGridObj.GetComponent<UIGrid>().Reposition();
 
@@ -129,15 +129,15 @@ public class InventoryManager : MonoBehaviour {
             if (itemSlotIdx > defaultItemSlot) CreateEmptySlot(10);
 
             // set user item info
-            _itemSlotList[itemSlotIdx].name = uitem.name;
-            _itemSlotList[itemSlotIdx].amount = uitem.amount.ToString();
-            _itemSlotList[itemSlotIdx].type = uitem.type.ToString();
+            itemSlotList[itemSlotIdx].name = uitem.name;
+            itemSlotList[itemSlotIdx].amount = uitem.amount.ToString();
+            itemSlotList[itemSlotIdx].type = uitem.type.ToString();
             // set item detail info
             ItemInfo itemInfo = gameItemDataFile.GetItemData(uitem.name);
-            _itemSlotList[itemSlotIdx].detailInfo = itemInfo.detailInfo;
+            itemSlotList[itemSlotIdx].detailInfo = itemInfo.detailInfo;
 
-            _itemSlotList[itemSlotIdx].InitData();
-            _itemSlotList[itemSlotIdx].OnInfo();
+            itemSlotList[itemSlotIdx].InitData();
+            itemSlotList[itemSlotIdx].OnInfo();
 
             itemSlotIdx++;
         }
