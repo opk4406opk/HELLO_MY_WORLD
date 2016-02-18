@@ -69,7 +69,7 @@ public class InventoryManager : MonoBehaviour {
     /// </summary>
     private void CallBackPopupClose()
     {
-        SceneManager.UnloadScene("popup_inventory");
+        UIPopupManager.CloseInven();
     }
 
     public void CreateEmptySlot(int _num)

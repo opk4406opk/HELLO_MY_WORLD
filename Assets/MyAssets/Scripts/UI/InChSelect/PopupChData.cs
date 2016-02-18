@@ -119,6 +119,5 @@ public class PopupChData : MonoBehaviour
         chType.text = data;
         sceneToSceneData.GetComponent<SceneToScene_Data>().gameChDatas.TryGetValue("detailScript", out data);
         chDetailScript.text = data;
-
     }
 }

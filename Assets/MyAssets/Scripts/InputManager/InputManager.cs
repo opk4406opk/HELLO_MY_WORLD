@@ -81,18 +81,14 @@ public class InputManager : MonoBehaviour {
             case INPUT_STATE.CREATE:
                 InitModifyProcess();
                 inputState = INPUT_STATE.NONE;
-                Debug.DrawLine(screenToWorldRay.origin,
-                    screenToWorldRay.origin + (screenToWorldRay.direction * rayHit.distance),
-                    Color.green, 2);
-                modifyTerrian.AddBlockCursor(rayHit, blockSelector.curSelectBlockType);
+                if(UIPopupManager.isAllpopupClose == true)
+                    modifyTerrian.AddBlockCursor(rayHit, blockSelector.curSelectBlockType);
                 break;
             case INPUT_STATE.DELETE:
                 InitModifyProcess();
                 inputState = INPUT_STATE.NONE;
-                Debug.DrawLine(screenToWorldRay.origin,
-                    screenToWorldRay.origin + (screenToWorldRay.direction * rayHit.distance),
-                    Color.green, 2);
-                modifyTerrian.ReplaceBlockCursor(rayHit, 0);
+                if (UIPopupManager.isAllpopupClose == true)
+                    modifyTerrian.ReplaceBlockCursor(rayHit, 0);
                 break;
             default:
                 break;
@@ -105,13 +101,11 @@ public class InputManager : MonoBehaviour {
         {
             case INPUT_STATE.INVEN_OPEN:
                 inputState = INPUT_STATE.NONE;
-                if (SceneManager.GetSceneByName("popup_inventory").isLoaded == false)
-                    SceneManager.LoadSceneAsync("popup_inventory", LoadSceneMode.Additive);
+                UIPopupManager.OpenInven();
                 break;
             case INPUT_STATE.MENU_OPEN:
                 inputState = INPUT_STATE.NONE;
-                if (SceneManager.GetSceneByName("popup_menu").isLoaded == false)
-                    SceneManager.LoadSceneAsync("popup_menu", LoadSceneMode.Additive);
+                UIPopupManager.OpenInGameMenu();
                 break;
             default:
                 break;

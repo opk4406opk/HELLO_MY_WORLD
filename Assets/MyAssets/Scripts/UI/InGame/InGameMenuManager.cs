@@ -33,7 +33,7 @@ public class InGameMenuManager : MonoBehaviour {
 
     private void CallBackPopupClose()
     {
-        SceneManager.UnloadScene("popup_menu");
+        UIPopupManager.CloseInGameMenu();
     }
 
     public void OnClickExit()

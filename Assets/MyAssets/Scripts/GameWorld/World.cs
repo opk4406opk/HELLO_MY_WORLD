@@ -45,7 +45,12 @@ public class World : MonoBehaviour
     }
     
 
-    private IEnumerator loadProcessRoutine;
+    private IEnumerator _loadProcessRoutine;
+    public IEnumerator loadProcessRoutine
+    {
+        get { return _loadProcessRoutine; }
+    }
+    
     private readonly float INTERVAL_LOAD_TIME = 1.0f;
 
     private TileDataFile worldTileDataFile;
@@ -62,15 +67,24 @@ public class World : MonoBehaviour
 
         InitWorldData();
         InitChunkGroup();
-        loadProcessRoutine = LoadProcess();
-        StartCoroutine(loadProcessRoutine);
+        if (GameStatus.isLoadGame == false)
+        {
+            InsertDefaultWorldData();
+            _loadProcessRoutine = LoadProcess();
+            StartCoroutine(_loadProcessRoutine);
+        }
+        else
+        {
+            // Game Load 라면, 기본데이터만 초기화 하고 Chunk Load는 하지 않는다.
+            _loadProcessRoutine = LoadProcess();
+        }
     }
 
     private IEnumerator LoadProcess()
     {
         while(true)
         {
-            LoadChunks(48, 256);
+            LoadChunks(48, 96);
             yield return new WaitForSeconds(INTERVAL_LOAD_TIME);
         }
     }
@@ -122,11 +136,14 @@ public class World : MonoBehaviour
 			
 		}
 	}
-  
+
     private void InitWorldData()
     {
         _worldBlockData = new byte[worldX, worldY, worldZ];
-
+    }
+  
+    private void InsertDefaultWorldData()
+    {
         for (int x = 0; x < worldX; x++)
         {
             for (int z = 0; z < worldZ; z++)
@@ -143,6 +160,7 @@ public class World : MonoBehaviour
             }
         }
     }
+
     private void InitChunkGroup()
     {
         _chunkGroup = new Chunk[Mathf.FloorToInt(worldX / chunkSize), Mathf.FloorToInt(worldY / chunkSize), Mathf.FloorToInt(worldZ / chunkSize)];

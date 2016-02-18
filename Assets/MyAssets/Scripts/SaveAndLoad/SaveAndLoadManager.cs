@@ -18,12 +18,23 @@ public class SaveAndLoadManager : MonoBehaviour {
     private readonly byte DELIMETER_AND = 199;
 
     private string filePath;
-    
+
+    [SerializeField]
+    private GameManager gameManager;
+
+    public void Init()
+    {
+        filePath = Application.persistentDataPath + "/GameSavefile.dat";
+        gameWorldList = gameManager.GetComponent<GameManager>().worldList;
+    }
+
     public void Save()
     {
         SaveProcessInit();
         for (int idx = 0; idx < gameWorldList.Count; ++idx)
             SubWorldToTotalWorld(idx);
+        // 마지막 원소에 데이터의 끝을 알리는 구분자를 넣는다.
+        mergeWorldData[mergeWorldSize - 1] = DELIMETER_END;
 
         // 파일 생성.
         BinaryFormatter bf = new BinaryFormatter();
@@ -38,14 +49,8 @@ public class SaveAndLoadManager : MonoBehaviour {
         mergeIdx = 0;
         mergeIdxOffset = 0;
 
-        GameObject gameManager = GameObject.Find("GameManager");
-        gameWorldList = gameManager.GetComponent<GameManager>().worldList;
-
         CalcWorldDataSize();
-        // 인덱스 0부터 시작하므로 총 크기에서 -1을 뺀 만큼의 크기를 할당.
-        mergeWorldData = new byte[mergeWorldSize - 1];
-
-        filePath = Application.persistentDataPath + "/GameSavefile.dat";
+        mergeWorldData = new byte[mergeWorldSize];
     }
 
     private void SubWorldToTotalWorld(int subWorldIdx)
@@ -57,11 +62,12 @@ public class SaveAndLoadManager : MonoBehaviour {
                     mergeIdx = (x * GameWorldConfig.worldY * GameWorldConfig.worldZ) + (y * GameWorldConfig.worldZ) + z;
                     mergeWorldData[mergeIdx + mergeIdxOffset] = gameWorldList[subWorldIdx].worldBlockData[x, y, z];
                 }
-        // 데이터 입력이 끝나면, 구분자를 삽입한다. 
-        if(subWorldIdx == (gameWorldList.Count-1)) mergeWorldData[++mergeIdx] = DELIMETER_END;
-        else mergeWorldData[++mergeIdx] = DELIMETER_AND;
-
-        mergeIdxOffset += ++mergeIdx;
+        
+        // 데이터 입력이 끝나면, 구분자를 삽입한다.
+        if(subWorldIdx != (gameWorldList.Count-1)) 
+            mergeWorldData[mergeIdx + mergeIdxOffset + 1] = DELIMETER_AND;
+        // Delimeter 포함하여 +2를 해줘야한다.
+        mergeIdxOffset += (mergeIdx+2);
     }
 
     public void Load()
@@ -77,7 +83,7 @@ public class SaveAndLoadManager : MonoBehaviour {
         mergeWorldData = (byte[])bf.Deserialize(fileStream);
 
         int idx = 0;
-        while(mergeWorldData[mergeIdx] != DELIMETER_END)
+        while(mergeWorldData[mergeIdxOffset] != DELIMETER_END)
         {
             TotalWorldToSubWorld(idx);
             idx++;
@@ -94,7 +100,8 @@ public class SaveAndLoadManager : MonoBehaviour {
                     gameWorldList[subWorldIdx].worldBlockData[x, y, z] = mergeWorldData[mergeIdx + mergeIdxOffset];
                 }
 
-        if(mergeWorldData[mergeIdx + 1] == DELIMETER_AND)
+        if((subWorldIdx != (gameWorldList.Count-1)) &&
+           (mergeWorldData[mergeIdx + mergeIdxOffset + 1] == DELIMETER_AND))
         {
             mergeIdx += 2;
             mergeIdxOffset += mergeIdx;
@@ -102,6 +109,7 @@ public class SaveAndLoadManager : MonoBehaviour {
         else
         {
             mergeIdx += 1;
+            mergeIdxOffset += mergeIdx;
         } 
     }
 

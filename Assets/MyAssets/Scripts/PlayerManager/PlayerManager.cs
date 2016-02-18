@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Mono.Data.Sqlite;
+using System.Data;
 
 public class PlayerManager : MonoBehaviour {
 
@@ -14,8 +16,6 @@ public class PlayerManager : MonoBehaviour {
     [SerializeField]
     private GameObject trucker_Prefab;
 
-    private SceneToScene_Data sceneToSceneData;
-
     private GameObject _gamePlayer;
     public GameObject gamePlayer
     {
@@ -26,14 +26,40 @@ public class PlayerManager : MonoBehaviour {
 
     public void Init()
     {
-        sceneToSceneData = GameObject.Find("SceneToScene_datas").GetComponent<SceneToScene_Data>();
         CreateProcess();
     }
 
+    private delegate void del_GetUserInfo();
     private void CreateProcess()
     {
-        string chName;
-        sceneToSceneData.gameChDatas.TryGetValue("chName", out chName);
+        string chName = System.String.Empty;
+        del_GetUserInfo GetUserInfo = () =>
+        {
+            string conn = "URI=file:" + Application.dataPath +
+               "/MyAssets/Resources/GameUserDB/userDB.db";
+
+            IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
+            IDbCommand dbcmd = dbconn.CreateCommand();
+            dbconn.Open(); //Open connection to the database.
+
+            string sqlQuery = "SELECT name FROM USER_INFO";
+            dbcmd.CommandText = sqlQuery;
+            IDataReader reader = dbcmd.ExecuteReader();
+
+            // 임시로 0번 레코드의 Name 필드의 값만 쓴다. 
+            reader.Read();
+            chName = reader.GetString(0); 
+            
+            reader.Close();
+            reader = null;
+            dbcmd.Dispose();
+            dbcmd = null;
+
+            dbconn.Close();
+            dbconn = null;
+        };
+        GetUserInfo();
+
         switch(chName)
         {
             case "FireFighter":

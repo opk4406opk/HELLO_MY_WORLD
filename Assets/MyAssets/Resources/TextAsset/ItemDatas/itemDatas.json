@@ -1,5 +1,5 @@
 {
-	"element_gold"       : {"type":"0", "detail":"this is gold item" },
+	"element_gold"       : {"type":"0", "detail":"황금원재료 입니다. 이를모아 금괴를 만들 수 있습니다." },
 	"element_silver"       : {"type":"0", "detail":"this is sliver item" },
 	"element_iron"       : {"type":"0", "detail":"this is iron item" },
 	"element_stone"       : {"type":"0", "detail":"this is stone item" },

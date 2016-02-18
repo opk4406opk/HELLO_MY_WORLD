@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// 게임 서브 월드의 설정을 관리하는 클래스.
+/// </summary>
 public class GameWorldConfig
 {
     private static int _worldX = 32;
@@ -36,6 +39,23 @@ public class GameWorldConfig
     }
 }
 
+/// <summary>
+/// 게임 상태( Load, Save, etc...)를 관리하는 클래스.
+/// </summary>
+public class GameStatus
+{
+    private static bool _isLoadGame = false;
+    public static bool isLoadGame
+    {
+        set { _isLoadGame = value; }
+        get { return _isLoadGame; }
+    }
+}
+
+/// <summary>
+/// 게임에 전반적인 관리를 하는 클래스.
+/// ( 게임의 시작점 )
+/// </summary>
 public class GameManager : MonoBehaviour
 {
     private int MAX_SUB_WORLD = 0;
@@ -67,6 +87,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private BlockSelector blockSelector;
 
+    [SerializeField]
+    private SaveAndLoadManager saveAndLoadManager;
+
     void Start ()
     {
         //player Init
@@ -81,9 +104,22 @@ public class GameManager : MonoBehaviour
         //InGameUI Init
         blockSelector.Init(tileData);
 
+        //saveAndLoad Init
+        saveAndLoadManager.Init();
+
         MAX_SUB_WORLD = subWorldData.maxSubWorld;
         CreateGameWorld();
+
+        if (GameStatus.isLoadGame == true)
+        {
+            saveAndLoadManager.Load();
+            foreach(World world in _worldList)
+            {
+                StartCoroutine(world.loadProcessRoutine);
+            }
+        }
     }
+
 
     private void CreateGameWorld()
     {
