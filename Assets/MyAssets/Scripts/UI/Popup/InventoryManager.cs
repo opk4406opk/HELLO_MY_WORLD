@@ -24,9 +24,6 @@ public class InventoryManager : MonoBehaviour {
 
     void Start ()
     {
-        Scene thisScene = SceneManager.GetSceneByName("popup_inventory");
-        SceneManager.SetActiveScene(thisScene);
-
         GameObject obj = GameObject.Find("ItemDataFile");
         gameItemDataFile = obj.GetComponent<ItemDataFile>();
 
@@ -46,25 +43,32 @@ public class InventoryManager : MonoBehaviour {
             "easetype", iTween.EaseType.linear,
             "looptype", iTween.LoopType.none));
     }
-    private void ScaleDownEffect()
+    private void ScaleDownEffect(string _callBack)
     {
         popupObj.transform.localScale = new Vector3(1, 1, 1);
-        Vector3 scaleUp = new Vector3(0, 0, 0);
-        iTween.ScaleTo(popupObj, iTween.Hash("scale", scaleUp,
-            "name", "scaleUp",
+        Vector3 scaleDown = new Vector3(0, 0, 0);
+        iTween.ScaleTo(popupObj, iTween.Hash("scale", scaleDown,
+            "name", "scaleDown",
             "time", 1.0f,
             "speed", 10.0f,
             "easetype", iTween.EaseType.linear,
-            "looptype", iTween.LoopType.none));
+            "looptype", iTween.LoopType.none,
+            "oncomplete", _callBack,
+            "oncompletetarget", gameObject));
     }
     public void ClickExit()
     {
-        StartCoroutine(PopupExitProcess());
+        PopupExitProcess();
     }
-    private IEnumerator PopupExitProcess()
+    private void PopupExitProcess()
     {
-        ScaleDownEffect();
-        yield return new WaitForSeconds(0.2f);
+        ScaleDownEffect("CallBackPopupClose");
+    }
+    /// <summary>
+    /// ScaleDown 애니메이션이 종료된 후, 호출되어지는 팝업창 종료 메소드.
+    /// </summary>
+    private void CallBackPopupClose()
+    {
         SceneManager.UnloadScene("popup_inventory");
     }
 
@@ -85,7 +89,6 @@ public class InventoryManager : MonoBehaviour {
             itemSlotList.Add(newItem.GetComponent<ItemData>());
         }
         uiGridObj.GetComponent<UIGrid>().Reposition();
-
     }
 
     private delegate void del_GetUserItems();
@@ -129,7 +132,7 @@ public class InventoryManager : MonoBehaviour {
             if (itemSlotIdx > defaultItemSlot) CreateEmptySlot(10);
 
             // set user item info
-            itemSlotList[itemSlotIdx].name = uitem.name;
+            itemSlotList[itemSlotIdx].itemName = uitem.name;
             itemSlotList[itemSlotIdx].amount = uitem.amount.ToString();
             itemSlotList[itemSlotIdx].type = uitem.type.ToString();
             // set item detail info

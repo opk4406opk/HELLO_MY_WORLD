@@ -62,13 +62,7 @@ public class ModifyTerrain : MonoBehaviour
     {
         //adds the specified block at these coordinates
         print("Adding: " + x + ", " + y + ", " + z);
-
-        //if (_world.worldBlockData[x + 1, y, z] == 254) _world.worldBlockData[x + 1, y, z] = 255;
-        //if (_world.worldBlockData[x - 1, y, z] == 254) _world.worldBlockData[x - 1, y, z] = 255;
-        //if (_world.worldBlockData[x, y, z + 1] == 254) _world.worldBlockData[x, y, z + 1] = 255;
-        //if (_world.worldBlockData[x, y, z - 1] == 254) _world.worldBlockData[x, y, z - 1] = 255;
-        //if (_world.worldBlockData[x, y + 1, z] == 254) _world.worldBlockData[x, y + 1, z] = 255;
-
+        
         _world.worldBlockData[x, y, z] = block;
 
         UpdateChunkAt(x, y, z, block);
@@ -86,35 +80,35 @@ public class ModifyTerrain : MonoBehaviour
 
         _world.chunkGroup[updateX, updateY, updateZ].update = true;
 
-        //if (x - (chunkSize * updateX) == 0 && updateX != 0)
-        //{
-        //    _world.chunkGroup[updateX - 1, updateY, updateZ].update = true;
-        //}
+        if (x - (chunkSize * updateX) == 0 && updateX != 0)
+        {
+            _world.chunkGroup[updateX - 1, updateY, updateZ].update = true;
+        }
 
-        //if (x - (chunkSize * updateX) == 15 && updateX != _world.chunkGroup.GetLength(0) - 1)
-        //{
-        //    _world.chunkGroup[updateX + 1, updateY, updateZ].update = true;
-        //}
+        if (x - (chunkSize * updateX) == GameWorldConfig.chunkSize && updateX != _world.chunkGroup.GetLength(0) - 1)
+        {
+            _world.chunkGroup[updateX + 1, updateY, updateZ].update = true;
+        }
 
-        //if (y - (chunkSize * updateY) == 0 && updateY != 0)
-        //{
-        //    _world.chunkGroup[updateX, updateY - 1, updateZ].update = true;
-        //}
+        if (y - (chunkSize * updateY) == 0 && updateY != 0)
+        {
+            _world.chunkGroup[updateX, updateY - 1, updateZ].update = true;
+        }
 
-        //if (y - (chunkSize * updateY) == 15 && updateY != _world.chunkGroup.GetLength(1) - 1)
-        //{
-        //    _world.chunkGroup[updateX, updateY + 1, updateZ].update = true;
-        //}
+        if (y - (chunkSize * updateY) == GameWorldConfig.chunkSize && updateY != _world.chunkGroup.GetLength(1) - 1)
+        {
+            _world.chunkGroup[updateX, updateY + 1, updateZ].update = true;
+        }
 
-        //if (z - (chunkSize * updateZ) == 0 && updateZ != 0)
-        //{
-        //    _world.chunkGroup[updateX, updateY, updateZ - 1].update = true;
-        //}
+        if (z - (chunkSize * updateZ) == 0 && updateZ != 0)
+        {
+            _world.chunkGroup[updateX, updateY, updateZ - 1].update = true;
+        }
 
-        //if (z - (chunkSize * updateZ) == 15 && updateZ != _world.chunkGroup.GetLength(2) - 1)
-        //{
-        //    _world.chunkGroup[updateX, updateY, updateZ + 1].update = true;
-        //}
+        if (z - (chunkSize * updateZ) == GameWorldConfig.chunkSize && updateZ != _world.chunkGroup.GetLength(2) - 1)
+        {
+            _world.chunkGroup[updateX, updateY, updateZ + 1].update = true;
+        }
 
     }
 

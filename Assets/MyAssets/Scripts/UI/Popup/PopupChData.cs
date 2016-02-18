@@ -19,9 +19,6 @@ public class PopupChData : MonoBehaviour
 
     void Start()
     {
-        Scene thisScene = SceneManager.GetSceneByName("popup_chInfo");
-        SceneManager.SetActiveScene(thisScene);
-
         SetData();
         ScaleUpEffect();
     }
@@ -37,21 +34,23 @@ public class PopupChData : MonoBehaviour
             "easetype", iTween.EaseType.linear,
             "looptype", iTween.LoopType.none));
     }
-    private void ScaleDownEffect()
+    private void ScaleDownEffect(string _callBack)
     {
         popupObj.transform.localScale = new Vector3(1, 1, 1);
-        Vector3 scaleUp = new Vector3(0, 0, 0);
-        iTween.ScaleTo(popupObj, iTween.Hash("scale", scaleUp,
-            "name", "scaleUp",
+        Vector3 scaleDown = new Vector3(0, 0, 0);
+        iTween.ScaleTo(popupObj, iTween.Hash("scale", scaleDown,
+            "name", "scaleDown",
             "time", 1.0f,
             "speed", 10.0f,
             "easetype", iTween.EaseType.linear,
-            "looptype", iTween.LoopType.none));
+            "looptype", iTween.LoopType.none,
+            "oncomplete", _callBack,
+            "oncompletetarget", gameObject));
     }
 
     public void ClickExit()
     {
-        StartCoroutine(PopupExitProcess());
+        PopupExitProcess();
     }
 
     private delegate void del_InsertNewUserInfo();
@@ -80,20 +79,31 @@ public class PopupChData : MonoBehaviour
         };
         InsertInfo();
 
-        StartCoroutine(GameLoadingProcess());
+        GameLoadingProcess();
     }
 
-    private IEnumerator GameLoadingProcess()
+    private void GameLoadingProcess()
     {
-        ScaleDownEffect();
-        yield return new WaitForSeconds(0.2f);
+        ScaleDownEffect("CallBackGameLoading");
+    }
+    /// <summary>
+    /// ScaleDown 애니메이션이 종료된 후, 호출되어지는 InGame 로딩 메소드.
+    /// </summary>
+    private void CallBackGameLoading()
+    {
         SceneManager.LoadSceneAsync("GameLoading");
     }
 
-    private IEnumerator PopupExitProcess()
+    private void PopupExitProcess()
     {
-        ScaleDownEffect();
-        yield return new WaitForSeconds(0.2f);
+        ScaleDownEffect("CallBackPopupClose");
+    }
+
+    /// <summary>
+    /// ScaleDown 애니메이션이 종료된 후, 호출되어지는 팝업창 종료 메소드.
+    /// </summary>
+    private void CallBackPopupClose()
+    {
         SceneManager.UnloadScene("popup_chInfo");
     }
 

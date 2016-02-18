@@ -17,9 +17,6 @@ public class Chunk : MonoBehaviour
 
     // 256 x 256 tile 기준. 1tile(16pixel) 이 차지하는 텍스처 좌표값.  16/256
     private float tUnit = 0.0625f;
-    private Vector2 tStone = new Vector2(0, 14);
-    private Vector2 tGrass = new Vector2(0, 15);
-    private Vector2 tGrassTop = new Vector2(0, 15);
 
     private Vector2 texturePos;
 
@@ -89,6 +86,7 @@ public class Chunk : MonoBehaviour
                         //if (Block(x - 1, y, z) == 0) CubeWest(x, y, z, Block(x, y, z));
                         //if (Block(x, y, z + 1) == 0) CubeNorth(x, y, z, Block(x, y, z));
                         //if (Block(x, y, z - 1) == 0) CubeSouth(x, y, z, Block(x, y, z));
+
                         if (Block(x, y + 1, z) == 0) CubeTop(x, y, z, Block(x, y, z));
                         if (Block(x, y - 1, z) == 0) CubeBot(x, y, z, Block(x, y, z));
                         CubeNorth(x, y, z, Block(x, y, z));

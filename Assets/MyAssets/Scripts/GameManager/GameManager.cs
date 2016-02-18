@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class GameWorldConfig
 {
-    private static int _worldX = 64;
+    private static int _worldX = 32;
     public static int worldX
     {
         get { return _worldX; }
@@ -14,7 +14,7 @@ public class GameWorldConfig
     {
         get { return _worldY; }
     }
-    private static int _worldZ = 64;
+    private static int _worldZ = 32;
     public static int worldZ
     {
         get { return _worldZ; }
@@ -39,7 +39,12 @@ public class GameWorldConfig
 public class GameManager : MonoBehaviour
 {
     private int MAX_SUB_WORLD = 0;
-    private Dictionary<string, World> worldDictionary = new Dictionary<string, World>();
+
+    private List<World> _worldList = new List<World>();
+    public List<World> worldList
+    {
+        get { return _worldList; }
+    }
 
     [SerializeField]
     private SubWorldDataFile subWorldData;
@@ -61,7 +66,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private BlockSelector blockSelector;
-    
+
     void Start ()
     {
         //player Init
@@ -75,7 +80,6 @@ public class GameManager : MonoBehaviour
 
         //InGameUI Init
         blockSelector.Init(tileData);
-
 
         MAX_SUB_WORLD = subWorldData.maxSubWorld;
         CreateGameWorld();
@@ -97,7 +101,7 @@ public class GameManager : MonoBehaviour
             newSubWorld.name = subWorldName; 
             newSubWorld.transform.parent = worldGroupTrans;
             //add world.
-            worldDictionary.Add(subWorldName, newSubWorld.GetComponent<World>());
+            _worldList.Add(newSubWorld.GetComponent<World>());
         }
     }
 	

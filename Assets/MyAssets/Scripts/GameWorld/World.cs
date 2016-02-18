@@ -23,7 +23,11 @@ public class World : MonoBehaviour
     ///<summary>
     /// 월드의 모든 블록(타일Type값)성질을 저장하는 배열.
     ///</summary>
-    public byte[,,] worldBlockData;
+    private byte[,,] _worldBlockData;
+    public byte[,,] worldBlockData
+    {
+        get { return _worldBlockData; }
+    }
 
 	private int worldX = 0;
     private int worldY = 0;
@@ -96,8 +100,8 @@ public class World : MonoBehaviour
         for (int y = 0; y < _chunkGroup.GetLength(1); y++)
         {
             //subWorld offset 크기만큼 실제 chunk의 world Position에 적용.
-            GameObject newChunk = Instantiate(_chunkPrefab, new Vector3((x + _chunkOffsetX) * chunkSize,
-                                                y * chunkSize, (z + _chunkOffsetZ) * chunkSize),
+            GameObject newChunk = Instantiate(_chunkPrefab, new Vector3((x + _chunkOffsetX) * chunkSize - 0.5f,
+                                                y * chunkSize + 0.5f, (z + _chunkOffsetZ) * chunkSize - 0.5f),
                                                 new Quaternion(0, 0, 0, 0)) as GameObject;
 
             newChunk.transform.parent = gameObject.transform;
@@ -121,7 +125,7 @@ public class World : MonoBehaviour
   
     private void InitWorldData()
     {
-        worldBlockData = new byte[worldX, worldY, worldZ];
+        _worldBlockData = new byte[worldX, worldY, worldZ];
 
         for (int x = 0; x < worldX; x++)
         {
@@ -133,8 +137,8 @@ public class World : MonoBehaviour
 
                 for (int y = 0; y < worldY; y++)
                 {
-                    if (y <= stone) worldBlockData[x, y, z] = (byte)worldTileDataFile.GetTileData("STONE_BIG").type;
-                    else if (y <= dirt + stone) worldBlockData[x, y, z] = (byte)worldTileDataFile.GetTileData("GRASS").type;
+                    if (y <= stone) _worldBlockData[x, y, z] = (byte)worldTileDataFile.GetTileData("STONE_BIG").type;
+                    else if (y <= dirt + stone) _worldBlockData[x, y, z] = (byte)worldTileDataFile.GetTileData("GRASS").type;
                 }
             }
         }
@@ -168,6 +172,6 @@ public class World : MonoBehaviour
 			return (byte)1;
 		}
    
-		return worldBlockData [x, y, z];
+		return _worldBlockData [x, y, z];
 	}
 }

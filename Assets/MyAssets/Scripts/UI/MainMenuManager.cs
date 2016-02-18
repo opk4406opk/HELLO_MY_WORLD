@@ -3,23 +3,22 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 public class MainMenuManager : MonoBehaviour {
 
-
-    public void ClickStart()
+    public void OnClickStart()
     {
         SceneManager.LoadSceneAsync("SelectCharacter");
     }
 
-    public void ClickLoad()
+    public void OnClickLoad()
     {
-
+        
     }
     
-    public void ClickSettings()
+    public void OnClickSettings()
     {
 
     }
 
-    public void ClickExit()
+    public void OnClickExit()
     {
         Application.Quit();
     }

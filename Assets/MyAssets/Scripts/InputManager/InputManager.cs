@@ -6,7 +6,6 @@ public class InputManager : MonoBehaviour {
 
     [SerializeField]
     private ModifyTerrain modifyTerrian;
-
     [SerializeField]
     private BlockSelector blockSelector;
 
@@ -18,7 +17,8 @@ public class InputManager : MonoBehaviour {
         CREATE = 1,
         DELETE = 2,
         ATTACK = 3,
-        INVEN_OPEN = 4
+        INVEN_OPEN = 4,
+        MENU_OPEN = 5
     }
     private INPUT_STATE inputState = INPUT_STATE.NONE;
     
@@ -51,6 +51,10 @@ public class InputManager : MonoBehaviour {
         {
             inputState = INPUT_STATE.INVEN_OPEN;
         }
+        else if (Input.GetKeyDown(KeyCode.F10))
+        {
+            inputState = INPUT_STATE.MENU_OPEN;
+        }
         else
         {
             inputState = INPUT_STATE.NONE;
@@ -63,7 +67,6 @@ public class InputManager : MonoBehaviour {
         if (Physics.Raycast(screenToWorldRay, out rayHit) &&
             (rayHit.transform.CompareTag("Chunk")))
         {
-            Debug.Log("hit : " + rayHit.transform.name);
             return true;
         }
         else
@@ -104,6 +107,11 @@ public class InputManager : MonoBehaviour {
                 inputState = INPUT_STATE.NONE;
                 if (SceneManager.GetSceneByName("popup_inventory").isLoaded == false)
                     SceneManager.LoadSceneAsync("popup_inventory", LoadSceneMode.Additive);
+                break;
+            case INPUT_STATE.MENU_OPEN:
+                inputState = INPUT_STATE.NONE;
+                if (SceneManager.GetSceneByName("popup_menu").isLoaded == false)
+                    SceneManager.LoadSceneAsync("popup_menu", LoadSceneMode.Additive);
                 break;
             default:
                 break;

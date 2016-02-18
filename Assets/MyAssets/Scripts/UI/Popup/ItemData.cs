@@ -17,11 +17,11 @@ public class ItemData : MonoBehaviour {
         get { return _type; }
     }
 
-    private string _name;
-    public string name
+    private string _itemName;
+    public string itemName
     {
-        set { _name = value; }
-        get { return _name; }
+        set { _itemName = value; }
+        get { return _itemName; }
     }
 
     private string _detailInfo;
@@ -50,7 +50,7 @@ public class ItemData : MonoBehaviour {
 
     public void InitData()
     {
-        spr_itemImage.spriteName = _name;
+        spr_itemImage.spriteName = _itemName;
         lbl_amount.text = _amount;
     }
 }
