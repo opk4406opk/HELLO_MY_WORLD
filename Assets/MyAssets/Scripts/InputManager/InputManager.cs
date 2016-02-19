@@ -112,6 +112,11 @@ public class InputManager : MonoBehaviour {
         }
     }
 
+    private void CursorModeProcess()
+    {
+        
+    }
+
     private void InitModifyProcess()
     {
         World world = rayHit.transform.GetComponent<Chunk>().world;

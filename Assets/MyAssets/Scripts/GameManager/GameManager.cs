@@ -104,20 +104,14 @@ public class GameManager : MonoBehaviour
         //InGameUI Init
         blockSelector.Init(tileData);
 
-        //saveAndLoad Init
-        saveAndLoadManager.Init();
-
+        //GameWorld Init
         MAX_SUB_WORLD = subWorldData.maxSubWorld;
         CreateGameWorld();
 
-        if (GameStatus.isLoadGame == true)
-        {
-            saveAndLoadManager.Load();
-            foreach(World world in _worldList)
-            {
-                StartCoroutine(world.loadProcessRoutine);
-            }
-        }
+        //saveAndLoad Init
+        saveAndLoadManager.Init();
+
+        if (GameStatus.isLoadGame == true) { saveAndLoadManager.Load(); }
     }
 
 

@@ -19,6 +19,12 @@ public class UIPopupManager : MonoBehaviour {
         get { return _isGameMenuOpen; }
     }
 
+    private static bool _isGameMessageOpen = false;
+    public static bool isGameMessageOpen
+    {
+        get { return _isGameMenuOpen; }
+    }
+
     private static bool _isAllPopupClose = false;
     public static bool isAllpopupClose
     {
@@ -66,5 +72,17 @@ public class UIPopupManager : MonoBehaviour {
     {
         SceneManager.UnloadScene("popup_menu");
         _isGameMenuOpen = false;
+    }
+
+    public static void OpenGameMessage()
+    {
+        SceneManager.LoadSceneAsync("popup_message", LoadSceneMode.Additive);
+        _isGameMessageOpen = true;
+    }
+
+    public static void CloseGameMessage()
+    {
+        SceneManager.UnloadScene("popup_message");
+        _isGameMessageOpen = false;
     }
 }

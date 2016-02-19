@@ -75,7 +75,6 @@ public class World : MonoBehaviour
         }
         else
         {
-            // Game Load 라면, 기본데이터만 초기화 하고 Chunk Load는 하지 않는다.
             _loadProcessRoutine = LoadProcess();
         }
     }
