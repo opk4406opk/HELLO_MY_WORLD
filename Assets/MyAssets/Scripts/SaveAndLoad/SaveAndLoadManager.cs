@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using Mono.Data.Sqlite;
 using System.Data;
+using System;
 
 public class SaveAndLoadManager : MonoBehaviour {
 
@@ -28,18 +29,23 @@ public class SaveAndLoadManager : MonoBehaviour {
 
     public void Init()
     {
-        filePath = Application.persistentDataPath + "/GameSavefile.dat";
+        filePath = Application.dataPath + "/GameSavefile.dat";
         gameWorldList = gameManager.GetComponent<GameManager>().worldList;
         lzfCompress = new LZFCompress();
         CalcWorldDataSize();
     }
 
-    public void Save()
+    public bool Save()
     {
         //init
         mergeIdx = 0;
         mergeIdxOffset = 0;
         mergeWorldData = new byte[mergeWorldSize];
+
+        // 파일 생성.
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream fileStream = File.Open(filePath, FileMode.OpenOrCreate);
+        if (fileStream == null) return false;
 
         for (int idx = 0; idx < gameWorldList.Count; ++idx)
             SubWorldToTotalWorld(idx);
@@ -54,13 +60,12 @@ public class SaveAndLoadManager : MonoBehaviour {
 
         for (int idx = 0; idx < compressedSize; ++idx)
             compressedData[idx] = outputData[idx];
-
-        // 파일 생성.
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream fileStream = File.Open(filePath, FileMode.OpenOrCreate);
+        
         // 시리얼라이징.
         bf.Serialize(fileStream, compressedData);
         fileStream.Close();
+
+        return true;
     }
   
     private void SubWorldToTotalWorld(int subWorldIdx)
@@ -81,16 +86,18 @@ public class SaveAndLoadManager : MonoBehaviour {
     }
 
     private delegate void del_GetMergeWorldSize();
-    public void Load()
+    public bool Load()
     {
         //init
         mergeIdx = 0;
         mergeIdxOffset = 0;
+        // path 초기화는 임시로 넣은코드. 원래 Init()에서 처리한다. - comment by jjw 2016-02-20.
+        filePath = Application.dataPath + "/GameSavefile.dat";
 
         del_GetMergeWorldSize GetMergeWorldSize = () =>
         {
             string conn = "URI=file:" + Application.dataPath +
-              "/MyAssets/Resources/GameUserDB/userDB.db";
+              "/StreamingAssets/GameUserDB/userDB.db";
 
             IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
             IDbCommand dbcmd = dbconn.CreateCommand();
@@ -115,6 +122,7 @@ public class SaveAndLoadManager : MonoBehaviour {
         //파일 생성.
         BinaryFormatter bf = new BinaryFormatter();
         FileStream fileStream = File.Open(filePath, FileMode.Open);
+        if (fileStream == null) return false;
         // DeSerialzing ( decode..)
         byte[] compressedData = (byte[])bf.Deserialize(fileStream);
         int compressedSize = compressedData.Length;
@@ -133,6 +141,9 @@ public class SaveAndLoadManager : MonoBehaviour {
         {
             StartCoroutine(world.loadProcessRoutine);
         }
+
+        fileStream.Close();
+        return true;
     }
 
     private void TotalWorldToSubWorld(int subWorldIdx)
@@ -174,7 +185,7 @@ public class SaveAndLoadManager : MonoBehaviour {
         del_GetRecordNum GetRecordNum = () =>
         {
             string conn = "URI=file:" + Application.dataPath +
-               "/MyAssets/Resources/GameUserDB/userDB.db";
+               "/StreamingAssets/GameUserDB/userDB.db";
 
             IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
             IDbCommand dbcmd = dbconn.CreateCommand();
@@ -196,7 +207,7 @@ public class SaveAndLoadManager : MonoBehaviour {
         del_UpdateMergeWorldSize UpdateMergeWorldSize = () =>
         {
             string conn = "URI=file:" + Application.dataPath +
-               "/MyAssets/Resources/GameUserDB/userDB.db";
+               "/StreamingAssets/GameUserDB/userDB.db";
 
             IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
             IDbCommand dbcmd = dbconn.CreateCommand();
@@ -216,7 +227,7 @@ public class SaveAndLoadManager : MonoBehaviour {
         del_InSertMergeWorldSize InSertMergeWorldSize = () =>
         {
             string conn = "URI=file:" + Application.dataPath +
-               "/MyAssets/Resources/GameUserDB/userDB.db";
+               "/StreamingAssets/GameUserDB/userDB.db";
 
             IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
             IDbCommand dbcmd = dbconn.CreateCommand();

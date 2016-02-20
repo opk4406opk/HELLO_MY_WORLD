@@ -63,7 +63,20 @@ public class ModifyTerrain : MonoBehaviour
         //adds the specified block at these coordinates
         print("Adding: " + x + ", " + y + ", " + z);
         
-        _world.worldBlockData[x, y, z] = block;
+        if((x < GameWorldConfig.worldX) &&
+           (y < GameWorldConfig.worldY) &&
+           (z < GameWorldConfig.worldZ) &&
+           (x >= 0) && (y >= 0) && (z >= 0)) 
+        {
+            _world.worldBlockData[x, y, z] = block;
+        }
+        else
+        {
+            GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.CANT_CREATE_BLOCK;
+            GameMessage.SetMessage("허용 범위를 벗어나 블록 생성이 불가능합니다. (구조적 문제로 인해 수정중입니다. 기다려주세요.)");
+            UIPopupManager.OpenGameMessage();
+        }
+        
 
         UpdateChunkAt(x, y, z, block);
     }

@@ -1,0 +1,7 @@
+InGame  = 0
+
+popup
+1. iven = 10
+2. menu = 30
+3. message = 40
+4. chInfo = 10

@@ -9,7 +9,8 @@ public class GameMessage
         WORLD_LOAD_FAIL = 1,
         WORLD_SAVE_FAIL = 2,
         WORLD_LOAD_SUCCESS = 3,
-        WORLD_SAVE_SUCCESS = 4
+        WORLD_SAVE_SUCCESS = 4,
+        CANT_CREATE_BLOCK = 5
     }
 
     private static MESSAGE_TYPE _curGameMsgType = MESSAGE_TYPE.NONE;
@@ -39,6 +40,10 @@ public class GameMessage
             case MESSAGE_TYPE.WORLD_SAVE_SUCCESS:
                 PlayerPrefs.SetString("WORLD_SAVE_SUCCESS", _message);
                 curKeyString = "WORLD_SAVE_SUCCESS";
+                break;
+            case MESSAGE_TYPE.CANT_CREATE_BLOCK:
+                PlayerPrefs.SetString("CANT_CREATE_BLOCK", _message);
+                curKeyString = "CANT_CREATE_BLOCK";
                 break;
             default:
                 break;

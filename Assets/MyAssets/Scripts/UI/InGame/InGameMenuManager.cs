@@ -18,12 +18,34 @@ public class InGameMenuManager : MonoBehaviour {
 
     public void OnClickSave()
     {
-        saveAndLoadManager.Save();
+        if(saveAndLoadManager.Save())
+        {
+            GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.WORLD_SAVE_SUCCESS;
+            GameMessage.SetMessage("게임 세이브에 성공했습니다.");
+            UIPopupManager.OpenGameMessage();
+        }
+        else
+        {
+            GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.WORLD_SAVE_FAIL;
+            GameMessage.SetMessage("게임 세이브에 실패했습니다.");
+            UIPopupManager.OpenGameMessage();
+        }
     }
 
     public void OnClickLoad()
     {
-        saveAndLoadManager.Load();
+        if (saveAndLoadManager.Load())
+        {
+            GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.WORLD_LOAD_SUCCESS;
+            GameMessage.SetMessage("게임 로드에 성공했습니다.");
+            UIPopupManager.OpenGameMessage();
+        }
+        else
+        {
+            GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.WORLD_LOAD_FAIL;
+            GameMessage.SetMessage("게임 로드에 실패했습니다.");
+            UIPopupManager.OpenGameMessage();
+        }
     }
 
     public void OnClickClose()

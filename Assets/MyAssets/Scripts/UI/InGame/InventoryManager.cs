@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using Mono.Data.Sqlite;
 using System.Data;
+using System;
 
 public class InventoryManager : MonoBehaviour {
 
@@ -97,7 +98,7 @@ public class InventoryManager : MonoBehaviour {
         del_GetUserItems GetUserItems = () =>
         {
             string conn = "URI=file:" + Application.dataPath +
-               "/MyAssets/Resources/GameUserDB/userDB.db";
+               "/StreamingAssets/GameUserDB/userDB.db";
 
             IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
             IDbCommand dbcmd = dbconn.CreateCommand();

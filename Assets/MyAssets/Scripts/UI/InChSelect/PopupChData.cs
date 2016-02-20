@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using Mono.Data.Sqlite;
 using System.Data;
+using System;
 
 public class PopupChData : MonoBehaviour
 {
@@ -59,7 +60,7 @@ public class PopupChData : MonoBehaviour
         del_InsertNewUserInfo InsertInfo = () =>
         {
             string conn = "URI=file:" + Application.dataPath +
-               "/MyAssets/Resources/GameUserDB/userDB.db";
+               "/StreamingAssets/GameUserDB/userDB.db";
 
             IDbConnection dbconn = new SqliteConnection(conn);
             IDbCommand dbcmd = dbconn.CreateCommand();

@@ -31,7 +31,8 @@ public class UIPopupManager : MonoBehaviour {
         get
         {
             if ((_isInvenOpen == false) &&
-               (_isGameMenuOpen == false))
+               (_isGameMenuOpen == false) &&
+               (_isGameMessageOpen == false))
             {
                 _isAllPopupClose = true;
                 return _isAllPopupClose;
@@ -76,8 +77,12 @@ public class UIPopupManager : MonoBehaviour {
 
     public static void OpenGameMessage()
     {
-        SceneManager.LoadSceneAsync("popup_message", LoadSceneMode.Additive);
-        _isGameMessageOpen = true;
+        if(_isGameMessageOpen == false)
+        {
+            SceneManager.LoadSceneAsync("popup_message", LoadSceneMode.Additive);
+            _isGameMessageOpen = true;
+            _isAllPopupClose = false;
+        }
     }
 
     public static void CloseGameMessage()

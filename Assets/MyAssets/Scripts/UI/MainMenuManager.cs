@@ -40,12 +40,14 @@ public class MainMenuManager : MonoBehaviour {
      
     private bool ChkIsFile()
     {
+        BinaryFormatter bf;
+        FileStream fileStream;
         try
         {
-            string filePath = Application.persistentDataPath + "/GameSavefile.dat";
+            string filePath = Application.dataPath + "/GameSavefile.dat";
             //파일 생성.
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream fileStream = File.Open(filePath, FileMode.Open);
+            bf = new BinaryFormatter();
+            fileStream = File.Open(filePath, FileMode.Open);
             if (fileStream != null) fileStream.Close();
             return true;
         }

@@ -2,6 +2,7 @@
 using System.Collections;
 using Mono.Data.Sqlite;
 using System.Data;
+using System;
 
 public class PlayerManager : MonoBehaviour {
 
@@ -36,7 +37,7 @@ public class PlayerManager : MonoBehaviour {
         del_GetUserInfo GetUserInfo = () =>
         {
             string conn = "URI=file:" + Application.dataPath +
-               "/MyAssets/Resources/GameUserDB/userDB.db";
+               "/StreamingAssets/GameUserDB/userDB.db";
 
             IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
             IDbCommand dbcmd = dbconn.CreateCommand();
