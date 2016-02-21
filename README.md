@@ -13,5 +13,5 @@ Reference link : http://studentgamedev.blogspot.kr/2013/08/unity-voxel-tutorial-
 2. 개발언어 : C#
 3. 사용 Lib : Itween, NGUI 3.x, JSONObject
 
--> 현재 기본 게임 플레이가 가능한 상태이며, 개발 진행중이기에 일부 버그가 있습니다.
+-> 현재 기본 게임 플레이가 가능한 상태이며, 개발 진행중이기에 일부 버그가 있습니다.<br>
 -> 블록을 생성/수정 하는 게임 방식 외에 RPG 성향이 섞여있습니다. ( 추후 계속 추가 예정.)
