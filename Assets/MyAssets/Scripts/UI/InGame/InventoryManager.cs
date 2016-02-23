@@ -146,8 +146,26 @@ public class InventoryManager : MonoBehaviour {
             itemSlotList[itemSlotIdx].InitData();
             itemSlotList[itemSlotIdx].OnInfo();
 
+            //set event delegate
+            Ed_OnClickItem = new EventDelegate(this, "OnClickItem");
+            Ed_OnClickItem.parameters[0].value = itemSlotList[itemSlotIdx];
+            itemSlotList[itemSlotIdx].GetComponent<UIButton>().onClick.Add(Ed_OnClickItem);
+
             itemSlotIdx++;
         }
+    }
+
+    private EventDelegate Ed_OnClickItem;
+    private void OnClickItem(ItemData itemData)
+    {
+        GameObject sceneToSceneData = GameObject.Find("SceneToScene_datas");
+        sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Clear();
+        sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Add("itemName", itemData.itemName);
+        sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Add("type", itemData.type);
+        sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Add("amount", itemData.amount);
+        sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Add("detailInfo", itemData.detailInfo);
+
+        UIPopupManager.OpenElementItemData();
     }
 
 }

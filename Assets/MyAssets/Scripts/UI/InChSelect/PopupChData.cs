@@ -52,7 +52,7 @@ public class PopupChData : MonoBehaviour
             "oncompletetarget", gameObject));
     }
 
-    public void ClickExit()
+    public void OnClickClose()
     {
         PopupExitProcess();
     }

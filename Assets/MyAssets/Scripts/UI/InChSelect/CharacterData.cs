@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// 게임 캐릭터 선택창에 등록되어 있는 캐릭터 카드들의 상태를 저장하고 있는 클래스.
+/// </summary>
 public class CharacterData : MonoBehaviour {
 
     private string _chName;
