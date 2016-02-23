@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+///  c# 심플 노이즈 생성 클래스. 
+/// </summary>
 public static class Noise
 {
     static Noise()

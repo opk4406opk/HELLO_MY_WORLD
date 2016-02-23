@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
  
+/// <summary>
+/// 게임내 월드를 생성 및 관리하는 클래스.
+/// </summary>
 public class World : MonoBehaviour
 {
     private Transform _playerTrans;

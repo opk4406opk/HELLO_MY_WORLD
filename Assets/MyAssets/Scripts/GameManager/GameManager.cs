@@ -83,12 +83,13 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private PlayerManager playerManager;
-
     [SerializeField]
     private BlockSelector blockSelector;
-
     [SerializeField]
     private SaveAndLoadManager saveAndLoadManager;
+    [SerializeField]
+    private LootingSystem lootingSystem;
+
 
     void Start ()
     {
@@ -100,6 +101,9 @@ public class GameManager : MonoBehaviour
         itemData.Init();
         tileData.Init();
         subWorldData.Init();
+
+        //LootingSystem Init;
+        lootingSystem.Init();
 
         //InGameUI Init
         blockSelector.Init(tileData);

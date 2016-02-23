@@ -2,6 +2,9 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// 게임내 메뉴 팝업창을 관리하는 클래스.
+/// </summary>
 public class InGameMenuManager : MonoBehaviour {
 
     private SaveAndLoadManager saveAndLoadManager;

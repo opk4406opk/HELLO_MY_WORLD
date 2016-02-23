@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// 게임내에서 사용자가 사용하고 싶은 블록을 선택하는 벨트를 관리하는 클래스.
+/// </summary>
 public class BlockSelector : MonoBehaviour {
 
     private TileDataFile tileDataFile;

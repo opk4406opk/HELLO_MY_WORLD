@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// 게임 캐릭터 선택하는 창을 관리하는 클래스.
+/// </summary>
 public class ChSelectManager : MonoBehaviour
 {
     private JSONObject chDatajsonObj;

@@ -5,6 +5,9 @@ using Mono.Data.Sqlite;
 using System.Data;
 using System;
 
+/// <summary>
+/// 캐릭터 선택창에서 팝업되는 세부정보를 관리하는 클래스.
+/// </summary>
 public class PopupChData : MonoBehaviour
 {
     [SerializeField]
@@ -64,19 +67,27 @@ public class PopupChData : MonoBehaviour
 
             IDbConnection dbconn = new SqliteConnection(conn);
             IDbCommand dbcmd = dbconn.CreateCommand();
-            dbconn.Open(); //Open connection to the database.
+            try
+            {
+                dbconn.Open(); //Open connection to the database.
 
-            string sqlQuery =
-            "INSERT INTO USER_INFO(name, level, type) " +
-            "VALUES(" + "'" + chName.text + "'" + ", " +
-            "'" + chLevel.text + "'" + ", " +
-            "'" + chType.text + "'" + ")";
+                string sqlQuery =
+                "INSERT INTO USER_INFO(name, level, type) " +
+                "VALUES(" + "'" + chName.text + "'" + ", " +
+                "'" + chLevel.text + "'" + ", " +
+                "'" + chType.text + "'" + ")";
 
-            dbcmd.CommandText = sqlQuery;
-            dbcmd.ExecuteNonQuery();
+                dbcmd.CommandText = sqlQuery;
+                dbcmd.ExecuteNonQuery();
 
-            dbcmd.Dispose();
-            dbconn.Close();
+                dbcmd.Dispose();
+                dbconn.Close();
+            }
+            catch
+            {
+                dbcmd.Dispose();
+                dbconn.Close();
+            }
         };
         InsertInfo();
 

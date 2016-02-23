@@ -5,6 +5,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using System.IO;
 using System.Text;
+
+/// <summary>
+/// 첫 게임메인화면을 관리하는 클래스.
+/// </summary>
 public class MainMenuManager : MonoBehaviour {
 
     public void OnClickStart()

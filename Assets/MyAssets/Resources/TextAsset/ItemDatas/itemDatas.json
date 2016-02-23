@@ -1,8 +1,22 @@
 {
-	"element_gold"       : {"type":"0", "detail":"황금원재료 입니다. 이를모아 금괴를 만들 수 있습니다." },
-	"element_silver"       : {"type":"0", "detail":"this is sliver item" },
-	"element_iron"       : {"type":"0", "detail":"this is iron item" },
-	"element_stone"       : {"type":"0", "detail":"this is stone item" },
-	"element_wood"       : {"type":"0", "detail":"this is wood item" },
-	"element_dark_stone"       : {"type":"0", "detail":"very secret material.." }
+	"element_gold"       : {"type":"0",
+							"detail":"황금원재료 입니다. 이를모아 금괴를 만들 수 있습니다." },
+	"element_silver"       : {"type":"0",
+							  "detail":"this is sliver item" },
+	"element_iron"       : {"type":"0",
+							"detail":"this is iron item" },
+	"element_small_stone" : {"type":"0",
+							"detail":"this is small Stone item" },
+	"element_big_stone"   : {"type":"0",
+							"detail":"this is big Stone item" },						
+	"element_wood"       : {"type":"0",
+							"detail":"this is wood item" },
+	"element_sand"       : {"type":"0",
+							"detail":"매우 고운 입자를 가진 모래입니다." },						
+	"element_dark_stone" : {"type":"0",
+							"detail":"very secret material.." },
+	"element_red_stone" : {"type":"0",
+							"detail":"붉은색을 지닌 돌조각.." },		
+    "element_grass" 	: {"type":"0",
+							"detail":"풋내가 나는 풀덩어리." }								
 }

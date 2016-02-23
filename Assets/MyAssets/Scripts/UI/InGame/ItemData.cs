@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// 인벤토리에 등록되어 있는 아이템의 세부정보를 가지고 있는 클래스.
+/// </summary>
 public class ItemData : MonoBehaviour {
 
     private string _amount;

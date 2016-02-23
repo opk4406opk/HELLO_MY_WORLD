@@ -2,6 +2,9 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// 게임내 입력관리를 하는 클래스.
+/// </summary>
 public class InputManager : MonoBehaviour {
 
     [SerializeField]

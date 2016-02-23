@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// 게임내 팝업창을 통해 보여지는 메세지를 관리하는 클래스.
+/// </summary>
 public class GameMessage
 {
     public enum MESSAGE_TYPE
@@ -56,6 +59,9 @@ public class GameMessage
     }
 }
 
+/// <summary>
+/// UI-팝업 메세지창 클래스.
+/// </summary>
 public class MessageManager : MonoBehaviour {
 
     [SerializeField]

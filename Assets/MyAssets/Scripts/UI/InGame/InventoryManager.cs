@@ -6,6 +6,9 @@ using Mono.Data.Sqlite;
 using System.Data;
 using System;
 
+/// <summary>
+/// 게임내 사용자의 인벤토리를 관리하는 클래스.
+/// </summary>
 public class InventoryManager : MonoBehaviour {
 
     [SerializeField]

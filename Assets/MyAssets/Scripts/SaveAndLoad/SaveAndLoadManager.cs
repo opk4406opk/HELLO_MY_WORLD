@@ -9,6 +9,9 @@ using Mono.Data.Sqlite;
 using System.Data;
 using System;
 
+/// <summary>
+/// 게임내 세이브&로드를 관리하는 클래스.
+/// </summary>
 public class SaveAndLoadManager : MonoBehaviour {
 
     private List<World> gameWorldList;
