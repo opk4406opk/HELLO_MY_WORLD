@@ -72,6 +72,8 @@ public class GameManager : MonoBehaviour
     private TileDataFile tileData;
     [SerializeField]
     private ItemDataFile itemData;
+    [SerializeField]
+    private CraftItemListDataFile craftItemListDataFile;
 
     [SerializeField]
     private GameObject chunkPrefab;
@@ -101,6 +103,7 @@ public class GameManager : MonoBehaviour
         itemData.Init();
         tileData.Init();
         subWorldData.Init();
+        craftItemListDataFile.Init();
 
         //LootingSystem Init;
         lootingSystem.Init();

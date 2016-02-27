@@ -5,5 +5,8 @@
 	"STONE_SMALL" : {"posX":"1", "posY":"14", "type":"3"},
 	"SAND"        : {"posX":"0", "posY":"4", "type":"4"},
 	"RED_STONE"   : {"posX":"0", "posY":"1", "type":"5"},
-	"WOOD"        : {"posX":"2", "posY":"15", "type":"6"}
+	"WOOD"        : {"posX":"2", "posY":"15", "type":"6"},
+	"STONE_GOLD"  : {"posX":"0", "posY":"13", "type":"7"},
+	"STONE_IRON"  : {"posX":"2", "posY":"13", "type":"8"},
+	"STONE_SILVER"  : {"posX":"0", "posY":"11", "type":"9"}
 }

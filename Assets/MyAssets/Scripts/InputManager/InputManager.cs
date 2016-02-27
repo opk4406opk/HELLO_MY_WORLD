@@ -21,17 +21,12 @@ public class InputManager : MonoBehaviour {
         DELETE = 2,
         ATTACK = 3,
         INVEN_OPEN = 4,
-        MENU_OPEN = 5
+        MENU_OPEN = 5,
+        CRAFT_ITEM_OPEN = 6
     }
     private INPUT_STATE inputState = INPUT_STATE.NONE;
-    
-    
-    public void Init()
-    {
-        // to do
-    }
 
-	void Update ()
+    void Update ()
     {
         ChkInputState();
         MouseInputProcess();
@@ -57,6 +52,10 @@ public class InputManager : MonoBehaviour {
         else if (Input.GetKeyDown(KeyCode.F10))
         {
             inputState = INPUT_STATE.MENU_OPEN;
+        }
+        else if (Input.GetKeyDown(KeyCode.U))
+        {
+            inputState = INPUT_STATE.CRAFT_ITEM_OPEN;
         }
         else
         {
@@ -109,6 +108,10 @@ public class InputManager : MonoBehaviour {
             case INPUT_STATE.MENU_OPEN:
                 inputState = INPUT_STATE.NONE;
                 UIPopupManager.OpenInGameMenu();
+                break;
+            case INPUT_STATE.CRAFT_ITEM_OPEN:
+                inputState = INPUT_STATE.NONE;
+                UIPopupManager.OpenCraftItem();
                 break;
             default:
                 break;

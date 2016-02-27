@@ -31,6 +31,12 @@ public class UIPopupManager : MonoBehaviour {
         get { return _isElementItemDataOpen; }
     }
 
+    private static bool _isCraftItemOpen = false;
+    public static bool isCraftItemOpen
+    {
+        get { return _isCraftItemOpen; }
+    }
+
     private static bool _isAllPopupClose = false;
     public static bool isAllpopupClose
     {
@@ -39,7 +45,8 @@ public class UIPopupManager : MonoBehaviour {
             if ((_isInvenOpen == false) &&
                (_isGameMenuOpen == false) &&
                (_isGameMessageOpen == false) &&
-               (_isElementItemDataOpen == false))
+               (_isElementItemDataOpen == false) &&
+               (_isCraftItemOpen == false))
             {
                 _isAllPopupClose = true;
                 return _isAllPopupClose;
@@ -112,5 +119,21 @@ public class UIPopupManager : MonoBehaviour {
     {
         SceneManager.UnloadScene("popup_elementItemData");
         _isElementItemDataOpen = false;
+    }
+
+    public static void OpenCraftItem()
+    {
+        if(_isCraftItemOpen == false)
+        {
+            SceneManager.LoadSceneAsync("popup_craftItem", LoadSceneMode.Additive);
+            _isCraftItemOpen = true;
+            _isAllPopupClose = false;
+        }
+    }
+
+    public static void CloseCraftItem()
+    {
+        SceneManager.UnloadScene("popup_craftItem");
+        _isCraftItemOpen = false;
     }
 }

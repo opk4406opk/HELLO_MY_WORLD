@@ -13,7 +13,9 @@ public class GameMessage
         WORLD_SAVE_FAIL = 2,
         WORLD_LOAD_SUCCESS = 3,
         WORLD_SAVE_SUCCESS = 4,
-        CANT_CREATE_BLOCK = 5
+        CANT_CREATE_BLOCK = 5,
+        CRAFT_ITEM_FAIL = 6,
+        CRAFT_ITEM_SUCCESS = 7
     }
 
     private static MESSAGE_TYPE _curGameMsgType = MESSAGE_TYPE.NONE;
@@ -47,6 +49,14 @@ public class GameMessage
             case MESSAGE_TYPE.CANT_CREATE_BLOCK:
                 PlayerPrefs.SetString("CANT_CREATE_BLOCK", _message);
                 curKeyString = "CANT_CREATE_BLOCK";
+                break;
+            case MESSAGE_TYPE.CRAFT_ITEM_SUCCESS:
+                PlayerPrefs.SetString("CRAFT_ITEM_SUCCESS", _message);
+                curKeyString = "CRAFT_ITEM_SUCCESS";
+                break;
+            case MESSAGE_TYPE.CRAFT_ITEM_FAIL:
+                PlayerPrefs.SetString("CRAFT_ITEM_FAIL", _message);
+                curKeyString = "CRAFT_ITEM_FAIL";
                 break;
             default:
                 break;

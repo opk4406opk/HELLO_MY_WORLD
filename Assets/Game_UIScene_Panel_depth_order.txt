@@ -5,3 +5,5 @@ popup
 2. menu = 30
 3. message = 40
 4. chInfo = 10
+5. itemDataInfo = 15
+6. craftItem = 9

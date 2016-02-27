@@ -5,7 +5,7 @@
 	"4" : "element_sand",
 	"5" : "element_red_stone",
 	"6" : "element_wood",
+	"7" : "element_gold",
 	"8" : "element_iron",
-	"9" : "element_silver",
-	"10" : "element_gold"
+	"9" : "element_silver"
 }

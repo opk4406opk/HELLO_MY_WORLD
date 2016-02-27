@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 using Mono.Data.Sqlite;
 using System.Data;
 using System;
@@ -62,10 +61,6 @@ public class InventoryManager : MonoBehaviour {
     }
     public void ClickExit()
     {
-        PopupExitProcess();
-    }
-    private void PopupExitProcess()
-    {
         ScaleDownEffect("CallBackPopupClose");
     }
     /// <summary>
@@ -76,7 +71,7 @@ public class InventoryManager : MonoBehaviour {
         UIPopupManager.CloseInven();
     }
 
-    public void CreateEmptySlot(int _num)
+    private void CreateEmptySlot(int _num)
     {
         for (int idx = 0; idx < _num; ++idx)
         {
@@ -122,9 +117,9 @@ public class InventoryManager : MonoBehaviour {
             }
             reader.Close();
             reader = null;
+
             dbcmd.Dispose();
             dbcmd = null;
-
             dbconn.Close();
             dbconn = null;
         };

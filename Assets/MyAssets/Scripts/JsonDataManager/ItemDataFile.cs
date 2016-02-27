@@ -22,8 +22,6 @@ public class ItemDataFile : MonoBehaviour
     private TextAsset jsonFile;
     private Dictionary<string, Dictionary<string, string>> jsonDataSheet;
 
-    private ItemInfo itemInfo;
-
     public void Init()
     {
         jsonDataSheet = new Dictionary<string, Dictionary<string, string>>();
@@ -34,12 +32,14 @@ public class ItemDataFile : MonoBehaviour
 
     public ItemInfo GetItemData(string _name)
     {
+
         Dictionary<string, string> dic;
         jsonDataSheet.TryGetValue(_name, out dic);
         string type, detail;
         dic.TryGetValue("type", out type);
         dic.TryGetValue("detail", out detail);
 
+        ItemInfo itemInfo;
         itemInfo.name = _name;
         itemInfo.type = type;
         itemInfo.detailInfo = detail;

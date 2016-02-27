@@ -53,6 +53,7 @@ public class ItemData : MonoBehaviour {
 
     public void InitData()
     {
+        gameObject.GetComponent<UIButton>().normalSprite = _itemName;
         spr_itemImage.spriteName = _itemName;
         lbl_amount.text = _amount;
     }
