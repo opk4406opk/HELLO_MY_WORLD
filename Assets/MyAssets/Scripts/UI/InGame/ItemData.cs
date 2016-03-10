@@ -51,10 +51,12 @@ public class ItemData : MonoBehaviour {
         spr_itemImage.gameObject.SetActive(true);
     }
 
-    public void InitData()
+    public void InitAllData()
     {
         gameObject.GetComponent<UIButton>().normalSprite = _itemName;
         spr_itemImage.spriteName = _itemName;
         lbl_amount.text = _amount;
     }
+    public void InitAmountData() { lbl_amount.text = _amount; }
+   
 }

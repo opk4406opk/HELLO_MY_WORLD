@@ -19,14 +19,12 @@ public class CraftItemManager : MonoBehaviour {
     [SerializeField]
     private UISprite spr_afterItemImg;
 
-    private int craftItemQuantity;
-
     private readonly int defaultItemSlot = 9;
     private List<ItemData> itemSlotList = new List<ItemData>();
 
     private CraftItemListDataFile craftItemDataFile;
-    private ItemDataFile itemDataFile;    
-
+    private ItemDataFile itemDataFile;  
+    
     void Start ()
     {
         GameObject obj = GameObject.Find("craftItemListDataFile");
@@ -36,6 +34,9 @@ public class CraftItemManager : MonoBehaviour {
         itemDataFile = obj.GetComponent<ItemDataFile>();
 
         spr_afterItemImg.spriteName = string.Empty;
+
+        Ed_OnClickQuantityList = new EventDelegate(this, "OnClickQuantTityList");
+        selectQuantityList.onChange.Add(Ed_OnClickQuantityList);
 
         CreateEmptySlot(defaultItemSlot);
         SetDropDownList();
@@ -277,10 +278,33 @@ public class CraftItemManager : MonoBehaviour {
         selectCraftItemList.onChange.Add(Ed_OnClickCraftItemList);
     }
 
+    private EventDelegate Ed_OnClickQuantityList;
+    private void OnClickQuantTityList()
+    {
+        UpdateConsumeAmount();
+    }
+
+    private void UpdateConsumeAmount()
+    {
+        string selectItemName = selectCraftItemList.value;
+        List<CraftRawMaterial> rawMaterials;
+        craftItemDataFile.craftItemDictionary.TryGetValue(selectItemName, out rawMaterials);
+
+        int slotIdx = 0;
+        foreach (CraftRawMaterial raw in rawMaterials)
+        {
+            string calcedAmount = (raw.consumeAmount * int.Parse(selectQuantityList.value)).ToString();
+            itemSlotList[slotIdx].amount = "x"+ calcedAmount;
+            itemSlotList[slotIdx].InitAmountData();
+            slotIdx++;
+        }
+    }
+
     private EventDelegate Ed_OnClickCraftItemList;
     private void OnClickCraftItemList()
     {
         ShowRawMaterials();
+        UpdateConsumeAmount();
     }
 
     private void ShowRawMaterials()
@@ -299,7 +323,7 @@ public class CraftItemManager : MonoBehaviour {
 
             itemSlotList[itemSlotIdx].itemName = raw.rawMaterialName;
             itemSlotList[itemSlotIdx].amount = "x" + raw.consumeAmount.ToString();
-            itemSlotList[itemSlotIdx].InitData();
+            itemSlotList[itemSlotIdx].InitAllData();
             itemSlotList[itemSlotIdx].OnInfo();
 
             //set event delegate
@@ -323,7 +347,7 @@ public class CraftItemManager : MonoBehaviour {
         {
             itemData.itemName = string.Empty;
             itemData.amount = string.Empty;
-            itemData.InitData();
+            itemData.InitAllData();
             itemData.OffInfo();
         }
     }

@@ -138,7 +138,7 @@ public class InventoryManager : MonoBehaviour {
             ItemInfo itemInfo = gameItemDataFile.GetItemData(uitem.name);
             itemSlotList[itemSlotIdx].detailInfo = itemInfo.detailInfo;
 
-            itemSlotList[itemSlotIdx].InitData();
+            itemSlotList[itemSlotIdx].InitAllData();
             itemSlotList[itemSlotIdx].OnInfo();
 
             //set event delegate
