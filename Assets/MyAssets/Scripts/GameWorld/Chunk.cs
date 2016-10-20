@@ -72,6 +72,8 @@ public class Chunk : MonoBehaviour
         GenerateMesh();
     }
 
+
+    private List<LineRenderer> lineRenderes = new List<LineRenderer>();
     private void GenerateMesh()
     {
 
@@ -82,8 +84,9 @@ public class Chunk : MonoBehaviour
                 for (int z = 0; z < chunkSize; z++)
                 {
                     //This code will run for every block in the chunk
-                    if (Block(x, y, z) != 0)
+                    if (CheckBlock(x, y, z) != 0)
                     {
+                        // why use these??
                         //if (Block(x, y + 1, z) == 0) CubeTop(x, y, z, Block(x, y, z));
                         //if (Block(x, y - 1, z) == 0) CubeBot(x, y, z, Block(x, y, z));
                         //if (Block(x + 1, y, z) == 0) CubeEast(x, y, z, Block(x, y, z));
@@ -91,12 +94,15 @@ public class Chunk : MonoBehaviour
                         //if (Block(x, y, z + 1) == 0) CubeNorth(x, y, z, Block(x, y, z));
                         //if (Block(x, y, z - 1) == 0) CubeSouth(x, y, z, Block(x, y, z));
 
-                        if (Block(x, y + 1, z) == 0) CubeTop(x, y, z, Block(x, y, z));
-                        if (Block(x, y - 1, z) == 0) CubeBot(x, y, z, Block(x, y, z));
-                        CubeNorth(x, y, z, Block(x, y, z));
-                        CubeSouth(x, y, z, Block(x, y, z));
-                        CubeEast(x, y, z, Block(x, y, z));
-                        CubeWest(x, y, z, Block(x, y, z));
+                        if (CheckBlock(x, y + 1, z) == 0) CubeTopFace(x, y, z, CheckBlock(x, y, z));
+                        if (CheckBlock(x, y - 1, z) == 0) CubeBotFace(x, y, z, CheckBlock(x, y, z));
+                        CubeNorthFace(x, y, z, CheckBlock(x, y, z));
+                        CubeSouthFace(x, y, z, CheckBlock(x, y, z));
+                        CubeEastFace(x, y, z, CheckBlock(x, y, z));
+                        CubeWestFace(x, y, z, CheckBlock(x, y, z));
+
+                        _world.worldBlockData[x + _chunkX, y + _chunkY, z + _chunkZ].aabb.minExtent = new Vector3(x + _chunkX, y + _chunkY, z + _chunkZ);
+                        _world.worldBlockData[x + _chunkX, y + _chunkY, z + _chunkZ].aabb.maxExtent = new Vector3(x + _chunkX + 1, y + _chunkY + 1, z + _chunkZ + 1);
                     }
 
                 }
@@ -105,29 +111,38 @@ public class Chunk : MonoBehaviour
 
         UpdateMesh();
     }
-
-    private byte Block(int x, int y, int z)
+    
+    private byte CheckBlock(int x, int y, int z)
     {
-        return _world.Block(x + _chunkX, y + _chunkY, z + _chunkZ);
+        if (x >= GameWorldConfig.worldX ||
+               x < 0 ||
+               y >= GameWorldConfig.worldY ||
+               y < 0 ||
+               z >= GameWorldConfig.worldZ ||
+               z < 0)
+        {
+            return (byte)1;
+        }
+        return _world.worldBlockData[x + _chunkX, y + _chunkY, z + _chunkZ].type;
     }
 
-    private void CubeTop(int x, int y, int z, byte block)
+    private void CubeTopFace(int x, int y, int z, byte block)
     {
         newVertices.Add(new Vector3(x, y, z + 1));
         newVertices.Add(new Vector3(x + 1, y, z + 1));
         newVertices.Add(new Vector3(x + 1, y, z));
         newVertices.Add(new Vector3(x, y, z));
 
-        string tileName = worldTileData.GetTileName(Block(x, y, z));
+        string tileName = worldTileData.GetTileName(CheckBlock(x, y, z));
         TileInfo tileData = worldTileData.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;
 
-        Cube(texturePos);
+        CreateFace(texturePos);
     }
 
-    private  void CubeNorth(int x, int y, int z, byte block)
+    private  void CubeNorthFace(int x, int y, int z, byte block)
     {
 
         newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
@@ -135,17 +150,17 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x, y, z + 1));
         newVertices.Add(new Vector3(x, y - 1, z + 1));
 
-        string tileName = worldTileData.GetTileName(Block(x, y, z));
+        string tileName = worldTileData.GetTileName(CheckBlock(x, y, z));
         TileInfo tileData = worldTileData.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;
 
-        Cube(texturePos);
+        CreateFace(texturePos);
 
     }
 
-    private void CubeEast(int x, int y, int z, byte block)
+    private void CubeEastFace(int x, int y, int z, byte block)
     {
 
         newVertices.Add(new Vector3(x + 1, y - 1, z));
@@ -153,17 +168,17 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y, z + 1));
         newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
 
-        string tileName = worldTileData.GetTileName(Block(x, y, z));
+        string tileName = worldTileData.GetTileName(CheckBlock(x, y, z));
         TileInfo tileData = worldTileData.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;
 
-        Cube(texturePos);
+        CreateFace(texturePos);
 
     }
 
-    private void CubeSouth(int x, int y, int z, byte block)
+    private void CubeSouthFace(int x, int y, int z, byte block)
     {
 
         newVertices.Add(new Vector3(x, y - 1, z));
@@ -171,17 +186,17 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y, z));
         newVertices.Add(new Vector3(x + 1, y - 1, z));
 
-        string tileName = worldTileData.GetTileName(Block(x, y, z));
+        string tileName = worldTileData.GetTileName(CheckBlock(x, y, z));
         TileInfo tileData = worldTileData.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;
 
-        Cube(texturePos);
+        CreateFace(texturePos);
 
     }
 
-    private void CubeWest(int x, int y, int z, byte block)
+    private void CubeWestFace(int x, int y, int z, byte block)
     {
 
         newVertices.Add(new Vector3(x, y - 1, z + 1));
@@ -189,17 +204,17 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x, y, z));
         newVertices.Add(new Vector3(x, y - 1, z));
 
-        string tileName = worldTileData.GetTileName(Block(x, y, z));
+        string tileName = worldTileData.GetTileName(CheckBlock(x, y, z));
         TileInfo tileData = worldTileData.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;
 
-        Cube(texturePos);
+        CreateFace(texturePos);
 
     }
 
-    private void CubeBot(int x, int y, int z, byte block)
+    private void CubeBotFace(int x, int y, int z, byte block)
     {
 
         newVertices.Add(new Vector3(x, y - 1, z));
@@ -207,17 +222,17 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
         newVertices.Add(new Vector3(x, y - 1, z + 1));
 
-        string tileName = worldTileData.GetTileName(Block(x, y, z));
+        string tileName = worldTileData.GetTileName(CheckBlock(x, y, z));
         TileInfo tileData = worldTileData.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;
 
-        Cube(texturePos);
+        CreateFace(texturePos);
 
     }
 
-    private void Cube(Vector2 texturePos)
+    private void CreateFace(Vector2 texturePos)
     {
 
         newTriangles.Add(faceCount * 4); //1

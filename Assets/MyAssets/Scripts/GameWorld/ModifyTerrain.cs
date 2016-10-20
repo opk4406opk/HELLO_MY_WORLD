@@ -40,18 +40,19 @@ public class ModifyTerrain : MonoBehaviour
         //removes a block at these impact coordinates, you can raycast against the terrain and call this with the hit.point
         Vector3 position = hit.point;
         position += (hit.normal * -0.5f);
-
         // 기본 청크 위치 : x' = x * chunkSize;
         // 오프셋 적용한 청크 위치 : x'' = (x + offset) * chunkSize;
         // 따라서, 기본 Chunk 위치와 오프셋이 적용된 Chunk의 차이는
         //  x'' = x' - (offset * chunkSize)
         int x, y, z;
-        x = Mathf.RoundToInt(position.x - (_world.chunkOffsetX * chunkSize));
+        x = Mathf.RoundToInt(position.x - (_world.worldOffsetX * chunkSize));
         y = Mathf.RoundToInt(position.y);
-        z = Mathf.RoundToInt(position.z - (_world.chunkOffsetZ * chunkSize));
+        z = Mathf.RoundToInt(position.z - (_world.worldOffsetZ * chunkSize));
 
-        SetBlockForDelete(x, y, z, block);
-
+        // test code.
+        if ((_world.worldBlockData[x, y, z].aabb.IsInterSectPoint(new Vector3(x, y, z))) ||
+            (_world.worldBlockData[x, y - 1, z].aabb.IsInterSectPoint(new Vector3(x, y, z))))
+            SetBlockForDelete(x, y, z, block);
     }
 
     private void AddBlockAt(RaycastHit hit, byte block)
@@ -59,31 +60,30 @@ public class ModifyTerrain : MonoBehaviour
         //adds the specified block at these impact coordinates, you can raycast against the terrain and call this with the hit.point
         Vector3 position = hit.point;
         position += (hit.normal * 0.5f);
-
         // 기본 청크 위치 : x' = x * chunkSize;
         // 오프셋 적용한 청크 위치 : x'' = (x + offset) * chunkSize;
         // 따라서, 기본 Chunk 위치와 오프셋이 적용된 Chunk의 차이는
         //  x'' = x' - (offset * chunkSize)
         int x, y, z;
-        x = Mathf.RoundToInt(position.x - (_world.chunkOffsetX * chunkSize));
+        x = Mathf.RoundToInt(position.x - (_world.worldOffsetX * chunkSize));
         y = Mathf.RoundToInt(position.y);
-        z = Mathf.RoundToInt(position.z - (_world.chunkOffsetZ * chunkSize));
-
-        SetBlockForAdd(x, y, z, block);
+        z = Mathf.RoundToInt(position.z - (_world.worldOffsetZ * chunkSize));
+        // test code.
+        if((_world.worldBlockData[x, y, z].aabb.IsInterSectPoint(new Vector3(x, y, z))) ||
+            (_world.worldBlockData[x, y-1, z].aabb.IsInterSectPoint(new Vector3(x, y, z))))
+            SetBlockForAdd(x, y, z, block);
     }
     
 
     private void SetBlockForAdd(int x, int y, int z, byte block)
     {
-        //adds the specified block at these coordinates
-        print("Adding: " + x + ", " + y + ", " + z);
-        
+      
         if((x < GameWorldConfig.worldX) &&
            (y < GameWorldConfig.worldY) &&
            (z < GameWorldConfig.worldZ) &&
            (x >= 0) && (y >= 0) && (z >= 0)) 
         {
-            _world.worldBlockData[x, y, z] = block;
+            _world.worldBlockData[x, y, z].type = block;
             UpdateChunkAt(x, y, z, block);
         }
         else
@@ -96,9 +96,7 @@ public class ModifyTerrain : MonoBehaviour
     private delegate void del_UpdateUserItem(byte blockType);
     private void SetBlockForDelete(int x, int y, int z, byte block)
     {
-        //adds the specified block at these coordinates
-        print("Adding: " + x + ", " + y + ", " + z);
-
+        
         del_UpdateUserItem UpdateUserItem = (byte blockType) =>
         {
             string conn = "URI=file:" + Application.dataPath +
@@ -155,8 +153,8 @@ public class ModifyTerrain : MonoBehaviour
            (z < GameWorldConfig.worldZ) &&
            (x >= 0) && (y >= 0) && (z >= 0))
         {
-            UpdateUserItem(_world.worldBlockData[x, y, z]);
-            _world.worldBlockData[x, y, z] = block;
+            UpdateUserItem(_world.worldBlockData[x, y, z].type);
+            _world.worldBlockData[x, y, z].type = block;
             UpdateChunkAt(x, y, z, block);
         }
         else
@@ -176,7 +174,7 @@ public class ModifyTerrain : MonoBehaviour
         updateY = Mathf.FloorToInt(y / chunkSize);
         updateZ = Mathf.FloorToInt(z / chunkSize);
        
-        print("Updating: " + updateX + ", " + updateY + ", " + updateZ);
+        //print("Updating: " + updateX + ", " + updateY + ", " + updateZ);
 
         _world.chunkGroup[updateX, updateY, updateZ].update = true;
 

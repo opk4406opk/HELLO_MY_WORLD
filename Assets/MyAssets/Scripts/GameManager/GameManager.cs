@@ -92,7 +92,6 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private LootingSystem lootingSystem;
 
-
     void Start ()
     {
         //player Init

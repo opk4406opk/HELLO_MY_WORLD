@@ -316,29 +316,39 @@ public class CraftItemManager : MonoBehaviour {
 
         List<CraftRawMaterial> rawMaterials;
         craftItemDataFile.craftItemDictionary.TryGetValue(selectItemName, out rawMaterials);
-        int itemSlotIdx = 0;
+        int slotIdx = 0;
         foreach (CraftRawMaterial raw in rawMaterials)
         {
-            if (itemSlotIdx > defaultItemSlot) CreateEmptySlot(5);
+            if (slotIdx > defaultItemSlot) CreateEmptySlot(5);
 
-            itemSlotList[itemSlotIdx].itemName = raw.rawMaterialName;
-            itemSlotList[itemSlotIdx].amount = "x" + raw.consumeAmount.ToString();
-            itemSlotList[itemSlotIdx].InitAllData();
-            itemSlotList[itemSlotIdx].OnInfo();
+          
+            itemSlotList[slotIdx].itemName = raw.rawMaterialName;
+            itemSlotList[slotIdx].type = itemDataFile.GetItemData(raw.rawMaterialName).type;
+            itemSlotList[slotIdx].detailInfo = itemDataFile.GetItemData(raw.rawMaterialName).detailInfo;
+            itemSlotList[slotIdx].amount = "x" + raw.consumeAmount.ToString();
+            itemSlotList[slotIdx].InitAllData();
+            itemSlotList[slotIdx].OnInfo();
 
             //set event delegate
             Ed_OnClickItem = new EventDelegate(this, "OnClickItem");
-            Ed_OnClickItem.parameters[0].value = itemSlotList[itemSlotIdx];
-            itemSlotList[itemSlotIdx].GetComponent<UIButton>().onClick.Add(Ed_OnClickItem);
+            Ed_OnClickItem.parameters[0].value = itemSlotList[slotIdx];
+            itemSlotList[slotIdx].GetComponent<UIButton>().onClick.Add(Ed_OnClickItem);
 
-            itemSlotIdx++;
+            slotIdx++;
         }
     }
 
     private EventDelegate Ed_OnClickItem;
     private void OnClickItem(ItemData itemData)
     {
-        // to do
+        GameObject sceneToSceneData = GameObject.Find("SceneToScene_datas");
+        sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Clear();
+        sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Add("itemName", itemData.itemName);
+        sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Add("type", itemData.type);
+        sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Add("amount", itemData.amount);
+        sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Add("detailInfo", itemData.detailInfo);
+
+        UIPopupManager.OpenElementItemData();
     }
 
     private void ClearItemSlot()

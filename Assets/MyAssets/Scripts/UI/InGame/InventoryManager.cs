@@ -132,7 +132,7 @@ public class InventoryManager : MonoBehaviour {
 
             // set user item info
             itemSlotList[itemSlotIdx].itemName = uitem.name;
-            itemSlotList[itemSlotIdx].amount = uitem.amount.ToString();
+            itemSlotList[itemSlotIdx].amount = "x" + uitem.amount.ToString();
             itemSlotList[itemSlotIdx].type = uitem.type.ToString();
             // set item detail info
             ItemInfo itemInfo = gameItemDataFile.GetItemData(uitem.name);
