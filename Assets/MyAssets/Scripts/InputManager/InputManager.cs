@@ -12,8 +12,6 @@ public class InputManager : MonoBehaviour {
     [SerializeField]
     private BlockSelector blockSelector;
 
-    private Ray screenToWorldRay;
-    private RaycastHit rayHit;
     private enum INPUT_STATE
     {
         NONE = 0,
@@ -37,12 +35,10 @@ public class InputManager : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (ChkRayHit() == false) return;
             inputState = INPUT_STATE.CREATE;
         }
         else if (Input.GetMouseButtonDown(1))
         {
-            if (ChkRayHit() == false) return;
             inputState = INPUT_STATE.DELETE;
         }
         else if(Input.GetKeyDown(KeyCode.I))
@@ -63,34 +59,22 @@ public class InputManager : MonoBehaviour {
         }
     }
 
-    private bool ChkRayHit()
-    {
-        screenToWorldRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(screenToWorldRay, out rayHit) &&
-            (rayHit.transform.CompareTag("Chunk")))
-        {
-            return true;
-        }
-        else
-            return false;
-       
-    }
-
     private void MouseInputProcess()
     {
+        Vector3 clickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Debug.DrawRay(ray.origin, ray.direction * 100, Color.magenta);
         switch (inputState)
         {
             case INPUT_STATE.CREATE:
-                InitModifyProcess();
                 inputState = INPUT_STATE.NONE;
                 if(UIPopupManager.isAllpopupClose == true)
-                    modifyTerrian.AddBlockCursor(rayHit, blockSelector.curSelectBlockType);
+                    modifyTerrian.AddBlockCursor(ray, blockSelector.curSelectBlockType);
                 break;
             case INPUT_STATE.DELETE:
-                InitModifyProcess();
                 inputState = INPUT_STATE.NONE;
                 if (UIPopupManager.isAllpopupClose == true)
-                    modifyTerrian.ReplaceBlockCursor(rayHit, 0);
+                    modifyTerrian.ReplaceBlockCursor(clickPos, 0);
                 break;
             default:
                 break;
@@ -118,14 +102,4 @@ public class InputManager : MonoBehaviour {
         }
     }
 
-    private void CursorModeProcess()
-    {
-        
-    }
-
-    private void InitModifyProcess()
-    {
-        World world = rayHit.transform.GetComponent<Chunk>().world;
-        modifyTerrian.world = world;
-    }
 }

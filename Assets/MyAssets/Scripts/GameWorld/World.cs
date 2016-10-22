@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
  
 /// <summary>
 /// 게임내 월드를 생성 및 관리하는 클래스.
@@ -23,6 +24,16 @@ public class World : MonoBehaviour
         get { return _chunkGroup; }
     }
 
+    private string _worldName;
+    public string worldName
+    {
+        set {
+            _worldName = value;
+            gameObject.name = _worldName;
+        }
+        get { return _worldName; }
+    }
+
     ///<summary>
     /// 월드의 모든 블록을 저장하는 배열.
     ///</summary>
@@ -32,7 +43,9 @@ public class World : MonoBehaviour
         get { return _worldBlockData; }
     }
 
-	private int worldX = 0;
+    private List<Block> _worldBlockList = new List<Block>(); 
+    
+    private int worldX = 0;
     private int worldY = 0;
     private int worldZ = 0;
     private int chunkSize = 0;
@@ -115,17 +128,26 @@ public class World : MonoBehaviour
         for (int y = 0; y < _chunkGroup.GetLength(1); y++)
         {
             //subWorld offset 크기만큼 실제 chunk의 world Position에 적용.
-            GameObject newChunk = Instantiate(_chunkPrefab, new Vector3((x + _worldOffsetX) * chunkSize - 0.5f,
-                                                y * chunkSize + 0.5f, (z + _worldOffsetZ) * chunkSize - 0.5f),
+            // 0.5f 의 값을 실제 Chunk가 위치하는 xyz값에 더하고 빼는 이유는 아래와 같다.
+            // 유니티엔진에서 제공되는 모든 게임오브젝트들의 중점은 정가운데로 되어 있다. Cube로 예를 들면 정육면체의 정가운데 지점이 된다.
+            // 따라서, 실제 Chunk에서 N개의 Block을 생성할 때 Block의 중점은 상단면 최하단 왼쪽 부분이다. ( = 유니티엔진과 실제 생성하는 블록과의 중점의 차이가 발생. )
+            // 중점에 대한 차이를 없애기 위해 아래 코드처럼 처리한다.
+            float coordX = x * chunkSize + 0.5f;
+            float coordY = y * chunkSize - 0.5f;
+            float coordZ = z * chunkSize + 0.5f;
+            GameObject newChunk = Instantiate(_chunkPrefab, new Vector3(0, 0 , 0),
                                                 new Quaternion(0, 0, 0, 0)) as GameObject;
 
             newChunk.transform.parent = gameObject.transform;
             newChunk.transform.name = "Chunk_" + chunkNumber++;
             _chunkGroup[x, y, z] = newChunk.GetComponent("Chunk") as Chunk;
             _chunkGroup[x, y, z].world = this;
-            _chunkGroup[x, y, z].chunkX = x * chunkSize;
-            _chunkGroup[x, y, z].chunkY = y * chunkSize;
-            _chunkGroup[x, y, z].chunkZ = z * chunkSize;
+            _chunkGroup[x, y, z].worldDataIdxX = x * chunkSize;
+            _chunkGroup[x, y, z].worldDataIdxY = y * chunkSize;
+            _chunkGroup[x, y, z].worldDataIdxZ = z * chunkSize;
+            _chunkGroup[x, y, z].worldCoordX = coordX;
+            _chunkGroup[x, y, z].worldCoordY = coordY;
+            _chunkGroup[x, y, z].worldCoordZ = coordZ;
             _chunkGroup[x, y, z].Init(worldTileDataFile);
         }
 	}
@@ -142,6 +164,12 @@ public class World : MonoBehaviour
     private void InitWorldData()
     {
         _worldBlockData = new Block[worldX, worldY, worldZ];
+        for (int x = 0; x < worldX; x++)
+            for (int y = 0; y < worldY; y++)
+                for (int z = 0; z < worldZ; z++)
+                {
+                    _worldBlockData[x, y, z].aabb.isEnable = false;
+                }
     }
   
     private void InsertDefaultWorldData()

@@ -11,5 +11,11 @@ public struct Block {
     }
 
     public CustomAABB aabb;
-    
+
+    private string _belongWorld;
+    public string belongWorld
+    {
+        set { _belongWorld = value; }
+        get { return _belongWorld; }
+    }
 }
