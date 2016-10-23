@@ -127,14 +127,14 @@ public class World : MonoBehaviour
     {
         for (int y = 0; y < _chunkGroup.GetLength(1); y++)
         {
-            //subWorld offset 크기만큼 실제 chunk의 world Position에 적용.
-            // 0.5f 의 값을 실제 Chunk가 위치하는 xyz값에 더하고 빼는 이유는 아래와 같다.
-            // 유니티엔진에서 제공되는 모든 게임오브젝트들의 중점은 정가운데로 되어 있다. Cube로 예를 들면 정육면체의 정가운데 지점이 된다.
-            // 따라서, 실제 Chunk에서 N개의 Block을 생성할 때 Block의 중점은 상단면 최하단 왼쪽 부분이다. ( = 유니티엔진과 실제 생성하는 블록과의 중점의 차이가 발생. )
-            // 중점에 대한 차이를 없애기 위해 아래 코드처럼 처리한다.
-            float coordX = x * chunkSize + 0.5f;
-            float coordY = y * chunkSize - 0.5f;
-            float coordZ = z * chunkSize + 0.5f;
+           
+            // 유니티엔진에서 제공되는 씬에서 존재하는 모든 게임 오브젝트들의 중점은
+            // 실제 게임 오브젝트의 정중앙이 된다. 
+            // 따라서, 유니티엔진에 맞춰서 오브젝트의 중점을 정중앙으로 하려면, 아래와 같은 0.5f(offset)값을
+            // 추가해야한다. 이 프로젝트에서 1개의 block의 중앙점은 최상단면의 좌측하단의 포인트가 된다.(디폴트)
+            float coordX = x * chunkSize /*+ 0.5f*/;
+            float coordY = y * chunkSize + 1;
+            float coordZ = z * chunkSize /*+ 0.5f*/;
             GameObject newChunk = Instantiate(_chunkPrefab, new Vector3(0, 0 , 0),
                                                 new Quaternion(0, 0, 0, 0)) as GameObject;
 
@@ -157,7 +157,6 @@ public class World : MonoBehaviour
 		for (int y=0; y< _chunkGroup.GetLength(1); y++)
         {
 			Object.Destroy(chunkGroup [x, y, z].gameObject);
-			
 		}
 	}
 

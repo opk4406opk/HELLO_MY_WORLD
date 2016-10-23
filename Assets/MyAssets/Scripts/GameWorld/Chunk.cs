@@ -130,10 +130,11 @@ public class Chunk : MonoBehaviour
                         points[5] = new Vector3(worldCoordX + 1, worldCoordY - 1, worldCoordZ);
                         points[6] = new Vector3(worldCoordX + 1, worldCoordY - 1, worldCoordZ + 1);
                         points[7] = new Vector3(worldCoordX, worldCoordY - 1, worldCoordZ + 1);
+                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].worldPos = new Vector3(worldCoordX, worldCoordY, worldCoordZ);
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].belongWorld = world.worldName;
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].aabb.MakeAABB(points);
+                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].aabb.centerPos = new Vector3(worldCoordX, worldCoordY, worldCoordZ);
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].aabb.isEnable = true;
-                        
                     }
 
                 }

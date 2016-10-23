@@ -7,6 +7,8 @@ public class CustomRayCast : MonoBehaviour
 {
     public static bool InterSectWithAABB(Ray ray, CustomAABB aabb)
     {
+        if (!aabb.isEnable) return false;
+
         float tmin = (aabb.minExtent.x - ray.origin.x) / ray.direction.normalized.x;
         float tmax = (aabb.maxExtent.x - ray.origin.x) / ray.direction.normalized.x;
 
@@ -60,6 +62,8 @@ public class CustomRayCast : MonoBehaviour
 
     public static bool TestRayCast0(Ray r, CustomAABB aabb)
     {
+        if (!aabb.isEnable) return false;
+
         Vector3 dirfrac;
         float t;
         // r.direction is unit direction vector of ray

@@ -13,6 +13,13 @@ public struct CustomAABB {
     {
         get { return _maxExtent; }
     }
+    // in world space coordinate
+    private Vector3 _centerPos;
+    public Vector3 centerPos
+    {
+        set { _centerPos = value; }
+        get { return _centerPos; }
+    }
 
     private bool _isEnable;
     public bool isEnable
@@ -34,6 +41,11 @@ public struct CustomAABB {
             if (points[idx].z < _minExtent.z) _minExtent.z = points[idx].z;
             else if (points[idx].z > _maxExtent.z) _maxExtent.z = points[idx].z;
         }
+    }
+    public void MakeAABB(Vector3 minExtent, Vector3 maxExtent)
+    {
+        _minExtent = minExtent;
+        _maxExtent = maxExtent;
     }
 
     public bool IsInterSectPoint(Vector3 point)

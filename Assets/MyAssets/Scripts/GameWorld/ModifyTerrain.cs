@@ -30,39 +30,29 @@ public class ModifyTerrain : MonoBehaviour
         chunkSize = GameWorldConfig.chunkSize;
     }
 
-    public void ReplaceBlockCursor(Vector3 clickPos, byte block)
+    public void ReplaceBlockCursor(Ray ray, byte blockType)
     {
-        DeleteBlockAt(clickPos, block);
+        DeleteBlockAt(ray, blockType);
     }
 
-    public void AddBlockCursor(Ray ray, byte block)
+    public void AddBlockCursor(Ray ray, byte blockType)
     {
-        AddBlockAt(ray, block);
+        AddBlockAt(ray, blockType);
     }
 
-    private void DeleteBlockAt(Vector3 position, byte block)
+    private void DeleteBlockAt(Ray ray, byte blockType)
     {
-        //removes a block at these impact coordinates, you can raycast against the terrain and call this with the hit.point
-        //Vector3 position = hit.point;
-        //position += (hit.normal * -0.5f);
-
-        // 기본 청크 위치 : x' = x * chunkSize;
-        // 오프셋 적용한 청크 위치 : x'' = (x + offset) * chunkSize;
-        // 따라서, 기본 Chunk 위치와 오프셋이 적용된 Chunk의 차이는
-        //  x'' = x' - (offset * chunkSize)
-
-        int x, y, z;
-        x = Mathf.RoundToInt(position.x - (_world.worldOffsetX * chunkSize));
-        y = Mathf.RoundToInt(position.y);
-        z = Mathf.RoundToInt(position.z - (_world.worldOffsetZ * chunkSize));
-
-        // test code.
-        if ((_world.worldBlockData[x, y, z].aabb.IsInterSectPoint(new Vector3(x, y, z))) ||
-            (_world.worldBlockData[x, y - 1, z].aabb.IsInterSectPoint(new Vector3(x, y, z))))
-            SetBlockForDelete(x, y, z, block);
+        _world = gameMgr.worldList[0];
+        RayCastingProcess(ray, blockType, false);
+    }
+    private void AddBlockAt(Ray ray, byte blockType)
+    {
+        _world = gameMgr.worldList[0];
+        RayCastingProcess(ray, blockType, true);
     }
 
-    private void RayCastingProcess(Ray ray, byte blockType)
+    //test func
+    private void RayCastingProcess(Ray ray, byte blockType, bool isCreate)
     {
         int lenX = gameMgr.worldList[0].worldBlockData.GetLength(0);
         int lenY = gameMgr.worldList[0].worldBlockData.GetLength(1);
@@ -76,11 +66,15 @@ public class ModifyTerrain : MonoBehaviour
                         Debug.Log("x " + ix + " y " + iy + " z " + iz);
                         Debug.Log("minExt : " + gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.minExtent);
                         Debug.Log("maxExt : " + gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.maxExtent);
-                        SetBlockForAdd(ix, iy, iz, blockType);
+                        if (isCreate) SetBlockForAdd(ix, iy, iz, blockType);
+                        else {
+                            SetBlockForDelete(ix, iy, iz, blockType);
+                            gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.isEnable = false;
+                        }
+
                     }
                 }
     }
-
     void OnDrawGizmos()
     {
         int lenX = gameMgr.worldList[0].worldBlockData.GetLength(0);
@@ -92,34 +86,14 @@ public class ModifyTerrain : MonoBehaviour
                 {
                     Vector3 min = gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.minExtent;
                     Vector3 max = gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.maxExtent;
-                    Gizmos.color = Color.green;
+                    Gizmos.color = Color.red;
                     Gizmos.DrawLine(min, max);
                     //Gizmos.DrawWireCube(new Vector3(ix, iy, iz), new Vector3(1, 1, 1));
                 }
     }
 
 
-    private void AddBlockAt(Ray ray, byte blockType)
-    {
-        //adds the specified block at these impact coordinates, you can raycast against the terrain and call this with the hit.point
-        //Vector3 position = hit.point;
-        //position += (hit.normal * 0.5f);
 
-        // 기본 청크 위치 : x' = x * chunkSize;
-        // 오프셋 적용한 청크 위치 : x'' = (x + offset) * chunkSize;
-        // 따라서, 기본 Chunk 위치와 오프셋이 적용된 Chunk의 차이는
-        //  x'' = x' - (offset * chunkSize)
-        _world = gameMgr.worldList[0];
-        RayCastingProcess(ray, blockType);
-        //int x, y, z;
-        //x = Mathf.RoundToInt(position.x - (_world.worldOffsetX * chunkSize));
-        //y = Mathf.RoundToInt(position.y);
-        //z = Mathf.RoundToInt(position.z - (_world.worldOffsetZ * chunkSize));
-        //// test code.
-        //if ((_world.worldBlockData[x, y, z].aabb.IsInterSectPoint(new Vector3(x, y, z))) ||
-        //    (_world.worldBlockData[x, y - 1, z].aabb.IsInterSectPoint(new Vector3(x, y, z))))
-        //    SetBlockForAdd(x, y, z, block);
-    }
 
 
     private void SetBlockForAdd(int x, int y, int z, byte block)

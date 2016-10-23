@@ -18,4 +18,11 @@ public struct Block {
         set { _belongWorld = value; }
         get { return _belongWorld; }
     }
+
+    private Vector3 _worldPos;
+    public Vector3 worldPos
+    {
+        set { _worldPos = value; }
+        get { return _worldPos; }
+    }
 }
