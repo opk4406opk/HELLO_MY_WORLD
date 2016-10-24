@@ -133,7 +133,7 @@ public class World : MonoBehaviour
             // 따라서, 유니티엔진에 맞춰서 오브젝트의 중점을 정중앙으로 하려면, 아래와 같은 0.5f(offset)값을
             // 추가해야한다. 이 프로젝트에서 1개의 block의 중앙점은 최상단면의 좌측하단의 포인트가 된다.(디폴트)
             float coordX = x * chunkSize /*+ 0.5f*/;
-            float coordY = y * chunkSize + 1;
+            float coordY = y * chunkSize + 1 ;
             float coordZ = z * chunkSize /*+ 0.5f*/;
             GameObject newChunk = Instantiate(_chunkPrefab, new Vector3(0, 0 , 0),
                                                 new Quaternion(0, 0, 0, 0)) as GameObject;
@@ -167,6 +167,7 @@ public class World : MonoBehaviour
             for (int y = 0; y < worldY; y++)
                 for (int z = 0; z < worldZ; z++)
                 {
+                    _worldBlockData[x, y, z] = new Block();
                     _worldBlockData[x, y, z].aabb.isEnable = false;
                 }
     }

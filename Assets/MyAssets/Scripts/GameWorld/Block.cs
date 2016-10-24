@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public struct Block {
+public class Block {
 
     private byte _type;
     public byte type
@@ -24,5 +24,40 @@ public struct Block {
     {
         set { _worldPos = value; }
         get { return _worldPos; }
+    }
+
+    private int _blockDataPosX;
+    public int blockDataPosX
+    {
+        set { _blockDataPosX = value; }
+        get { return _blockDataPosX; }
+    }
+    private int _blockDataPosY;
+    public int blockDataPosY
+    {
+        set { _blockDataPosY = value; }
+        get { return _blockDataPosY; }
+    }
+    private int _blockDataPosZ;
+    public int blockDataPosZ
+    {
+        set { _blockDataPosZ = value; }
+        get { return _blockDataPosZ; }
+    }
+    // 디폴트.
+    public Block()
+    {
+        // to do.
+    }
+    // 복사 생성자.
+    public Block(Block b)
+    {
+        this.aabb = b.aabb;
+        this.belongWorld = b.belongWorld;
+        this.blockDataPosX = b.blockDataPosX;
+        this.blockDataPosY = b.blockDataPosY;
+        this.blockDataPosZ = b.blockDataPosZ;
+        this.type = b.type;
+        this.worldPos = b.worldPos;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Mono.Data.Sqlite;
 using System.Data;
 
@@ -54,6 +55,7 @@ public class ModifyTerrain : MonoBehaviour
     //test func
     private void RayCastingProcess(Ray ray, byte blockType, bool isCreate)
     {
+        List<Block> candidateHits = new List<Block>();
         int lenX = gameMgr.worldList[0].worldBlockData.GetLength(0);
         int lenY = gameMgr.worldList[0].worldBlockData.GetLength(1);
         int lenZ = gameMgr.worldList[0].worldBlockData.GetLength(2);
@@ -63,39 +65,54 @@ public class ModifyTerrain : MonoBehaviour
                 {
                     if (CustomRayCast.InterSectWithAABB(ray, gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb))
                     {
-                        Debug.Log("x " + ix + " y " + iy + " z " + iz);
-                        Debug.Log("minExt : " + gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.minExtent);
-                        Debug.Log("maxExt : " + gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.maxExtent);
-                        if (isCreate) SetBlockForAdd(ix, iy, iz, blockType);
-                        else {
-                            SetBlockForDelete(ix, iy, iz, blockType);
-                            gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.isEnable = false;
-                        }
-
+                        //Debug.Log("x " + ix + " y " + iy + " z " + iz);
+                        //Debug.Log("minExt : " + gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.minExtent);
+                        //Debug.Log("maxExt : " + gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.maxExtent);
+                        candidateHits.Add(new Block(gameMgr.worldList[0].worldBlockData[ix, iy, iz]));
                     }
                 }
-    }
-    void OnDrawGizmos()
-    {
-        int lenX = gameMgr.worldList[0].worldBlockData.GetLength(0);
-        int lenY = gameMgr.worldList[0].worldBlockData.GetLength(1);
-        int lenZ = gameMgr.worldList[0].worldBlockData.GetLength(2);
-        for (int ix = 0; ix < lenX; ix++)
-            for (int iy = 0; iy < lenY; iy++)
-                for (int iz = 0; iz < lenZ; iz++)
+        float minDist = 0.0f;
+        int blockX = 0, blockY = 0, blockZ = 0;
+        if(candidateHits.Count > 0)
+        {
+            minDist = Vector3.Distance(ray.origin, candidateHits[0].worldPos);
+            foreach (var block in candidateHits)
+            {
+                float d = Vector3.Distance(ray.origin, block.worldPos);
+                if (minDist > d)
                 {
-                    Vector3 min = gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.minExtent;
-                    Vector3 max = gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.maxExtent;
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawLine(min, max);
-                    //Gizmos.DrawWireCube(new Vector3(ix, iy, iz), new Vector3(1, 1, 1));
+                    minDist = d;
+                    blockX = block.blockDataPosX;
+                    blockY = block.blockDataPosY;
+                    blockZ = block.blockDataPosZ;
                 }
+            }
+            if (isCreate) SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
+            else
+            {
+                SetBlockForDelete(blockX, blockY, blockZ, blockType);
+                gameMgr.worldList[0].worldBlockData[blockX, blockY, blockZ].aabb.isEnable = false;
+            }
+            candidateHits.Clear();
+        }
+        
     }
-
-
-
-
-
+    //void OnDrawGizmos()
+    //{
+    //    int lenX = gameMgr.worldList[0].worldBlockData.GetLength(0);
+    //    int lenY = gameMgr.worldList[0].worldBlockData.GetLength(1);
+    //    int lenZ = gameMgr.worldList[0].worldBlockData.GetLength(2);
+    //    for (int ix = 0; ix < lenX; ix++)
+    //        for (int iy = 0; iy < lenY; iy++)
+    //            for (int iz = 0; iz < lenZ; iz++)
+    //            {
+    //                Vector3 min = gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.minExtent;
+    //                Vector3 max = gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.maxExtent;
+    //                Gizmos.color = Color.red;
+    //                Gizmos.DrawLine(min, max);
+    //                //Gizmos.DrawWireCube(new Vector3(ix, iy, iz), new Vector3(1, 1, 1));
+    //            }
+    //}
     private void SetBlockForAdd(int x, int y, int z, byte block)
     {
       
