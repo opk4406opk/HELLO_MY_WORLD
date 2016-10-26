@@ -12,10 +12,10 @@ Reference link : http://studentgamedev.blogspot.kr/2013/08/unity-voxel-tutorial-
 1. 개발엔진 : Unity3D
 2. 개발언어 : C#
 3. 사용 Lib : Itween, NGUI 3.x, JSONObject, Sqlite3
-4. 지형을 만들기 위해 perlin Noise를 이용해 높이맵을 만들어 사용하고 있으며 현재 cave 생성을 위해 관련 알고리즘을 찾아보고 있습니다.
-
--> 현재 기본 게임 플레이가 가능한 상태이며, 개발 진행중이기에 일부 버그가 있습니다.<br>
--> 블록을 생성/수정 하는 게임 방식 외에 RPG 성향이 섞여있습니다. ( 추후 계속 추가 예정.)<br><br>
+4. 현재 작업중인 내용: <br>
+ -> 기존 유니티엔진에서 제공하는 Collider 및 충돌 관련 기능을 제외하고 AABB 및 RayCast등 기능을 구현하여 적용 및 테스트중. <br>
+ -> 지형생성에 있어 Octree를 이용하고자 하나 변경 비용이 클 것 같아 일단은 충돌 체크에 쓰는걸로 이용하고자 한다. ( 테스트중..) <br>
+ -> 기타 기능 개선을 꾀하고 있다. <br>
 
 -> Play Video Link  : https://www.youtube.com/watch?v=I8wuYFqKNQE
 
