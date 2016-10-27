@@ -87,12 +87,14 @@ public class ModifyTerrain : MonoBehaviour
                     blockZ = block.blockDataPosZ;
                 }
             }
-            if (isCreate) SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
-            else
-            {
-                SetBlockForDelete(blockX, blockY, blockZ, blockType);
-                gameMgr.worldList[0].worldBlockData[blockX, blockY, blockZ].aabb.isEnable = false;
-            }
+            Debug.Log("bx " + blockX + " by " + blockY + " bz " + blockZ);
+            gameMgr.GetYuKoNPC().ActivePathFindNPC(blockX, blockZ);
+            //if (isCreate) SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
+            //else
+            //{
+            //    SetBlockForDelete(blockX, blockY, blockZ, blockType);
+            //    gameMgr.worldList[0].worldBlockData[blockX, blockY, blockZ].aabb.isEnable = false;
+            //}
             candidateHits.Clear();
         }
         
@@ -122,6 +124,8 @@ public class ModifyTerrain : MonoBehaviour
            (x >= 0) && (y >= 0) && (z >= 0)) 
         {
             _world.worldBlockData[x, y, z].type = block;
+            _world.worldBlockData[x, y, z].isRendered = true;
+            _world.worldBlockData[x, y, z].aabb.isEnable = true;
             UpdateChunkAt(x, y, z, block);
         }
         else
@@ -193,6 +197,8 @@ public class ModifyTerrain : MonoBehaviour
         {
             UpdateUserItem(_world.worldBlockData[x, y, z].type);
             _world.worldBlockData[x, y, z].type = block;
+            _world.worldBlockData[x, y, z].isRendered = false;
+            _world.worldBlockData[x, y, z].aabb.isEnable = false;
             UpdateChunkAt(x, y, z, block);
         }
         else

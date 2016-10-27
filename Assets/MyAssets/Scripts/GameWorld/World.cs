@@ -127,14 +127,14 @@ public class World : MonoBehaviour
     {
         for (int y = 0; y < _chunkGroup.GetLength(1); y++)
         {
-           
+
             // 유니티엔진에서 제공되는 씬에서 존재하는 모든 게임 오브젝트들의 중점은
             // 실제 게임 오브젝트의 정중앙이 된다. 
             // 따라서, 유니티엔진에 맞춰서 오브젝트의 중점을 정중앙으로 하려면, 아래와 같은 0.5f(offset)값을
             // 추가해야한다. 이 프로젝트에서 1개의 block의 중앙점은 최상단면의 좌측하단의 포인트가 된다.(디폴트)
-            float coordX = x * chunkSize /*+ 0.5f*/;
-            float coordY = y * chunkSize + 1 ;
-            float coordZ = z * chunkSize /*+ 0.5f*/;
+            float coordX = x * chunkSize - 0.5f;//+ 0.5f;
+            float coordY = y * chunkSize + 0.5f;//  -0.5f;
+            float coordZ = z * chunkSize -0.5f;// + 0.5f;
             GameObject newChunk = Instantiate(_chunkPrefab, new Vector3(0, 0 , 0),
                                                 new Quaternion(0, 0, 0, 0)) as GameObject;
 
@@ -168,6 +168,7 @@ public class World : MonoBehaviour
                 for (int z = 0; z < worldZ; z++)
                 {
                     _worldBlockData[x, y, z] = new Block();
+                    _worldBlockData[x, y, z].isRendered = false;
                     _worldBlockData[x, y, z].aabb.isEnable = false;
                 }
     }

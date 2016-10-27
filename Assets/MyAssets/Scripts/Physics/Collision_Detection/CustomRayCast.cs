@@ -60,7 +60,13 @@ public class CustomRayCast : MonoBehaviour
         return true;
     }
 
-    public static bool TestRayCast0(Ray r, CustomAABB aabb)
+    /// <summary>
+    /// 테스트버전.
+    /// </summary>
+    /// <param name="r"></param>
+    /// <param name="aabb"></param>
+    /// <returns></returns>
+    public static bool InterSectWithAABB_TEST_Version(Ray r, CustomAABB aabb)
     {
         if (!aabb.isEnable) return false;
 

@@ -99,7 +99,6 @@ public class Chunk : MonoBehaviour
                     //This code will run for every block in the chunk
                     if (CheckBlock(blockIdxX, blockIdxY, blockIdxZ) != 0)
                     {
-                        // why use these??
                         //if (Block(x, y + 1, z) == 0) CubeTop(x, y, z, Block(x, y, z));
                         //if (Block(x, y - 1, z) == 0) CubeBot(x, y, z, Block(x, y, z));
                         //if (B lock(x + 1, y, z) == 0) CubeEast(x, y, z, Block(x, y, z));
@@ -138,6 +137,7 @@ public class Chunk : MonoBehaviour
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].aabb.MakeAABB(points);
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].aabb.centerPos = new Vector3(worldCoordX, worldCoordY, worldCoordZ);
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].aabb.isEnable = true;
+                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].isRendered = true;
                     }
 
                 }

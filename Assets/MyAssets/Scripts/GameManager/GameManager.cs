@@ -92,6 +92,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private LootingSystem lootingSystem;
 
+    [SerializeField]
+    private NPC_Controller yukoNPC;
+    public NPC_Controller GetYuKoNPC() { return yukoNPC; }
+
     void Start ()
     {
         //player Init
@@ -118,9 +122,11 @@ public class GameManager : MonoBehaviour
         saveAndLoadManager.Init();
 
         if (GameStatus.isLoadGame == true) { saveAndLoadManager.Load(); }
+
+        yukoNPC.Init(_worldList[0].worldBlockData);
     }
 
-
+    // 테스트를 위해 서브월드는 1개만 생성하는걸로 한다. ( 총 월드는 1개 ).
     private void CreateGameWorld()
     {
         // MAX_SUB_WORLD to 1...

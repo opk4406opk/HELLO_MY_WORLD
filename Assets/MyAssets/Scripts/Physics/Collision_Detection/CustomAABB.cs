@@ -59,4 +59,15 @@ public struct CustomAABB {
         return false;
     }
 
+    public bool IsInterSectAABB(CustomAABB other)
+    {
+        if ((_minExtent.x <= other.maxExtent.x && _maxExtent.x >= other.minExtent.x) &&
+         (_minExtent.y <= other.maxExtent.y && _maxExtent.y >= other.minExtent.y) &&
+         (_minExtent.z <= other.maxExtent.z && _maxExtent.z >= other.minExtent.z))
+        {
+            return true;
+        }
+        return false;
+    }
+
 }

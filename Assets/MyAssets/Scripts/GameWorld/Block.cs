@@ -44,6 +44,14 @@ public class Block {
         set { _blockDataPosZ = value; }
         get { return _blockDataPosZ; }
     }
+
+    private bool _isRendered;
+    public bool isRendered
+    {
+        set { _isRendered = value; }
+        get { return _isRendered; }
+    }
+
     // 디폴트.
     public Block()
     {
