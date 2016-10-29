@@ -82,7 +82,6 @@ public class NPC_Controller : MonoBehaviour
         PathNode node = null;
         while (pathTrace.Count > 0){
             yield return new WaitForSeconds(1.0f);
-            Debug.Log("pathTrace count : " + pathTrace.Count);
             node = pathTrace.Pop();
             Vector3 newPos = new Vector3(node.pathMapDataX, node.worldCoordY, node.pathMapDataZ);
             int diff = Mathf.RoundToInt(transform.position.y - newPos.y);
@@ -110,7 +109,7 @@ public class NPC_Controller : MonoBehaviour
 
     private void CalcPathFinding()
     {
-        Debug.Log("NPC pos :: " + transform.position);
+        //Debug.Log("NPC pos :: " + transform.position);
         pathTrace.Clear();
         Stack<PathNode> reversePath = pathFinder.PathFinding();
         if (reversePath != null)

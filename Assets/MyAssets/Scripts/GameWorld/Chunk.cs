@@ -120,6 +120,8 @@ public class Chunk : MonoBehaviour
                         CubeEastFace(worldCoordX, worldCoordY, worldCoordZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
                         CubeWestFace(worldCoordX, worldCoordY, worldCoordZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
 
+                        // points 배열은 실제 블록을 생성할 때 쓰이는 8개의 포인트로 실제 월드 좌표값이다.
+                        // 따라서, 이를 이용해 블록의 AABB의 Min, Max Extent 값을 정한다.
                         Vector3[] points = new Vector3[8];
                         points[0] = new Vector3(worldCoordX, worldCoordY, worldCoordZ);
                         points[1] = new Vector3(worldCoordX + 1, worldCoordY, worldCoordZ);
@@ -129,15 +131,16 @@ public class Chunk : MonoBehaviour
                         points[5] = new Vector3(worldCoordX + 1, worldCoordY - 1, worldCoordZ);
                         points[6] = new Vector3(worldCoordX + 1, worldCoordY - 1, worldCoordZ + 1);
                         points[7] = new Vector3(worldCoordX, worldCoordY - 1, worldCoordZ + 1);
-                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].worldPos = new Vector3(worldCoordX, worldCoordY, worldCoordZ);
+                        // 블록 생성시 정중앙을 맞추기 위해 추가했던 offset 값을 제거한다.
+                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].center = new Vector3(worldCoordX + 0.5f, worldCoordY - 0.5f, worldCoordZ + 0.5f);
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].blockDataPosX = blockIdxX;
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].blockDataPosY = blockIdxY;
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].blockDataPosZ = blockIdxZ;
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].belongWorld = world.worldName;
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].aabb.MakeAABB(points);
-                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].aabb.centerPos = new Vector3(worldCoordX, worldCoordY, worldCoordZ);
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].aabb.isEnable = true;
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].isRendered = true;
+
                     }
 
                 }

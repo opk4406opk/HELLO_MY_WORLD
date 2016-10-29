@@ -19,11 +19,14 @@ public class Block {
         get { return _belongWorld; }
     }
 
-    private Vector3 _worldPos;
-    public Vector3 worldPos
+    private Vector3 _center;
+    /// <summary>
+    /// 블록의 정중앙 포인트.
+    /// </summary>
+    public Vector3 center
     {
-        set { _worldPos = value; }
-        get { return _worldPos; }
+        set { _center = value; }
+        get { return _center; }
     }
 
     private int _blockDataPosX;
@@ -66,6 +69,6 @@ public class Block {
         this.blockDataPosY = b.blockDataPosY;
         this.blockDataPosZ = b.blockDataPosZ;
         this.type = b.type;
-        this.worldPos = b.worldPos;
+        this.center = b.center;
     }
 }

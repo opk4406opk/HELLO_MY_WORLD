@@ -17,7 +17,6 @@ public struct CustomAABB {
     private Vector3 _centerPos;
     public Vector3 centerPos
     {
-        set { _centerPos = value; }
         get { return _centerPos; }
     }
 
@@ -41,11 +40,14 @@ public struct CustomAABB {
             if (points[idx].z < _minExtent.z) _minExtent.z = points[idx].z;
             else if (points[idx].z > _maxExtent.z) _maxExtent.z = points[idx].z;
         }
+
+        _centerPos = (_maxExtent + _minExtent) / 2;
     }
     public void MakeAABB(Vector3 minExtent, Vector3 maxExtent)
     {
         _minExtent = minExtent;
         _maxExtent = maxExtent;
+        _centerPos = (_maxExtent + _minExtent) / 2;
     }
 
     public bool IsInterSectPoint(Vector3 point)
