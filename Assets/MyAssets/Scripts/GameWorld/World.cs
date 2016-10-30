@@ -70,8 +70,17 @@ public class World : MonoBehaviour
     private TileDataFile worldTileDataFile;
     private int chunkNumber = 0;
 
+    private CustomOctree _customOctree = new CustomOctree();
+    public CustomOctree customOctree
+    {
+        get { return _customOctree; }
+    }
+
     public void Init(int offsetX, int offsetZ, TileDataFile tileDataFile)
 	{
+        _customOctree.Init(new Vector3(0, 0, 0), new Vector3(GameWorldConfig.worldX,
+            GameWorldConfig.worldY,
+            GameWorldConfig.worldZ));
         worldTileDataFile = tileDataFile;
         worldX = GameWorldConfig.worldX;
         worldY = GameWorldConfig.worldY;
@@ -92,6 +101,11 @@ public class World : MonoBehaviour
         {
             _loadProcessRoutine = LoadProcess();
         }
+    }
+
+    void OnDrawGizmos()
+    {
+        _customOctree.DrawFullTree();
     }
 
     private IEnumerator LoadProcess()

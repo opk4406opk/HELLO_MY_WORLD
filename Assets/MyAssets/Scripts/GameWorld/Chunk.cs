@@ -140,7 +140,8 @@ public class Chunk : MonoBehaviour
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].aabb.MakeAABB(points);
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].aabb.isEnable = true;
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].isRendered = true;
-
+                        // 월드맵에 생성된 블록의 중앙점을 이용해 Octree의 노드를 생성합니다.
+                        _world.customOctree.Add(_world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].aabb.centerPos);
                     }
 
                 }
