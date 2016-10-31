@@ -55,7 +55,7 @@ public class ModifyTerrain : MonoBehaviour
     //test func
     private void RayCastingProcess(Ray ray, byte blockType, bool isCreate)
     {
-        List<Block> candidateHits = new List<Block>();
+        Queue<Block> candidateHits = new Queue<Block>();
         int lenX = gameMgr.worldList[0].worldBlockData.GetLength(0);
         int lenY = gameMgr.worldList[0].worldBlockData.GetLength(1);
         int lenZ = gameMgr.worldList[0].worldBlockData.GetLength(2);
@@ -68,35 +68,36 @@ public class ModifyTerrain : MonoBehaviour
                         //Debug.Log("x " + ix + " y " + iy + " z " + iz);
                         //Debug.Log("minExt : " + gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.minExtent);
                         //Debug.Log("maxExt : " + gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.maxExtent);
-                        candidateHits.Add(new Block(gameMgr.worldList[0].worldBlockData[ix, iy, iz]));
+                        candidateHits.Enqueue(new Block(gameMgr.worldList[0].worldBlockData[ix, iy, iz]));
                     }
                 }
+        if (candidateHits.Count > 0) return;
+
         float minDist = 0.0f;
         int blockX = 0, blockY = 0, blockZ = 0;
-        if(candidateHits.Count > 0)
+        Block candidateBlock = candidateHits.Dequeue();
+        minDist = Vector3.Distance(ray.origin, candidateBlock.center);
+        blockX = candidateBlock.blockDataPosX;
+        blockY = candidateBlock.blockDataPosY;
+        blockZ = candidateBlock.blockDataPosZ;
+        while (candidateHits.Count > 0)
         {
-            minDist = Vector3.Distance(ray.origin, candidateHits[0].center);
-            foreach (var block in candidateHits)
+            candidateBlock = candidateHits.Dequeue();
+            float d = Vector3.Distance(ray.origin, candidateBlock.center);
+            if (minDist > d)
             {
-                float d = Vector3.Distance(ray.origin, block.center);
-                if (minDist > d)
-                {
-                    minDist = d;
-                    blockX = block.blockDataPosX;
-                    blockY = block.blockDataPosY;
-                    blockZ = block.blockDataPosZ;
-                }
+                minDist = d;
+                blockX = candidateBlock.blockDataPosX;
+                blockY = candidateBlock.blockDataPosY;
+                blockZ = candidateBlock.blockDataPosZ;
             }
-            Debug.Log("bx " + blockX + " by " + blockY + " bz " + blockZ);
-            Debug.Log("minExtent :: " + gameMgr.worldList[0].worldBlockData[blockX, blockY, blockZ].aabb.minExtent);
-            Debug.Log("maxExtent :: " + gameMgr.worldList[0].worldBlockData[blockX, blockY, blockZ].aabb.maxExtent);
-            //gameMgr.GetYuKoNPC().ActivePathFindNPC(blockX, blockZ);
-            //if (isCreate) SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
-            //else
-            //{
-            //    SetBlockForDelete(blockX, blockY, blockZ, blockType);
-            //    gameMgr.worldList[0].worldBlockData[blockX, blockY, blockZ].aabb.isEnable = false;
-            //}
+        }
+        //gameMgr.GetYuKoNPC().ActivePathFindNPC(blockX, blockZ);
+        if (isCreate) SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
+        else
+        {
+            SetBlockForDelete(blockX, blockY, blockZ, blockType);
+            gameMgr.worldList[0].worldBlockData[blockX, blockY, blockZ].aabb.isEnable = false;
         }
         candidateHits.Clear();
     }

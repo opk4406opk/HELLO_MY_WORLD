@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 //                      X    Y     Z
 //root 노드 -> center(15.5, 15.5, 15.5)
