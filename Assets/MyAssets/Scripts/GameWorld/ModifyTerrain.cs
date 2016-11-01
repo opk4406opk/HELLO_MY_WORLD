@@ -52,55 +52,30 @@ public class ModifyTerrain : MonoBehaviour
         RayCastingProcess(ray, blockType, true);
     }
 
-    //test func
     private void RayCastingProcess(Ray ray, byte blockType, bool isCreate)
     {
-        Queue<Block> candidateHits = new Queue<Block>();
-        int lenX = gameMgr.worldList[0].worldBlockData.GetLength(0);
-        int lenY = gameMgr.worldList[0].worldBlockData.GetLength(1);
-        int lenZ = gameMgr.worldList[0].worldBlockData.GetLength(2);
-        for (int ix = 0; ix < lenX; ix++)
-            for (int iy = 0; iy < lenY; iy++)
-                for (int iz = 0; iz < lenZ; iz++)
-                {
-                    if (CustomRayCast.InterSectWithAABB(ray, gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb))
-                    {
-                        //Debug.Log("x " + ix + " y " + iy + " z " + iz);
-                        //Debug.Log("minExt : " + gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.minExtent);
-                        //Debug.Log("maxExt : " + gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.maxExtent);
-                        candidateHits.Enqueue(new Block(gameMgr.worldList[0].worldBlockData[ix, iy, iz]));
-                    }
-                }
-        if (candidateHits.Count > 0) return;
-
-        float minDist = 0.0f;
-        int blockX = 0, blockY = 0, blockZ = 0;
-        Block candidateBlock = candidateHits.Dequeue();
-        minDist = Vector3.Distance(ray.origin, candidateBlock.center);
-        blockX = candidateBlock.blockDataPosX;
-        blockY = candidateBlock.blockDataPosY;
-        blockZ = candidateBlock.blockDataPosZ;
-        while (candidateHits.Count > 0)
+        CollideInfo collideInfo = _world.customOctree.Collide(ray);
+        if (collideInfo.isCollide)
         {
-            candidateBlock = candidateHits.Dequeue();
-            float d = Vector3.Distance(ray.origin, candidateBlock.center);
-            if (minDist > d)
+            int blockX, blockY, blockZ;
+            blockX = (int)(collideInfo.hitBlockCenter.x);
+            blockY = (int)(collideInfo.hitBlockCenter.y);
+            blockZ = (int)(collideInfo.hitBlockCenter.z);
+            //gameMgr.GetYuKoNPC().ActivePathFindNPC(blockX, blockZ);
+            if (isCreate)
             {
-                minDist = d;
-                blockX = candidateBlock.blockDataPosX;
-                blockY = candidateBlock.blockDataPosY;
-                blockZ = candidateBlock.blockDataPosZ;
+                _world.customOctree.Add(collideInfo.hitBlockCenter + new Vector3(0, 1.0f, 0));
+                SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
+            }
+            else
+            {
+                _world.customOctree.Delete(collideInfo.hitBlockCenter);
+                SetBlockForDelete(blockX, blockY, blockZ, blockType);
+                gameMgr.worldList[0].worldBlockData[blockX, blockY, blockZ].aabb.isEnable = false;
             }
         }
-        //gameMgr.GetYuKoNPC().ActivePathFindNPC(blockX, blockZ);
-        if (isCreate) SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
-        else
-        {
-            SetBlockForDelete(blockX, blockY, blockZ, blockType);
-            gameMgr.worldList[0].worldBlockData[blockX, blockY, blockZ].aabb.isEnable = false;
-        }
-        candidateHits.Clear();
     }
+
     //void OnDrawGizmos()
     //{
     //    Gizmos.color = Color.red;

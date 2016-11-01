@@ -42,6 +42,13 @@ public class COTNode
         set { _center = value; }
         get { return _center; }
     }
+
+    private Vector3 _size;
+    public Vector3 size
+    {
+        set { _size = value; }
+        get { return _size; }
+    }
     //// 각 성분은 x, y, z의 길이를 나타낸다. ( 정육면체 ).
     //private Vector3 _size;
     //public Vector3 size
@@ -61,6 +68,11 @@ public class COTNode
         _isCanDelete = false;
     }
 }
+public struct CollideInfo
+{
+    public bool isCollide;
+    public Vector3 hitBlockCenter;
+}
 public class CustomOctree : MonoBehaviour
 {
     private COTNode root;
@@ -68,6 +80,9 @@ public class CustomOctree : MonoBehaviour
     // 따라서, Octree 노드에 있는 AABB min, max또한 블록에 적용된 오프셋을 감안해서 별도의 오프셋을 적용한다.
     // 값은 아래와 같다.
     private Vector3 offset = new Vector3(-0.5f, -0.5f, -0.5f);
+    // 블록의 최소 단위.
+    private Vector3 blockMinSize = new Vector3(1.0f, 1.0f, 1.0f);
+    private List<CollideInfo> collideCandidate = new List<CollideInfo>();
 
     /// <summary>
     /// 전체 지형를 감싸는 바운딩박스의 Min, MaxExtent로  Octree의 초기화를 합니다.
@@ -82,6 +97,7 @@ public class CustomOctree : MonoBehaviour
         Vector3 center = (_maxBound + _minBound) /2;
         root = new COTNode();
         root.center = center;
+        root.size = _maxBound - _minBound;
         root.aabb.MakeAABB(_minBound, _maxBound);
     }
     /// <summary>
@@ -96,13 +112,11 @@ public class CustomOctree : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         //Gizmos.DrawLine(node.aabb.minExtent, node.aabb.maxExtent);
-        Vector3 size = node.aabb.maxExtent - node.aabb.minExtent;
-        Gizmos.DrawWireCube(node.center, size);
+        if(node.size == blockMinSize) Gizmos.DrawWireCube(node.center, node.size);
         for (int i = 0; i < 8; i++)
         {
             if (node.childs[i] == null) continue;
-            size = node.childs[i].aabb.maxExtent - node.childs[i].aabb.minExtent;
-            Gizmos.DrawWireCube(node.childs[i].center, size);
+            if (node.size == blockMinSize) Gizmos.DrawWireCube(node.childs[i].center, node.childs[i].size);
             DrawAllNodes(node.childs[i]);
         }
     }
@@ -128,6 +142,57 @@ public class CustomOctree : MonoBehaviour
     public void CreateFullTree()
     {
         CreateALLNodes(root, 1);
+    }
+
+    public CollideInfo Collide(Ray ray)
+    {
+        CollideNodeWithRay(ray, root);
+
+        CollideInfo info;
+        info.isCollide = false;
+        info.hitBlockCenter = new Vector3(0, 0, 0);
+        Vector3 hitBlockCenter;
+        if(collideCandidate.Count > 0)
+        {
+            float minDist = Vector3.Distance(ray.origin, collideCandidate[0].hitBlockCenter);
+            hitBlockCenter = collideCandidate[0].hitBlockCenter;
+            for (int i = 1; i < collideCandidate.Count; i++)
+            {
+                float d = Vector3.Distance(ray.origin, collideCandidate[i].hitBlockCenter);
+                if (minDist > d)
+                {
+                    minDist = d;
+                    hitBlockCenter = collideCandidate[i].hitBlockCenter;
+                }
+            }
+            info.isCollide = true;
+            info.hitBlockCenter = hitBlockCenter;
+            collideCandidate.Clear();
+        }
+        return info;
+    }
+
+    private void CollideNodeWithRay(Ray ray, COTNode root)
+    {
+        if (root == null) return;
+
+        CollideInfo info;
+        info.isCollide = false;
+        info.hitBlockCenter = new Vector3(0, 0, 0);
+        if(root.size == blockMinSize)
+        {
+            info.isCollide = true;
+            info.hitBlockCenter = root.center;
+            collideCandidate.Add(info);
+        }
+        for(int i = 0; i < 8; i++)
+        {
+            if ((root.childs[i] != null) &&
+                (CustomRayCast.InterSectWithAABB(ray, root.childs[i].aabb)))
+            {
+                CollideNodeWithRay(ray, root.childs[i]);
+            }
+        }
     }
 
     private void DeleteNode(Vector3 pos, COTNode root)
@@ -256,6 +321,7 @@ public class CustomOctree : MonoBehaviour
                     parentCenter.z - parentHalfDepth);
                 maxExtent = parentCenter;
                 root.childs[0].center = (maxExtent + minExtent) / 2;
+                root.childs[0].size = maxExtent - minExtent;
                 root.childs[0].aabb.MakeAABB(minExtent, maxExtent);
                 AddNode(pos, root.childs[0]);
             }
@@ -279,6 +345,7 @@ public class CustomOctree : MonoBehaviour
                     parentCenter.y,
                     parentCenter.z);
                 root.childs[1].center = (maxExtent + minExtent) / 2;
+                root.childs[1].size = maxExtent - minExtent;
                 root.childs[1].aabb.MakeAABB(minExtent, maxExtent);
                 AddNode(pos, root.childs[1]);
             }
@@ -302,6 +369,7 @@ public class CustomOctree : MonoBehaviour
                     parentCenter.y + parentHalfHeight,
                     parentCenter.z);
                 root.childs[2].center = (maxExtent + minExtent) / 2;
+                root.childs[2].size = maxExtent - minExtent;
                 root.childs[2].aabb.MakeAABB(minExtent, maxExtent);
                 AddNode(pos, root.childs[2]);
             }
@@ -325,6 +393,7 @@ public class CustomOctree : MonoBehaviour
                     parentCenter.y + parentHalfHeight,
                     parentCenter.z);
                 root.childs[3].center = (maxExtent + minExtent) / 2;
+                root.childs[3].size = maxExtent - minExtent;
                 root.childs[3].aabb.MakeAABB(minExtent, maxExtent);
                 AddNode(pos, root.childs[3]);
             }
@@ -348,6 +417,7 @@ public class CustomOctree : MonoBehaviour
                     parentCenter.y,
                     parentCenter.z + parentHalfDepth);
                 root.childs[4].center = (maxExtent + minExtent) / 2;
+                root.childs[4].size = maxExtent - minExtent;
                 root.childs[4].aabb.MakeAABB(minExtent, maxExtent);
                 AddNode(pos, root.childs[4]);
             }
@@ -371,6 +441,7 @@ public class CustomOctree : MonoBehaviour
                     parentCenter.y,
                     parentCenter.z + parentHalfDepth);
                 root.childs[5].center = (maxExtent + minExtent) / 2;
+                root.childs[5].size = maxExtent - minExtent;
                 root.childs[5].aabb.MakeAABB(minExtent, maxExtent);
                 AddNode(pos, root.childs[5]);
             }
@@ -394,6 +465,7 @@ public class CustomOctree : MonoBehaviour
                     parentCenter.y + parentHalfHeight,
                     parentCenter.z + parentHalfDepth);
                 root.childs[6].center = (maxExtent + minExtent) / 2;
+                root.childs[6].size = maxExtent - minExtent;
                 root.childs[6].aabb.MakeAABB(minExtent, maxExtent);
                 AddNode(pos, root.childs[6]);
             }
@@ -417,6 +489,7 @@ public class CustomOctree : MonoBehaviour
                     parentCenter.y + parentHalfHeight,
                     parentCenter.z + parentHalfDepth);
                 root.childs[7].center = (maxExtent + minExtent) / 2;
+                root.childs[7].size = maxExtent - minExtent;
                 root.childs[7].aabb.MakeAABB(minExtent, maxExtent);
                 AddNode(pos, root.childs[7]);
             }
@@ -439,6 +512,7 @@ public class CustomOctree : MonoBehaviour
             parentCenter.z - parentHalfDepth);
         maxExtent = parentCenter;
         root.childs[0].center = (maxExtent + minExtent) / 2;
+        root.childs[0].size = maxExtent - minExtent;
         root.childs[0].aabb.MakeAABB(minExtent, maxExtent);
         CreateALLNodes(root.childs[0], maxDepth -1);
 
@@ -450,6 +524,7 @@ public class CustomOctree : MonoBehaviour
             parentCenter.y,
             parentCenter.z);
         root.childs[1].center = (maxExtent + minExtent) / 2;
+        root.childs[1].size = maxExtent - minExtent;
         root.childs[1].aabb.MakeAABB(minExtent, maxExtent);
         CreateALLNodes(root.childs[1], maxDepth - 1);
 
@@ -461,6 +536,7 @@ public class CustomOctree : MonoBehaviour
             parentCenter.y + parentHalfHeight,
             parentCenter.z);
         root.childs[2].center = (maxExtent + minExtent) / 2;
+        root.childs[2].size = maxExtent - minExtent;
         root.childs[2].aabb.MakeAABB(minExtent, maxExtent);
         CreateALLNodes(root.childs[2], maxDepth - 1);
 
@@ -472,6 +548,7 @@ public class CustomOctree : MonoBehaviour
             parentCenter.y + parentHalfHeight,
             parentCenter.z);
         root.childs[3].center = (maxExtent + minExtent) / 2;
+        root.childs[3].size = maxExtent - minExtent;
         root.childs[3].aabb.MakeAABB(minExtent, maxExtent);
         CreateALLNodes(root.childs[3], maxDepth - 1);
 
@@ -483,6 +560,7 @@ public class CustomOctree : MonoBehaviour
             parentCenter.y,
             parentCenter.z + parentHalfDepth);
         root.childs[4].center = (maxExtent + minExtent) / 2;
+        root.childs[4].size = maxExtent - minExtent;
         root.childs[4].aabb.MakeAABB(minExtent, maxExtent);
         CreateALLNodes(root.childs[4], maxDepth - 1);
 
@@ -494,6 +572,7 @@ public class CustomOctree : MonoBehaviour
             parentCenter.y,
             parentCenter.z + parentHalfDepth);
         root.childs[5].center = (maxExtent + minExtent) / 2;
+        root.childs[5].size = maxExtent - minExtent;
         root.childs[5].aabb.MakeAABB(minExtent, maxExtent);
         CreateALLNodes(root.childs[5], maxDepth - 1);
 
@@ -505,6 +584,7 @@ public class CustomOctree : MonoBehaviour
             parentCenter.y + parentHalfHeight,
             parentCenter.z + parentHalfDepth);
         root.childs[6].center = (maxExtent + minExtent) / 2;
+        root.childs[6].size = maxExtent - minExtent;
         root.childs[6].aabb.MakeAABB(minExtent, maxExtent);
         CreateALLNodes(root.childs[6], maxDepth - 1);
 
@@ -516,6 +596,7 @@ public class CustomOctree : MonoBehaviour
             parentCenter.y + parentHalfHeight,
             parentCenter.z + parentHalfDepth);
         root.childs[7].center = (maxExtent + minExtent) / 2;
+        root.childs[7].size = maxExtent - minExtent;
         root.childs[7].aabb.MakeAABB(minExtent, maxExtent);
         CreateALLNodes(root.childs[7], maxDepth - 1);
     }

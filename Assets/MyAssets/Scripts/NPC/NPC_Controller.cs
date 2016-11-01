@@ -109,7 +109,6 @@ public class NPC_Controller : MonoBehaviour
 
     private void CalcPathFinding()
     {
-        //Debug.Log("NPC pos :: " + transform.position);
         pathTrace.Clear();
         Stack<PathNode> reversePath = pathFinder.PathFinding();
         if (reversePath != null)

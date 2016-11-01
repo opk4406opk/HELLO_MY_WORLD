@@ -7,7 +7,7 @@ public class CustomRayCast : MonoBehaviour
 {
     public static bool InterSectWithAABB(Ray ray, CustomAABB aabb)
     {
-        if (!aabb.isEnable) return false;
+        //if (!aabb.isEnable) return false;
 
         float tmin = (aabb.minExtent.x - ray.origin.x) / ray.direction.normalized.x;
         float tmax = (aabb.maxExtent.x - ray.origin.x) / ray.direction.normalized.x;
