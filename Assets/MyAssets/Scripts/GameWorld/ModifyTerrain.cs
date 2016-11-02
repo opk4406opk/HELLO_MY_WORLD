@@ -76,22 +76,6 @@ public class ModifyTerrain : MonoBehaviour
         }
     }
 
-    //void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.red;
-    //    int lenX = gameMgr.worldList[0].worldBlockData.GetLength(0);
-    //    int lenY = gameMgr.worldList[0].worldBlockData.GetLength(1);
-    //    int lenZ = gameMgr.worldList[0].worldBlockData.GetLength(2);
-    //    for (int ix = 0; ix < lenX; ix++)
-    //        for (int iy = 0; iy < lenY; iy++)
-    //            for (int iz = 0; iz < lenZ; iz++)
-    //            {
-    //                Vector3 min = gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.minExtent;
-    //                Vector3 max = gameMgr.worldList[0].worldBlockData[ix, iy, iz].aabb.maxExtent;
-    //                Gizmos.DrawWireCube(gameMgr.worldList[0].worldBlockData[ix, iy, iz].center, max - min);
-    //                Gizmos.DrawLine(min, max);
-    //            }
-    //}
     private void SetBlockForAdd(int x, int y, int z, byte block)
     {
       
@@ -121,15 +105,9 @@ public class ModifyTerrain : MonoBehaviour
             string conn = "URI=file:" + Application.dataPath +
               "/StreamingAssets/GameUserDB/userDB.db";
 
-            IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
-            IDbCommand dbcmd = dbconn.CreateCommand();
-
-            string itemName;
-            itemName = lootingSystem.GetTypeToItemName(blockType.ToString());
-            string type;
-            ItemInfo itemInfo = itemDataFile.GetItemData(itemName);
-            type = itemInfo.type;
-            try
+            IDbConnection dbconn;
+            IDbCommand dbcmd;
+            using (dbconn = (IDbConnection)new SqliteConnection(conn))
             {
                 dbconn.Open(); //Open connection to the database.
                 string sqlQuery = "INSERT INTO USER_ITEM (name, type, amount) VALUES("
@@ -163,7 +141,6 @@ public class ModifyTerrain : MonoBehaviour
                 dbcmd = null;
 
                 dbconn.Close();
-                dbconn = null;
             }
         };
 
@@ -194,8 +171,6 @@ public class ModifyTerrain : MonoBehaviour
         updateX = Mathf.FloorToInt(x / chunkSize);
         updateY = Mathf.FloorToInt(y / chunkSize);
         updateZ = Mathf.FloorToInt(z / chunkSize);
-       
-        //print("Updating: " + updateX + ", " + updateY + ", " + updateZ);
 
         _world.chunkGroup[updateX, updateY, updateZ].update = true;
 

@@ -97,31 +97,29 @@ public class InventoryManager : MonoBehaviour {
         {
             string conn = "URI=file:" + Application.dataPath +
                "/StreamingAssets/GameUserDB/userDB.db";
-
-            IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
-            IDbCommand dbcmd = dbconn.CreateCommand();
-            dbconn.Open(); //Open connection to the database.
-
-            string sqlQuery = "SELECT name, type, amount FROM USER_ITEM";
-            dbcmd.CommandText = sqlQuery;
-            IDataReader reader = dbcmd.ExecuteReader();
-
-            while (reader.Read())
+            using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
             {
-                USER_ITEM userItem;
-                userItem.name = reader.GetString(0);
-                userItem.type = reader.GetInt32(1);
-                userItem.amount = reader.GetInt32(2);
+                using (IDbCommand dbcmd = dbconn.CreateCommand())
+                {
+                    dbconn.Open(); //Open connection to the database.
+                    string sqlQuery = "SELECT name, type, amount FROM USER_ITEM";
+                    dbcmd.CommandText = sqlQuery;
+                    using (IDataReader reader = dbcmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            USER_ITEM userItem;
+                            userItem.name = reader.GetString(0);
+                            userItem.type = reader.GetInt32(1);
+                            userItem.amount = reader.GetInt32(2);
 
-                userItemList.Add(userItem);
+                            userItemList.Add(userItem);
+                        }
+                        reader.Close();
+                    }
+                }
+                dbconn.Close();
             }
-            reader.Close();
-            reader = null;
-
-            dbcmd.Dispose();
-            dbcmd = null;
-            dbconn.Close();
-            dbconn = null;
         };
         GetUserItems();
 
