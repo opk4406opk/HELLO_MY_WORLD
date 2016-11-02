@@ -88,27 +88,26 @@ public class CraftItemManager : MonoBehaviour {
         string conn = "URI=file:" + Application.dataPath +
                "/StreamingAssets/GameUserDB/userDB.db";
 
-        IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
-        IDbCommand dbcmd = dbconn.CreateCommand();
-        dbconn.Open(); //Open connection to the database.
+        int amount;
+        using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
+        {
+            dbconn.Open(); //Open connection to the database.
+            using (IDbCommand dbcmd = dbconn.CreateCommand())
+            {
+                string sqlQuery = "SELECT amount FROM USER_ITEM WHERE name = "
+                                  + "'" + itemName + "'";
+                dbcmd.CommandText = sqlQuery;
+                IDataReader reader = dbcmd.ExecuteReader();
 
-        string sqlQuery = "SELECT amount FROM USER_ITEM WHERE name = "
-                          + "'" + itemName + "'";
-        dbcmd.CommandText = sqlQuery;
-        IDataReader reader = dbcmd.ExecuteReader();
+                amount = 0;
+                reader.Read();
+                amount = reader.GetInt32(0);
 
-        int amount = 0;
-        reader.Read();
-        amount = reader.GetInt32(0);
-
-        reader.Close();
-        reader = null;
-
-        dbcmd.Dispose();
-        dbcmd = null;
-        dbconn.Close();
-        dbconn = null;
-
+                reader.Close();
+                reader = null;
+            }
+            dbconn.Close();
+        }
         return amount;
     }
 
@@ -116,71 +115,58 @@ public class CraftItemManager : MonoBehaviour {
     {
         string conn = "URI=file:" + Application.dataPath +
                "/StreamingAssets/GameUserDB/userDB.db";
-
-        IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
-        IDbCommand dbcmd = dbconn.CreateCommand();
-
         string sqlQuery = "INSERT INTO USER_ITEM (name, type, amount) VALUES ("
-                              + "'" + itemName + "'" + ", " + itemType + ", " + itemAmount + ")";
-        try
+                                 + "'" + itemName + "'" + ", " + itemType + ", " + itemAmount + ")";
+        using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
         {
             dbconn.Open(); //Open connection to the database.
-            
-            dbcmd.CommandText = sqlQuery;
-            dbcmd.ExecuteNonQuery();
+            using (IDbCommand dbcmd = dbconn.CreateCommand())
+            {
+                try
+                {
+                    dbcmd.CommandText = sqlQuery;
+                    dbcmd.ExecuteNonQuery();
+                    dbconn.Close();
+                }
+                catch // 인벤토리에 중복된 아이템이 있다면, 수량증가를 해야한다.
+                {
+                    sqlQuery = "SELECT amount FROM USER_ITEM WHERE name = "
+                                          + "'" + itemName + "'";
+                    dbcmd.CommandText = sqlQuery;
+                    IDataReader reader = dbcmd.ExecuteReader();
+                    reader.Read();
+                    int userInvenAmount = reader.GetInt32(0);
+                    userInvenAmount += itemAmount;
+                    reader.Close();
 
-            dbcmd.Dispose();
-            dbcmd = null;
-
+                    sqlQuery = "UPDATE USER_ITEM SET amount = " + "'" + userInvenAmount + "'" +
+                                " WHERE name = " + "'" + itemName + "'";
+                    dbcmd.CommandText = sqlQuery;
+                    dbcmd.ExecuteNonQuery();
+                    dbconn.Close();
+                }
+            }
             dbconn.Close();
-            dbconn = null;
         }
-        catch // 인벤토리에 중복된 아이템이 있다면, 수량증가를 해야한다.
-        {
-            sqlQuery = "SELECT amount FROM USER_ITEM WHERE name = "
-                                  + "'" + itemName + "'";
-            dbcmd.CommandText = sqlQuery;
-            IDataReader reader = dbcmd.ExecuteReader();
-            reader.Read();
-            int userInvenAmount = reader.GetInt32(0);
-            userInvenAmount += itemAmount;
-            reader.Close();
-
-            sqlQuery = "UPDATE USER_ITEM SET amount = " + "'" + userInvenAmount + "'" +
-                        " WHERE name = " + "'" + itemName + "'";
-            dbcmd.CommandText = sqlQuery;
-            dbcmd.ExecuteNonQuery();
-
-            dbcmd.Dispose();
-            dbcmd = null;
-
-            dbconn.Close();
-            dbconn = null;
-        }
-
-        
     }
 
     private void SetUserMaterialAmount(string itemName, int itemAmount)
     {
         string conn = "URI=file:" + Application.dataPath +
                "/StreamingAssets/GameUserDB/userDB.db";
-        
-        IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
-        IDbCommand dbcmd = dbconn.CreateCommand();
-        dbconn.Open(); //Open connection to the database.
-        
-        string sqlQuery = "UPDATE USER_ITEM SET amount = " + "'" + itemAmount + "'" +
+
+        using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
+        {
+            dbconn.Open(); //Open connection to the database.
+            using (IDbCommand dbcmd = dbconn.CreateCommand())
+            {
+                string sqlQuery = "UPDATE USER_ITEM SET amount = " + "'" + itemAmount + "'" +
                     " WHERE name = " + "'" + itemName + "'";
-
-        dbcmd.CommandText = sqlQuery;
-        dbcmd.ExecuteNonQuery();
-
-        dbcmd.Dispose();
-        dbcmd = null;
-
-        dbconn.Close();
-        dbconn = null;
+                dbcmd.CommandText = sqlQuery;
+                dbcmd.ExecuteNonQuery();
+            }
+            dbconn.Close();
+        }
     }
 
     private void DeleteUserMaterial(string itemName)
@@ -188,20 +174,18 @@ public class CraftItemManager : MonoBehaviour {
         string conn = "URI=file:" + Application.dataPath +
                "/StreamingAssets/GameUserDB/userDB.db";
 
-        IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
-        IDbCommand dbcmd = dbconn.CreateCommand();
-        dbconn.Open(); //Open connection to the database.
+        using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
+        {
+            dbconn.Open(); //Open connection to the database.
+            using (IDbCommand dbcmd = dbconn.CreateCommand())
+            {
+                string sqlQuery = "DELETE FROM USER_ITEM WHERE name = " + "'" + itemName + "'";
 
-        string sqlQuery = "DELETE FROM USER_ITEM WHERE name = " + "'" + itemName + "'";
-
-        dbcmd.CommandText = sqlQuery;
-        dbcmd.ExecuteNonQuery();
-
-        dbcmd.Dispose();
-        dbcmd = null;
-
-        dbconn.Close();
-        dbconn = null;
+                dbcmd.CommandText = sqlQuery;
+                dbcmd.ExecuteNonQuery();
+            }
+            dbconn.Close();
+        }
     }
 
     private bool ChkPossibleMakeItem()
@@ -226,43 +210,33 @@ public class CraftItemManager : MonoBehaviour {
 
         string sqlQuery = "SELECT amount FROM USER_ITEM WHERE name = "
                           + "'" + itemName + "'";
-        IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
-        IDbCommand dbcmd = dbconn.CreateCommand();
-        IDataReader reader;
-
-        dbconn.Open(); //Open connection to the database.
-        dbcmd.CommandText = sqlQuery;
-        reader = dbcmd.ExecuteReader();
-        try
+        using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
         {
-            int amount = 0;
-            reader.Read();
-            amount = reader.GetInt32(0);
-
-            reader.Close();
-            reader = null;
-
-            dbcmd.Dispose();
-            dbcmd = null;
-            dbconn.Close();
-            dbconn = null;
-
-            if (amount >= needAmount) return true;
-            else return false;
+            dbconn.Open(); //Open connection to the database.
+            using (IDbCommand dbcmd = dbconn.CreateCommand())
+            {
+                dbcmd.CommandText = sqlQuery;
+                using (IDataReader reader = dbcmd.ExecuteReader())
+                {
+                    try
+                    {
+                        int amount = 0;
+                        reader.Read();
+                        amount = reader.GetInt32(0);
+                        reader.Close();
+                        dbconn.Close();
+                        if (amount >= needAmount) return true;
+                        else return false;
+                    }
+                    catch // 사용자에게 해당 재료 아이템이 없다.
+                    {
+                        reader.Close();
+                        dbconn.Close();
+                        return false;
+                    }
+                }
+            }
         }
-        catch // 사용자에게 해당 재료 아이템이 없다.
-        {
-            reader.Close();
-            reader = null;
-
-            dbcmd.Dispose();
-            dbcmd = null;
-            dbconn.Close();
-            dbconn = null;
-
-            return false;
-        }
-        
     }
 
     private void SetDropDownList()

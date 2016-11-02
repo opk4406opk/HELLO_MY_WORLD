@@ -111,8 +111,7 @@ public class CustomOctree : MonoBehaviour
     private void DrawAllNodes(COTNode node)
     {
         Gizmos.color = Color.yellow;
-        //Gizmos.DrawLine(node.aabb.minExtent, node.aabb.maxExtent);
-        if(node.size == blockMinSize) Gizmos.DrawWireCube(node.center, node.size);
+        if (node.size == blockMinSize) Gizmos.DrawWireCube(node.center, node.size);
         for (int i = 0; i < 8; i++)
         {
             if (node.childs[i] == null) continue;
