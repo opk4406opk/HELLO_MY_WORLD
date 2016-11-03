@@ -183,7 +183,6 @@ public class World : MonoBehaviour
                 {
                     _worldBlockData[x, y, z] = new Block();
                     _worldBlockData[x, y, z].isRendered = false;
-                    _worldBlockData[x, y, z].aabb.isEnable = false;
                 }
     }
   

@@ -111,9 +111,7 @@ public class Chunk : MonoBehaviour
                         worldCoordY = relativeY + _worldCoordY;
                         worldCoordZ = relativeZ + _worldCoordZ;
 
-                        //if (CheckBlock(blockIdxX, blockIdxY + 1, blockIdxZ) == 0)
                         CubeTopFace(worldCoordX, worldCoordY, worldCoordZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
-                        //if (CheckBlock(blockIdxX, blockIdxY - 1, blockIdxZ) == 0)
                         CubeBotFace(worldCoordX, worldCoordY, worldCoordZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
                         CubeNorthFace(worldCoordX, worldCoordY, worldCoordZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
                         CubeSouthFace(worldCoordX, worldCoordY, worldCoordZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
@@ -136,12 +134,9 @@ public class Chunk : MonoBehaviour
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].blockDataPosX = blockIdxX;
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].blockDataPosY = blockIdxY;
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].blockDataPosZ = blockIdxZ;
-                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].belongWorld = world.worldName;
-                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].aabb.MakeAABB(points);
-                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].aabb.isEnable = true;
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].isRendered = true;
                         // 월드맵에 생성된 블록의 중앙점을 이용해 Octree의 노드를 생성합니다.
-                        _world.customOctree.Add(_world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].aabb.centerPos);
+                        _world.customOctree.Add(_world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].center);
                     }
 
                 }

@@ -10,15 +10,6 @@ public class Block {
         get { return _type; }
     }
 
-    public CustomAABB aabb;
-
-    private string _belongWorld;
-    public string belongWorld
-    {
-        set { _belongWorld = value; }
-        get { return _belongWorld; }
-    }
-
     private Vector3 _center;
     /// <summary>
     /// 블록의 정중앙 포인트.
@@ -63,8 +54,6 @@ public class Block {
     // 복사 생성자.
     public Block(Block b)
     {
-        this.aabb = b.aabb;
-        this.belongWorld = b.belongWorld;
         this.blockDataPosX = b.blockDataPosX;
         this.blockDataPosY = b.blockDataPosY;
         this.blockDataPosZ = b.blockDataPosZ;

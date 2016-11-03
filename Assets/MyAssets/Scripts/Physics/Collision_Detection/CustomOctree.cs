@@ -171,6 +171,43 @@ public class CustomOctree : MonoBehaviour
         return info;
     }
 
+    public CollideInfo Collide(CustomAABB other)
+    {
+        return CollideNodeWithAABB(other, root);
+    }
+
+    /// <summary>
+    /// Octree 중에 특정 AABB와 충돌하는 노드를 찾습니다.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <param name="root"></param>
+    private CollideInfo CollideNodeWithAABB(CustomAABB other, COTNode root)
+    {
+        CollideInfo info;
+        info.isCollide = false;
+        info.hitBlockCenter = new Vector3(0, 0, 0);
+        if(root.size == blockMinSize) 
+        {
+            info.isCollide = true;
+            info.hitBlockCenter = root.center;
+            return info;
+        }
+        for (int i = 0; i < 8; i++)
+        {
+            if ((root.childs[i] != null) &&
+               (root.childs[i].aabb.IsInterSectAABB(other)))
+            {
+                return CollideNodeWithAABB(other, root.childs[i]);
+            }
+        }
+        return info;
+    }
+
+    /// <summary>
+    ///  Octree 중에 광선과 충돌하는 노드를 찾습니다.
+    /// </summary>
+    /// <param name="ray"></param>
+    /// <param name="root"></param>
     private void CollideNodeWithRay(Ray ray, COTNode root)
     {
         if (root == null) return;

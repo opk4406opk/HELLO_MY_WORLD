@@ -10,19 +10,17 @@ public class NPC_Controller : MonoBehaviour
     [SerializeField]
     private Transform objectMaxExtent;
 
-    private Block[,,] worldBlockData;
+    private World world;
     private CustomAstar pathFinder;
     private Stack<PathNode> pathTrace = new Stack<PathNode>();
     private IEnumerator pMoveProcess;
-    public void Init(Block[,,] _worldBlockData)
+    public void Init(World _world)
     {
-        aabb.isEnable = true;
-        worldBlockData = _worldBlockData;
-        pathFinder = new CustomAstar(worldBlockData, transform);
-       
+        aabb.MakeAABB(objectMinExtent.position, objectMaxExtent.position);
+        world = _world;
+        pathFinder = new CustomAstar(world.worldBlockData, transform);
         StartCoroutine(ReMakeAABBProcess());
         StartCoroutine(SimpleGravityForce());
-        //StartCoroutine(MoveProcess());
     }
 
     public void ActivePathFindNPC(int goalX, int goalZ)
@@ -36,46 +34,9 @@ public class NPC_Controller : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(aabb.minExtent, aabb.maxExtent);
+        Gizmos.DrawWireCube(aabb.centerPos, aabb.maxExtent - aabb.minExtent);
     }
-
-    // NPC를 주변으로 일정한 공간과의 충돌을 감지한다.
-    private bool IsCollisionArounds()
-    {
-        int worldX = Mathf.RoundToInt(transform.position.x);
-        int worldY = Mathf.RoundToInt(transform.position.y);
-        int worldZ = Mathf.RoundToInt(transform.position.z);
-
-        int blockX, blockY, blockZ;
-        blockX = worldX; blockY = worldY; blockZ = worldZ;
-        if ((worldBlockData[blockX+1, blockY + 1, blockZ].aabb.isEnable)
-            && (worldBlockData[blockX+1, blockY + 1, blockZ].aabb.IsInterSectAABB(aabb))) return true;
-        if ((worldBlockData[blockX, blockY + 1, blockZ+1].aabb.isEnable)
-            && (worldBlockData[blockX, blockY + 1, blockZ+1].aabb.IsInterSectAABB(aabb))) return true;
-        if ((worldBlockData[blockX-1, blockY + 1, blockZ].aabb.isEnable)
-            && (worldBlockData[blockX-1, blockY + 1, blockZ].aabb.IsInterSectAABB(aabb))) return true;
-        if ((worldBlockData[blockX, blockY + 1, blockZ -1].aabb.isEnable)
-           && (worldBlockData[blockX, blockY + 1, blockZ -1].aabb.IsInterSectAABB(aabb))) return true;
-
-        return false;
-    }
-
-    private bool IsCollsionFloor()
-    {
-        int worldX = Mathf.RoundToInt(transform.position.x);
-        int worldY = Mathf.RoundToInt(transform.position.y);
-        int worldZ = Mathf.RoundToInt(transform.position.z);
-
-        int blockX, blockY, blockZ;
-        blockX = worldX; blockY = worldY; blockZ = worldZ;
-        if ((worldBlockData[blockX, blockY, blockZ].aabb.isEnable)
-            && (worldBlockData[blockX, blockY, blockZ].aabb.IsInterSectAABB(aabb)))
-        {
-            return true;
-        }
-        return false;
-    }
-
+    
     private IEnumerator MoveProcess()
     {
         CalcPathFinding();
@@ -103,7 +64,6 @@ public class NPC_Controller : MonoBehaviour
                 transform.position = newPos;
             }
         }
-
         Debug.Log("End Move Process");
     }
 
@@ -124,8 +84,8 @@ public class NPC_Controller : MonoBehaviour
     {
         while (true)
         {
-            
-            if (!IsCollsionFloor()) transform.position = new Vector3(transform.position.x, transform.position.y - 0.1f, transform.position.z);
+            CollideInfo collideInfo = world.customOctree.Collide(aabb);
+            if(!collideInfo.isCollide) transform.position = new Vector3(transform.position.x, transform.position.y - 0.1f, transform.position.z);
             yield return null;
         }
     }
