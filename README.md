@@ -12,10 +12,7 @@ Reference link : http://studentgamedev.blogspot.kr/2013/08/unity-voxel-tutorial-
 1. 개발엔진 : Unity3D
 2. 개발언어 : C#
 3. 사용 Lib : Itween, NGUI 3.x, JSONObject, Sqlite3
-4. 현재 작업중인 내용: <br>
- -> 기존 유니티엔진에서 제공하는 Collider 및 충돌 관련 기능을 제외하고 AABB 및 RayCast등 기능을 구현하여 적용 및 테스트중. <br>
- -> 지형생성에 있어 Octree를 이용하고자 하나 변경 비용이 클 것 같아 일단은 충돌 체크에 쓰는걸로 이용하고자 한다. ( 테스트중..) <br>
- -> 기타 기능 개선을 꾀하고 있다. <br>
+4. Unity3d 에서 제공하는 Collider 및 충돌 기능을 쓰지 않고, 직접 만든 AABB, RayCasting, Octree를 이용해 지형 충돌을 하고 있습니다.
 
 -> Play Video Link  : https://www.youtube.com/watch?v=I8wuYFqKNQE
 
