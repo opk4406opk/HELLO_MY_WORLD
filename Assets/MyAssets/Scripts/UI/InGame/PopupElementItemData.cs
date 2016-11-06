@@ -69,7 +69,7 @@ public class PopupElementItemData : MonoBehaviour
         sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.TryGetValue("type", out output);
         lbl_itemType.text = output;
         sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.TryGetValue("amount", out output);
-        lbl_itemAmount.text = "x" + output;
+        lbl_itemAmount.text = output;
         sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.TryGetValue("detailInfo", out output);
         lbl_itemDetailInfo.text = output;
     }

@@ -64,33 +64,32 @@ public class PopupChData : MonoBehaviour
         {
             string conn = "URI=file:" + Application.dataPath +
                "/StreamingAssets/GameUserDB/userDB.db";
-
-            IDbConnection dbconn = new SqliteConnection(conn);
-            IDbCommand dbcmd = dbconn.CreateCommand();
-            try
+            using (IDbConnection dbconn = new SqliteConnection(conn))
             {
                 dbconn.Open(); //Open connection to the database.
+                using (IDbCommand dbcmd = dbconn.CreateCommand())
+                {
+                    try
+                    {
+                        string sqlQuery =
+                    "INSERT INTO USER_INFO(name, level, type) " +
+                    "VALUES(" + "'" + chName.text + "'" + ", " +
+                    "'" + chLevel.text + "'" + ", " +
+                    "'" + chType.text + "'" + ")";
 
-                string sqlQuery =
-                "INSERT INTO USER_INFO(name, level, type) " +
-                "VALUES(" + "'" + chName.text + "'" + ", " +
-                "'" + chLevel.text + "'" + ", " +
-                "'" + chType.text + "'" + ")";
-
-                dbcmd.CommandText = sqlQuery;
-                dbcmd.ExecuteNonQuery();
-
-                dbcmd.Dispose();
-                dbconn.Close();
-            }
-            catch
-            {
-                dbcmd.Dispose();
+                        dbcmd.CommandText = sqlQuery;
+                        dbcmd.ExecuteNonQuery();
+                    }
+                    catch(SqliteException e)
+                    {
+                        // 이미 등록된 캐릭터이다.
+                        Debug.Log(e.Message);
+                    }
+                }
                 dbconn.Close();
             }
         };
         InsertInfo();
-
         GameLoadingProcess();
     }
 

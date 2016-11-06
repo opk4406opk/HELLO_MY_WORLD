@@ -92,6 +92,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private LootingSystem lootingSystem;
 
+    [SerializeField]
+    private NPC_Controller yukoNPC;
+    public NPC_Controller GetYuKoNPC() { return yukoNPC; }
 
     void Start ()
     {
@@ -119,12 +122,15 @@ public class GameManager : MonoBehaviour
         saveAndLoadManager.Init();
 
         if (GameStatus.isLoadGame == true) { saveAndLoadManager.Load(); }
+        // test NPC.
+        yukoNPC.Init(_worldList[0]);
     }
 
-
+    // 테스트를 위해 서브월드는 1개만 생성하는걸로 한다. ( 총 월드는 1개 ).
     private void CreateGameWorld()
     {
-        for (int idx = 0; idx < MAX_SUB_WORLD; ++idx)
+        // MAX_SUB_WORLD to 1...
+        for (int idx = 0; idx < 1; ++idx)
         {
             int subWorldPosX = subWorldData.GetPosValue(idx, "X") * GameWorldConfig.offsetX;
             int subWorldPosZ = subWorldData.GetPosValue(idx, "Z") * GameWorldConfig.offsetZ;
@@ -135,7 +141,7 @@ public class GameManager : MonoBehaviour
             newSubWorld.GetComponent<World>().chunkPrefab = chunkPrefab;
             newSubWorld.GetComponent<World>().playerTrans = playerTrans;
             newSubWorld.GetComponent<World>().Init(subWorldPosX, subWorldPosZ, tileData);
-            newSubWorld.name = subWorldName; 
+            newSubWorld.GetComponent<World>().worldName = subWorldName;
             newSubWorld.transform.parent = worldGroupTrans;
             //add world.
             _worldList.Add(newSubWorld.GetComponent<World>());

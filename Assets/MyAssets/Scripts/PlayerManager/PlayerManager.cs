@@ -91,5 +91,6 @@ public class PlayerManager : MonoBehaviour {
         _gamePlayer = Instantiate(_prefab,
             initPosition,
             new Quaternion(0, 0, 0, 0)) as GameObject;
+        _gamePlayer.GetComponent<PlayerController>().Init(Camera.main);
     }
 }

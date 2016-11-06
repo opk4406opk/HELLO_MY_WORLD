@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
  
 /// <summary>
 /// 게임내 월드를 생성 및 관리하는 클래스.
@@ -16,37 +17,48 @@ public class World : MonoBehaviour
     {
         set { _chunkPrefab = value; }
     }
-    // 1개의 월드에는 N개의 청크가 있다.
+    // 1개의 월드에는 N개의 Chunk가 있으며 각 Chunk는 M개의 Block을 가지고 있다.
     private Chunk[,,] _chunkGroup;
     public Chunk[,,] chunkGroup
     {
         get { return _chunkGroup; }
     }
 
+    private string _worldName;
+    public string worldName
+    {
+        set {
+            _worldName = value;
+            gameObject.name = _worldName;
+        }
+        get { return _worldName; }
+    }
+
     ///<summary>
-    /// 월드의 모든 블록(타일Type값)성질을 저장하는 배열.
+    /// 월드의 모든 블록을 저장하는 배열.
     ///</summary>
-    private byte[,,] _worldBlockData;
-    public byte[,,] worldBlockData
+    private Block[,,] _worldBlockData;
+    public Block[,,] worldBlockData
     {
         get { return _worldBlockData; }
     }
 
-	private int worldX = 0;
+    private List<Block> _worldBlockList = new List<Block>(); 
+    
+    private int worldX = 0;
     private int worldY = 0;
     private int worldZ = 0;
     private int chunkSize = 0;
-    private int _chunkOffsetX = 0;
-    public int chunkOffsetX
+    private int _worldOffsetX = 0;
+    public int worldOffsetX
     {
-        get { return _chunkOffsetX; }
+        get { return _worldOffsetX; }
     }
-    private int _chunkOffsetZ = 0;
-    public int chunkOffsetZ
+    private int _worldOffsetZ = 0;
+    public int worldOffsetZ
     {
-        get { return _chunkOffsetZ; }
+        get { return _worldOffsetZ; }
     }
-    
 
     private IEnumerator _loadProcessRoutine;
     public IEnumerator loadProcessRoutine
@@ -55,18 +67,27 @@ public class World : MonoBehaviour
     }
     
     private readonly float INTERVAL_LOAD_TIME = 1.0f;
-
     private TileDataFile worldTileDataFile;
+    private int chunkNumber = 0;
+
+    private CustomOctree _customOctree = new CustomOctree();
+    public CustomOctree customOctree
+    {
+        get { return _customOctree; }
+    }
 
     public void Init(int offsetX, int offsetZ, TileDataFile tileDataFile)
 	{
+        _customOctree.Init(new Vector3(0, 0, 0), new Vector3(GameWorldConfig.worldX,
+            GameWorldConfig.worldY,
+            GameWorldConfig.worldZ));
         worldTileDataFile = tileDataFile;
         worldX = GameWorldConfig.worldX;
         worldY = GameWorldConfig.worldY;
         worldZ = GameWorldConfig.worldZ;
         chunkSize = GameWorldConfig.chunkSize;
-        _chunkOffsetX = offsetX;
-        _chunkOffsetZ = offsetZ;
+        _worldOffsetX = offsetX;
+        _worldOffsetZ = offsetZ;
 
         InitWorldData();
         InitChunkGroup();
@@ -80,6 +101,11 @@ public class World : MonoBehaviour
         {
             _loadProcessRoutine = LoadProcess();
         }
+    }
+
+    void OnDrawGizmos()
+    {
+        _customOctree.DrawFullTree();
     }
 
     private IEnumerator LoadProcess()
@@ -96,8 +122,8 @@ public class World : MonoBehaviour
         for (int x = 0; x < _chunkGroup.GetLength(0); x++)
             for (int z = 0; z < _chunkGroup.GetLength(2); z++)
             {
-                float dist = Vector2.Distance(new Vector2((x + _chunkOffsetX) * chunkSize,
-                        (z + _chunkOffsetZ) * chunkSize),
+                float dist = Vector2.Distance(new Vector2((x + _worldOffsetX) * chunkSize,
+                        (z + _worldOffsetZ) * chunkSize),
                         new Vector2(_playerTrans.position.x, _playerTrans.position.z));
 
                 if (dist < distToLoad)
@@ -115,17 +141,27 @@ public class World : MonoBehaviour
     {
         for (int y = 0; y < _chunkGroup.GetLength(1); y++)
         {
-            //subWorld offset 크기만큼 실제 chunk의 world Position에 적용.
-            GameObject newChunk = Instantiate(_chunkPrefab, new Vector3((x + _chunkOffsetX) * chunkSize - 0.5f,
-                                                y * chunkSize + 0.5f, (z + _chunkOffsetZ) * chunkSize - 0.5f),
+
+            // 유니티엔진에서 제공되는 씬에서 존재하는 모든 게임 오브젝트들의 중점은
+            // 실제 게임 오브젝트의 정중앙이 된다. 
+            // 따라서, 유니티엔진에 맞춰서 오브젝트의 중점을 정중앙으로 하려면, 아래와 같은 0.5f(offset)값을 추가한다.
+            // p.s. 이 프로젝트에서 1개의 block의 기준점(block을 생성할 때 쓰이는)은 최상단면의 좌측하단의 포인트가 된다.(디폴트)
+            float coordX = x * chunkSize - 0.5f;
+            float coordY = y * chunkSize + 0.5f;
+            float coordZ = z * chunkSize - 0.5f;
+            GameObject newChunk = Instantiate(_chunkPrefab, new Vector3(0, 0, 0),
                                                 new Quaternion(0, 0, 0, 0)) as GameObject;
 
             newChunk.transform.parent = gameObject.transform;
+            newChunk.transform.name = "Chunk_" + chunkNumber++;
             _chunkGroup[x, y, z] = newChunk.GetComponent("Chunk") as Chunk;
             _chunkGroup[x, y, z].world = this;
-            _chunkGroup[x, y, z].chunkX = x * chunkSize;
-            _chunkGroup[x, y, z].chunkY = y * chunkSize;
-            _chunkGroup[x, y, z].chunkZ = z * chunkSize;
+            _chunkGroup[x, y, z].worldDataIdxX = x * chunkSize;
+            _chunkGroup[x, y, z].worldDataIdxY = y * chunkSize;
+            _chunkGroup[x, y, z].worldDataIdxZ = z * chunkSize;
+            _chunkGroup[x, y, z].worldCoordX = coordX;
+            _chunkGroup[x, y, z].worldCoordY = coordY;
+            _chunkGroup[x, y, z].worldCoordZ = coordZ;
             _chunkGroup[x, y, z].Init(worldTileDataFile);
         }
 	}
@@ -135,13 +171,19 @@ public class World : MonoBehaviour
 		for (int y=0; y< _chunkGroup.GetLength(1); y++)
         {
 			Object.Destroy(chunkGroup [x, y, z].gameObject);
-			
 		}
 	}
 
     private void InitWorldData()
     {
-        _worldBlockData = new byte[worldX, worldY, worldZ];
+        _worldBlockData = new Block[worldX, worldY, worldZ];
+        for (int x = 0; x < worldX; x++)
+            for (int y = 0; y < worldY; y++)
+                for (int z = 0; z < worldZ; z++)
+                {
+                    _worldBlockData[x, y, z] = new Block();
+                    _worldBlockData[x, y, z].isRendered = false;
+                }
     }
   
     private void InsertDefaultWorldData()
@@ -156,8 +198,8 @@ public class World : MonoBehaviour
 
                 for (int y = 0; y < worldY; y++)
                 {
-                    if (y <= stone) _worldBlockData[x, y, z] = (byte)worldTileDataFile.GetTileData("STONE_BIG").type;
-                    else if (y <= dirt + stone) _worldBlockData[x, y, z] = (byte)worldTileDataFile.GetTileData("GRASS").type;
+                    if (y <= stone) _worldBlockData[x, y, z].type = (byte)worldTileDataFile.GetTileData("STONE_BIG").type;
+                    else if (y <= dirt + stone) _worldBlockData[x, y, z].type = (byte)worldTileDataFile.GetTileData("GRASS").type;
                 }
             }
         }
@@ -177,21 +219,5 @@ public class World : MonoBehaviour
 		if (power != 0) rValue = Mathf.Pow(rValue, power);
 		return (int)rValue;
 	}
-  
-  
-	public byte Block (int x, int y, int z)
-	{
-   
-		if (x >= worldX ||
-            x < 0 ||
-            y >= worldY ||
-            y < 0 ||
-            z >= worldZ ||
-            z < 0)
-        {
-			return (byte)1;
-		}
-   
-		return _worldBlockData [x, y, z];
-	}
+    
 }

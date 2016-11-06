@@ -78,7 +78,7 @@ public class SaveAndLoadManager : MonoBehaviour {
                 for (int z = 0; z < GameWorldConfig.worldZ; ++z)
                 {
                     mergeIdx = (x * GameWorldConfig.worldY * GameWorldConfig.worldZ) + (y * GameWorldConfig.worldZ) + z;
-                    mergeWorldData[mergeIdx + mergeIdxOffset] = gameWorldList[subWorldIdx].worldBlockData[x, y, z];
+                    mergeWorldData[mergeIdx + mergeIdxOffset] = gameWorldList[subWorldIdx].worldBlockData[x, y, z].type;
                 }
         
         // 데이터 입력이 끝나면, 구분자를 삽입한다.
@@ -156,7 +156,7 @@ public class SaveAndLoadManager : MonoBehaviour {
                 for (int z = 0; z < GameWorldConfig.worldZ; ++z)
                 {
                     mergeIdx = (x * GameWorldConfig.worldY * GameWorldConfig.worldZ) + (y * GameWorldConfig.worldZ) + z;
-                    gameWorldList[subWorldIdx].worldBlockData[x, y, z] = mergeWorldData[mergeIdx + mergeIdxOffset];
+                    gameWorldList[subWorldIdx].worldBlockData[x, y, z].type = mergeWorldData[mergeIdx + mergeIdxOffset];
                 }
 
         if((subWorldIdx != (gameWorldList.Count-1)) &&

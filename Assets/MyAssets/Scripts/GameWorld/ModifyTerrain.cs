@@ -1,22 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Mono.Data.Sqlite;
 using System.Data;
+
+
 /// <summary>
 /// 게임내 사용자가 월드 블록을 수정/삭제를 관리하는 클래스.
 /// </summary>
+/// 
 public class ModifyTerrain : MonoBehaviour
 {
     [SerializeField]
     private LootingSystem lootingSystem;
     [SerializeField]
     private ItemDataFile itemDataFile;
+    [SerializeField]
+    private GameManager gameMgr;
 
-    private World _world;
-    public World world
-    {
-        set { _world = value; }
-    }
+    private World world;
+    //public World world
+    //{
+    //    set { _world = value; }
+    //}
     
     private int chunkSize = 0;
 
@@ -25,65 +31,64 @@ public class ModifyTerrain : MonoBehaviour
         chunkSize = GameWorldConfig.chunkSize;
     }
 
-    public void ReplaceBlockCursor(RaycastHit hit, byte block)
+    public void ReplaceBlockCursor(Ray ray, byte blockType)
     {
-        DeleteBlockAt(hit, block);
+        DeleteBlockAt(ray, blockType);
     }
 
-    public void AddBlockCursor(RaycastHit hit, byte block)
+    public void AddBlockCursor(Ray ray, byte blockType)
     {
-        AddBlockAt(hit, block);
+        AddBlockAt(ray, blockType);
     }
 
-    private void DeleteBlockAt(RaycastHit hit, byte block)
+    private void DeleteBlockAt(Ray ray, byte blockType)
     {
-        //removes a block at these impact coordinates, you can raycast against the terrain and call this with the hit.point
-        Vector3 position = hit.point;
-        position += (hit.normal * -0.5f);
-
-        // 기본 청크 위치 : x' = x * chunkSize;
-        // 오프셋 적용한 청크 위치 : x'' = (x + offset) * chunkSize;
-        // 따라서, 기본 Chunk 위치와 오프셋이 적용된 Chunk의 차이는
-        //  x'' = x' - (offset * chunkSize)
-        int x, y, z;
-        x = Mathf.RoundToInt(position.x - (_world.chunkOffsetX * chunkSize));
-        y = Mathf.RoundToInt(position.y);
-        z = Mathf.RoundToInt(position.z - (_world.chunkOffsetZ * chunkSize));
-
-        SetBlockForDelete(x, y, z, block);
-
+        world = gameMgr.worldList[0];
+        RayCastingProcess(ray, blockType, false);
+    }
+    private void AddBlockAt(Ray ray, byte blockType)
+    {
+        world = gameMgr.worldList[0];
+        RayCastingProcess(ray, blockType, true);
     }
 
-    private void AddBlockAt(RaycastHit hit, byte block)
+    private void RayCastingProcess(Ray ray, byte blockType, bool isCreate)
     {
-        //adds the specified block at these impact coordinates, you can raycast against the terrain and call this with the hit.point
-        Vector3 position = hit.point;
-        position += (hit.normal * 0.5f);
-
-        // 기본 청크 위치 : x' = x * chunkSize;
-        // 오프셋 적용한 청크 위치 : x'' = (x + offset) * chunkSize;
-        // 따라서, 기본 Chunk 위치와 오프셋이 적용된 Chunk의 차이는
-        //  x'' = x' - (offset * chunkSize)
-        int x, y, z;
-        x = Mathf.RoundToInt(position.x - (_world.chunkOffsetX * chunkSize));
-        y = Mathf.RoundToInt(position.y);
-        z = Mathf.RoundToInt(position.z - (_world.chunkOffsetZ * chunkSize));
-
-        SetBlockForAdd(x, y, z, block);
+        CollideInfo collideInfo = world.customOctree.Collide(ray);
+        if (collideInfo.isCollide)
+        {
+            int blockX, blockY, blockZ;
+            blockX = (int)(collideInfo.hitBlockCenter.x);
+            blockY = (int)(collideInfo.hitBlockCenter.y);
+            blockZ = (int)(collideInfo.hitBlockCenter.z);
+            // 광선과 충돌하는 블록으로 NPC가 이동한다. ( 길찾기 알고리즘 테스트용 코드. )--------
+            gameMgr.GetYuKoNPC().ActivePathFindNPC(blockX, blockZ);
+            //-------------------------------------------------------------------------------
+            if (isCreate)
+            {
+                world.customOctree.Add(collideInfo.hitBlockCenter + new Vector3(0, 1.0f, 0));
+                SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
+                world.worldBlockData[blockX, blockY + 1, blockZ].isRendered = true;
+            }
+            else
+            {
+                world.customOctree.Delete(collideInfo.hitBlockCenter);
+                SetBlockForDelete(blockX, blockY, blockZ, blockType);
+                world.worldBlockData[blockX, blockY, blockZ].isRendered = false;
+            }
+        }
     }
-    
 
     private void SetBlockForAdd(int x, int y, int z, byte block)
     {
-        //adds the specified block at these coordinates
-        print("Adding: " + x + ", " + y + ", " + z);
-        
+      
         if((x < GameWorldConfig.worldX) &&
            (y < GameWorldConfig.worldY) &&
            (z < GameWorldConfig.worldZ) &&
            (x >= 0) && (y >= 0) && (z >= 0)) 
         {
-            _world.worldBlockData[x, y, z] = block;
+            world.worldBlockData[x, y, z].type = block;
+            world.worldBlockData[x, y, z].isRendered = true;
             UpdateChunkAt(x, y, z, block);
         }
         else
@@ -96,57 +101,56 @@ public class ModifyTerrain : MonoBehaviour
     private delegate void del_UpdateUserItem(byte blockType);
     private void SetBlockForDelete(int x, int y, int z, byte block)
     {
-        //adds the specified block at these coordinates
-        print("Adding: " + x + ", " + y + ", " + z);
-
+        
         del_UpdateUserItem UpdateUserItem = (byte blockType) =>
         {
             string conn = "URI=file:" + Application.dataPath +
               "/StreamingAssets/GameUserDB/userDB.db";
 
-            IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
-            IDbCommand dbcmd = dbconn.CreateCommand();
-
-            string itemName;
-            itemName = lootingSystem.GetTypeToItemName(blockType.ToString());
-            string type;
-            ItemInfo itemInfo = itemDataFile.GetItemData(itemName);
-            type = itemInfo.type;
-            try
+            IDbConnection dbconn;
+            IDbCommand dbcmd;
+            using (dbconn = (IDbConnection)new SqliteConnection(conn))
             {
-                dbconn.Open(); //Open connection to the database.
-                string sqlQuery = "INSERT INTO USER_ITEM (name, type, amount) VALUES("
-                                   + "'"+ itemName +"'" + "," + "'" +type + "'" + "," + "1)";
-                dbcmd.CommandText = sqlQuery;
-                dbcmd.ExecuteNonQuery();
+                using (dbcmd = dbconn.CreateCommand())
+                {
+                    string itemName;
+                    itemName = lootingSystem.GetTypeToItemName(blockType.ToString());
+                    string type;
+                    ItemInfo itemInfo = itemDataFile.GetItemData(itemName);
+                    type = itemInfo.type;
+                    try
+                    {
+                        dbconn.Open(); //Open connection to the database.
+                        string sqlQuery = "INSERT INTO USER_ITEM (name, type, amount) VALUES("
+                                           + "'" + itemName + "'" + "," + "'" + type + "'" + "," + "1)";
+                        dbcmd.CommandText = sqlQuery;
+                        dbcmd.ExecuteNonQuery();
 
-                dbcmd.Dispose();
-                dbcmd = null;
+                        dbconn.Close();
+                    }
+                    catch (SqliteException e) // 인벤토리에 중복된 아이템이 있다면, 수량증가를 해야한다.
+                    {
+                        if (SQLiteErrorCode.Constraint == e.ErrorCode)
+                        {
+                            string sqlQuery = "SELECT amount FROM USER_ITEM WHERE name = "
+                                        + "'" + itemName + "'";
+                            dbcmd.CommandText = sqlQuery;
+                            IDataReader reader = dbcmd.ExecuteReader();
+                            reader.Read();
+                            int itemAmount = reader.GetInt32(0);
+                            itemAmount++;
+                            reader.Close();
 
+                            sqlQuery = "UPDATE USER_ITEM SET amount = " + "'" + itemAmount + "'" +
+                                        " WHERE name = " + "'" + itemName + "'";
+                            dbcmd.CommandText = sqlQuery;
+                            dbcmd.ExecuteNonQuery();
+
+                            dbconn.Close();
+                        }
+                    }
+                }
                 dbconn.Close();
-                dbconn = null;
-            }
-            catch // 인벤토리에 중복된 아이템이 있다면, 수량증가를 해야한다.
-            {
-                string sqlQuery = "SELECT amount FROM USER_ITEM WHERE name = "
-                                  + "'" + itemName +"'";
-                dbcmd.CommandText = sqlQuery;
-                IDataReader reader = dbcmd.ExecuteReader();
-                reader.Read();
-                int itemAmount = reader.GetInt32(0);
-                itemAmount++;
-                reader.Close();
-
-                sqlQuery = "UPDATE USER_ITEM SET amount = " + "'" + itemAmount + "'" +
-                            " WHERE name = " + "'" + itemName + "'" ;
-                dbcmd.CommandText = sqlQuery;
-                dbcmd.ExecuteNonQuery();
-
-                dbcmd.Dispose();
-                dbcmd = null;
-
-                dbconn.Close();
-                dbconn = null;
             }
         };
 
@@ -155,8 +159,9 @@ public class ModifyTerrain : MonoBehaviour
            (z < GameWorldConfig.worldZ) &&
            (x >= 0) && (y >= 0) && (z >= 0))
         {
-            UpdateUserItem(_world.worldBlockData[x, y, z]);
-            _world.worldBlockData[x, y, z] = block;
+            UpdateUserItem(world.worldBlockData[x, y, z].type);
+            world.worldBlockData[x, y, z].type = block;
+            world.worldBlockData[x, y, z].isRendered = false;
             UpdateChunkAt(x, y, z, block);
         }
         else
@@ -175,39 +180,37 @@ public class ModifyTerrain : MonoBehaviour
         updateX = Mathf.FloorToInt(x / chunkSize);
         updateY = Mathf.FloorToInt(y / chunkSize);
         updateZ = Mathf.FloorToInt(z / chunkSize);
-       
-        print("Updating: " + updateX + ", " + updateY + ", " + updateZ);
 
-        _world.chunkGroup[updateX, updateY, updateZ].update = true;
+        world.chunkGroup[updateX, updateY, updateZ].update = true;
 
         if (x - (chunkSize * updateX) == 0 && updateX != 0)
         {
-            _world.chunkGroup[updateX - 1, updateY, updateZ].update = true;
+            world.chunkGroup[updateX - 1, updateY, updateZ].update = true;
         }
 
-        if (x - (chunkSize * updateX) == GameWorldConfig.chunkSize && updateX != _world.chunkGroup.GetLength(0) - 1)
+        if (x - (chunkSize * updateX) == GameWorldConfig.chunkSize && updateX != world.chunkGroup.GetLength(0) - 1)
         {
-            _world.chunkGroup[updateX + 1, updateY, updateZ].update = true;
+            world.chunkGroup[updateX + 1, updateY, updateZ].update = true;
         }
 
         if (y - (chunkSize * updateY) == 0 && updateY != 0)
         {
-            _world.chunkGroup[updateX, updateY - 1, updateZ].update = true;
+            world.chunkGroup[updateX, updateY - 1, updateZ].update = true;
         }
 
-        if (y - (chunkSize * updateY) == GameWorldConfig.chunkSize && updateY != _world.chunkGroup.GetLength(1) - 1)
+        if (y - (chunkSize * updateY) == GameWorldConfig.chunkSize && updateY != world.chunkGroup.GetLength(1) - 1)
         {
-            _world.chunkGroup[updateX, updateY + 1, updateZ].update = true;
+            world.chunkGroup[updateX, updateY + 1, updateZ].update = true;
         }
 
         if (z - (chunkSize * updateZ) == 0 && updateZ != 0)
         {
-            _world.chunkGroup[updateX, updateY, updateZ - 1].update = true;
+            world.chunkGroup[updateX, updateY, updateZ - 1].update = true;
         }
 
-        if (z - (chunkSize * updateZ) == GameWorldConfig.chunkSize && updateZ != _world.chunkGroup.GetLength(2) - 1)
+        if (z - (chunkSize * updateZ) == GameWorldConfig.chunkSize && updateZ != world.chunkGroup.GetLength(2) - 1)
         {
-            _world.chunkGroup[updateX, updateY, updateZ + 1].update = true;
+            world.chunkGroup[updateX, updateY, updateZ + 1].update = true;
         }
 
     }
