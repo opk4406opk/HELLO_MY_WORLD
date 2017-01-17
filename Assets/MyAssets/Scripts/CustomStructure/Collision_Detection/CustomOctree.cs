@@ -49,13 +49,7 @@ public class COTNode
         set { _size = value; }
         get { return _size; }
     }
-    //// 각 성분은 x, y, z의 길이를 나타낸다. ( 정육면체 ).
-    //private Vector3 _size;
-    //public Vector3 size
-    //{
-    //    set { _size = value; }
-    //    get { return _size; }
-    //}
+
     private bool _isCanDelete;
     public bool isCanDelete
     {
