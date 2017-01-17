@@ -26,7 +26,7 @@ public class Chunk : MonoBehaviour
 
     private int chunkSize = 0;
 
-    // 월드 데이터 배열에서 Chunk가 존재하는 idx x,y,z.----------
+    // 월드 데이터 배열에서 Chunk가 존재하는 인덱스 값( x,y,z).----------
     private int _worldDataIdxX;
     public int worldDataIdxX
     {
@@ -106,31 +106,31 @@ public class Chunk : MonoBehaviour
                         //if (Block(x, y, z + 1) == 0) CubeNorth(x, y, z, Block(x, y, z));
                         //if (Block(x, y, z - 1) == 0) CubeSouth(x, y, z, Block(x, y, z));
                         //test codes.
-                        float worldCoordX, worldCoordY, worldCoordZ;
-                        worldCoordX = relativeX + _worldCoordX;
-                        worldCoordY = relativeY + _worldCoordY;
-                        worldCoordZ = relativeZ + _worldCoordZ;
+                        float cubeX, cubeY, cubeZ;
+                        cubeX = relativeX + _worldCoordX;
+                        cubeY = relativeY + _worldCoordY;
+                        cubeZ = relativeZ + _worldCoordZ;
 
-                        CubeTopFace(worldCoordX, worldCoordY, worldCoordZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
-                        CubeBotFace(worldCoordX, worldCoordY, worldCoordZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
-                        CubeNorthFace(worldCoordX, worldCoordY, worldCoordZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
-                        CubeSouthFace(worldCoordX, worldCoordY, worldCoordZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
-                        CubeEastFace(worldCoordX, worldCoordY, worldCoordZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
-                        CubeWestFace(worldCoordX, worldCoordY, worldCoordZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
+                        CubeTopFace(cubeX, cubeY, cubeZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
+                        CubeBotFace(cubeX, cubeY, cubeZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
+                        CubeNorthFace(cubeX, cubeY, cubeZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
+                        CubeSouthFace(cubeX, cubeY, cubeZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
+                        CubeEastFace(cubeX, cubeY, cubeZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
+                        CubeWestFace(cubeX, cubeY, cubeZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
 
                         // points 배열은 실제 블록을 생성할 때 쓰이는 8개의 포인트로 실제 월드 좌표값이다.
                         // 따라서, 이를 이용해 블록의 AABB의 Min, Max Extent 값을 정한다.
                         Vector3[] points = new Vector3[8];
-                        points[0] = new Vector3(worldCoordX, worldCoordY, worldCoordZ);
-                        points[1] = new Vector3(worldCoordX + 1, worldCoordY, worldCoordZ);
-                        points[2] = new Vector3(worldCoordX + 1, worldCoordY, worldCoordZ + 1 );
-                        points[3] = new Vector3(worldCoordX, worldCoordY, worldCoordZ + 1);
-                        points[4] = new Vector3(worldCoordX, worldCoordY - 1, worldCoordZ);
-                        points[5] = new Vector3(worldCoordX + 1, worldCoordY - 1, worldCoordZ);
-                        points[6] = new Vector3(worldCoordX + 1, worldCoordY - 1, worldCoordZ + 1);
-                        points[7] = new Vector3(worldCoordX, worldCoordY - 1, worldCoordZ + 1);
+                        points[0] = new Vector3(cubeX, cubeY, cubeZ);
+                        points[1] = new Vector3(cubeX + 1, cubeY, cubeZ);
+                        points[2] = new Vector3(cubeX + 1, cubeY, cubeZ + 1 );
+                        points[3] = new Vector3(cubeX, cubeY, cubeZ + 1);
+                        points[4] = new Vector3(cubeX, cubeY - 1, cubeZ);
+                        points[5] = new Vector3(cubeX + 1, cubeY - 1, cubeZ);
+                        points[6] = new Vector3(cubeX + 1, cubeY - 1, cubeZ + 1);
+                        points[7] = new Vector3(cubeX, cubeY - 1, cubeZ + 1);
                         // 블록 생성시 정중앙을 맞추기 위해 추가했던 offset 값을 제거한다.
-                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].center = new Vector3(worldCoordX + 0.5f, worldCoordY - 0.5f, worldCoordZ + 0.5f);
+                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].center = new Vector3(cubeX + 0.5f, cubeY - 0.5f, cubeZ + 0.5f);
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].blockDataPosX = blockIdxX;
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].blockDataPosY = blockIdxY;
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].blockDataPosZ = blockIdxZ;

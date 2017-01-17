@@ -27,16 +27,6 @@ public class GameWorldConfig
     {
         get { return _chunkSize; }
     }
-    private static int _offsetX = _worldX / _chunkSize;
-    public static int offsetX
-    {
-        get { return _offsetX; }
-    }
-    private static int _offsetZ = _worldZ / _chunkSize;
-    public static int offsetZ
-    {
-        get { return _offsetZ; }
-    }
 }
 
 /// <summary>
@@ -129,11 +119,10 @@ public class GameManager : MonoBehaviour
     // 테스트를 위해 서브월드는 1개만 생성하는걸로 한다. ( 총 월드는 1개 ).
     private void CreateGameWorld()
     {
-        // MAX_SUB_WORLD to 1...
-        for (int idx = 0; idx < 1; ++idx)
+        for (int idx = 0; idx < MAX_SUB_WORLD; ++idx)
         {
-            int subWorldPosX = subWorldData.GetPosValue(idx, "X") * GameWorldConfig.offsetX;
-            int subWorldPosZ = subWorldData.GetPosValue(idx, "Z") * GameWorldConfig.offsetZ;
+            int subWorldPosX = subWorldData.GetPosValue(idx, "X") * GameWorldConfig.worldX;
+            int subWorldPosZ = subWorldData.GetPosValue(idx, "Z") * GameWorldConfig.worldZ;
             string subWorldName = subWorldData.GetWorldName(idx, "WORLD_NAME");
 
             GameObject newSubWorld = Instantiate(worldPrefab, new Vector3(0, 0, 0),
