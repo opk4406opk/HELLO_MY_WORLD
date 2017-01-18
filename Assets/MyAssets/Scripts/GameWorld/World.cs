@@ -78,9 +78,9 @@ public class World : MonoBehaviour
 
     public void Init(int offsetX, int offsetZ, TileDataFile tileDataFile)
 	{
-        _customOctree.Init(new Vector3(0, 0, 0), 
-            new Vector3(GameWorldConfig.worldX ,GameWorldConfig.worldY,
-            GameWorldConfig.worldZ));
+        _customOctree.Init(new Vector3(offsetX, 0, offsetZ), 
+            new Vector3(GameWorldConfig.worldX + offsetX ,GameWorldConfig.worldY,
+            GameWorldConfig.worldZ + offsetZ));
         worldTileDataFile = tileDataFile;
         worldX = GameWorldConfig.worldX;
         worldY = GameWorldConfig.worldY;
@@ -151,7 +151,6 @@ public class World : MonoBehaviour
             float worldCoordZ = z * chunkSize - 0.5f;
             GameObject newChunk = Instantiate(_chunkPrefab, new Vector3(0, 0, 0),
                                                 new Quaternion(0, 0, 0, 0)) as GameObject;
-
             newChunk.transform.parent = gameObject.transform;
             newChunk.transform.name = "Chunk_" + chunkNumber++;
             _chunkGroup[x, y, z] = newChunk.GetComponent("Chunk") as Chunk;
