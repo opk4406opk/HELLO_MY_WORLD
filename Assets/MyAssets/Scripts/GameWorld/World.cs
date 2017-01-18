@@ -42,8 +42,6 @@ public class World : MonoBehaviour
     {
         get { return _worldBlockData; }
     }
-
-    private List<Block> _worldBlockList = new List<Block>(); 
     
     private int worldX = 0;
     private int worldY = 0;
@@ -105,7 +103,7 @@ public class World : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        _customOctree.DrawFullTree();
+        //_customOctree.DrawFullTree();
     }
 
     private IEnumerator LoadProcess()

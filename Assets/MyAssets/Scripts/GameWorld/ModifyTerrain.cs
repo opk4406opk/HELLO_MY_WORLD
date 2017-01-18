@@ -19,37 +19,43 @@ public class ModifyTerrain : MonoBehaviour
     private GameManager gameMgr;
 
     private World world;
-    //public World world
-    //{
-    //    set { _world = value; }
-    //}
-    
     private int chunkSize = 0;
-
     void Start()
     {
         chunkSize = GameWorldConfig.chunkSize;
     }
 
-    public void ReplaceBlockCursor(Ray ray, byte blockType)
+    public void ReplaceBlockCursor(Ray ray, Vector3 clickWorldPos, byte blockType)
     {
-        DeleteBlockAt(ray, blockType);
+        DeleteBlockAt(ray, clickWorldPos, blockType);
     }
 
-    public void AddBlockCursor(Ray ray, byte blockType)
+    public void AddBlockCursor(Ray ray, Vector3 clickWorldPos, byte blockType)
     {
-        AddBlockAt(ray, blockType);
+        AddBlockAt(ray, clickWorldPos, blockType);
     }
 
-    private void DeleteBlockAt(Ray ray, byte blockType)
+    private void DeleteBlockAt(Ray ray, Vector3 clickWorldPos, byte blockType)
     {
-        world = gameMgr.worldList[0];
+        SelectWorld(clickWorldPos);
         RayCastingProcess(ray, blockType, false);
     }
-    private void AddBlockAt(Ray ray, byte blockType)
+    private void AddBlockAt(Ray ray, Vector3 clickWorldPos, byte blockType)
     {
-        world = gameMgr.worldList[0];
+        SelectWorld(clickWorldPos);
         RayCastingProcess(ray, blockType, true);
+    }
+    private void SelectWorld(Vector3 clickWorldPos)
+    {
+        foreach (World w in gameMgr.worldList)
+        {
+            if (CustomAABB.IsInterSectPoint(w.customOctree.rootMinBound,
+                w.customOctree.rootMaxBound, clickWorldPos))
+            {
+                world = w;
+                break;
+            }
+        }
     }
 
     private void RayCastingProcess(Ray ray, byte blockType, bool isCreate)
@@ -61,8 +67,12 @@ public class ModifyTerrain : MonoBehaviour
             blockX = (int)(collideInfo.hitBlockCenter.x);
             blockY = (int)(collideInfo.hitBlockCenter.y);
             blockZ = (int)(collideInfo.hitBlockCenter.z);
+
+            blockX -= world.worldOffsetX;
+            blockZ -= world.worldOffsetZ;
+            // 현재 테스트중임.
             // 광선과 충돌하는 블록으로 NPC가 이동한다. ( 길찾기 알고리즘 테스트용 코드. )--------
-            gameMgr.GetYuKoNPC().ActivePathFindNPC(blockX, blockZ);
+            //gameMgr.GetYuKoNPC().ActivePathFindNPC(blockX, blockZ);
             //-------------------------------------------------------------------------------
             if (isCreate)
             {

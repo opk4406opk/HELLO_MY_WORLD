@@ -78,6 +78,18 @@ public class CustomOctree : MonoBehaviour
     private Vector3 blockMinSize = new Vector3(1.0f, 1.0f, 1.0f);
     private List<CollideInfo> collideCandidate = new List<CollideInfo>();
 
+    // root min, max bound 의 경우 Octree가 생성하는 Node들중의
+    // 가장 최상위 노드의 extent를 의미한다.
+    private Vector3 _rootMinBound;
+    public Vector3 rootMinBound
+    {
+        get { return _rootMinBound; }
+    }
+    private Vector3 _rootMaxBound;
+    public Vector3 rootMaxBound
+    {
+        get { return _rootMaxBound; }
+    }
     /// <summary>
     /// 전체 지형를 감싸는 바운딩박스의 Min, MaxExtent로  Octree의 초기화를 합니다.
     /// </summary>
@@ -85,14 +97,14 @@ public class CustomOctree : MonoBehaviour
     /// <param name="_maxBound"></param>
     public void Init(Vector3 _minBound, Vector3 _maxBound)
     {
-        // 실제 월드에 존재하는 각 블록들의 렌더링 되는 시작점에서 해당 오프셋을 빼준다.
-        _minBound += offset;
-        _maxBound += offset;
-        Vector3 center = (_maxBound + _minBound) /2;
+        // 실제 월드에 존재하는 각 블록들의 렌더링 되는 시작점에서 해당 오프셋을 적용.
+        _rootMinBound = _minBound + offset;
+        _rootMaxBound = _maxBound + offset;
+        Vector3 center = (_rootMaxBound + _rootMinBound) /2;
         root = new COTNode();
         root.center = center;
-        root.size = _maxBound - _minBound;
-        root.aabb.MakeAABB(_minBound, _maxBound);
+        root.size = _rootMaxBound - _rootMinBound;
+        root.aabb.MakeAABB(_rootMinBound, _rootMaxBound);
     }
     /// <summary>
     /// Gizmo를 이용해 Octree의 모든노드를 그려준다.

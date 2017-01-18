@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// 테스트용 NPC 컨트롤러 스크립트.
+/// </summary>
 public class NPC_Controller : MonoBehaviour
 {
     private CustomAABB aabb;

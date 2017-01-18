@@ -69,12 +69,12 @@ public class InputManager : MonoBehaviour {
             case INPUT_STATE.CREATE:
                 inputState = INPUT_STATE.NONE;
                 if(UIPopupManager.isAllpopupClose == true)
-                    modifyTerrian.AddBlockCursor(ray, blockSelector.curSelectBlockType);
+                    modifyTerrian.AddBlockCursor(ray, clickPos, blockSelector.curSelectBlockType);
                 break;
             case INPUT_STATE.DELETE:
                 inputState = INPUT_STATE.NONE;
                 if (UIPopupManager.isAllpopupClose == true)
-                    modifyTerrian.ReplaceBlockCursor(ray, 0);
+                    modifyTerrian.ReplaceBlockCursor(ray, clickPos, 0);
                 break;
             default:
                 break;

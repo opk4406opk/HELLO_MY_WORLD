@@ -61,6 +61,17 @@ public struct CustomAABB {
         return false;
     }
 
+    public static bool IsInterSectPoint(Vector3 minExtent, Vector3 maxExtent, Vector3 point)
+    {
+        if ((point.x > minExtent.x && point.x < maxExtent.x) &&
+           (point.y > minExtent.y && point.y < maxExtent.y) &&
+           (point.z > minExtent.z && point.z < maxExtent.z))
+        {
+            return true;
+        }
+        return false;
+    }
+
     public bool IsInterSectAABB(CustomAABB other)
     {
         if ((_minExtent.x <= other.maxExtent.x && _maxExtent.x >= other.minExtent.x) &&
