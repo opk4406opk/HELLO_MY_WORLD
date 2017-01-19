@@ -42,8 +42,6 @@ public class World : MonoBehaviour
     {
         get { return _worldBlockData; }
     }
-
-    private List<Block> _worldBlockList = new List<Block>(); 
     
     private int worldX = 0;
     private int worldY = 0;
@@ -78,9 +76,9 @@ public class World : MonoBehaviour
 
     public void Init(int offsetX, int offsetZ, TileDataFile tileDataFile)
 	{
-        _customOctree.Init(new Vector3(0, 0, 0), new Vector3(GameWorldConfig.worldX,
-            GameWorldConfig.worldY,
-            GameWorldConfig.worldZ));
+        _customOctree.Init(new Vector3(offsetX, 0, offsetZ), 
+            new Vector3(GameWorldConfig.worldX + offsetX ,GameWorldConfig.worldY,
+            GameWorldConfig.worldZ + offsetZ));
         worldTileDataFile = tileDataFile;
         worldX = GameWorldConfig.worldX;
         worldY = GameWorldConfig.worldY;
@@ -105,7 +103,7 @@ public class World : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        _customOctree.DrawFullTree();
+        //_customOctree.DrawFullTree();
     }
 
     private IEnumerator LoadProcess()
@@ -122,8 +120,8 @@ public class World : MonoBehaviour
         for (int x = 0; x < _chunkGroup.GetLength(0); x++)
             for (int z = 0; z < _chunkGroup.GetLength(2); z++)
             {
-                float dist = Vector2.Distance(new Vector2((x + _worldOffsetX) * chunkSize,
-                        (z + _worldOffsetZ) * chunkSize),
+                float dist = Vector2.Distance(new Vector2(x * chunkSize,
+                        z * chunkSize),
                         new Vector2(_playerTrans.position.x, _playerTrans.position.z));
 
                 if (dist < distToLoad)
@@ -142,16 +140,15 @@ public class World : MonoBehaviour
         for (int y = 0; y < _chunkGroup.GetLength(1); y++)
         {
 
-            // 유니티엔진에서 제공되는 씬에서 존재하는 모든 게임 오브젝트들의 중점은
+            // 유니티엔진에서 제공되는 게임 오브젝트들의 중점(=월드좌표에서의 위치)은
             // 실제 게임 오브젝트의 정중앙이 된다. 
             // 따라서, 유니티엔진에 맞춰서 오브젝트의 중점을 정중앙으로 하려면, 아래와 같은 0.5f(offset)값을 추가한다.
             // p.s. 이 프로젝트에서 1개의 block의 기준점(block을 생성할 때 쓰이는)은 최상단면의 좌측하단의 포인트가 된다.(디폴트)
-            float coordX = x * chunkSize - 0.5f;
-            float coordY = y * chunkSize + 0.5f;
-            float coordZ = z * chunkSize - 0.5f;
+            float worldCoordX = x * chunkSize - 0.5f;
+            float worldCoordY = y * chunkSize + 0.5f;
+            float worldCoordZ = z * chunkSize - 0.5f;
             GameObject newChunk = Instantiate(_chunkPrefab, new Vector3(0, 0, 0),
                                                 new Quaternion(0, 0, 0, 0)) as GameObject;
-
             newChunk.transform.parent = gameObject.transform;
             newChunk.transform.name = "Chunk_" + chunkNumber++;
             _chunkGroup[x, y, z] = newChunk.GetComponent("Chunk") as Chunk;
@@ -159,9 +156,9 @@ public class World : MonoBehaviour
             _chunkGroup[x, y, z].worldDataIdxX = x * chunkSize;
             _chunkGroup[x, y, z].worldDataIdxY = y * chunkSize;
             _chunkGroup[x, y, z].worldDataIdxZ = z * chunkSize;
-            _chunkGroup[x, y, z].worldCoordX = coordX;
-            _chunkGroup[x, y, z].worldCoordY = coordY;
-            _chunkGroup[x, y, z].worldCoordZ = coordZ;
+            _chunkGroup[x, y, z].worldCoordX = worldCoordX + _worldOffsetX;
+            _chunkGroup[x, y, z].worldCoordY = worldCoordY;
+            _chunkGroup[x, y, z].worldCoordZ = worldCoordZ + _worldOffsetZ;
             _chunkGroup[x, y, z].Init(worldTileDataFile);
         }
 	}
