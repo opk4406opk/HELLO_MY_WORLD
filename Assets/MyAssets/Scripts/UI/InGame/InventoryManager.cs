@@ -17,7 +17,7 @@ public class InventoryManager : MonoBehaviour {
     [SerializeField]
     private GameObject popupObj;
 
-    private readonly int defaultItemSlot = 50;
+    private readonly int defaultItemSlot = 10;
     private List<ItemData> itemSlotList = new List<ItemData>();
     
     // DB에서 추출한 유저 아이템정보를 담아두는 리스트.
@@ -123,11 +123,11 @@ public class InventoryManager : MonoBehaviour {
         };
         GetUserItems();
 
-        int itemSlotIdx = 0;
+		int moreEmptySlot = userItemList.Count;
+		if (moreEmptySlot > defaultItemSlot) CreateEmptySlot(moreEmptySlot - defaultItemSlot);
+		int itemSlotIdx = 0;
         foreach(USER_ITEM uitem in userItemList)
         {
-            if (itemSlotIdx > defaultItemSlot) CreateEmptySlot(10);
-
             // set user item info
             itemSlotList[itemSlotIdx].itemName = uitem.name;
             itemSlotList[itemSlotIdx].amount = "x" + uitem.amount.ToString();
@@ -143,8 +143,7 @@ public class InventoryManager : MonoBehaviour {
             Ed_OnClickItem = new EventDelegate(this, "OnClickItem");
             Ed_OnClickItem.parameters[0].value = itemSlotList[itemSlotIdx];
             itemSlotList[itemSlotIdx].GetComponent<UIButton>().onClick.Add(Ed_OnClickItem);
-
-            itemSlotIdx++;
+			itemSlotIdx++;
         }
     }
 

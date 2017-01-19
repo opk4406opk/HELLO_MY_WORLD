@@ -71,3 +71,5 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 *.db
+Assets/StreamingAssets/GameUserDB/userDB.db
+*.db
