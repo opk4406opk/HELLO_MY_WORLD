@@ -13,4 +13,4 @@ Reference link : http://studentgamedev.blogspot.kr/2013/08/unity-voxel-tutorial-
 2. 개발언어 : C#
 3. 사용 Lib : Itween, NGUI 3.x, JSONObject, Sqlite3
 4. Unity3d 에서 제공하는 Collider 및 충돌 기능을 쓰지 않고, 직접 만든 AABB, RayCasting, Octree를 이용해 지형 충돌을 하고 있습니다.
-
+( 엔진에서 제공하는 충돌 기능을 사용하지 않은 이유는, 해당 기능을 직접 구현함으로 프로그래밍 공부를 하기 위해서 입니다.)
