@@ -67,12 +67,13 @@ public class ModifyTerrain : MonoBehaviour
             blockX = (int)(collideInfo.hitBlockCenter.x);
             blockY = (int)(collideInfo.hitBlockCenter.y);
             blockZ = (int)(collideInfo.hitBlockCenter.z);
+			// 현재 테스트중임.
+			// 광선과 충돌하는 블록으로 NPC가 이동한다. ( 길찾기 알고리즘 테스트용 코드. )--------
+			gameMgr.GetYuKoNPC().Init(world);
+			gameMgr.GetYuKoNPC().ActivePathFindNPC(blockX, blockZ);
 
             blockX -= world.worldOffsetX;
             blockZ -= world.worldOffsetZ;
-            // 현재 테스트중임.
-            // 광선과 충돌하는 블록으로 NPC가 이동한다. ( 길찾기 알고리즘 테스트용 코드. )--------
-            //gameMgr.GetYuKoNPC().ActivePathFindNPC(blockX, blockZ);
             //-------------------------------------------------------------------------------
             if (isCreate)
             {

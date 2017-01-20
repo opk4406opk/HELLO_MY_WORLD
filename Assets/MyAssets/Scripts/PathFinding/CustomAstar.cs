@@ -104,8 +104,7 @@ public class PathNode
 
 public class CustomAstar
 {
-    private int MAP_SIZE_X;
-    private int MAP_SIZE_Z;
+	private int MAP_SIZE_X, MAP_SIZE_Z;
 
     private PathNode[,] pathFindMapData;
     private List<PathNode> openList = new List<PathNode>();
@@ -113,16 +112,19 @@ public class CustomAstar
 
     private List<Vector2> eightDir = new List<Vector2>();
 
-    private PathNode curNode;
-    private PathNode goalNode;
+    private PathNode curNode , goalNode;
 
     private Block[,,] worldBlockData;
     private Transform moveObject;
 
     private Stack<PathNode> navigatePath = new Stack<PathNode>();
 
-    public CustomAstar(Block[,,] _worldBlockData, Transform _moveObject)
+	private int offsetX = 0, offsetZ = 0;
+
+	public CustomAstar(Block[,,] _worldBlockData, Transform _moveObject, int _offsetX, int _offsetZ)
     {
+		offsetX = _offsetX;
+		offsetZ = _offsetZ;
         worldBlockData = _worldBlockData;
         MAP_SIZE_X = GameWorldConfig.worldX;
         MAP_SIZE_Z = GameWorldConfig.worldZ;
@@ -176,8 +178,8 @@ public class CustomAstar
 
     private void SetStartPathNode()
     {
-        int x = Mathf.RoundToInt(moveObject.position.x);
-        int z = Mathf.RoundToInt(moveObject.position.z);
+		int x = Mathf.RoundToInt(moveObject.position.x - offsetX);
+		int z = Mathf.RoundToInt(moveObject.position.z - offsetZ);
         curNode = pathFindMapData[x, z];
         curNode.parentNode = null;
         curNode.Calc_H_Value(goalNode);
@@ -190,7 +192,7 @@ public class CustomAstar
     /// </summary>
     public void SetGoalPathNode(int worldCoordX, int worldCoordZ)
     {
-        goalNode = pathFindMapData[worldCoordX, worldCoordZ];
+		goalNode = pathFindMapData[worldCoordX - offsetX, worldCoordZ - offsetZ];
         goalNode.isGoalNode = true;
     }
 

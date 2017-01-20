@@ -13,15 +13,15 @@ public class NPC_Controller : MonoBehaviour
     [SerializeField]
     private Transform objectMaxExtent;
 
-    private World world;
+	private World world;
     private CustomAstar pathFinder;
     private Stack<PathNode> pathTrace = new Stack<PathNode>();
     private IEnumerator pMoveProcess;
-    public void Init(World _world)
+	public void Init(World _world)
     {
+		world = _world;
         aabb.MakeAABB(objectMinExtent.position, objectMaxExtent.position);
-        world = _world;
-        pathFinder = new CustomAstar(world.worldBlockData, transform);
+		pathFinder = new CustomAstar(world.worldBlockData, transform, world.worldOffsetX, world.worldOffsetZ);
         StartCoroutine(ReMakeAABBProcess());
         StartCoroutine(SimpleGravityForce());
     }
@@ -47,7 +47,9 @@ public class NPC_Controller : MonoBehaviour
         while (pathTrace.Count > 0){
             yield return new WaitForSeconds(1.0f);
             node = pathTrace.Pop();
-            Vector3 newPos = new Vector3(node.pathMapDataX, node.worldCoordY, node.pathMapDataZ);
+			Vector3 newPos = new Vector3(node.pathMapDataX + world.worldOffsetX,
+				node.worldCoordY,
+				node.pathMapDataZ + world.worldOffsetZ);
             int diff = Mathf.RoundToInt(transform.position.y - newPos.y);
             if (Mathf.Abs(diff) >= 1)
             {

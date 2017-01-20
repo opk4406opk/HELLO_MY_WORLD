@@ -112,11 +112,8 @@ public class GameManager : MonoBehaviour
         saveAndLoadManager.Init();
 
         if (GameStatus.isLoadGame == true) { saveAndLoadManager.Load(); }
-        // test NPC.
-        yukoNPC.Init(_worldList[0]);
     }
-
-    // 테스트를 위해 서브월드는 1개만 생성하는걸로 한다. ( 총 월드는 1개 ).
+		
     private void CreateGameWorld()
     {
         for (int idx = 0; idx < MAX_SUB_WORLD; ++idx)
