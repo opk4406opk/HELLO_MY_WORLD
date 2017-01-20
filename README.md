@@ -14,5 +14,3 @@ Reference link : http://studentgamedev.blogspot.kr/2013/08/unity-voxel-tutorial-
 3. 사용 Lib : Itween, NGUI 3.x, JSONObject, Sqlite3
 4. Unity3d 에서 제공하는 Collider 및 충돌 기능을 쓰지 않고, 직접 만든 AABB, RayCasting, Octree를 이용해 지형 충돌을 하고 있습니다.
 
--> Play Video Link  : https://www.youtube.com/watch?v=I8wuYFqKNQE
-
