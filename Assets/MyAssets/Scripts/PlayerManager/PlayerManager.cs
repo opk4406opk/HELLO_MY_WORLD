@@ -41,26 +41,24 @@ public class PlayerManager : MonoBehaviour {
         {
             string conn = "URI=file:" + Application.dataPath +
                "/StreamingAssets/GameUserDB/userDB.db";
-
-            IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
-            IDbCommand dbcmd = dbconn.CreateCommand();
-            dbconn.Open(); //Open connection to the database.
-
-            string sqlQuery = "SELECT name FROM USER_INFO";
-            dbcmd.CommandText = sqlQuery;
-            IDataReader reader = dbcmd.ExecuteReader();
-
-            // 임시로 0번 레코드의 Name 필드의 값만 쓴다. 
-            reader.Read();
-            chName = reader.GetString(0); 
-            
-            reader.Close();
-            reader = null;
-            dbcmd.Dispose();
-            dbcmd = null;
-
-            dbconn.Close();
-            dbconn = null;
+            IDbConnection dbconn;
+            IDbCommand dbcmd;
+            using (dbconn = (IDbConnection)new SqliteConnection(conn))
+            {
+                using (dbcmd = dbconn.CreateCommand())
+                {
+                    dbconn.Open(); //Open connection to the database.
+                    string sqlQuery = "SELECT name FROM USER_INFO";
+                    dbcmd.CommandText = sqlQuery;
+                    IDataReader reader = dbcmd.ExecuteReader();
+                    // 임시로 0번 레코드의 Name 필드의 값만 쓴다. 
+                    reader.Read();
+                    chName = reader.GetString(0);
+                    reader.Close();
+                    reader = null;
+                }
+                dbconn.Close();
+            }
         };
         GetUserInfo();
 

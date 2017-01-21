@@ -71,12 +71,10 @@ public class PopupChData : MonoBehaviour
                 {
                     try
                     {
-                        string sqlQuery =
-                    "INSERT INTO USER_INFO(name, level, type) " +
-                    "VALUES(" + "'" + chName.text + "'" + ", " +
-                    "'" + chLevel.text + "'" + ", " +
-                    "'" + chType.text + "'" + ")";
-
+                        string sqlQuery = "INSERT INTO USER_INFO(name, level, type) " +
+                                          "VALUES(" + "'" + chName.text + "'" + ", " +
+                                          "'" + chLevel.text + "'" + ", " +
+                                          "'" + chType.text + "'" + ")";
                         dbcmd.CommandText = sqlQuery;
                         dbcmd.ExecuteNonQuery();
                     }

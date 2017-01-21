@@ -290,7 +290,6 @@ public class Chunk : MonoBehaviour
         mesh.vertices = newVertices.ToArray();
         mesh.uv = newUV.ToArray();
         mesh.triangles = newTriangles.ToArray();
-        ;
         mesh.RecalculateNormals();
 
         newVertices.Clear();

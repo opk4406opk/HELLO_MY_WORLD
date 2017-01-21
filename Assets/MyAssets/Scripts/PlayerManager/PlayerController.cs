@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour {
         while (true)
         {
             CamFollowPlayer();
-            RotationCamAndPlayer();
+            if(UIPopupManager.isAllpopupClose) RotationCamAndPlayer();
             yield return null;
         }
     }

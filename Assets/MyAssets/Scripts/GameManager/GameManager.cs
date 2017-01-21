@@ -3,26 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// 게임 서브 월드의 설정을 관리하는 클래스.
+/// 게임 월드의 설정을 관리하는 클래스.
 /// </summary>
 public class GameWorldConfig
 {
-    private static int _worldX = 32;
+    private static readonly int _worldX = 32;
     public static int worldX
     {
         get { return _worldX; }
     }
-    private static int _worldY = 32;
+    private static readonly int _worldY = 32;
     public static int worldY
     {
         get { return _worldY; }
     }
-    private static int _worldZ = 32;
+    private static readonly int _worldZ = 32;
     public static int worldZ
     {
         get { return _worldZ; }
     }
-    private static int _chunkSize = 8;
+    private static readonly int _chunkSize = 8;
     public static int chunkSize
     {
         get { return _chunkSize; }
