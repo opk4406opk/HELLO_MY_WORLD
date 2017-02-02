@@ -32,12 +32,10 @@ public class PlayerManager : MonoBehaviour {
     {
         CreateProcess();
     }
-
-    private delegate void del_GetUserInfo();
     private void CreateProcess()
     {
         string chName = System.String.Empty;
-        del_GetUserInfo GetUserInfo = () =>
+        Action GetUserInfo = () =>
         {
             string conn = "URI=file:" + Application.dataPath +
                "/StreamingAssets/GameUserDB/userDB.db";

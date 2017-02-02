@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Mono.Data.Sqlite;
 using System.Data;
+using System;
 
 
 /// <summary>
@@ -109,11 +110,9 @@ public class ModifyTerrain : MonoBehaviour
             UIPopupManager.OpenGameMessage();
         }
     }
-    private delegate void del_UpdateUserItem(byte blockType);
     private void SetBlockForDelete(int x, int y, int z, byte block)
     {
-        
-        del_UpdateUserItem UpdateUserItem = (byte blockType) =>
+        Action<byte> UpdateUserItem = (byte blockType) =>
         {
             string conn = "URI=file:" + Application.dataPath +
               "/StreamingAssets/GameUserDB/userDB.db";

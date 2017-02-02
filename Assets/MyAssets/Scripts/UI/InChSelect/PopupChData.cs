@@ -56,11 +56,9 @@ public class PopupChData : MonoBehaviour
     {
         PopupExitProcess();
     }
-
-    private delegate void del_InsertNewUserInfo();
     public void ClickGameStart()
     {
-        del_InsertNewUserInfo InsertInfo = () =>
+        Action InsertInfo = () =>
         {
             string conn = "URI=file:" + Application.dataPath +
                "/StreamingAssets/GameUserDB/userDB.db";

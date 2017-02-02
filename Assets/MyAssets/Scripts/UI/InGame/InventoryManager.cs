@@ -89,11 +89,9 @@ public class InventoryManager : MonoBehaviour {
         }
         uiGridObj.GetComponent<UIGrid>().Reposition();
     }
-
-    private delegate void del_GetUserItems();
     private void SettingUserItem()
     {
-        del_GetUserItems GetUserItems = () =>
+        Action GetUserItems = () =>
         {
             string conn = "URI=file:" + Application.dataPath +
                "/StreamingAssets/GameUserDB/userDB.db";
