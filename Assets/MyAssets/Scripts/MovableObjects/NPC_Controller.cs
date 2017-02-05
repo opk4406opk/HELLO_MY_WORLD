@@ -21,7 +21,10 @@ public class NPC_Controller : MonoBehaviour
     {
 		world = _world;
         aabb.MakeAABB(objectMinExtent.position, objectMaxExtent.position);
-		pathFinder = new CustomAstar(world.worldBlockData, transform, world.worldOffsetX, world.worldOffsetZ);
+        pathFinder = new CustomAstar();
+        pathFinder.Init(new PathFinderInitData(world.worldBlockData,
+            transform, world.worldOffsetX,
+            world.worldOffsetZ));
         StartCoroutine(ReMakeAABBProcess());
         StartCoroutine(SimpleGravityForce());
     }
@@ -47,9 +50,9 @@ public class NPC_Controller : MonoBehaviour
         while (pathTrace.Count > 0){
             yield return new WaitForSeconds(1.0f);
             node = pathTrace.Pop();
-			Vector3 newPos = new Vector3(node.pathMapDataX + world.worldOffsetX,
+			Vector3 newPos = new Vector3(node.worldCoordX,
 				node.worldCoordY,
-				node.pathMapDataZ + world.worldOffsetZ);
+				node.worldCoordZ);
             int diff = Mathf.RoundToInt(transform.position.y - newPos.y);
             if (Mathf.Abs(diff) >= 1)
             {
@@ -75,14 +78,7 @@ public class NPC_Controller : MonoBehaviour
     private void CalcPathFinding()
     {
         pathTrace.Clear();
-        Stack<PathNode> reversePath = pathFinder.PathFinding();
-        if (reversePath != null)
-        {
-            foreach (PathNode p in reversePath)
-            {
-                pathTrace.Push(p);
-            }
-        }
+        pathTrace = pathFinder.PathFinding();
     }
 
     private IEnumerator SimpleGravityForce()
@@ -99,14 +95,9 @@ public class NPC_Controller : MonoBehaviour
     {
         while (true)
         {
-            ReMakeAABB();
+            aabb.MakeAABB(objectMinExtent.position, objectMaxExtent.position);
             yield return null;
         }
-    }
-
-    private void ReMakeAABB()
-    {
-        aabb.MakeAABB(objectMinExtent.position, objectMaxExtent.position);
     }
 }
 

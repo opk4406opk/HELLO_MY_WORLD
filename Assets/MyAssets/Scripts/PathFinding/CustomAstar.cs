@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+// 참고 레퍼런스 문서 List.
 // ref #1 : http://cozycoz.egloos.com/9748811
 // ref #2 : http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html
 
@@ -9,6 +10,8 @@ public class PathNode
 {
     // 길찾기용 맵 데이터 좌표 X,Z 이다. 그러나 실제 월드 블록 배열 X,Z 평면값과 동일한 의미로 쓰이기도 하니,
     // 이 값을 실제 길을 찾아가는 오브젝트가 월드 좌표 (x, z)값으로 사용 가능하다.
+    #region variables.
+   
     private int _pathMapDataX;
     public int pathMapDataX
     {
@@ -21,12 +24,23 @@ public class PathNode
         set { _pathMapDataZ = value; }
         get { return _pathMapDataZ; }
     }
-
+    private int _worldCoordX;
+    public int worldCoordX
+    {
+        set { _worldCoordX = value; }
+        get { return _worldCoordX; }
+    }
     private int _worldCoordY;
     public int worldCoordY
     {
         set { _worldCoordY = value; }
         get { return _worldCoordY; }
+    }
+    private int _worldCoordZ;
+    public int worldCoordZ
+    {
+        set { _worldCoordZ = value; }
+        get { return _worldCoordZ; }
     }
 
     private bool _isJumped;
@@ -55,7 +69,9 @@ public class PathNode
     {
         get { return _gValue; }
     }
-
+    #endregion
+    #region method
+    
     public void Calc_G_Value()
     {
         if (_parentNode == null)
@@ -83,15 +99,12 @@ public class PathNode
             absY = Mathf.Abs(y);
             _gValue = (absX + absY) * 10 + _parentNode.gValue;
         }
-            
     }
-
     private int _hValue;
     public int hValue
     {
         get { return _hValue; }
     }
-
     // 대각선 이동, 장애물들을 모두 무시한채 목표지점간의 x, y 이동값에 대한 결과를 구한다.
     public void Calc_H_Value(PathNode goal)
     {
@@ -99,7 +112,25 @@ public class PathNode
         int y = Mathf.Abs(goal.pathMapDataZ - _pathMapDataZ);
         _hValue = (x + y) * 10;
     }
+    #endregion
+}
 
+/// <summary>
+/// 길찾기 시작에 필요한 초기화 데이터.
+/// </summary>
+public struct PathFinderInitData
+{
+    public Block[,,] worldBlockData;
+    public Transform moveObjTrans;
+    public int offsetX, offsetZ;
+
+    public PathFinderInitData(Block[,,] blockData, Transform trans, int _offsetX, int _offsetZ)
+    {
+        worldBlockData = blockData;
+        moveObjTrans = trans;
+        offsetX = _offsetX;
+        offsetZ = _offsetZ;
+    }
 }
 
 public class CustomAstar
@@ -115,17 +146,19 @@ public class CustomAstar
     private PathNode curNode , goalNode;
 
     private Block[,,] worldBlockData;
-    private Transform moveObject;
+    private Transform trans;
 
     private Stack<PathNode> navigatePath = new Stack<PathNode>();
 
 	private int offsetX = 0, offsetZ = 0;
 
-	public CustomAstar(Block[,,] _worldBlockData, Transform _moveObject, int _offsetX, int _offsetZ)
+    public CustomAstar() { }
+
+	public void Init(PathFinderInitData data)
     {
-		offsetX = _offsetX;
-		offsetZ = _offsetZ;
-        worldBlockData = _worldBlockData;
+		offsetX = data.offsetX;
+		offsetZ = data.offsetZ;
+        worldBlockData = data.worldBlockData;
         MAP_SIZE_X = GameWorldConfig.worldX;
         MAP_SIZE_Z = GameWorldConfig.worldZ;
         pathFindMapData = new PathNode[MAP_SIZE_X, MAP_SIZE_Z];
@@ -138,7 +171,7 @@ public class CustomAstar
                 pathFindMapData[x, z].parentNode = null;
                 pathFindMapData[x, z].isGoalNode = false;
             }
-        moveObject = _moveObject;
+        trans = data.moveObjTrans;
         InitEightDir();
     }
 
@@ -147,11 +180,13 @@ public class CustomAstar
         PathNode path = goalNode;
         while (path.parentNode != null)
         {
+            path.worldCoordX = path.pathMapDataX + offsetX;
+            path.worldCoordZ = path.pathMapDataZ + offsetZ;
             navigatePath.Push(path);
             path = path.parentNode;
         }
     }
-    private void InitData()
+    private void InitPathFinding()
     {
         openList.Clear();
         closedList.Clear();
@@ -159,9 +194,14 @@ public class CustomAstar
         InitPathFindMapData();
         BuildPathFindMapData();
     }
+    /// <summary>
+    /// 길찾기를 시작합니다.
+    /// 길찾기에 앞서 목표 노드를 반드시 설정해야합니다.
+    /// </summary>
+    /// <returns>길 노드 목록을 Stack으로 반환합니다.</returns>
     public Stack<PathNode> PathFinding()
     {
-        InitData();
+        InitPathFinding();
         SetStartPathNode();
         while ((openList.Count != 0) && (!IsGoalInOpenList()))
         {
@@ -173,13 +213,14 @@ public class CustomAstar
         // Stack<T> 의 복사 생성자는 오리지널의 스택 순서에서 반대로 카피를 한다.
         // # 1 : https://msdn.microsoft.com/en-us/library/76atxd68(v=vs.110).aspx
         // # 2 : http://stackoverflow.com/questions/7391348/c-sharp-clone-a-stack
-        return new Stack<PathNode>(navigatePath);
+        return Utility.ReversePathStack(new Stack<PathNode>(navigatePath));
     }
 
     private void SetStartPathNode()
     {
-		int x = Mathf.RoundToInt(moveObject.position.x - offsetX);
-		int z = Mathf.RoundToInt(moveObject.position.z - offsetZ);
+        // 각 sub World 마다 간격이 있으므로 해당 간격에 맞추어 offset 값을 추가.
+        int x = Mathf.RoundToInt(trans.position.x - offsetX);
+		int z = Mathf.RoundToInt(trans.position.z - offsetZ);
         curNode = pathFindMapData[x, z];
         curNode.parentNode = null;
         curNode.Calc_H_Value(goalNode);
@@ -192,6 +233,7 @@ public class CustomAstar
     /// </summary>
     public void SetGoalPathNode(int worldCoordX, int worldCoordZ)
     {
+        // 각 sub World 마다 간격이 있으므로 해당 간격에 맞추어 offset 값을 추가.
 		goalNode = pathFindMapData[worldCoordX - offsetX, worldCoordZ - offsetZ];
         goalNode.isGoalNode = true;
     }
@@ -221,7 +263,7 @@ public class CustomAstar
         //길을 찾아 움직이려는 오브젝트의 현재 높이.
         //실제 밟고 서있는 WorldBlock 배열의 Y값을 구한다.
         // p.s. 게임 내 월드블록 배열에서 XZ 평면에서의 데이터만 있으면 된다.
-        int curHeight = Mathf.RoundToInt(moveObject.position.y);
+        int curHeight = Mathf.RoundToInt(trans.position.y);
         for(int x = 0; x < MAP_SIZE_X; x++)
             for(int z=0; z < MAP_SIZE_Z; z++)
             {

@@ -55,7 +55,8 @@ public class GameManager : MonoBehaviour
     {
         get { return _worldList; }
     }
-
+    #region Inspector variables.
+    
     [SerializeField]
     private SubWorldDataFile subWorldData;
     [SerializeField]
@@ -84,8 +85,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private NPC_Controller yukoNPC;
+    [SerializeField]
+    private TestNPC0 testYukoNpc;
+    #endregion
     public NPC_Controller GetYuKoNPC() { return yukoNPC; }
-
     void Start ()
     {
         //player Init
@@ -112,6 +115,11 @@ public class GameManager : MonoBehaviour
         saveAndLoadManager.Init();
 
         if (GameStatus.isLoadGame == true) { saveAndLoadManager.Load(); }
+
+        ActorStatData actorData = new ActorStatData();
+        PathFinderInitData pathData = new PathFinderInitData(worldList[0].worldBlockData,
+            testYukoNpc.transform, 0, 0);
+        testYukoNpc.Init(actorData, pathData, new Vector3(16, 15, 16), worldList[0]);
     }
 		
     private void CreateGameWorld()
