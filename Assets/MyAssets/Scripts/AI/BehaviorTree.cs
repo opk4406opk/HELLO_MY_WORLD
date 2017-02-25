@@ -79,13 +79,17 @@ public class MoveForTarget : Node
     {
         if (path.Count > 0)
         {
-            src.x = _controller.curPos.position.x;
-            src.y = _controller.curPos.position.z;
+            src.x = _controller.GetActorTransform().position.x;
+            src.y = _controller.GetActorTransform().position.z;
             dest.x = p.worldCoordX;
             dest.y = p.worldCoordZ;
-            Debug.Log(Vector2.Distance(src, dest));
-            if (Vector2.Distance(src, dest) <= dist) p = path.Pop();
-            else _controller.Move(new Vector3(dest.x - src.x, 0.0f, dest.y - src.y), 1.5f);
+            Vector2 dir = dest - src;
+            if (Vector2.Distance(src, dest) <= dist)
+            {
+                p = path.Pop();
+                _controller.LookAt(new Vector3(dir.x, 0.0f, dir.y));
+            }
+            else _controller.Move(new Vector3(dir.x, 0.0f, dir.y), 1.5f);
             return false;
         }
         else return true;

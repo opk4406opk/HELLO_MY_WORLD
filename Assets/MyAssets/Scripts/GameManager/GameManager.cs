@@ -84,11 +84,8 @@ public class GameManager : MonoBehaviour
     private LootingSystem lootingSystem;
 
     [SerializeField]
-    private NPC_Controller yukoNPC;
-    [SerializeField]
     private TestNPC0 testYukoNpc;
     #endregion
-    public NPC_Controller GetYuKoNPC() { return yukoNPC; }
     void Start ()
     {
         //player Init

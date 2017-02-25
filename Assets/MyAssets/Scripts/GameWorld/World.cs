@@ -103,7 +103,7 @@ public class World : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        //_customOctree.DrawFullTree();
+       // _customOctree.DrawFullTree();
     }
 
     private IEnumerator LoadProcess()

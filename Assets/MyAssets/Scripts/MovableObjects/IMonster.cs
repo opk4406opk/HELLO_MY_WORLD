@@ -2,6 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-interface IMonster
+public interface IMonster
 {
 }

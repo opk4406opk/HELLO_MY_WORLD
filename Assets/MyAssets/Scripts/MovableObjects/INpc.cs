@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-interface INpc
+public interface INpc
 {
     void Talk();
 }

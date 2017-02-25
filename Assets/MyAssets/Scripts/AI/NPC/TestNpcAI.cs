@@ -18,7 +18,7 @@ public sealed class TestNpcAI : BehaviorTree
         root.AddChild(selector);
         moveForTarget.controller = actorController;
         moveForTarget.InitPathFinder(pathData);
-        moveForTarget.pathFinder.SetGoalPathNode(6, 17);
+        moveForTarget.pathFinder.SetGoalPathNode(22, 25);
         moveForTarget.PathFinding();
         selector.AddChild(seqMoveForTarget);
         selector.AddChild(seqDead);
@@ -32,10 +32,7 @@ public sealed class TestNpcAI : BehaviorTree
     public override IEnumerator BehaviorProcess()
     {
         Debug.Log("BehaviorProcess Start!!");
-        while (!root.Invoke())
-        {
-            yield return null;
-        }
+        while (!root.Invoke()) yield return null;
         Debug.Log("behavior process exit");
     }
 
