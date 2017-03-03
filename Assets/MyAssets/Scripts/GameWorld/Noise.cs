@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+// ref : http://flafla2.github.io/2014/08/09/perlinnoise.html
 /// <summary>
 ///  c# 심플 노이즈 생성 클래스. 
 /// </summary>

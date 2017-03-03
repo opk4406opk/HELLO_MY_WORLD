@@ -7,13 +7,17 @@ public class TEST_OBB : MonoBehaviour {
     [SerializeField]
     private GameObject A;
     [SerializeField]
+    private Transform aMaxExtent;
+    [SerializeField]
     private GameObject B;
-    
+    [SerializeField]
+    private Transform bMaxExtent;
+
     void Start()
     {
 
-        A.GetComponent<CustomOBB>().Init(A.transform, 0.25f, 0.5f, 0.25f);
-        B.GetComponent<CustomOBB>().Init(B.transform, 0.25f, 0.5f, 0.25f);
+        A.GetComponent<CustomOBB>().Init(A.transform, aMaxExtent);
+        B.GetComponent<CustomOBB>().Init(B.transform, bMaxExtent);
         StartCoroutine(TEST());
     }
     private IEnumerator TEST()
