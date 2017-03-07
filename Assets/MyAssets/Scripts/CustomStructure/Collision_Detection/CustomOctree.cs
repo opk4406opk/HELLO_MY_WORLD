@@ -149,6 +149,32 @@ public class CustomOctree : MonoBehaviour
         CreateALLNodes(root, 1);
     }
 
+    public CollideInfo Collide(Vector3 point)
+    {
+        return CollideWithPoint(point, root);
+    }
+    private CollideInfo CollideWithPoint(Vector3 point, COTNode root)
+    {
+        CollideInfo info;
+        info.isCollide = false;
+        info.hitBlockCenter = new Vector3(0, 0, 0);
+        if (root.size == blockMinSize)
+        {
+            info.isCollide = true;
+            info.hitBlockCenter = root.center;
+            return info;
+        }
+        for (int i = 0; i < 8; i++)
+        {
+            if ((root.childs[i] != null) &&
+               (root.childs[i].aabb.IsInterSectPoint(point)))
+            {
+                return CollideWithPoint(point, root.childs[i]);
+            }
+        }
+        return info;
+    }
+
     public CollideInfo Collide(Ray ray)
     {
         CollideNodeWithRay(ray, root);
@@ -175,6 +201,33 @@ public class CustomOctree : MonoBehaviour
             collideCandidate.Clear();
         }
         return info;
+    }
+    /// <summary>
+    ///  Octree 중에 광선과 충돌하는 노드를 찾습니다.
+    /// </summary>
+    /// <param name="ray"></param>
+    /// <param name="root"></param>
+    private void CollideNodeWithRay(Ray ray, COTNode root)
+    {
+        if (root == null) return;
+
+        CollideInfo info;
+        info.isCollide = false;
+        info.hitBlockCenter = new Vector3(0, 0, 0);
+        if (root.size == blockMinSize)
+        {
+            info.isCollide = true;
+            info.hitBlockCenter = root.center;
+            collideCandidate.Add(info);
+        }
+        for (int i = 0; i < 8; i++)
+        {
+            if ((root.childs[i] != null) &&
+                (CustomRayCast.InterSectWithAABB(ray, root.childs[i].aabb)))
+            {
+                CollideNodeWithRay(ray, root.childs[i]);
+            }
+        }
     }
 
     public CollideInfo Collide(CustomAABB other)
@@ -209,33 +262,7 @@ public class CustomOctree : MonoBehaviour
         return info;
     }
 
-    /// <summary>
-    ///  Octree 중에 광선과 충돌하는 노드를 찾습니다.
-    /// </summary>
-    /// <param name="ray"></param>
-    /// <param name="root"></param>
-    private void CollideNodeWithRay(Ray ray, COTNode root)
-    {
-        if (root == null) return;
-
-        CollideInfo info;
-        info.isCollide = false;
-        info.hitBlockCenter = new Vector3(0, 0, 0);
-        if(root.size == blockMinSize)
-        {
-            info.isCollide = true;
-            info.hitBlockCenter = root.center;
-            collideCandidate.Add(info);
-        }
-        for(int i = 0; i < 8; i++)
-        {
-            if ((root.childs[i] != null) &&
-                (CustomRayCast.InterSectWithAABB(ray, root.childs[i].aabb)))
-            {
-                CollideNodeWithRay(ray, root.childs[i]);
-            }
-        }
-    }
+    
 
     private void DeleteNode(Vector3 pos, COTNode root)
     {
