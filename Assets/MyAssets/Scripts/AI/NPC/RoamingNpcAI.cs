@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class TestNpcAI : BehaviorTree
+public sealed class RoamingNpcAI : BehaviorTree
 {
     private Sequence root = new Sequence();
     private Selector selector = new Selector();

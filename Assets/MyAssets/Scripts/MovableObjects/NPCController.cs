@@ -7,16 +7,10 @@ public class NPCController : MonoBehaviour, ActorController
 {
     [SerializeField]
     private Animator animator;
-    private CustomAABB aabb;
+    private CustomOBB obb = new CustomOBB();
     private World containWorld;
     [SerializeField]
-    private Transform minExtent;
-    [SerializeField]
     private Transform maxExtent;
-
-    void OnDrawGizmos()
-    {
-    }
 
     void ActorController.Move(Vector3 dir, float speed)
     {
@@ -24,6 +18,12 @@ public class NPCController : MonoBehaviour, ActorController
         Vector3 newPos = gameObject.transform.position;
         newPos += dir.normalized * Time.deltaTime * speed;
         gameObject.transform.position = newPos;
+    }
+    void OnDrawGizmos()
+    {
+        Vector3 offsetPos = transform.position;
+        offsetPos.y += 1.0f;
+        Gizmos.DrawWireCube(offsetPos, new Vector3(obb.xRadius, obb.yRadius, obb.zRadius));
     }
 
     void ActorController.LookAt(Vector3 dir)
@@ -38,6 +38,7 @@ public class NPCController : MonoBehaviour, ActorController
     void ActorController.Init(World world)
     {
         containWorld = world;
+        obb.Init(transform, maxExtent);
         StartCoroutine(SimpleGravityForce());
     }
 
@@ -49,8 +50,7 @@ public class NPCController : MonoBehaviour, ActorController
     {
         for (;;)
         {
-            aabb.MakeAABB(minExtent.position, maxExtent.position);
-            CollideInfo collideInfo = containWorld.customOctree.Collide(aabb);
+            CollideInfo collideInfo = containWorld.customOctree.Collide(transform.position);
             if (!collideInfo.isCollide)
             {
                 transform.position = new Vector3(transform.position.x,

@@ -5,12 +5,12 @@ using UnityEngine;
 
 // bug issue # 1 : http://answers.unity3d.com/questions/745685/nullreferenceexception-on-startcoroutine.html
 
-public class TestNPC0 : Actor, INpc
+public class RoamingMerchant : Actor, INpc
 {
     [SerializeField]
     private NPCController actorController;
     [SerializeField]
-    private TestNpcAI ai;
+    private RoamingNpcAI ai;
     private ActorStatData status;
 
     public override void Init(ActorStatData statData, PathFinderInitData pathData, Vector3 pos, World world)

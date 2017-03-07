@@ -20,14 +20,6 @@ public class CustomOBB : MonoBehaviour
         _maxExtent = maxExtent;
     }
 
-    void OnDrawGizmos()
-    {
-        //Vector3 offsetPos = new Vector3(transform.position.x,
-        //    transform.position.y + 0.5f,
-        //    transform.position.z);
-        //Gizmos.DrawWireCube(transform.position, new Vector3(xRadius, yRadius, zRadius));
-    }
-
     public static bool Collide(CustomOBB a, CustomOBB b)
     {
         //factors.

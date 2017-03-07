@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
     private LootingSystem lootingSystem;
 
     [SerializeField]
-    private TestNPC0 testYukoNpc;
+    private RoamingMerchant roamingMerchant;
     #endregion
     void Start ()
     {
@@ -115,8 +115,8 @@ public class GameManager : MonoBehaviour
 
         ActorStatData actorData = new ActorStatData();
         PathFinderInitData pathData = new PathFinderInitData(worldList[0].worldBlockData,
-            testYukoNpc.transform, 0, 0);
-        testYukoNpc.Init(actorData, pathData, new Vector3(16, 15, 16), worldList[0]);
+            roamingMerchant.transform, 0, 0);
+        roamingMerchant.Init(actorData, pathData, new Vector3(16, 15, 16), worldList[0]);
     }
 		
     private void CreateGameWorld()
