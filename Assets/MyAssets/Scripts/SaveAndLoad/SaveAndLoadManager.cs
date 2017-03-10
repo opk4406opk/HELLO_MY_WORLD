@@ -73,11 +73,11 @@ public class SaveAndLoadManager : MonoBehaviour {
   
     private void SubWorldToTotalWorld(int subWorldIdx)
     {
-        for (int x = 0; x < GameWorldConfig.worldX; ++x)
-            for (int y = 0; y < GameWorldConfig.worldY; ++y)
-                for (int z = 0; z < GameWorldConfig.worldZ; ++z)
+        for (int x = 0; x < GameConfig.worldX; ++x)
+            for (int y = 0; y < GameConfig.worldY; ++y)
+                for (int z = 0; z < GameConfig.worldZ; ++z)
                 {
-                    mergeIdx = (x * GameWorldConfig.worldY * GameWorldConfig.worldZ) + (y * GameWorldConfig.worldZ) + z;
+                    mergeIdx = (x * GameConfig.worldY * GameConfig.worldZ) + (y * GameConfig.worldZ) + z;
                     mergeWorldData[mergeIdx + mergeIdxOffset] = gameWorldList[subWorldIdx].worldBlockData[x, y, z].type;
                 }
         
@@ -151,11 +151,11 @@ public class SaveAndLoadManager : MonoBehaviour {
 
     private void TotalWorldToSubWorld(int subWorldIdx)
     {
-        for (int x = 0; x < GameWorldConfig.worldX; ++x)
-            for (int y = 0; y < GameWorldConfig.worldY; ++y)
-                for (int z = 0; z < GameWorldConfig.worldZ; ++z)
+        for (int x = 0; x < GameConfig.worldX; ++x)
+            for (int y = 0; y < GameConfig.worldY; ++y)
+                for (int z = 0; z < GameConfig.worldZ; ++z)
                 {
-                    mergeIdx = (x * GameWorldConfig.worldY * GameWorldConfig.worldZ) + (y * GameWorldConfig.worldZ) + z;
+                    mergeIdx = (x * GameConfig.worldY * GameConfig.worldZ) + (y * GameConfig.worldZ) + z;
                     gameWorldList[subWorldIdx].worldBlockData[x, y, z].type = mergeWorldData[mergeIdx + mergeIdxOffset];
                 }
 
@@ -181,7 +181,7 @@ public class SaveAndLoadManager : MonoBehaviour {
     private delegate void del_InSertMergeWorldSize();
     private void CalcWorldDataSize()
     {
-        int subWorldSize = GameWorldConfig.worldX * GameWorldConfig.worldY * GameWorldConfig.worldZ;
+        int subWorldSize = GameConfig.worldX * GameConfig.worldY * GameConfig.worldZ;
         mergeWorldSize = (subWorldSize * gameWorldList.Count) + gameWorldList.Count;
 
         int recordNum = 0;

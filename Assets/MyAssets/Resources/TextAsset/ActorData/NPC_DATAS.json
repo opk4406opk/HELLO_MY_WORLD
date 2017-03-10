@@ -1,0 +1,8 @@
+[
+{"type" : "roaming_merchant", "name" : "Elice", "ap" : "10", "dp" : "10", "hp" : "10", "mp" : "10",
+"spawn_position" : "16, 22, 18", "spawn_world" : "0", "selling_items_id" : "1,2,3,4,5,6" },
+{"type" : "roaming_merchant", "name" : "Kiyoko", "ap" : "10", "dp" : "10", "hp" : "10", "mp" : "10",
+"spawn_position" : "20, 18, 14","spawn_world" : "0", "selling_items_id" : "10,11,99,143" },
+{"type" : "shop_merchant", "name" : "Hamdin", "ap" : "10", "dp" : "10", "hp" : "10", "mp" : "10",
+"spawn_position" : "3, 0, 5", "spawn_world" : "0","selling_items_id" : "100, 102, 445, 600, 789" }
+]

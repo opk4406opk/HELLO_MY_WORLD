@@ -23,7 +23,7 @@ public class ModifyTerrain : MonoBehaviour
     private int chunkSize = 0;
     void Start()
     {
-        chunkSize = GameWorldConfig.chunkSize;
+        chunkSize = GameConfig.chunkSize;
     }
 
     public void ReplaceBlockCursor(Ray ray, Vector3 clickWorldPos, byte blockType)
@@ -89,9 +89,9 @@ public class ModifyTerrain : MonoBehaviour
     private void SetBlockForAdd(int x, int y, int z, byte block)
     {
       
-        if((x < GameWorldConfig.worldX) &&
-           (y < GameWorldConfig.worldY) &&
-           (z < GameWorldConfig.worldZ) &&
+        if((x < GameConfig.worldX) &&
+           (y < GameConfig.worldY) &&
+           (z < GameConfig.worldZ) &&
            (x >= 0) && (y >= 0) && (z >= 0)) 
         {
             world.worldBlockData[x, y, z].type = block;
@@ -159,9 +159,9 @@ public class ModifyTerrain : MonoBehaviour
             }
         };
 
-        if ((x < GameWorldConfig.worldX) &&
-           (y < GameWorldConfig.worldY) &&
-           (z < GameWorldConfig.worldZ) &&
+        if ((x < GameConfig.worldX) &&
+           (y < GameConfig.worldY) &&
+           (z < GameConfig.worldZ) &&
            (x >= 0) && (y >= 0) && (z >= 0))
         {
             UpdateUserItem(world.worldBlockData[x, y, z].type);
@@ -193,7 +193,7 @@ public class ModifyTerrain : MonoBehaviour
             world.chunkGroup[updateX - 1, updateY, updateZ].update = true;
         }
 
-        if (x - (chunkSize * updateX) == GameWorldConfig.chunkSize && updateX != world.chunkGroup.GetLength(0) - 1)
+        if (x - (chunkSize * updateX) == GameConfig.chunkSize && updateX != world.chunkGroup.GetLength(0) - 1)
         {
             world.chunkGroup[updateX + 1, updateY, updateZ].update = true;
         }
@@ -203,7 +203,7 @@ public class ModifyTerrain : MonoBehaviour
             world.chunkGroup[updateX, updateY - 1, updateZ].update = true;
         }
 
-        if (y - (chunkSize * updateY) == GameWorldConfig.chunkSize && updateY != world.chunkGroup.GetLength(1) - 1)
+        if (y - (chunkSize * updateY) == GameConfig.chunkSize && updateY != world.chunkGroup.GetLength(1) - 1)
         {
             world.chunkGroup[updateX, updateY + 1, updateZ].update = true;
         }
@@ -213,7 +213,7 @@ public class ModifyTerrain : MonoBehaviour
             world.chunkGroup[updateX, updateY, updateZ - 1].update = true;
         }
 
-        if (z - (chunkSize * updateZ) == GameWorldConfig.chunkSize && updateZ != world.chunkGroup.GetLength(2) - 1)
+        if (z - (chunkSize * updateZ) == GameConfig.chunkSize && updateZ != world.chunkGroup.GetLength(2) - 1)
         {
             world.chunkGroup[updateX, updateY, updateZ + 1].update = true;
         }

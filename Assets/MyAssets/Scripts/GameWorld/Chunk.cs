@@ -79,7 +79,7 @@ public class Chunk : MonoBehaviour
     public void Init(TileDataFile tileDataFile)
     {
         worldTileData = tileDataFile;
-        chunkSize = GameWorldConfig.chunkSize;
+        chunkSize = GameConfig.chunkSize;
         mesh = GetComponent<MeshFilter>().mesh;
         GenerateMesh();
     }
@@ -148,11 +148,11 @@ public class Chunk : MonoBehaviour
     
     private byte CheckBlock(int x, int y, int z)
     {
-        if (x >= GameWorldConfig.worldX ||
+        if (x >= GameConfig.worldX ||
                x < 0 ||
-               y >= GameWorldConfig.worldY ||
+               y >= GameConfig.worldY ||
                y < 0 ||
-               z >= GameWorldConfig.worldZ ||
+               z >= GameConfig.worldZ ||
                z < 0)
         {
             return (byte)1;

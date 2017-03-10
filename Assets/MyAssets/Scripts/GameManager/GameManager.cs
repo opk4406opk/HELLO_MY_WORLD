@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 게임 월드의 설정을 관리하는 클래스.
 /// </summary>
-public class GameWorldConfig
+public class GameConfig
 {
     private static readonly int _worldX = 32;
     public static int worldX
@@ -26,6 +26,12 @@ public class GameWorldConfig
     public static int chunkSize
     {
         get { return _chunkSize; }
+    }
+
+    private static readonly int _inGameFontSize = 10;
+    public static int inGameFontSize
+    {
+        get { return _inGameFontSize; }
     }
 }
 
@@ -65,6 +71,8 @@ public class GameManager : MonoBehaviour
     private ItemDataFile itemData;
     [SerializeField]
     private CraftItemListDataFile craftItemListDataFile;
+    [SerializeField]
+    private NPCDataFile npcDataFile;
 
     [SerializeField]
     private GameObject chunkPrefab;
@@ -84,7 +92,7 @@ public class GameManager : MonoBehaviour
     private LootingSystem lootingSystem;
 
     [SerializeField]
-    private RoamingMerchant roamingMerchant;
+    private NPCManager npcManager;
     #endregion
     void Start ()
     {
@@ -97,6 +105,7 @@ public class GameManager : MonoBehaviour
         tileData.Init();
         subWorldData.Init();
         craftItemListDataFile.Init();
+        npcDataFile.Init();
 
         //LootingSystem Init;
         lootingSystem.Init();
@@ -111,20 +120,20 @@ public class GameManager : MonoBehaviour
         //saveAndLoad Init
         saveAndLoadManager.Init();
 
+        //
+        npcManager.Init();
+        npcManager.GenerateNPC();
+
         if (GameStatus.isLoadGame == true) { saveAndLoadManager.Load(); }
 
-        ActorStatData actorData = new ActorStatData();
-        PathFinderInitData pathData = new PathFinderInitData(worldList[0].worldBlockData,
-            roamingMerchant.transform, 0, 0);
-        roamingMerchant.Init(actorData, pathData, new Vector3(16, 15, 16), worldList[0]);
     }
 		
     private void CreateGameWorld()
     {
         for (int idx = 0; idx < MAX_SUB_WORLD; ++idx)
         {
-            int subWorldPosX = subWorldData.GetPosValue(idx, "X") * GameWorldConfig.worldX;
-            int subWorldPosZ = subWorldData.GetPosValue(idx, "Z") * GameWorldConfig.worldZ;
+            int subWorldPosX = subWorldData.GetPosValue(idx, "X") * GameConfig.worldX;
+            int subWorldPosZ = subWorldData.GetPosValue(idx, "Z") * GameConfig.worldZ;
             string subWorldName = subWorldData.GetWorldName(idx, "WORLD_NAME");
 
             GameObject newSubWorld = Instantiate(worldPrefab, new Vector3(0, 0, 0),

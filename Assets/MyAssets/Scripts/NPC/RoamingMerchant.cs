@@ -11,15 +11,17 @@ public class RoamingMerchant : Actor, INpc
     private NPCController actorController;
     [SerializeField]
     private RoamingNpcAI ai;
-    private ActorStatData status;
-
-    public override void Init(ActorStatData statData, PathFinderInitData pathData, Vector3 pos, World world)
+    [SerializeField]
+    private TextMeshController _textMeshController;
+    public TextMeshController textMeshController
     {
-        ai.Init(actorController, pathData);
-        status = statData;
+        get { return _textMeshController; }
+    }
+
+    public override void Init(Vector3 pos, World world)
+    {
         ((ActorController)actorController).Init(world);
         gameObject.transform.position = pos;
-        ai.StartBT();
     }
 
     void INpc.Talk()
