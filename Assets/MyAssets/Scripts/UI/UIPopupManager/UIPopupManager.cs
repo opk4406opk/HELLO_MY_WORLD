@@ -25,16 +25,22 @@ public class UIPopupManager : MonoBehaviour {
         get { return _isGameMenuOpen; }
     }
 
-    private static bool _isElementItemDataOpen = false;
-    public static bool isElementItemDataOpen
+    private static bool _isItemDataOpen = false;
+    public static bool isItemDataOpen
     {
-        get { return _isElementItemDataOpen; }
+        get { return _isItemDataOpen; }
     }
 
     private static bool _isCraftItemOpen = false;
     public static bool isCraftItemOpen
     {
         get { return _isCraftItemOpen; }
+    }
+
+    private static bool _isShopOpen = false;
+    public static bool isShopOpen
+    {
+        get { return _isShopOpen; }
     }
 
     private static bool _isAllPopupClose = false;
@@ -45,8 +51,9 @@ public class UIPopupManager : MonoBehaviour {
             if ((_isInvenOpen == false) &&
                (_isGameMenuOpen == false) &&
                (_isGameMessageOpen == false) &&
-               (_isElementItemDataOpen == false) &&
-               (_isCraftItemOpen == false))
+               (_isItemDataOpen == false) &&
+               (_isCraftItemOpen == false) &&
+               (_isShopOpen == false))
             {
                 _isAllPopupClose = true;
                 return _isAllPopupClose;
@@ -69,7 +76,7 @@ public class UIPopupManager : MonoBehaviour {
 
     public static void CloseInven()
     {
-        SceneManager.UnloadScene("popup_inventory");
+        SceneManager.UnloadSceneAsync("popup_inventory");
         _isInvenOpen = false;
     }
 
@@ -85,7 +92,7 @@ public class UIPopupManager : MonoBehaviour {
 
     public static void CloseInGameMenu()
     {
-        SceneManager.UnloadScene("popup_menu");
+        SceneManager.UnloadSceneAsync("popup_menu");
         _isGameMenuOpen = false;
     }
 
@@ -101,24 +108,24 @@ public class UIPopupManager : MonoBehaviour {
 
     public static void CloseGameMessage()
     {
-        SceneManager.UnloadScene("popup_message");
+        SceneManager.UnloadSceneAsync("popup_message");
         _isGameMessageOpen = false;
     }
 
-    public static void OpenElementItemData()
+    public static void OpenItemData()
     {
-        if(_isElementItemDataOpen == false)
+        if(_isItemDataOpen == false)
         {
-            SceneManager.LoadSceneAsync("popup_elementItemData", LoadSceneMode.Additive);
-            _isElementItemDataOpen = true;
+            SceneManager.LoadSceneAsync("popup_ItemData", LoadSceneMode.Additive);
+            _isItemDataOpen = true;
             _isAllPopupClose = false;
         }
     }
 
-    public static void CloseElementItemData()
+    public static void CloseItemData()
     {
-        SceneManager.UnloadScene("popup_elementItemData");
-        _isElementItemDataOpen = false;
+        SceneManager.UnloadSceneAsync("popup_ItemData");
+        _isItemDataOpen = false;
     }
 
     public static void OpenCraftItem()
@@ -133,7 +140,23 @@ public class UIPopupManager : MonoBehaviour {
 
     public static void CloseCraftItem()
     {
-        SceneManager.UnloadScene("popup_craftItem");
+        SceneManager.UnloadSceneAsync("popup_craftItem");
         _isCraftItemOpen = false;
+    }
+
+    public static void OpenShop()
+    {
+        if (_isShopOpen == false)
+        {
+            SceneManager.LoadSceneAsync("popup_shop", LoadSceneMode.Additive);
+            _isShopOpen = true;
+            _isAllPopupClose = false;
+        }
+    }
+
+    public static void CloseShop()
+    {
+        SceneManager.UnloadSceneAsync("popup_shop");
+        _isShopOpen = false;
     }
 }

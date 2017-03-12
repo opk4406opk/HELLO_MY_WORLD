@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PopupElementItemData : MonoBehaviour
+public class PopupItemData : MonoBehaviour
 {
 
     [SerializeField]
@@ -56,7 +56,7 @@ public class PopupElementItemData : MonoBehaviour
 
     private void CallBackPopupClose()
     {
-        UIPopupManager.CloseElementItemData();
+        UIPopupManager.CloseItemData();
     }
 
     private void SetData()

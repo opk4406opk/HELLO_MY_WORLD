@@ -2,9 +2,16 @@
 using System.Collections;
 
 /// <summary>
-/// 인벤토리에 등록되어 있는 아이템의 세부정보를 가지고 있는 클래스.
+/// 인벤토리, 제작아이템, 상점에 등록되어 있는 아이템의 세부정보를 가지고 있는 클래스.
 /// </summary>
 public class ItemData : MonoBehaviour {
+
+    private string _id;
+    public string id
+    {
+        set { _id = value; }
+        get { return _id; }
+    }
 
     private string _amount;
     public string amount

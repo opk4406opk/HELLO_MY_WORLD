@@ -7,6 +7,13 @@ using System.Collections.Generic;
 /// </summary>
 public class CraftItem
 {
+    private string _craftItemID;
+    public string craftItemID
+    {
+        get { return _craftItemID; }
+        set { _craftItemID = value; }
+    }
+
     private string _craftItemName;
     public string craftItemName
     {
@@ -26,6 +33,7 @@ public class CraftItem
 /// </summary>
 public struct CraftRawMaterial
 {
+    public string id;
     public string rawMaterialName;
     public int consumeAmount;
 }
@@ -35,26 +43,19 @@ public struct CraftRawMaterial
 /// </summary>
 public class CraftItemListDataFile : MonoBehaviour
 {
-
+    [SerializeField]
+    private ItemDataFile itemDataFile;
     private JSONObject craftItemListJsonObj;
     private TextAsset jsonFile;
-    // 일반적인 용도에서 쓰이는 제작 아이템 리스트.
-    private List<CraftItem> _craftItemList;
-    public List<CraftItem> craftItemList
+   
+    private Dictionary<string, CraftItem> _craftItems = new Dictionary<string, CraftItem>();
+    public Dictionary<string, CraftItem> craftItems
     {
-        get { return _craftItemList; }
-    }
-    // UIPopupList 에서 쓰이는 용도의 제작 아이템 리스트.
-    private Dictionary<string, List<CraftRawMaterial>> _craftItemDictionary;
-    public Dictionary<string, List<CraftRawMaterial>> craftItemDictionary
-    {
-        get { return _craftItemDictionary; }
+        get { return _craftItems; }
     }
 
     public void Init()
     {
-        _craftItemDictionary = new Dictionary<string, List<CraftRawMaterial>>();
-        _craftItemList = new List<CraftItem>();
         jsonFile = Resources.Load("TextAsset/ItemDatas/craftItemListDatas") as TextAsset;
         craftItemListJsonObj = new JSONObject(jsonFile.text);
         AccessData(craftItemListJsonObj);
@@ -65,26 +66,30 @@ public class CraftItemListDataFile : MonoBehaviour
         switch (jsonObj.type)
         {
             case JSONObject.Type.OBJECT:
-                for(int idx = 0; idx < jsonObj.Count; ++idx)
-                {
-                    CraftItem craftItem = new CraftItem();
-                    craftItem.craftItemName = jsonObj.keys[idx];
-
-                    JSONObject rawMaterials = jsonObj[idx];
-                    int materialNum = rawMaterials.Count;
-                    for(int i = 0; i < materialNum; ++i)
-                    {
-                        CraftRawMaterial craftRawMaterial;
-                        craftRawMaterial.rawMaterialName = rawMaterials.keys[i];
-                        craftRawMaterial.consumeAmount = int.Parse(rawMaterials.list[i].str);
-                        craftItem.rawMaterials.Add(craftRawMaterial);
-                    }
-                    _craftItemList.Add(craftItem);
-                    _craftItemDictionary.Add(craftItem.craftItemName, craftItem.rawMaterials);
-                }
                 break;
             case JSONObject.Type.ARRAY:
-                // to do
+                foreach (var e in jsonObj.list)
+                {
+                    CraftItem craftItem = new CraftItem();
+                    string id = e.keys[0];
+                    craftItem.craftItemID = id;
+                    craftItem.craftItemName = itemDataFile.GetItemData(id).name;
+                    List<CraftRawMaterial> rawMats = new List<CraftRawMaterial>();
+                    foreach (var raw in e.list[0].list)
+                    {
+                        CraftRawMaterial rawMat;
+                        string value;
+                        raw.ToDictionary().TryGetValue("name", out value);
+                        rawMat.rawMaterialName = value;
+                        raw.ToDictionary().TryGetValue("amount", out value);
+                        rawMat.consumeAmount = int.Parse(value);
+                        raw.ToDictionary().TryGetValue("id", out value);
+                        rawMat.id = value;
+                        rawMats.Add(rawMat);
+                    }
+                    craftItem.rawMaterials = rawMats;
+                    _craftItems.Add(craftItem.craftItemName, craftItem);
+                }
                 break;
             default:
                 Debug.Log("Json Level Data Sheet Access ERROR");

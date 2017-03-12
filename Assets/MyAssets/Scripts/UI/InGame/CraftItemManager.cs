@@ -53,21 +53,21 @@ public class CraftItemManager : MonoBehaviour {
         if(ChkPossibleMakeItem() == true)
         {
             // consume user materials, and user item info update
-            List<CraftRawMaterial> rawMaterialList;
-            craftItemDataFile.craftItemDictionary.TryGetValue(selectCraftItemList.value, out rawMaterialList);
-            foreach (CraftRawMaterial raw in rawMaterialList)
+            CraftItem item;
+            craftItemDataFile.craftItems.TryGetValue(selectCraftItemList.value, out item);
+            foreach (CraftRawMaterial raw in item.rawMaterials)
             {
-                int userMatAmount = GetUserMaterialAmount(raw.rawMaterialName);
+                int userMatAmount = GetUserMaterialAmount(raw.id);
                 int amount = userMatAmount - raw.consumeAmount;
 
-                if (amount == 0) DeleteUserMaterial(raw.rawMaterialName);
-                else SetUserMaterialAmount(raw.rawMaterialName, amount);
+                if (amount == 0) DeleteUserMaterial(raw.id);
+                else SetUserMaterialAmount(raw.id, amount);
             }
 
             // Set CraftItem to user
-            ItemInfo itemInfo = itemDataFile.GetItemData(selectCraftItemList.value);
+            ItemInfo itemInfo = itemDataFile.GetItemData(item.craftItemID);
             int craftItemType = int.Parse(itemInfo.type);
-            SetCraftItemToUser(selectCraftItemList.value,
+            SetCraftItemToUser(item.craftItemID, item.craftItemName,
                 int.Parse(selectQuantityList.value),
                 craftItemType);
 
@@ -83,7 +83,7 @@ public class CraftItemManager : MonoBehaviour {
         }
     }
 
-    private int GetUserMaterialAmount(string itemName)
+    private int GetUserMaterialAmount(string itemID)
     {
         string conn = "URI=file:" + Application.dataPath +
                "/StreamingAssets/GameUserDB/userDB.db";
@@ -94,8 +94,8 @@ public class CraftItemManager : MonoBehaviour {
             dbconn.Open(); //Open connection to the database.
             using (IDbCommand dbcmd = dbconn.CreateCommand())
             {
-                string sqlQuery = "SELECT amount FROM USER_ITEM WHERE name = "
-                                  + "'" + itemName + "'";
+                string sqlQuery = "SELECT amount FROM USER_ITEM WHERE id = "
+                                  + "'" + itemID + "'";
                 dbcmd.CommandText = sqlQuery;
                 IDataReader reader = dbcmd.ExecuteReader();
 
@@ -111,12 +111,13 @@ public class CraftItemManager : MonoBehaviour {
         return amount;
     }
 
-    private void SetCraftItemToUser(string itemName, int itemAmount, int itemType)
+    private void SetCraftItemToUser(string itemID, string itemName, int itemAmount, int itemType)
     {
         string conn = "URI=file:" + Application.dataPath +
                "/StreamingAssets/GameUserDB/userDB.db";
-        string sqlQuery = "INSERT INTO USER_ITEM (name, type, amount) VALUES ("
-                                 + "'" + itemName + "'" + ", " + itemType + ", " + itemAmount + ")";
+        string sqlQuery = "INSERT INTO USER_ITEM (name, type, amount, id) VALUES ("
+                                 + "'" + itemName + "'" + ", " 
+                                 + itemType + ", " + itemAmount + ", " + "'" + itemID + "'" + ")";
         using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
         {
             dbconn.Open(); //Open connection to the database.
@@ -130,8 +131,8 @@ public class CraftItemManager : MonoBehaviour {
                 }
                 catch // 인벤토리에 중복된 아이템이 있다면, 수량증가를 해야한다.
                 {
-                    sqlQuery = "SELECT amount FROM USER_ITEM WHERE name = "
-                                          + "'" + itemName + "'";
+                    sqlQuery = "SELECT amount FROM USER_ITEM WHERE id = "
+                                          + "'" + itemID + "'";
                     dbcmd.CommandText = sqlQuery;
                     IDataReader reader = dbcmd.ExecuteReader();
                     reader.Read();
@@ -140,7 +141,7 @@ public class CraftItemManager : MonoBehaviour {
                     reader.Close();
 
                     sqlQuery = "UPDATE USER_ITEM SET amount = " + "'" + userInvenAmount + "'" +
-                                " WHERE name = " + "'" + itemName + "'";
+                                " WHERE id = " + "'" + itemID + "'";
                     dbcmd.CommandText = sqlQuery;
                     dbcmd.ExecuteNonQuery();
                     dbconn.Close();
@@ -150,7 +151,7 @@ public class CraftItemManager : MonoBehaviour {
         }
     }
 
-    private void SetUserMaterialAmount(string itemName, int itemAmount)
+    private void SetUserMaterialAmount(string itemID, int itemAmount)
     {
         string conn = "URI=file:" + Application.dataPath +
                "/StreamingAssets/GameUserDB/userDB.db";
@@ -161,7 +162,7 @@ public class CraftItemManager : MonoBehaviour {
             using (IDbCommand dbcmd = dbconn.CreateCommand())
             {
                 string sqlQuery = "UPDATE USER_ITEM SET amount = " + "'" + itemAmount + "'" +
-                    " WHERE name = " + "'" + itemName + "'";
+                    " WHERE id = " + "'" + itemID + "'";
                 dbcmd.CommandText = sqlQuery;
                 dbcmd.ExecuteNonQuery();
             }
@@ -169,7 +170,7 @@ public class CraftItemManager : MonoBehaviour {
         }
     }
 
-    private void DeleteUserMaterial(string itemName)
+    private void DeleteUserMaterial(string itemID)
     {
         string conn = "URI=file:" + Application.dataPath +
                "/StreamingAssets/GameUserDB/userDB.db";
@@ -179,7 +180,7 @@ public class CraftItemManager : MonoBehaviour {
             dbconn.Open(); //Open connection to the database.
             using (IDbCommand dbcmd = dbconn.CreateCommand())
             {
-                string sqlQuery = "DELETE FROM USER_ITEM WHERE name = " + "'" + itemName + "'";
+                string sqlQuery = "DELETE FROM USER_ITEM WHERE id = " + "'" + itemID + "'";
 
                 dbcmd.CommandText = sqlQuery;
                 dbcmd.ExecuteNonQuery();
@@ -192,24 +193,24 @@ public class CraftItemManager : MonoBehaviour {
     {
         bool isPossibleMakeItem = false;
 
-        List<CraftRawMaterial> rawMaterialList;
-        craftItemDataFile.craftItemDictionary.TryGetValue(selectCraftItemList.value, out rawMaterialList);
-        foreach (CraftRawMaterial raw in rawMaterialList)
+        CraftItem item;
+        craftItemDataFile.craftItems.TryGetValue(selectCraftItemList.value, out item);
+        foreach (CraftRawMaterial raw in item.rawMaterials)
         {
-            isPossibleMakeItem = ChkMaterialAmount(raw.rawMaterialName,
+            isPossibleMakeItem = ChkMaterialAmount(raw.id,
                 raw.consumeAmount * int.Parse(selectQuantityList.value));
             if (isPossibleMakeItem == false) return false;
         }
         return true;
     }
 
-    private bool ChkMaterialAmount(string itemName, int needAmount)
+    private bool ChkMaterialAmount(string itemID, int needAmount)
     {
         string conn = "URI=file:" + Application.dataPath +
                "/StreamingAssets/GameUserDB/userDB.db";
 
-        string sqlQuery = "SELECT amount FROM USER_ITEM WHERE name = "
-                          + "'" + itemName + "'";
+        string sqlQuery = "SELECT amount FROM USER_ITEM WHERE id = "
+                          + "'" + itemID + "'";
         using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
         {
             dbconn.Open(); //Open connection to the database.
@@ -241,11 +242,9 @@ public class CraftItemManager : MonoBehaviour {
 
     private void SetDropDownList()
     {
-        int idx = 0;
-        foreach(CraftItem craftItem in craftItemDataFile.craftItemList)
+        foreach(var craftItem in craftItemDataFile.craftItems)
         {
-            selectCraftItemList.AddItem(craftItem.craftItemName);
-            idx++;
+            selectCraftItemList.AddItem(craftItem.Value.craftItemName);
         }
         // set event delegate
         Ed_OnClickCraftItemList = new EventDelegate(this, "OnClickCraftItemList");
@@ -260,12 +259,10 @@ public class CraftItemManager : MonoBehaviour {
 
     private void UpdateConsumeAmount()
     {
-        string selectItemName = selectCraftItemList.value;
-        List<CraftRawMaterial> rawMaterials;
-        craftItemDataFile.craftItemDictionary.TryGetValue(selectItemName, out rawMaterials);
-
+        CraftItem item;
+        craftItemDataFile.craftItems.TryGetValue(selectCraftItemList.value, out item);
         int slotIdx = 0;
-        foreach (CraftRawMaterial raw in rawMaterials)
+        foreach (CraftRawMaterial raw in item.rawMaterials)
         {
             string calcedAmount = (raw.consumeAmount * int.Parse(selectQuantityList.value)).ToString();
             itemSlotList[slotIdx].amount = "x"+ calcedAmount;
@@ -288,17 +285,16 @@ public class CraftItemManager : MonoBehaviour {
         string selectItemName = selectCraftItemList.value;
         spr_afterItemImg.spriteName = selectItemName;
 
-        List<CraftRawMaterial> rawMaterials;
-        craftItemDataFile.craftItemDictionary.TryGetValue(selectItemName, out rawMaterials);
+        CraftItem item;
+        craftItemDataFile.craftItems.TryGetValue(selectItemName, out item);
         int slotIdx = 0;
-        foreach (CraftRawMaterial raw in rawMaterials)
+        foreach (CraftRawMaterial raw in item.rawMaterials)
         {
             if (slotIdx > defaultItemSlot) CreateEmptySlot(5);
-
           
             itemSlotList[slotIdx].itemName = raw.rawMaterialName;
-            itemSlotList[slotIdx].type = itemDataFile.GetItemData(raw.rawMaterialName).type;
-            itemSlotList[slotIdx].detailInfo = itemDataFile.GetItemData(raw.rawMaterialName).detailInfo;
+            itemSlotList[slotIdx].type = itemDataFile.GetItemData(raw.id).type;
+            itemSlotList[slotIdx].detailInfo = itemDataFile.GetItemData(raw.id).detailInfo;
             itemSlotList[slotIdx].amount = "x" + raw.consumeAmount.ToString();
             itemSlotList[slotIdx].InitAllData();
             itemSlotList[slotIdx].OnInfo();
@@ -322,7 +318,7 @@ public class CraftItemManager : MonoBehaviour {
         sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Add("amount", itemData.amount);
         sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Add("detailInfo", itemData.detailInfo);
 
-        UIPopupManager.OpenElementItemData();
+        UIPopupManager.OpenItemData();
     }
 
     private void ClearItemSlot()

@@ -1,48 +1,49 @@
-﻿using UnityEngine;
+﻿using Mono.Data.Sqlite;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Mono.Data.Sqlite;
 using System.Data;
-using System;
+using UnityEngine;
 
-/// <summary>
-/// 게임내 사용자의 인벤토리를 관리하는 클래스.
-/// </summary>
-public class InventoryManager : MonoBehaviour {
+public class ShopManager : MonoBehaviour {
 
     [SerializeField]
-    private GameObject itemSlotPrefab;
+    private GameObject invenItemSlotPrefab;
     [SerializeField]
-    private GameObject uiGridObj;
+    private GameObject uiInvenGridObj;
     [SerializeField]
-    private GameObject popupObj;
+    private GameObject shopItemSlotPrefab;
+    [SerializeField]
+    private GameObject uiShopItemGridObj; 
+
+    [SerializeField]
+    private GameObject popupShopObj;
 
     private readonly int defaultItemSlot = 10;
-    private List<ItemData> itemSlotList = new List<ItemData>();
-    
+    private List<ItemData> invenItemSlotList = new List<ItemData>();
+
     // DB에서 추출한 유저 아이템정보를 담아두는 리스트.
     private List<USER_ITEM> userItemList = new List<USER_ITEM>();
 
     private ItemDataFile gameItemDataFile;
 
-    void Start ()
+    void Start()
     {
         if(gameItemDataFile == null)
         {
             GameObject obj = GameObject.Find("ItemDataFile");
             gameItemDataFile = obj.GetComponent<ItemDataFile>();
-
         }
-        CreateEmptySlot(defaultItemSlot);
+        CreateInvenEmptySlot(defaultItemSlot);
         SettingUserItem();
         ScaleUpEffect();
     }
 
     private void ScaleUpEffect()
     {
-        popupObj.transform.localScale = new Vector3(0, 0, 0);
+        popupShopObj.transform.localScale = new Vector3(0, 0, 0);
         Vector3 scaleUp = new Vector3(1, 1, 1);
-        iTween.ScaleTo(popupObj, iTween.Hash("scale", scaleUp,
+        iTween.ScaleTo(popupShopObj, iTween.Hash("scale", scaleUp,
             "name", "scaleUp",
             "time", 1.0f,
             "speed", 10.0f,
@@ -51,9 +52,9 @@ public class InventoryManager : MonoBehaviour {
     }
     private void ScaleDownEffect(string _callBack)
     {
-        popupObj.transform.localScale = new Vector3(1, 1, 1);
+        popupShopObj.transform.localScale = new Vector3(1, 1, 1);
         Vector3 scaleDown = new Vector3(0, 0, 0);
-        iTween.ScaleTo(popupObj, iTween.Hash("scale", scaleDown,
+        iTween.ScaleTo(popupShopObj, iTween.Hash("scale", scaleDown,
             "name", "scaleDown",
             "time", 1.0f,
             "speed", 10.0f,
@@ -64,6 +65,7 @@ public class InventoryManager : MonoBehaviour {
     }
     public void ClickExit()
     {
+        // to do
         ScaleDownEffect("CallBackPopupClose");
     }
     /// <summary>
@@ -71,27 +73,33 @@ public class InventoryManager : MonoBehaviour {
     /// </summary>
     private void CallBackPopupClose()
     {
-        UIPopupManager.CloseInven();
+        UIPopupManager.CloseShop();
     }
 
-    private void CreateEmptySlot(int _num)
+    private void CreateInvenEmptySlot(int _num)
     {
         for (int idx = 0; idx < _num; ++idx)
         {
-            GameObject newItem = Instantiate(itemSlotPrefab,
+            GameObject newItem = Instantiate(invenItemSlotPrefab,
                 new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
 
             newItem.SetActive(true);
             newItem.GetComponent<ItemData>().OffInfo();
             //item parenting
-            newItem.transform.parent = uiGridObj.transform;
+            newItem.transform.parent = uiInvenGridObj.transform;
             newItem.transform.localScale = new Vector3(1, 1, 1);
             newItem.transform.localPosition = new Vector3(0, 0, 0);
-           
-            itemSlotList.Add(newItem.GetComponent<ItemData>());
+
+            invenItemSlotList.Add(newItem.GetComponent<ItemData>());
         }
-        uiGridObj.GetComponent<UIGrid>().Reposition();
+        uiInvenGridObj.GetComponent<UIGrid>().Reposition();
     }
+
+    private void SettingShopItem()
+    {
+
+    }
+
     private void SettingUserItem()
     {
         Action GetUserItems = () =>
@@ -124,28 +132,28 @@ public class InventoryManager : MonoBehaviour {
         };
         GetUserItems();
 
-		int moreEmptySlot = userItemList.Count;
-		if (moreEmptySlot > defaultItemSlot) CreateEmptySlot(moreEmptySlot - defaultItemSlot);
-		int itemSlotIdx = 0;
-        foreach(USER_ITEM uitem in userItemList)
+        int moreEmptySlot = userItemList.Count;
+        if (moreEmptySlot > defaultItemSlot) CreateInvenEmptySlot(moreEmptySlot - defaultItemSlot);
+        int itemSlotIdx = 0;
+        foreach (USER_ITEM uitem in userItemList)
         {
             // set user item info
-            itemSlotList[itemSlotIdx].itemName = uitem.name;
-            itemSlotList[itemSlotIdx].id = uitem.id;
-            itemSlotList[itemSlotIdx].amount = "x" + uitem.amount.ToString();
-            itemSlotList[itemSlotIdx].type = uitem.type.ToString();
+            invenItemSlotList[itemSlotIdx].itemName = uitem.name;
+            invenItemSlotList[itemSlotIdx].id = uitem.id;
+            invenItemSlotList[itemSlotIdx].amount = "x" + uitem.amount.ToString();
+            invenItemSlotList[itemSlotIdx].type = uitem.type.ToString();
             // set item detail info
             ItemInfo itemInfo = gameItemDataFile.GetItemData(uitem.id);
-            itemSlotList[itemSlotIdx].detailInfo = itemInfo.detailInfo;
+            invenItemSlotList[itemSlotIdx].detailInfo = itemInfo.detailInfo;
 
-            itemSlotList[itemSlotIdx].InitAllData();
-            itemSlotList[itemSlotIdx].OnInfo();
+            invenItemSlotList[itemSlotIdx].InitAllData();
+            invenItemSlotList[itemSlotIdx].OnInfo();
 
             //set event delegate
             Ed_OnClickItem = new EventDelegate(this, "OnClickItem");
-            Ed_OnClickItem.parameters[0].value = itemSlotList[itemSlotIdx];
-            itemSlotList[itemSlotIdx].GetComponent<UIButton>().onClick.Add(Ed_OnClickItem);
-			itemSlotIdx++;
+            Ed_OnClickItem.parameters[0].value = invenItemSlotList[itemSlotIdx];
+            invenItemSlotList[itemSlotIdx].GetComponent<UIButton>().onClick.Add(Ed_OnClickItem);
+            itemSlotIdx++;
         }
     }
 
@@ -162,5 +170,4 @@ public class InventoryManager : MonoBehaviour {
 
         UIPopupManager.OpenItemData();
     }
-
 }

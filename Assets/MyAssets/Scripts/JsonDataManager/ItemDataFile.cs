@@ -7,6 +7,7 @@ using System.Collections.Generic;
 /// </summary>
 public struct ItemInfo
 {
+    public string id;
     public string name;
     public string type;
     public string detailInfo;
@@ -30,17 +31,18 @@ public class ItemDataFile : MonoBehaviour
         AccessData(itemDataJsonObj);
     }
 
-    public ItemInfo GetItemData(string _name)
+    public ItemInfo GetItemData(string id)
     {
-
         Dictionary<string, string> dic;
-        jsonDataSheet.TryGetValue(_name, out dic);
-        string type, detail;
+        jsonDataSheet.TryGetValue(id, out dic);
+        string type, detail, name;
+        dic.TryGetValue("name", out name);
         dic.TryGetValue("type", out type);
         dic.TryGetValue("detail", out detail);
 
         ItemInfo itemInfo;
-        itemInfo.name = _name;
+        itemInfo.id = id;
+        itemInfo.name = name;
         itemInfo.type = type;
         itemInfo.detailInfo = detail;
 

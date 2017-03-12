@@ -20,7 +20,8 @@ public class InputManager : MonoBehaviour {
         ATTACK = 3,
         INVEN_OPEN = 4,
         MENU_OPEN = 5,
-        CRAFT_ITEM_OPEN = 6
+        CRAFT_ITEM_OPEN = 6,
+        TEST_INPUT = 7
     }
     private INPUT_STATE inputState = INPUT_STATE.NONE;
 
@@ -52,6 +53,10 @@ public class InputManager : MonoBehaviour {
         else if (Input.GetKeyDown(KeyCode.U))
         {
             inputState = INPUT_STATE.CRAFT_ITEM_OPEN;
+        }
+        else if (Input.GetKeyDown(KeyCode.T))
+        {
+            inputState = INPUT_STATE.TEST_INPUT;
         }
         else
         {
@@ -96,6 +101,10 @@ public class InputManager : MonoBehaviour {
             case INPUT_STATE.CRAFT_ITEM_OPEN:
                 inputState = INPUT_STATE.NONE;
                 UIPopupManager.OpenCraftItem();
+                break;
+            case INPUT_STATE.TEST_INPUT:
+                inputState = INPUT_STATE.NONE;
+                UIPopupManager.OpenShop();
                 break;
             default:
                 break;

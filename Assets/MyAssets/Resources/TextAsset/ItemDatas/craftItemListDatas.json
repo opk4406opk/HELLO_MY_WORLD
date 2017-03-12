@@ -1,4 +1,10 @@
-{
-     "block_realgrass" : {"element_grass" : "5"},
-	 "block_sandstone" : {"element_sand" : "3", "element_big_stone" : "2"}
-}
+[
+     {"23" : [
+		{"name" : "element_grass", "amount" : "5", "id" : "9"},
+		{"name" : "element_sand", "amount" : "3", "id" : "6"}
+		]},
+	 {"24" : [
+		{"name" : "element_silver", "amount" : "3", "id" : "1"},
+		{"name" : "element_small_stone", "amount" : "1", "id" : "3"}
+		]}
+]

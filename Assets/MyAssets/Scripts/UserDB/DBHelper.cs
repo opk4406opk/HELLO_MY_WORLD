@@ -6,6 +6,7 @@ using System.Collections;
 /// </summary>
 public struct USER_ITEM
 {
+    public string id;
     public string name;
     public int type;
     public int amount;

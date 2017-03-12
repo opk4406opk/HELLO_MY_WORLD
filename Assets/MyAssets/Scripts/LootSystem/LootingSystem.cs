@@ -9,21 +9,22 @@ public class LootingSystem : MonoBehaviour
 {
     private JSONObject typeToItemNameJsonObj;
     private TextAsset jsonFile;
+    // blockType : itemID 형태로 되어있다.
     private Dictionary<string, string> jsonDataSheet;
 
     public void Init()
     {
         jsonDataSheet = new Dictionary<string, string>();
-        jsonFile = Resources.Load("TextAsset/ItemDatas/typeToItemName") as TextAsset;
+        jsonFile = Resources.Load("TextAsset/ItemDatas/typeToItemID") as TextAsset;
         typeToItemNameJsonObj = new JSONObject(jsonFile.text);
         AccessData(typeToItemNameJsonObj);
     }
 
-    public string GetTypeToItemName(string _type)
+    public string GetTypeToItemID(string _type)
     {
-        string itemName;
-        jsonDataSheet.TryGetValue(_type, out itemName);
-        return itemName;
+        string id;
+        jsonDataSheet.TryGetValue(_type, out id);
+        return id;
     }
 
     private void AccessData(JSONObject jsonObj)

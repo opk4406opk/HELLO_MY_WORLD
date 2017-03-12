@@ -118,16 +118,17 @@ public class ModifyTerrain : MonoBehaviour
             {
                 using (dbcmd = dbconn.CreateCommand())
                 {
-                    string itemName;
-                    itemName = lootingSystem.GetTypeToItemName(blockType.ToString());
+                    string itemID;
+                    itemID = lootingSystem.GetTypeToItemID(blockType.ToString());
                     string type;
-                    ItemInfo itemInfo = itemDataFile.GetItemData(itemName);
+                    ItemInfo itemInfo = itemDataFile.GetItemData(itemID);
                     type = itemInfo.type;
                     try
                     {
                         dbconn.Open(); //Open connection to the database.
-                        string sqlQuery = "INSERT INTO USER_ITEM (name, type, amount) VALUES("
-                                           + "'" + itemName + "'" + "," + "'" + type + "'" + "," + "1)";
+                        string sqlQuery = "INSERT INTO USER_ITEM (name, type, amount, id) VALUES("
+                                           + "'" + itemID + "'" + "," + "'" + 
+                                           type + "'" + "," + "1," + itemID +")";
                         dbcmd.CommandText = sqlQuery;
                         dbcmd.ExecuteNonQuery();
 
@@ -138,7 +139,7 @@ public class ModifyTerrain : MonoBehaviour
                         if (SQLiteErrorCode.Constraint == e.ErrorCode)
                         {
                             string sqlQuery = "SELECT amount FROM USER_ITEM WHERE name = "
-                                        + "'" + itemName + "'";
+                                        + "'" + itemID + "'";
                             dbcmd.CommandText = sqlQuery;
                             IDataReader reader = dbcmd.ExecuteReader();
                             reader.Read();
@@ -147,7 +148,7 @@ public class ModifyTerrain : MonoBehaviour
                             reader.Close();
 
                             sqlQuery = "UPDATE USER_ITEM SET amount = " + "'" + itemAmount + "'" +
-                                        " WHERE name = " + "'" + itemName + "'";
+                                        " WHERE name = " + "'" + itemID + "'";
                             dbcmd.CommandText = sqlQuery;
                             dbcmd.ExecuteNonQuery();
 
