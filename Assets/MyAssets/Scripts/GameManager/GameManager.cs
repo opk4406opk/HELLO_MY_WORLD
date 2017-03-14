@@ -93,6 +93,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private NPCManager npcManager;
+    [SerializeField]
+    private ActorCollideManager actorCollideManager;
     #endregion
     void Start ()
     {
@@ -123,6 +125,9 @@ public class GameManager : MonoBehaviour
         //
         npcManager.Init();
         npcManager.GenerateNPC();
+
+        //
+        actorCollideManager.Init();
 
         if (GameStatus.isLoadGame == true) { saveAndLoadManager.Load(); }
 

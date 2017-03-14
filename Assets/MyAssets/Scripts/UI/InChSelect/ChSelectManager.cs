@@ -28,11 +28,11 @@ public class ChSelectManager : MonoBehaviour
     private void OnClickChCard(CharacterData chData)
     {
         GameObject sceneToSceneData = GameObject.Find("SceneToScene_datas");
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameChDatas.Clear();
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameChDatas.Add("chName", chData.chName);
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameChDatas.Add("chLevel", chData.chLevel.ToString());
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameChDatas.Add("chType", chData.chType);
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameChDatas.Add("detailScript", chData.detailScript);
+        SceneToScene_Data.gameChDatas.Clear();
+        SceneToScene_Data.gameChDatas.Add("chName", chData.chName);
+        SceneToScene_Data.gameChDatas.Add("chLevel", chData.chLevel.ToString());
+        SceneToScene_Data.gameChDatas.Add("chType", chData.chType);
+        SceneToScene_Data.gameChDatas.Add("detailScript", chData.detailScript);
 
         SceneManager.LoadSceneAsync("popup_chInfo", LoadSceneMode.Additive);
     }

@@ -138,7 +138,7 @@ public class ModifyTerrain : MonoBehaviour
                     {
                         if (SQLiteErrorCode.Constraint == e.ErrorCode)
                         {
-                            string sqlQuery = "SELECT amount FROM USER_ITEM WHERE name = "
+                            string sqlQuery = "SELECT amount FROM USER_ITEM WHERE id = "
                                         + "'" + itemID + "'";
                             dbcmd.CommandText = sqlQuery;
                             IDataReader reader = dbcmd.ExecuteReader();
@@ -148,7 +148,7 @@ public class ModifyTerrain : MonoBehaviour
                             reader.Close();
 
                             sqlQuery = "UPDATE USER_ITEM SET amount = " + "'" + itemAmount + "'" +
-                                        " WHERE name = " + "'" + itemID + "'";
+                                        " WHERE id = " + "'" + itemID + "'";
                             dbcmd.CommandText = sqlQuery;
                             dbcmd.ExecuteNonQuery();
 

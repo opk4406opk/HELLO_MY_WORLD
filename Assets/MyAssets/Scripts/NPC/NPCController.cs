@@ -11,6 +11,23 @@ public class NPCController : MonoBehaviour, ActorController
     private World containWorld;
     [SerializeField]
     private Transform maxExtent;
+    [SerializeField]
+    private Transform minExtent;
+
+    Vector3 ActorController.GetMinExtent()
+    {
+        return minExtent.position;
+    }
+
+    Vector3 ActorController.GetMaxExtent()
+    {
+        return maxExtent.position;
+    }
+
+    CustomOBB ActorController.GetOBB()
+    {
+        return obb;
+    }
 
     void ActorController.Move(Vector3 dir, float speed)
     {
@@ -60,4 +77,5 @@ public class NPCController : MonoBehaviour, ActorController
             yield return null;
         }
     }
+
 }

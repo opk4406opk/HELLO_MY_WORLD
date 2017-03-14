@@ -11,6 +11,11 @@ public class InputManager : MonoBehaviour {
     private ModifyTerrain modifyTerrian;
     [SerializeField]
     private BlockSelector blockSelector;
+    [SerializeField]
+    private ActorCollideManager actorCollideManager;
+
+    private Vector3 clickPos;
+    private Ray ray;
 
     private enum INPUT_STATE
     {
@@ -21,7 +26,8 @@ public class InputManager : MonoBehaviour {
         INVEN_OPEN = 4,
         MENU_OPEN = 5,
         CRAFT_ITEM_OPEN = 6,
-        TEST_INPUT = 7
+        TALK_NPC_KEYBORAD = 7,
+        TALK_NPC_MOUSE = 8
     }
     private INPUT_STATE inputState = INPUT_STATE.NONE;
 
@@ -36,10 +42,16 @@ public class InputManager : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
-            inputState = INPUT_STATE.CREATE;
+            GetMouseInput();
+            if (actorCollideManager.IsNpcCollide(ray))
+            {
+                inputState = INPUT_STATE.TALK_NPC_MOUSE;
+            }
+            else inputState = INPUT_STATE.CREATE;
         }
         else if (Input.GetMouseButtonDown(1))
         {
+            GetMouseInput();
             inputState = INPUT_STATE.DELETE;
         }
         else if(Input.GetKeyDown(KeyCode.I))
@@ -54,9 +66,9 @@ public class InputManager : MonoBehaviour {
         {
             inputState = INPUT_STATE.CRAFT_ITEM_OPEN;
         }
-        else if (Input.GetKeyDown(KeyCode.T))
+        else if (Input.GetKeyDown(KeyCode.F))
         {
-            inputState = INPUT_STATE.TEST_INPUT;
+            inputState = INPUT_STATE.TALK_NPC_KEYBORAD;
         }
         else
         {
@@ -64,11 +76,14 @@ public class InputManager : MonoBehaviour {
         }
     }
 
+    private void GetMouseInput()
+    {
+        clickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    }
+
     private void MouseInputProcess()
     {
-        Vector3 clickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Debug.DrawRay(ray.origin, ray.direction * 100, Color.magenta);
         switch (inputState)
         {
             case INPUT_STATE.CREATE:
@@ -80,6 +95,10 @@ public class InputManager : MonoBehaviour {
                 inputState = INPUT_STATE.NONE;
                 if (UIPopupManager.isAllpopupClose == true)
                     modifyTerrian.ReplaceBlockCursor(ray, clickPos, 0);
+                break;
+            case INPUT_STATE.TALK_NPC_MOUSE:
+                inputState = INPUT_STATE.NONE;
+                UIPopupManager.OpenShop();
                 break;
             default:
                 break;
@@ -102,7 +121,7 @@ public class InputManager : MonoBehaviour {
                 inputState = INPUT_STATE.NONE;
                 UIPopupManager.OpenCraftItem();
                 break;
-            case INPUT_STATE.TEST_INPUT:
+            case INPUT_STATE.TALK_NPC_KEYBORAD:
                 inputState = INPUT_STATE.NONE;
                 UIPopupManager.OpenShop();
                 break;

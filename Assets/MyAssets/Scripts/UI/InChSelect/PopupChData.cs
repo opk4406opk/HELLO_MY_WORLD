@@ -118,13 +118,13 @@ public class PopupChData : MonoBehaviour
     {
         GameObject sceneToSceneData = GameObject.Find("SceneToScene_datas");
         string data;
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameChDatas.TryGetValue("chName", out data);
+        SceneToScene_Data.gameChDatas.TryGetValue("chName", out data);
         chName.text = data;
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameChDatas.TryGetValue("chLevel", out data);
+        SceneToScene_Data.gameChDatas.TryGetValue("chLevel", out data);
         chLevel.text = data;
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameChDatas.TryGetValue("chType", out data);
+        SceneToScene_Data.gameChDatas.TryGetValue("chType", out data);
         chType.text = data;
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameChDatas.TryGetValue("detailScript", out data);
+        SceneToScene_Data.gameChDatas.TryGetValue("detailScript", out data);
         chDetailScript.text = data;
     }
 }

@@ -13,7 +13,11 @@ public class NPCManager : MonoBehaviour {
     [SerializeField]
     private GameObject prefab_shopMerchantNPC;
 
-    private List<Actor> npcs = new List<Actor>();
+    private List<Actor> _npcs = new List<Actor>();
+    public List<Actor> npcs
+    {
+        get { return _npcs; }
+    }
 
     public void Init()
     {
@@ -26,11 +30,12 @@ public class NPCManager : MonoBehaviour {
         {
             GameObject npc = Instantiate(prefab_roamingMerchantNPC, data.spwanPos, Quaternion.identity);
             npc.GetComponent<RoamingMerchant>().Init(data.spwanPos, gameMangager.worldList[data.spwanWorld]);
+            npc.GetComponent<RoamingMerchant>().sellingItemIDs = data.sellingItemsID;
             npc.GetComponent<RoamingMerchant>().textMeshController.Init(GameConfig.inGameFontSize);
             npc.GetComponent<RoamingMerchant>().textMeshController.SetText(data.name);
-            npcs.Add(npc.GetComponent<RoamingMerchant>());
+            _npcs.Add(npc.GetComponent<RoamingMerchant>());
         }
-        
     }
+
 	
 }

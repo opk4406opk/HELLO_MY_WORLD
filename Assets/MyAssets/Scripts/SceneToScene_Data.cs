@@ -7,20 +7,15 @@ using System.Collections.Generic;
 /// </summary>
 public class SceneToScene_Data : MonoBehaviour {
 
-    private Dictionary<string, string> _gameChDatas = new Dictionary<string, string>();
-    public Dictionary<string, string> gameChDatas
+    private static Dictionary<string, string> _gameChDatas = new Dictionary<string, string>();
+    public static Dictionary<string, string> gameChDatas
     {
         get { return _gameChDatas; }
     }
 
-    private Dictionary<string, string> _gameInvenItemDatas = new Dictionary<string, string>();
-    public Dictionary<string, string> gameInvenItemDatas
+    private static Dictionary<string, string> _gameInvenItemDatas = new Dictionary<string, string>();
+    public static Dictionary<string, string> gameInvenItemDatas
     {
         get { return _gameInvenItemDatas; }
-    }
-
-    void Start()
-    {
-        DontDestroyOnLoad(gameObject);
     }
 }

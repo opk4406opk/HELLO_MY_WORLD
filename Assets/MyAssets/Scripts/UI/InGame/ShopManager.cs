@@ -161,13 +161,12 @@ public class ShopManager : MonoBehaviour {
     private void OnClickItem(ItemData itemData)
     {
         GameObject sceneToSceneData = GameObject.Find("SceneToScene_datas");
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Clear();
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Add("id", itemData.id);
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Add("itemName", itemData.itemName);
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Add("type", itemData.type);
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Add("amount", itemData.amount);
-        sceneToSceneData.GetComponent<SceneToScene_Data>().gameInvenItemDatas.Add("detailInfo", itemData.detailInfo);
-
+        SceneToScene_Data.gameInvenItemDatas.Clear();
+        SceneToScene_Data.gameInvenItemDatas.Add("id", itemData.id);
+        SceneToScene_Data.gameInvenItemDatas.Add("itemName", itemData.itemName);
+        SceneToScene_Data.gameInvenItemDatas.Add("type", itemData.type);
+        SceneToScene_Data.gameInvenItemDatas.Add("amount", itemData.amount);
+        SceneToScene_Data.gameInvenItemDatas.Add("detailInfo", itemData.detailInfo);
         UIPopupManager.OpenItemData();
     }
 }

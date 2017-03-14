@@ -18,14 +18,28 @@ public class RoamingMerchant : Actor, INpc
         get { return _textMeshController; }
     }
 
+    private List<int> _sellingItemIDs;
+    public List<int> sellingItemIDs
+    {
+        set { _sellingItemIDs = value; }
+        get { return _sellingItemIDs; }
+    }
+
     public override void Init(Vector3 pos, World world)
     {
         ((ActorController)actorController).Init(world);
         gameObject.transform.position = pos;
     }
 
+    public override ActorController GetActorController()
+    {
+        return actorController;
+    }
+
     void INpc.Talk()
     {
         // to do.
+        UIPopupManager.OpenShop();
+        
     }
 }
