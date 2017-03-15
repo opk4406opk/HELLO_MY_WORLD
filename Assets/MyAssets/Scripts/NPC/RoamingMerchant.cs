@@ -39,7 +39,7 @@ public class RoamingMerchant : Actor, INpc
     void INpc.Talk()
     {
         // to do.
+        SceneToScene_Data.shopItemIDs = new List<int>(_sellingItemIDs);
         UIPopupManager.OpenShop();
-        
     }
 }

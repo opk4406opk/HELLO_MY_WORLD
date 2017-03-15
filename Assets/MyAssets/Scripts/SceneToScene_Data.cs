@@ -18,4 +18,6 @@ public class SceneToScene_Data : MonoBehaviour {
     {
         get { return _gameInvenItemDatas; }
     }
+
+    public static List<int> shopItemIDs;
 }

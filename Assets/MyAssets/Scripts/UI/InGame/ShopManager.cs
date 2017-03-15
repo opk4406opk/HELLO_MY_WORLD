@@ -21,10 +21,8 @@ public class ShopManager : MonoBehaviour {
 
     private readonly int defaultItemSlot = 10;
     private List<ItemData> invenItemSlotList = new List<ItemData>();
-
-    // DB에서 추출한 유저 아이템정보를 담아두는 리스트.
-    private List<USER_ITEM> userItemList = new List<USER_ITEM>();
-
+    private List<ItemData> shopItemSlotList = new List<ItemData>();
+    // 아이템 정보가 기록되어 있는 데이터파일.
     private ItemDataFile gameItemDataFile;
 
     void Start()
@@ -35,7 +33,9 @@ public class ShopManager : MonoBehaviour {
             gameItemDataFile = obj.GetComponent<ItemDataFile>();
         }
         CreateInvenEmptySlot(defaultItemSlot);
+        CreateShopEmptySlot(defaultItemSlot);
         SettingUserItem();
+        SettingShopItem();
         ScaleUpEffect();
     }
 
@@ -95,13 +95,58 @@ public class ShopManager : MonoBehaviour {
         uiInvenGridObj.GetComponent<UIGrid>().Reposition();
     }
 
+    private void CreateShopEmptySlot(int _num)
+    {
+        for (int idx = 0; idx < _num; ++idx)
+        {
+            GameObject newItem = Instantiate(shopItemSlotPrefab,
+                new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
+
+            newItem.SetActive(true);
+            newItem.GetComponent<ItemData>().OffInfo();
+            //item parenting
+            newItem.transform.parent = uiShopItemGridObj.transform;
+            newItem.transform.localScale = new Vector3(1, 1, 1);
+            newItem.transform.localPosition = new Vector3(0, 0, 0);
+
+            shopItemSlotList.Add(newItem.GetComponent<ItemData>());
+        }
+        uiShopItemGridObj.GetComponent<UIGrid>().Reposition();
+    }
+
     private void SettingShopItem()
     {
+        List<int> shopItemIDs = SceneToScene_Data.shopItemIDs;
+        List<ItemInfo> shopItems = new List<ItemInfo>();
+        foreach(var id in shopItemIDs)
+        {
+            shopItems.Add(gameItemDataFile.GetItemData(id.ToString()));
+        }
 
+        int moreEmptySlot = shopItems.Count;
+        if (moreEmptySlot > defaultItemSlot) CreateShopEmptySlot(moreEmptySlot - defaultItemSlot);
+        int itemSlotIdx = 0;
+        foreach (ItemInfo item in shopItems)
+        {
+            // set user item info
+            shopItemSlotList[itemSlotIdx].itemName = item.name;
+            shopItemSlotList[itemSlotIdx].id = item.id;
+            shopItemSlotList[itemSlotIdx].amount = "∞";
+            shopItemSlotList[itemSlotIdx].type = item.type.ToString();
+            // set item detail info
+            shopItemSlotList[itemSlotIdx].detailInfo = item.detailInfo;
+
+            shopItemSlotList[itemSlotIdx].InitAllData();
+            shopItemSlotList[itemSlotIdx].OnInfo();
+
+            itemSlotIdx++;
+        }
     }
 
     private void SettingUserItem()
     {
+        // DB에서 추출한 유저 아이템정보를 담아두는 리스트.
+        List<USER_ITEM> userItemList = new List<USER_ITEM>();
         Action GetUserItems = () =>
         {
             string conn = "URI=file:" + Application.dataPath +

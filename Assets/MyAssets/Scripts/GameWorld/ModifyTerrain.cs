@@ -127,7 +127,7 @@ public class ModifyTerrain : MonoBehaviour
                     {
                         dbconn.Open(); //Open connection to the database.
                         string sqlQuery = "INSERT INTO USER_ITEM (name, type, amount, id) VALUES("
-                                           + "'" + itemID + "'" + "," + "'" + 
+                                           + "'" + itemInfo.name + "'" + "," + "'" + 
                                            type + "'" + "," + "1," + itemID +")";
                         dbcmd.CommandText = sqlQuery;
                         dbcmd.ExecuteNonQuery();
