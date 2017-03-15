@@ -152,14 +152,13 @@ public class InventoryManager : MonoBehaviour {
     private EventDelegate Ed_OnClickItem;
     private void OnClickItem(ItemData itemData)
     {
-        GameObject sceneToSceneData = GameObject.Find("SceneToScene_datas");
-        SceneToScene_Data.gameInvenItemDatas.Clear();
-        SceneToScene_Data.gameInvenItemDatas.Add("id", itemData.id);
-        SceneToScene_Data.gameInvenItemDatas.Add("itemName", itemData.itemName);
-        SceneToScene_Data.gameInvenItemDatas.Add("type", itemData.type);
-        SceneToScene_Data.gameInvenItemDatas.Add("amount", itemData.amount);
-        SceneToScene_Data.gameInvenItemDatas.Add("detailInfo", itemData.detailInfo);
-
+        SceneToScene_Data.popupItemInfo.Clear();
+        SceneToScene_Data.popupItemInfo.id = itemData.id;
+        SceneToScene_Data.popupItemInfo.name = itemData.itemName;
+        SceneToScene_Data.popupItemInfo.type = itemData.type;
+        SceneToScene_Data.popupItemInfo.amount = itemData.amount;
+        SceneToScene_Data.popupItemInfo.detailInfo = itemData.detailInfo;
+        
         UIPopupManager.OpenItemData();
     }
 

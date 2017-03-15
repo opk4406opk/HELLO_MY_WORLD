@@ -3,7 +3,6 @@ using System.Collections;
 
 public class PopupItemData : MonoBehaviour
 {
-
     [SerializeField]
     private UILabel lbl_itemTitle;
     [SerializeField]
@@ -61,16 +60,10 @@ public class PopupItemData : MonoBehaviour
 
     private void SetData()
     {
-        GameObject sceneToSceneData = GameObject.Find("SceneToScene_datas");
-        string output;
-        SceneToScene_Data.gameInvenItemDatas.TryGetValue("itemName", out output);
-        lbl_itemTitle.text = output;
-        spr_itemImg.spriteName = output;
-        SceneToScene_Data.gameInvenItemDatas.TryGetValue("type", out output);
-        lbl_itemType.text = output;
-        SceneToScene_Data.gameInvenItemDatas.TryGetValue("amount", out output);
-        lbl_itemAmount.text = output;
-        SceneToScene_Data.gameInvenItemDatas.TryGetValue("detailInfo", out output);
-        lbl_itemDetailInfo.text = output;
+        lbl_itemTitle.text = SceneToScene_Data.popupItemInfo.name;
+        spr_itemImg.spriteName = SceneToScene_Data.popupItemInfo.name;
+        lbl_itemType.text = SceneToScene_Data.popupItemInfo.type;
+        lbl_itemAmount.text = SceneToScene_Data.popupItemInfo.amount;
+        lbl_itemDetailInfo.text = SceneToScene_Data.popupItemInfo.detailInfo;
     }
 }

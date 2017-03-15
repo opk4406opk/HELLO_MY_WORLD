@@ -13,11 +13,6 @@ public class SceneToScene_Data : MonoBehaviour {
         get { return _gameChDatas; }
     }
 
-    private static Dictionary<string, string> _gameInvenItemDatas = new Dictionary<string, string>();
-    public static Dictionary<string, string> gameInvenItemDatas
-    {
-        get { return _gameInvenItemDatas; }
-    }
-
     public static List<int> shopItemIDs;
+    public static PopupUI_ItemInfo popupItemInfo;
 }

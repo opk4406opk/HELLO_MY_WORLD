@@ -27,7 +27,7 @@ public class ChSelectManager : MonoBehaviour
     private EventDelegate Ed_OnClickChCard;
     private void OnClickChCard(CharacterData chData)
     {
-        GameObject sceneToSceneData = GameObject.Find("SceneToScene_datas");
+        
         SceneToScene_Data.gameChDatas.Clear();
         SceneToScene_Data.gameChDatas.Add("chName", chData.chName);
         SceneToScene_Data.gameChDatas.Add("chLevel", chData.chLevel.ToString());

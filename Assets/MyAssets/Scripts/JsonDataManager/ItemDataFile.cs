@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// 게임 Item 데이터 내부통신을 위한 구조체.
+/// 게임 내 아이템들의 정보를 가진 데이터 구조체.
 /// </summary>
 public struct ItemInfo
 {
@@ -11,6 +11,23 @@ public struct ItemInfo
     public string name;
     public string type;
     public string detailInfo;
+}
+
+public struct PopupUI_ItemInfo
+{
+    public string id;
+    public string name;
+    public string type;
+    public string amount;
+    public string detailInfo;
+    public void Clear()
+    {
+        id = null;
+        name = null;
+        type = null;
+        amount = null;
+        detailInfo = null;
+    }
 }
 
 /// <summary>

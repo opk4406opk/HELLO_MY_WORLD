@@ -138,9 +138,25 @@ public class ShopManager : MonoBehaviour {
 
             shopItemSlotList[itemSlotIdx].InitAllData();
             shopItemSlotList[itemSlotIdx].OnInfo();
-
+            //set event delegate
+            Ed_OnClickShopItem = new EventDelegate(this, "OnClickShopItem");
+            Ed_OnClickShopItem.parameters[0].value = shopItemSlotList[itemSlotIdx];
+            shopItemSlotList[itemSlotIdx].GetComponent<UIButton>().onClick.Add(Ed_OnClickShopItem);
             itemSlotIdx++;
         }
+    }
+
+    private EventDelegate Ed_OnClickShopItem;
+    private void OnClickShopItem(ItemData itemData)
+    {
+        SceneToScene_Data.popupItemInfo.Clear();
+        SceneToScene_Data.popupItemInfo.id = itemData.id;
+        SceneToScene_Data.popupItemInfo.name = itemData.itemName;
+        SceneToScene_Data.popupItemInfo.type = itemData.type;
+        SceneToScene_Data.popupItemInfo.amount = itemData.amount;
+        SceneToScene_Data.popupItemInfo.detailInfo = itemData.detailInfo;
+
+        UIPopupManager.OpenPurchaseItemData();
     }
 
     private void SettingUserItem()
@@ -195,23 +211,23 @@ public class ShopManager : MonoBehaviour {
             invenItemSlotList[itemSlotIdx].OnInfo();
 
             //set event delegate
-            Ed_OnClickItem = new EventDelegate(this, "OnClickItem");
-            Ed_OnClickItem.parameters[0].value = invenItemSlotList[itemSlotIdx];
-            invenItemSlotList[itemSlotIdx].GetComponent<UIButton>().onClick.Add(Ed_OnClickItem);
+            Ed_OnClickUserItem = new EventDelegate(this, "OnClickUserItem");
+            Ed_OnClickUserItem.parameters[0].value = invenItemSlotList[itemSlotIdx];
+            invenItemSlotList[itemSlotIdx].GetComponent<UIButton>().onClick.Add(Ed_OnClickUserItem);
             itemSlotIdx++;
         }
     }
 
-    private EventDelegate Ed_OnClickItem;
-    private void OnClickItem(ItemData itemData)
+    private EventDelegate Ed_OnClickUserItem;
+    private void OnClickUserItem(ItemData itemData)
     {
-        GameObject sceneToSceneData = GameObject.Find("SceneToScene_datas");
-        SceneToScene_Data.gameInvenItemDatas.Clear();
-        SceneToScene_Data.gameInvenItemDatas.Add("id", itemData.id);
-        SceneToScene_Data.gameInvenItemDatas.Add("itemName", itemData.itemName);
-        SceneToScene_Data.gameInvenItemDatas.Add("type", itemData.type);
-        SceneToScene_Data.gameInvenItemDatas.Add("amount", itemData.amount);
-        SceneToScene_Data.gameInvenItemDatas.Add("detailInfo", itemData.detailInfo);
+        SceneToScene_Data.popupItemInfo.Clear();
+        SceneToScene_Data.popupItemInfo.id = itemData.id;
+        SceneToScene_Data.popupItemInfo.name = itemData.itemName;
+        SceneToScene_Data.popupItemInfo.type = itemData.type;
+        SceneToScene_Data.popupItemInfo.amount = itemData.amount;
+        SceneToScene_Data.popupItemInfo.detailInfo = itemData.detailInfo;
+
         UIPopupManager.OpenItemData();
     }
 }

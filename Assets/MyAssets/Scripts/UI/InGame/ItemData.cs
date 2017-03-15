@@ -2,7 +2,8 @@
 using System.Collections;
 
 /// <summary>
-/// 인벤토리, 제작아이템, 상점에 등록되어 있는 아이템의 세부정보를 가지고 있는 클래스.
+/// 인벤토리, 제작아이템, 상점에 등록되어 있는 아이템 UI의 사용하게 될 정보를 가지고 있는 클래스.
+/// ( 아이템 slot 오브젝트에 컴포넌트로 붙게된다. )
 /// </summary>
 public class ItemData : MonoBehaviour {
 
