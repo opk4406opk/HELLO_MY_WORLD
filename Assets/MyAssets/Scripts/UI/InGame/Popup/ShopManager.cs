@@ -201,7 +201,7 @@ public class ShopManager : MonoBehaviour {
             // set user item info
             invenItemSlotList[itemSlotIdx].itemName = uitem.name;
             invenItemSlotList[itemSlotIdx].id = uitem.id;
-            invenItemSlotList[itemSlotIdx].amount = "x" + uitem.amount.ToString();
+            invenItemSlotList[itemSlotIdx].amount = uitem.amount.ToString();
             invenItemSlotList[itemSlotIdx].type = uitem.type.ToString();
             // set item detail info
             ItemInfo itemInfo = gameItemDataFile.GetItemData(uitem.id);
@@ -228,6 +228,6 @@ public class ShopManager : MonoBehaviour {
         SceneToScene_Data.popupItemInfo.amount = itemData.amount;
         SceneToScene_Data.popupItemInfo.detailInfo = itemData.detailInfo;
 
-        UIPopupManager.OpenItemData();
+        UIPopupManager.OpenSellItemData();
     }
 }

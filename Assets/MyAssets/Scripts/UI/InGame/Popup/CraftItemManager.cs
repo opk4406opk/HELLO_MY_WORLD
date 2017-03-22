@@ -265,7 +265,7 @@ public class CraftItemManager : MonoBehaviour {
         foreach (CraftRawMaterial raw in item.rawMaterials)
         {
             string calcedAmount = (raw.consumeAmount * int.Parse(selectQuantityList.value)).ToString();
-            itemSlotList[slotIdx].amount = "x"+ calcedAmount;
+            itemSlotList[slotIdx].amount = calcedAmount;
             itemSlotList[slotIdx].InitAmountData();
             slotIdx++;
         }
@@ -295,7 +295,7 @@ public class CraftItemManager : MonoBehaviour {
             itemSlotList[slotIdx].itemName = raw.rawMaterialName;
             itemSlotList[slotIdx].type = itemDataFile.GetItemData(raw.id).type;
             itemSlotList[slotIdx].detailInfo = itemDataFile.GetItemData(raw.id).detailInfo;
-            itemSlotList[slotIdx].amount = "x" + raw.consumeAmount.ToString();
+            itemSlotList[slotIdx].amount = raw.consumeAmount.ToString();
             itemSlotList[slotIdx].InitAllData();
             itemSlotList[slotIdx].OnInfo();
 

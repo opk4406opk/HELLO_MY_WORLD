@@ -49,6 +49,12 @@ public class UIPopupManager : MonoBehaviour {
         get { return _isPurchaseItemOpen; }
     }
 
+    private static bool _isSellItemOpen = false;
+    public static bool isSellItemOpen
+    {
+        get { return _isSellItemOpen; }
+    }
+
     private static bool _isAllPopupClose = false;
     public static bool isAllpopupClose
     {
@@ -60,7 +66,8 @@ public class UIPopupManager : MonoBehaviour {
                (_isItemDataOpen == false) &&
                (_isCraftItemOpen == false) &&
                (_isShopOpen == false) &&
-               (_isPurchaseItemOpen == false))
+               (_isPurchaseItemOpen == false) &&
+               (_isSellItemOpen == false))
             {
                 _isAllPopupClose = true;
                 return _isAllPopupClose;
@@ -181,5 +188,21 @@ public class UIPopupManager : MonoBehaviour {
     {
         SceneManager.UnloadSceneAsync("popup_purChaseItem");
         _isPurchaseItemOpen = false;
+    }
+
+    public static void OpenSellItemData()
+    {
+        if (_isSellItemOpen == false)
+        {
+            SceneManager.LoadSceneAsync("popup_sellItem", LoadSceneMode.Additive);
+            _isSellItemOpen = true;
+            _isAllPopupClose = false;
+        }
+    }
+
+    public static void CloseSellItemData()
+    {
+        SceneManager.UnloadSceneAsync("popup_sellItem");
+        _isSellItemOpen = false;
     }
 }
