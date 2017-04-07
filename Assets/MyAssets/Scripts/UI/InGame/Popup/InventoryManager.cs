@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Mono.Data.Sqlite;
 using System.Data;
 using System;
+using System.Text;
 
 /// <summary>
 /// 게임내 사용자의 인벤토리를 관리하는 클래스.
@@ -96,9 +97,10 @@ public class InventoryManager : MonoBehaviour {
     {
         Action GetUserItems = () =>
         {
-            string conn = "URI=file:" + Application.dataPath +
-               "/StreamingAssets/GameUserDB/userDB.db";
-            using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
+            StringBuilder conn = new StringBuilder();
+            conn.AppendFormat("URI=file:{0}/StreamingAssets/GameUserDB/userDB.db", Application.dataPath);
+
+            using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn.ToString()))
             {
                 using (IDbCommand dbcmd = dbconn.CreateCommand())
                 {

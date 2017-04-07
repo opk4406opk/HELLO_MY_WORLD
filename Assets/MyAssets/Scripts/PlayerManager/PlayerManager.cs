@@ -3,6 +3,7 @@ using System.Collections;
 using Mono.Data.Sqlite;
 using System.Data;
 using System;
+using System.Text;
 
 /// <summary>
 /// 게임내 사용자(캐릭터)를 관리하는 클래스.
@@ -37,11 +38,11 @@ public class PlayerManager : MonoBehaviour {
         string chName = System.String.Empty;
         Action GetUserInfo = () =>
         {
-            string conn = "URI=file:" + Application.dataPath +
-               "/StreamingAssets/GameUserDB/userDB.db";
+            StringBuilder conn = new StringBuilder();
+            conn.AppendFormat("URI=file:{0}/StreamingAssets/GameUserDB/userDB.db", Application.dataPath);
             IDbConnection dbconn;
             IDbCommand dbcmd;
-            using (dbconn = (IDbConnection)new SqliteConnection(conn))
+            using (dbconn = (IDbConnection)new SqliteConnection(conn.ToString()))
             {
                 using (dbcmd = dbconn.CreateCommand())
                 {

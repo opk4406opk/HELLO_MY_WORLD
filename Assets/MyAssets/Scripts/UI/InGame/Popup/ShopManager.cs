@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Text;
 using UnityEngine;
 
 public class ShopManager : MonoBehaviour {
@@ -165,9 +166,10 @@ public class ShopManager : MonoBehaviour {
         List<USER_ITEM> userItemList = new List<USER_ITEM>();
         Action GetUserItems = () =>
         {
-            string conn = "URI=file:" + Application.dataPath +
-               "/StreamingAssets/GameUserDB/userDB.db";
-            using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
+            StringBuilder conn = new StringBuilder();
+            conn.AppendFormat("URI=file:{0}/StreamingAssets/GameUserDB/userDB.db", Application.dataPath);
+
+            using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn.ToString()))
             {
                 using (IDbCommand dbcmd = dbconn.CreateCommand())
                 {

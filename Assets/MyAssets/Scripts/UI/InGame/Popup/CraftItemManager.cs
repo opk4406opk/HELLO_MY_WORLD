@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Mono.Data.Sqlite;
 using System.Data;
+using System.Text;
 
 public class CraftItemManager : MonoBehaviour {
 
@@ -85,18 +86,18 @@ public class CraftItemManager : MonoBehaviour {
 
     private int GetUserMaterialAmount(string itemID)
     {
-        string conn = "URI=file:" + Application.dataPath +
-               "/StreamingAssets/GameUserDB/userDB.db";
+        StringBuilder conn = new StringBuilder();
+        conn.AppendFormat("URI=file:{0}/StreamingAssets/GameUserDB/userDB.db", Application.dataPath);
 
         int amount;
-        using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
+        using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn.ToString()))
         {
             dbconn.Open(); //Open connection to the database.
             using (IDbCommand dbcmd = dbconn.CreateCommand())
             {
-                string sqlQuery = "SELECT amount FROM USER_ITEM WHERE id = "
-                                  + "'" + itemID + "'";
-                dbcmd.CommandText = sqlQuery;
+                StringBuilder sqlQuery = new StringBuilder();
+                sqlQuery.AppendFormat("SELECT amount FROM USER_ITEM WHERE id = '{0}'", itemID);
+                dbcmd.CommandText = sqlQuery.ToString();
                 IDataReader reader = dbcmd.ExecuteReader();
 
                 amount = 0;
@@ -113,36 +114,37 @@ public class CraftItemManager : MonoBehaviour {
 
     private void SetCraftItemToUser(string itemID, string itemName, int itemAmount, int itemType)
     {
-        string conn = "URI=file:" + Application.dataPath +
-               "/StreamingAssets/GameUserDB/userDB.db";
-        string sqlQuery = "INSERT INTO USER_ITEM (name, type, amount, id) VALUES ("
-                                 + "'" + itemName + "'" + ", " 
-                                 + itemType + ", " + itemAmount + ", " + "'" + itemID + "'" + ")";
-        using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
+        StringBuilder conn = new StringBuilder();
+        conn.AppendFormat("URI=file:{0}/StreamingAssets/GameUserDB/userDB.db", Application.dataPath);
+
+        StringBuilder sqlQuery = new StringBuilder();
+        sqlQuery.AppendFormat("INSERT INTO USER_ITEM (name, type, amount, id) VALUES ('{0}',{1},{2},'{3}')",
+            itemName, itemType, itemAmount, itemID);
+        using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn.ToString()))
         {
             dbconn.Open(); //Open connection to the database.
             using (IDbCommand dbcmd = dbconn.CreateCommand())
             {
                 try
                 {
-                    dbcmd.CommandText = sqlQuery;
+                    dbcmd.CommandText = sqlQuery.ToString();
                     dbcmd.ExecuteNonQuery();
                     dbconn.Close();
                 }
                 catch // 인벤토리에 중복된 아이템이 있다면, 수량증가를 해야한다.
                 {
-                    sqlQuery = "SELECT amount FROM USER_ITEM WHERE id = "
-                                          + "'" + itemID + "'";
-                    dbcmd.CommandText = sqlQuery;
+                    sqlQuery.Remove(0, sqlQuery.Length);
+                    sqlQuery.AppendFormat("SELECT amount FROM USER_ITEM WHERE id = '{0}'", itemID);
+                    dbcmd.CommandText = sqlQuery.ToString();
                     IDataReader reader = dbcmd.ExecuteReader();
                     reader.Read();
                     int userInvenAmount = reader.GetInt32(0);
                     userInvenAmount += itemAmount;
                     reader.Close();
 
-                    sqlQuery = "UPDATE USER_ITEM SET amount = " + "'" + userInvenAmount + "'" +
-                                " WHERE id = " + "'" + itemID + "'";
-                    dbcmd.CommandText = sqlQuery;
+                    sqlQuery.Remove(0, sqlQuery.Length);
+                    sqlQuery.AppendFormat("UPDATE USER_ITEM SET amount = '{0}' WHERE id = '{1}'", userInvenAmount, itemID);
+                    dbcmd.CommandText = sqlQuery.ToString();
                     dbcmd.ExecuteNonQuery();
                     dbconn.Close();
                 }

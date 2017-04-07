@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Mono.Data.Sqlite;
 using System.Data;
 using System;
-
+using System.Text;
 
 /// <summary>
 /// 게임내 사용자가 월드 블록을 수정/삭제를 관리하는 클래스.
@@ -109,12 +109,12 @@ public class ModifyTerrain : MonoBehaviour
     {
         Action<byte> UpdateUserItem = (byte blockType) =>
         {
-            string conn = "URI=file:" + Application.dataPath +
-              "/StreamingAssets/GameUserDB/userDB.db";
+            StringBuilder conn = new StringBuilder();
+            conn.AppendFormat("URI=file:{0}/StreamingAssets/GameUserDB/userDB.db", Application.dataPath);
 
             IDbConnection dbconn;
             IDbCommand dbcmd;
-            using (dbconn = (IDbConnection)new SqliteConnection(conn))
+            using (dbconn = (IDbConnection)new SqliteConnection(conn.ToString()))
             {
                 using (dbcmd = dbconn.CreateCommand())
                 {
@@ -123,13 +123,14 @@ public class ModifyTerrain : MonoBehaviour
                     string type;
                     ItemInfo itemInfo = itemDataFile.GetItemData(itemID);
                     type = itemInfo.type;
+                   
                     try
                     {
                         dbconn.Open(); //Open connection to the database.
-                        string sqlQuery = "INSERT INTO USER_ITEM (name, type, amount, id) VALUES("
-                                           + "'" + itemInfo.name + "'" + "," + "'" + 
-                                           type + "'" + "," + "1," + itemID +")";
-                        dbcmd.CommandText = sqlQuery;
+                        StringBuilder sqlQuery = new StringBuilder();
+                        sqlQuery.AppendFormat("INSERT INTO USER_ITEM (name, type, amount, id) VALUES('{0}', '{1}', 1, {2} )",
+                            itemInfo.name, type, itemID);
+                        dbcmd.CommandText = sqlQuery.ToString();
                         dbcmd.ExecuteNonQuery();
 
                         dbconn.Close();
@@ -138,18 +139,19 @@ public class ModifyTerrain : MonoBehaviour
                     {
                         if (SQLiteErrorCode.Constraint == e.ErrorCode)
                         {
-                            string sqlQuery = "SELECT amount FROM USER_ITEM WHERE id = "
-                                        + "'" + itemID + "'";
-                            dbcmd.CommandText = sqlQuery;
+                            StringBuilder sqlQuery = new StringBuilder();
+                            sqlQuery.AppendFormat("SELECT amount FROM USER_ITEM WHERE id = '{0}'", itemID);
+                            dbcmd.CommandText = sqlQuery.ToString();
                             IDataReader reader = dbcmd.ExecuteReader();
                             reader.Read();
                             int itemAmount = reader.GetInt32(0);
                             itemAmount++;
                             reader.Close();
 
-                            sqlQuery = "UPDATE USER_ITEM SET amount = " + "'" + itemAmount + "'" +
-                                        " WHERE id = " + "'" + itemID + "'";
-                            dbcmd.CommandText = sqlQuery;
+                            sqlQuery.Remove(0, sqlQuery.Length);
+                            sqlQuery.AppendFormat("UPDATE USER_ITEM SET amount = '{0}' WHERE id = '{1}'",
+                                itemAmount, itemID);
+                            dbcmd.CommandText = sqlQuery.ToString();
                             dbcmd.ExecuteNonQuery();
 
                             dbconn.Close();
