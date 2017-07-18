@@ -25,7 +25,7 @@ public class BlockSelector : MonoBehaviour {
         tileDataFile = _tileDataFile;
         maxSelectBlocks = tileDataFile.tileNameList.Count;
         //default : grass block;
-        curSelectBlockName = "GRASS";
+        curSelectBlockName = TileType.TILE_TYPE_GRASS;
         _curSelectBlockType = 1;
 
         CreateSelectBlock();

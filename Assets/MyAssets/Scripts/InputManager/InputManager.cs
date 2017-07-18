@@ -94,6 +94,7 @@ public class InputManager : MonoBehaviour {
             case INPUT_STATE.DELETE:
                 inputState = INPUT_STATE.NONE;
                 if (UIPopupManager.isAllpopupClose == true)
+                    // 0번은 None type의 블록이다. 이 부분에 대해서는 따로 열거형을 쓰거나 해야겠다.
                     modifyTerrian.ReplaceBlockCursor(ray, clickPos, 0);
                 break;
             case INPUT_STATE.TALK_NPC_MOUSE:

@@ -18,7 +18,9 @@ public class Chunk : MonoBehaviour
     private List<Vector3> newVertices = new List<Vector3>();
     private List<int> newTriangles = new List<int>();
     private List<Vector2> newUV = new List<Vector2>();
-    // 256 x 256 tile 기준. 1tile(16pixel) 이 차지하는 텍스처 좌표값.  16/256
+    /// <summary>
+    ///  256 x 256(pixel) tileSheet 기준. 1tile(16pixel) 이 차지하는 텍스처 좌표값.  16/256
+    /// </summary>
     private float tUnit = 0.0625f;
     private Vector2 texturePos;
     private Mesh mesh;

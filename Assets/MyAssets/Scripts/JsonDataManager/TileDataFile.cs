@@ -3,6 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
+/// 블록 tile의 type 클래스.
+/// </summary>
+public class TileType
+{
+    public static readonly string TILE_TYPE_NONE = "NONE";
+    public static readonly string TILE_TYPE_GRASS = "GRASS";
+    public static readonly string TILE_TYPE_STONE_BIG = "STONE_BIG";
+    public static readonly string TILE_TYPE_STONE_SMALL = "STONE_SMALL";
+    public static readonly string TILE_TYPE_SAND = "SAND";
+    public static readonly string TILE_TYPE_RED_STONE = "RED_STONE";
+    public static readonly string TILE_TYPE_WOOD = "WOOD";
+    public static readonly string TILE_TYPE_STONE_GOLD = "STONE_GOLD";
+    public static readonly string TILE_TYPE_STONE_IRON = "STONE_IRON";
+    public static readonly string TILE_TYPE_STONE_SILVER = "STONE_SILVER";
+}
+/// <summary>
 /// Tile 데이터를 주고받기 위한 내부 통신용 구조체.
 /// </summary>
 public struct TileInfo
