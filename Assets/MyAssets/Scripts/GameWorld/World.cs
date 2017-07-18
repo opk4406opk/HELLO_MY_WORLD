@@ -7,6 +7,9 @@ using System.Collections.Generic;
 /// </summary>
 public class World : MonoBehaviour
 {
+    private readonly float DIST_TO_LOAD = 48.0f;
+    private readonly float DIST_TO_UNLOAD = 96.0f;
+
     private Transform _playerTrans;
     public Transform playerTrans
     {
@@ -91,7 +94,7 @@ public class World : MonoBehaviour
         InitChunkGroup();
         if (GameStatus.isLoadGame == false)
         {
-            InsertDefaultWorldData();
+            SetDefaultWorldData();
             _loadProcessRoutine = LoadProcess();
             StartCoroutine(_loadProcessRoutine);
         }
@@ -110,12 +113,12 @@ public class World : MonoBehaviour
     {
         while(true)
         {
-            LoadChunks(48, 96);
+            LoadChunks();
             yield return new WaitForSeconds(INTERVAL_LOAD_TIME);
         }
     }
     
-    private void LoadChunks(float distToLoad, float distToUnload)
+    private void LoadChunks()
     {
         for (int x = 0; x < _chunkGroup.GetLength(0); x++)
             for (int z = 0; z < _chunkGroup.GetLength(2); z++)
@@ -124,11 +127,11 @@ public class World : MonoBehaviour
                         z * chunkSize),
                         new Vector2(_playerTrans.position.x, _playerTrans.position.z));
 
-                if (dist < distToLoad)
+                if (dist < DIST_TO_LOAD)
                 {
                     if (_chunkGroup[x, 0, z] == null) GenColumn(x, z);
                 }
-                else if (dist > distToUnload)
+                else if (dist > DIST_TO_UNLOAD)
                 {
                     if (_chunkGroup[x, 0, z] != null) UnloadColumn(x, z);
                 }
@@ -139,7 +142,6 @@ public class World : MonoBehaviour
     {
         for (int y = 0; y < _chunkGroup.GetLength(1); y++)
         {
-
             // 유니티엔진에서 제공되는 게임 오브젝트들의 중점(=월드좌표에서의 위치)은
             // 실제 게임 오브젝트의 정중앙이 된다. 
             // 따라서, 유니티엔진에 맞춰서 오브젝트의 중점을 정중앙으로 하려면, 아래와 같은 0.5f(offset)값을 추가한다.
@@ -175,15 +177,19 @@ public class World : MonoBehaviour
     {
         _worldBlockData = new Block[worldX, worldY, worldZ];
         for (int x = 0; x < worldX; x++)
+        {
             for (int y = 0; y < worldY; y++)
+            {
                 for (int z = 0; z < worldZ; z++)
                 {
                     _worldBlockData[x, y, z] = new Block();
                     _worldBlockData[x, y, z].isRendered = false;
                 }
+            }
+        }
     }
   
-    private void InsertDefaultWorldData()
+    private void SetDefaultWorldData()
     {
         for (int x = 0; x < worldX; x++)
         {
@@ -195,8 +201,8 @@ public class World : MonoBehaviour
 
                 for (int y = 0; y < worldY; y++)
                 {
-                    if (y <= stone) _worldBlockData[x, y, z].type = (byte)worldTileDataFile.GetTileData("STONE_BIG").type;
-                    else if (y <= dirt + stone) _worldBlockData[x, y, z].type = (byte)worldTileDataFile.GetTileData("GRASS").type;
+                    if (y <= stone) _worldBlockData[x, y, z].type = (byte)worldTileDataFile.GetTileData(TileType.TILE_TYPE_STONE_BIG).type;
+                    else if (y <= dirt + stone) _worldBlockData[x, y, z].type = (byte)worldTileDataFile.GetTileData(TileType.TILE_TYPE_GRASS).type;
                 }
             }
         }
