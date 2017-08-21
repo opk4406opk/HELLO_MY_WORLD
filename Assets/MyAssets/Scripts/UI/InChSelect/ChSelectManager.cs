@@ -40,7 +40,7 @@ public class ChSelectManager : MonoBehaviour
     private void LoadChDatas()
     {
         jsonDataSheet = new List<Dictionary<string, string>>();
-        jsonFile = Resources.Load("TextAsset/ChDatas/characterDatas") as TextAsset;
+        jsonFile = Resources.Load(ConstFilePath.TXT_CHARACTER_DATAS) as TextAsset;
         chDatajsonObj = new JSONObject(jsonFile.text);
         AccessData(chDatajsonObj);
     }
@@ -84,8 +84,6 @@ public class ChSelectManager : MonoBehaviour
         switch (jsonObj.type)
         {
             case JSONObject.Type.OBJECT:
-                //for(int idx = 0; idx < jsonObj.Count; ++idx)
-                //    AccessData(jsonObj);
                 break;
             case JSONObject.Type.ARRAY:
                 maxChCard = jsonObj.Count;

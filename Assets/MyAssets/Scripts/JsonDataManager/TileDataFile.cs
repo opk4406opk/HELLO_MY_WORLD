@@ -52,7 +52,7 @@ public class TileDataFile : MonoBehaviour {
         _tileNameList = new List<string>();
         typeToNameSheet = new Dictionary<int, string>();
         jsonDataSheet = new Dictionary<string, Dictionary<string, string>>();
-        jsonFile = Resources.Load("TextAsset/TileDatas/tileDatas") as TextAsset;
+        jsonFile = Resources.Load(ConstFilePath.TXT_TILE_DATAS) as TextAsset;
         tileDataJsonObj = new JSONObject(jsonFile.text);
 
         AccessData(tileDataJsonObj);

@@ -20,7 +20,7 @@ public class SubWorldDataFile : MonoBehaviour
     public void Init()
     {
         jsonDataSheet = new List<Dictionary<string, string>>();
-        jsonFile = Resources.Load("TextAsset/SubWorldDefaultData/subworld_default") as TextAsset;
+        jsonFile = Resources.Load(ConstFilePath.TXT_SUB_WORLD_DEFAULT_DATAS) as TextAsset;
         subWorldJsonObj = new JSONObject(jsonFile.text);
         AccessData(subWorldJsonObj);
     }

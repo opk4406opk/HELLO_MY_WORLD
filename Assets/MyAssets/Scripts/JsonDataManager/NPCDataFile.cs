@@ -48,7 +48,7 @@ public class NPCDataFile : MonoBehaviour {
 
 	public void Init()
     {
-        jsonFile =Resources.Load("TextAsset/ActorData/NPC_DATAS") as TextAsset;
+        jsonFile =Resources.Load(ConstFilePath.TXT_NPC_DATAS) as TextAsset;
         jsonObject = new JSONObject(jsonFile.text);
         AccessData(jsonObject);
     }

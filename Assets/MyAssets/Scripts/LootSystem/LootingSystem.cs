@@ -15,7 +15,7 @@ public class LootingSystem : MonoBehaviour
     public void Init()
     {
         jsonDataSheet = new Dictionary<string, string>();
-        jsonFile = Resources.Load("TextAsset/ItemDatas/typeToItemID") as TextAsset;
+        jsonFile = Resources.Load(ConstFilePath.TXT_TYPE_TO_ITEM_DATAS) as TextAsset;
         typeToItemNameJsonObj = new JSONObject(jsonFile.text);
         AccessData(typeToItemNameJsonObj);
     }

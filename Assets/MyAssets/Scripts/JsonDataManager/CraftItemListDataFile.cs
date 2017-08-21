@@ -56,7 +56,7 @@ public class CraftItemListDataFile : MonoBehaviour
 
     public void Init()
     {
-        jsonFile = Resources.Load("TextAsset/ItemDatas/craftItemListDatas") as TextAsset;
+        jsonFile = Resources.Load(ConstFilePath.TXT_CRAFT_ITEM_LIST_DATAS) as TextAsset;
         craftItemListJsonObj = new JSONObject(jsonFile.text);
         AccessData(craftItemListJsonObj);
     }

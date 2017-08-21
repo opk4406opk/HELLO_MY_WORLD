@@ -197,12 +197,12 @@ public class World : MonoBehaviour
             {
                 int stone = PerlinNoise(x, 0, z, 10, 3, 1.2f);
                 stone += PerlinNoise(x, 300, z, 20, 4, 0) + 10;
-                int dirt = PerlinNoise(x, 100, z, 50, 3, 0) + 1;
+                int grass = PerlinNoise(x, 100, z, 50, 3, 0) + 1;
 
                 for (int y = 0; y < worldY; y++)
                 {
                     if (y <= stone) _worldBlockData[x, y, z].type = (byte)worldTileDataFile.GetTileData(TileType.TILE_TYPE_STONE_BIG).type;
-                    else if (y <= dirt + stone) _worldBlockData[x, y, z].type = (byte)worldTileDataFile.GetTileData(TileType.TILE_TYPE_GRASS).type;
+                    else if (y <= grass + stone) _worldBlockData[x, y, z].type = (byte)worldTileDataFile.GetTileData(TileType.TILE_TYPE_GRASS).type;
                 }
             }
         }

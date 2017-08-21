@@ -43,7 +43,7 @@ public class ItemDataFile : MonoBehaviour
     public void Init()
     {
         jsonDataSheet = new Dictionary<string, Dictionary<string, string>>();
-        jsonFile = Resources.Load("TextAsset/ItemDatas/itemDatas") as TextAsset;
+        jsonFile = Resources.Load(ConstFilePath.TXT_ITEM_DATAS) as TextAsset;
         itemDataJsonObj = new JSONObject(jsonFile.text);
         AccessData(itemDataJsonObj);
     }
