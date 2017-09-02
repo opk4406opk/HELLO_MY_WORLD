@@ -12,8 +12,10 @@ using System.Text;
 public class MainMenuManager : MonoBehaviour {
 
     public void OnClickStart()
-    {
-        GameStatus.isLoadGame = false;
+	{
+		GameNetworkManager.ConnectLoginServer();
+
+		GameStatus.isLoadGame = false;
         SceneManager.LoadSceneAsync("SelectCharacter");
     }
 
