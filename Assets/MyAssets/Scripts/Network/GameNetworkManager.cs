@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Collections.Generic;
 
 /// <summary>
 /// 현재 unity3d 엔진에서 stable .NET 3.5 버전에 맞춘 테스트 네트워크매니저 class.
@@ -12,15 +13,20 @@ public class GameNetworkManager {
 	
 	public static void ConnectLoginServer()
 	{
+		Dictionary<string, string> dummyData = new Dictionary<string, string>();
+		dummyData.Add("ip", "192.168.219.0");
+		dummyData.Add("user_name", "JJW");
+		JSONObject jsonData = new JSONObject(dummyData);
+
 		HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(new Uri(addr));
+		byte[] byteData = Encoding.ASCII.GetBytes(jsonData.ToString());
 		webReq.Method = HTTP_REQUEST_METHOD.POST;
-		byte[] testData = Encoding.ASCII.GetBytes("test-data-here");
-		webReq.ContentType = "text/plain";
-		webReq.ContentLength = testData.Length;
+		webReq.ContentType = "application/json";
+		webReq.ContentLength = byteData.Length;
 
 		using (Stream dataStream = webReq.GetRequestStream())
 		{
-			dataStream.Write(testData, 0, testData.Length);
+			dataStream.Write(byteData, 0, byteData.Length);
 		}
 
 		using(WebResponse webResponse = webReq.GetResponse())
