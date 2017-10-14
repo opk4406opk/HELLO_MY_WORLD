@@ -11,12 +11,30 @@ using System.Text;
 /// </summary>
 public class MainMenuManager : MonoBehaviour {
 
-    public void OnClickStart()
-    {
-        GameStatus.isLoadGame = false;
-        SceneManager.LoadSceneAsync("SelectCharacter");
+	private bool isSuccessLogin = false;
+	public void OnClickStart()
+	{
+		GameNetworkManager.PostHttpRequest += PostLoginRequest;
+		GameNetworkManager.ConnectLoginServer();
+		StartCoroutine(LoginProcess());
     }
-
+	private void PostLoginRequest(bool isSuccess)
+	{
+		if (isSuccess) isSuccessLogin = true;
+		else isSuccessLogin = false;
+	}
+	private IEnumerator LoginProcess()
+	{
+		while (!isSuccessLogin)
+		{
+			//to do.
+			//waiting connect to login-server (http-Request).
+			yield return null;
+		}
+		Debug.Log("Success Login_server");
+		SceneManager.LoadSceneAsync("SelectCharacter");
+	}
+	
     public void OnClickLoad()
     {
         if(ChkIsFile())
