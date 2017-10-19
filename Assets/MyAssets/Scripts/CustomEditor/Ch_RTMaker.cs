@@ -29,23 +29,25 @@ public class Ch_RTMaker : EditorWindow
     {
         EditorGUILayout.BeginToggleGroup("Func", true);
         if (GUILayout.Button("Open CharacteInfo file")) ClickOpenFile();
-        if (GUILayout.Button("Start Process")) CreateRT_Files();
+        if (GUILayout.Button("Start Process")) CreateRenderTextureFiles();
         EditorGUILayout.EndToggleGroup();
     }
 
     private void ClickOpenFile()
     {
-        filePath =  EditorUtility.OpenFilePanel("OpenFile Dialog", "C:\\", "");
+        //filePath =  EditorUtility.OpenFilePanel("OpenFile Dialog", "C:\\", "");
+		// test code.
+		filePath = "..\\MyAssets\\Resources\\TextAsset\\Texture(RT)\\ChDatas\\characterDatas.json";
         if(filePath != null)
         {
             LoadChDatas();
         }
     }
 
-    private void CreateRT_Files()
+    private void CreateRenderTextureFiles()
     {
-        GameObject rtChGroup = new GameObject();
-        rtChGroup.name = "RT_Ch_Group";
+        GameObject selectChars = new GameObject();
+        selectChars.name = "SelectCharacters";
 
         // create renderTexture files.
         for(int i = 0; i < maxChCard; i++)
@@ -61,20 +63,20 @@ public class Ch_RTMaker : EditorWindow
             if (File.Exists(destPath) == false) FileUtil.CopyFileOrDirectory(sourcePath, destPath);
             else Debug.Log(string.Format("{0} 파일은 {1} 위치에 이미 존재합니다.", textureFileName, destPath));
             // renderTexture에 사용될 캐릭터 prefab 생성.
-            CreateChPrefabs_ForRT(i, rtChGroup.transform, textureFileName);
+            CreateSelectCharPrefab(i, selectChars.transform, textureFileName);
         }
 
-        // create rtChGroup prefab.
-        StringBuilder rtGroupPrefabPath = new StringBuilder();
-        rtGroupPrefabPath.AppendFormat(ConstFilePath.SAVE_PATH_FOR_RT_PREFAB, rtChGroup.name);
-        PrefabUtility.CreatePrefab(rtGroupPrefabPath.ToString(), rtChGroup);
+        // create selectChars prefab.
+        StringBuilder selectCharsPrefabPath = new StringBuilder();
+        selectCharsPrefabPath.AppendFormat(ConstFilePath.SAVE_PATH_FOR_SELECT_CHARS_PREFAB, selectChars.name);
+        PrefabUtility.CreatePrefab(selectCharsPrefabPath.ToString(), selectChars);
         // and then destroy object in Scene.
-        DestroyImmediate(rtChGroup);
+        DestroyImmediate(selectChars);
     }
 
-    private void CreateChPrefabs_ForRT(int idx, Transform group, string rtFileName)
+    private void CreateSelectCharPrefab(int idx, Transform group, string rtFileName)
     {
-        int objOffset = 10;
+        int objIntervalPos = 10;
 
         string prefabName = null;
         jsonDataSheet[idx].TryGetValue("chPrefabName", out prefabName);
@@ -85,30 +87,34 @@ public class Ch_RTMaker : EditorWindow
         StringBuilder prefabPath = new StringBuilder();
         prefabPath.AppendFormat(ConstFilePath.PREFAB_CHARACTER, prefabName);
         GameObject character = Instantiate(Resources.Load(prefabPath.ToString()),
-            new Vector3(idx * objOffset, 0, idx * objOffset), Quaternion.identity) as GameObject;
+            new Vector3(idx * objIntervalPos, 0, idx * objIntervalPos), Quaternion.identity) as GameObject;
         character.name = chName;
         character.transform.parent = group;
 
         // set camera - position, rot, parenting, naming
-        GameObject cam = new GameObject();
-        cam.transform.position = character.transform.position;
-        cam.transform.Rotate(new Vector3(0, 180.0f, 0));
-        cam.transform.parent = character.transform;
-        cam.name = "RT_Camera";
-        // set camera - addComp, cullMaks, SetRT
-        cam.AddComponent<Camera>();
-        cam.GetComponent<Camera>().cullingMask = LayerMask.NameToLayer("PlayerCharacter");
+        GameObject camObj = new GameObject();
+        camObj.transform.position = character.transform.position;
+        camObj.transform.Rotate(new Vector3(0, 180.0f, 0));
+        camObj.transform.parent = character.transform;
+        camObj.name = "RenderTextureCamera";
+		Vector3 newPos = camObj.transform.position;
+		newPos.y += 0.5f;
+		newPos.z += 1.0f;
+		camObj.transform.position = newPos;
+		// set camera - addComp, cullMasks, SetRT
+        Camera cam = camObj.AddComponent<Camera>();
+		// 10번째 인덱스의 Layer를 컬링마스크 해야 한다.
+		// ref : https://docs.unity3d.com/Manual/Layers.html
+		cam.cullingMask = 1 << LayerMask.NameToLayer("PlayerCharacter");
+		cam.farClipPlane = 1.0f;
 
-        StringBuilder targetRT_Path = new StringBuilder();
-        targetRT_Path.AppendFormat(ConstFilePath.CH_RT_RESOURCE_PATH, rtFileName);
-        //FileStream fs = File.Open(targetRT_Path.ToString(), FileMode.Open);
-        // RenderTexture는 Object를 상속한 형태가 아님.
-        // 그냥 byte 덩어리의 파일.
-        // 따라서, RenderTexture 파일을 런타임에 읽어들여 카메라에 붙이고싶어도..음..
-        // De/Serialize 를 이용하면 가능은한데 쓸데없이 부피가 커진다.
-        // 어쨋든 Resources.Load 메소드로는 Object 형태가 아닌 RenderTexture는 불러올 수 없다. 
-        cam.GetComponent<Camera>().targetTexture = Resources.Load<RenderTexture>(targetRT_Path.ToString());
-    }
+		StringBuilder targetRT_Path = new StringBuilder();
+        targetRT_Path.AppendFormat(ConstFilePath.SELECT_CHARS_RT_PATH, rtFileName);
+		//FileStream fs = File.Open(targetRT_Path.ToString(), FileMode.Open);
+		// RenderTexture는 Texture 상속, 그리고 Texture는 오브젝트 상속.
+		RenderTexture rt = Resources.Load<RenderTexture>(targetRT_Path.ToString());
+		cam.targetTexture = rt;
+	}
 
     private void LoadChDatas()
     {
