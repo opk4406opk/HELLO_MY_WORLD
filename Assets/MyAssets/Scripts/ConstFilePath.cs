@@ -17,15 +17,22 @@ public class ConstFilePath {
     public readonly static string CH_RT_BASE_FILE_WITH_EXT = "Assets/MyAssets/Resources/Texture(RT)/userCharacters/CharRTBase.renderTexture";
     public readonly static string CH_RT_BASE_FILE_DIR = "Assets/MyAssets/Resources/Texture(RT)/userCharacters/{0}.renderTexture";
 
-    /// <summary>
-    /// Resource.Load 사용시에 쓰이는 캐릭터 RT 리소스 상대경로.
-    /// </summary>
-    public readonly static string SELECT_CHARS_RT_PATH = "Texture(RT)/userCharacters/{0}";
+	// ..\ 현재 폴더의 상위폴더
+	// .\ 현재 폴더.
+	/// <summary>
+	/// 윈도우 탐색기경로로 표현한. 캐릭터 데이타 파일 상대경로.
+	/// </summary>
+	public readonly static string WINDOW_PATH_CHARACTER_DATAS_FILE = ".\\Assets\\MyAssets\\Resources\\TextAsset\\ChDatas\\characterDatas.json";
+
+	/// <summary>
+	/// Resource.Load 사용시에 쓰이는 캐릭터 RT 리소스 상대경로.
+	/// </summary>
+	public readonly static string SELECT_CHARS_RT_PATH = "Texture(RT)/userCharacters/{0}";
 
     /// <summary>
     /// 캐릭터 프리팹이 위치한 path.
     /// </summary>
-    public readonly static string PREFAB_CHARACTER = "GamePrefabs/Characters/user/{0}";
+    public readonly static string PREFAB_CHARACTER = "GamePrefabs/Characters/user/";
 
     /// <summary>
     ///  RenderTexture에 사용될 캐릭터 프리팹이 저장될 path.

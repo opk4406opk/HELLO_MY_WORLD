@@ -1,9 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityEditor;
+
+/// <summary>
+/// Json파일로 저장될 캐릭터 데이터 
+/// </summary>
+public class CharacterJsonDataFormat
+{
+	public string chName;
+	public string chType;
+	public string chLevel;
+	public string detailScript;
+	public string chFaceTextureName;
+	public string chPrefabName;
+}
 
 /// <summary>
 /// Chracter RenderTexture 생성기.
@@ -28,21 +40,48 @@ public class Ch_RTMaker : EditorWindow
     void OnGUI()
     {
         EditorGUILayout.BeginToggleGroup("Func", true);
-        if (GUILayout.Button("Open CharacteInfo file")) ClickOpenFile();
-        if (GUILayout.Button("Start Process")) CreateRenderTextureFiles();
+		if (GUILayout.Button("CharsPrefabs To CharDataJosnFile")) CreateCharsDataFile();
+		if (GUILayout.Button("Open CharacterInfo file")) ClickOpenFile();
+		if (GUILayout.Button("Start CreateCharacterPrefabs")) CreateRenderTextureFiles();
+
         EditorGUILayout.EndToggleGroup();
     }
 
+	private void CreateCharsDataFile()
+	{
+		GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
+		if (charPrefabs == null) KojeomLogger.DebugLog("캐릭터 프리팹로딩에 실패했습니다.(데이터파일생성에 필요한)", LOG_TYPE.ERROR);
+		else
+		{
+			int idx = 0;
+			CharacterJsonDataFormat[] datas = new CharacterJsonDataFormat[charPrefabs.Length];
+			foreach(var p in charPrefabs)
+			{
+				CharacterJsonDataFormat format = new CharacterJsonDataFormat();
+				format.chName = p.name;
+				format.chPrefabName = p.name;
+				format.chFaceTextureName = p.name;
+				format.detailScript = "Something here..";
+				format.chLevel = "1";
+				format.chType = "citizen";
+
+				datas[idx] = format;
+				idx++;
+			}
+			string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(datas, Newtonsoft.Json.Formatting.Indented);
+			//Creates a new Json file, writes the specified string to the file,
+			//and then closes the file. If the target file already exists, it is overwritten.
+			File.WriteAllText(ConstFilePath.WINDOW_PATH_CHARACTER_DATAS_FILE, jsonData);
+			KojeomLogger.DebugLog("CreateCharsDataFile Done.");
+		}
+	}
+
     private void ClickOpenFile()
     {
-        //filePath =  EditorUtility.OpenFilePanel("OpenFile Dialog", "C:\\", "");
-		// test code.
-		filePath = "..\\MyAssets\\Resources\\TextAsset\\Texture(RT)\\ChDatas\\characterDatas.json";
-        if(filePath != null)
-        {
-            LoadChDatas();
-        }
-    }
+		//EditorUtility.OpenFilePanel("OpenFile Dialog", "C:\\", "");
+		LoadChDatas();
+		KojeomLogger.DebugLog("LoadCharDatas Done.");
+	}
 
     private void CreateRenderTextureFiles()
     {
@@ -72,7 +111,9 @@ public class Ch_RTMaker : EditorWindow
         PrefabUtility.CreatePrefab(selectCharsPrefabPath.ToString(), selectChars);
         // and then destroy object in Scene.
         DestroyImmediate(selectChars);
-    }
+
+		KojeomLogger.DebugLog("CreateRenderTextureFiles Done.");
+	}
 
     private void CreateSelectCharPrefab(int idx, Transform group, string rtFileName)
     {
@@ -85,7 +126,7 @@ public class Ch_RTMaker : EditorWindow
 
         // Instanciate character object;
         StringBuilder prefabPath = new StringBuilder();
-        prefabPath.AppendFormat(ConstFilePath.PREFAB_CHARACTER, prefabName);
+        prefabPath.AppendFormat(ConstFilePath.PREFAB_CHARACTER + "{0}", prefabName);
         GameObject character = Instantiate(Resources.Load(prefabPath.ToString()),
             new Vector3(idx * objIntervalPos, 0, idx * objIntervalPos), Quaternion.identity) as GameObject;
         character.name = chName;

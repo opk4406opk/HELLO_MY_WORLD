@@ -1,18 +1,442 @@
- [
-     {
-		"chName":"Query-Chan-SD",
-		"chType":"citizen",
-		"chLevel":"1",
-		"detailScript":"It's good",
-		"chFaceTextureName":"RT_Query-Chan-SD_00",
-		"chPrefabName" : "Query-Chan-SD"
-	 }, 
-	 {
-		"chName":"Query-Chan-SD_Aichi",
-		"chType":"citizen",
-		"chLevel":"1",
-		"detailScript":"It's good",
-		"chFaceTextureName":"RT_Query-Chan-SD_Aichi_01",
-		"chPrefabName" : "Query-Chan-SD_Aichi"
-	 }
- ]
+[
+  {
+    "chName": "Query-Chan-SD",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD",
+    "chPrefabName": "Query-Chan-SD"
+  },
+  {
+    "chName": "Query-Chan-SD_Aichi",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Aichi",
+    "chPrefabName": "Query-Chan-SD_Aichi"
+  },
+  {
+    "chName": "Query-Chan-SD_Akita",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Akita",
+    "chPrefabName": "Query-Chan-SD_Akita"
+  },
+  {
+    "chName": "Query-Chan-SD_Aomori",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Aomori",
+    "chPrefabName": "Query-Chan-SD_Aomori"
+  },
+  {
+    "chName": "Query-Chan-SD_Black",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Black",
+    "chPrefabName": "Query-Chan-SD_Black"
+  },
+  {
+    "chName": "Query-Chan-SD_Chiba",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Chiba",
+    "chPrefabName": "Query-Chan-SD_Chiba"
+  },
+  {
+    "chName": "Query-Chan-SD_Ehime",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Ehime",
+    "chPrefabName": "Query-Chan-SD_Ehime"
+  },
+  {
+    "chName": "Query-Chan-SD_Fukui",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Fukui",
+    "chPrefabName": "Query-Chan-SD_Fukui"
+  },
+  {
+    "chName": "Query-Chan-SD_Fukuoka",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Fukuoka",
+    "chPrefabName": "Query-Chan-SD_Fukuoka"
+  },
+  {
+    "chName": "Query-Chan-SD_Fukushima",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Fukushima",
+    "chPrefabName": "Query-Chan-SD_Fukushima"
+  },
+  {
+    "chName": "Query-Chan-SD_Gifu",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Gifu",
+    "chPrefabName": "Query-Chan-SD_Gifu"
+  },
+  {
+    "chName": "Query-Chan-SD_Gunma",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Gunma",
+    "chPrefabName": "Query-Chan-SD_Gunma"
+  },
+  {
+    "chName": "Query-Chan-SD_Hiroshima",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Hiroshima",
+    "chPrefabName": "Query-Chan-SD_Hiroshima"
+  },
+  {
+    "chName": "Query-Chan-SD_Hokkaido",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Hokkaido",
+    "chPrefabName": "Query-Chan-SD_Hokkaido"
+  },
+  {
+    "chName": "Query-Chan-SD_Hyogo",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Hyogo",
+    "chPrefabName": "Query-Chan-SD_Hyogo"
+  },
+  {
+    "chName": "Query-Chan-SD_Ishikawa",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Ishikawa",
+    "chPrefabName": "Query-Chan-SD_Ishikawa"
+  },
+  {
+    "chName": "Query-Chan-SD_Ivaraki",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Ivaraki",
+    "chPrefabName": "Query-Chan-SD_Ivaraki"
+  },
+  {
+    "chName": "Query-Chan-SD_Iwate",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Iwate",
+    "chPrefabName": "Query-Chan-SD_Iwate"
+  },
+  {
+    "chName": "Query-Chan-SD_Kagawa",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Kagawa",
+    "chPrefabName": "Query-Chan-SD_Kagawa"
+  },
+  {
+    "chName": "Query-Chan-SD_Kagoshima",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Kagoshima",
+    "chPrefabName": "Query-Chan-SD_Kagoshima"
+  },
+  {
+    "chName": "Query-Chan-SD_Kanagawa",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Kanagawa",
+    "chPrefabName": "Query-Chan-SD_Kanagawa"
+  },
+  {
+    "chName": "Query-Chan-SD_Kochi",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Kochi",
+    "chPrefabName": "Query-Chan-SD_Kochi"
+  },
+  {
+    "chName": "Query-Chan-SD_Kumamoto",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Kumamoto",
+    "chPrefabName": "Query-Chan-SD_Kumamoto"
+  },
+  {
+    "chName": "Query-Chan-SD_Kyoto",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Kyoto",
+    "chPrefabName": "Query-Chan-SD_Kyoto"
+  },
+  {
+    "chName": "Query-Chan-SD_Mie",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Mie",
+    "chPrefabName": "Query-Chan-SD_Mie"
+  },
+  {
+    "chName": "Query-Chan-SD_MikanButori",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_MikanButori",
+    "chPrefabName": "Query-Chan-SD_MikanButori"
+  },
+  {
+    "chName": "Query-Chan-SD_Miyagi",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Miyagi",
+    "chPrefabName": "Query-Chan-SD_Miyagi"
+  },
+  {
+    "chName": "Query-Chan-SD_Miyazaki",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Miyazaki",
+    "chPrefabName": "Query-Chan-SD_Miyazaki"
+  },
+  {
+    "chName": "Query-Chan-SD_Nagano",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Nagano",
+    "chPrefabName": "Query-Chan-SD_Nagano"
+  },
+  {
+    "chName": "Query-Chan-SD_Nagasaki",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Nagasaki",
+    "chPrefabName": "Query-Chan-SD_Nagasaki"
+  },
+  {
+    "chName": "Query-Chan-SD_Nara",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Nara",
+    "chPrefabName": "Query-Chan-SD_Nara"
+  },
+  {
+    "chName": "Query-Chan-SD_NewFukuoka",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_NewFukuoka",
+    "chPrefabName": "Query-Chan-SD_NewFukuoka"
+  },
+  {
+    "chName": "Query-Chan-SD_NewHokkaido",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_NewHokkaido",
+    "chPrefabName": "Query-Chan-SD_NewHokkaido"
+  },
+  {
+    "chName": "Query-Chan-SD_NewOsaka",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_NewOsaka",
+    "chPrefabName": "Query-Chan-SD_NewOsaka"
+  },
+  {
+    "chName": "Query-Chan-SD_Niigata",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Niigata",
+    "chPrefabName": "Query-Chan-SD_Niigata"
+  },
+  {
+    "chName": "Query-Chan-SD_Okayama",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Okayama",
+    "chPrefabName": "Query-Chan-SD_Okayama"
+  },
+  {
+    "chName": "Query-Chan-SD_Okinawa",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Okinawa",
+    "chPrefabName": "Query-Chan-SD_Okinawa"
+  },
+  {
+    "chName": "Query-Chan-SD_Ooita",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Ooita",
+    "chPrefabName": "Query-Chan-SD_Ooita"
+  },
+  {
+    "chName": "Query-Chan-SD_Osaka",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Osaka",
+    "chPrefabName": "Query-Chan-SD_Osaka"
+  },
+  {
+    "chName": "Query-Chan-SD_Saga",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Saga",
+    "chPrefabName": "Query-Chan-SD_Saga"
+  },
+  {
+    "chName": "Query-Chan-SD_Saitama",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Saitama",
+    "chPrefabName": "Query-Chan-SD_Saitama"
+  },
+  {
+    "chName": "Query-Chan-SD_Shiga",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Shiga",
+    "chPrefabName": "Query-Chan-SD_Shiga"
+  },
+  {
+    "chName": "Query-Chan-SD_Shimane",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Shimane",
+    "chPrefabName": "Query-Chan-SD_Shimane"
+  },
+  {
+    "chName": "Query-Chan-SD_Shizuoka",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Shizuoka",
+    "chPrefabName": "Query-Chan-SD_Shizuoka"
+  },
+  {
+    "chName": "Query-Chan-SD_SpaceCommand",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_SpaceCommand",
+    "chPrefabName": "Query-Chan-SD_SpaceCommand"
+  },
+  {
+    "chName": "Query-Chan-SD_Spain_Madrid",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Spain_Madrid",
+    "chPrefabName": "Query-Chan-SD_Spain_Madrid"
+  },
+  {
+    "chName": "Query-Chan-SD_Tochigi",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Tochigi",
+    "chPrefabName": "Query-Chan-SD_Tochigi"
+  },
+  {
+    "chName": "Query-Chan-SD_Tokushima",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Tokushima",
+    "chPrefabName": "Query-Chan-SD_Tokushima"
+  },
+  {
+    "chName": "Query-Chan-SD_Tokyo",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Tokyo",
+    "chPrefabName": "Query-Chan-SD_Tokyo"
+  },
+  {
+    "chName": "Query-Chan-SD_Tottori",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Tottori",
+    "chPrefabName": "Query-Chan-SD_Tottori"
+  },
+  {
+    "chName": "Query-Chan-SD_Toyama",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Toyama",
+    "chPrefabName": "Query-Chan-SD_Toyama"
+  },
+  {
+    "chName": "Query-Chan-SD_Wakayama",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Wakayama",
+    "chPrefabName": "Query-Chan-SD_Wakayama"
+  },
+  {
+    "chName": "Query-Chan-SD_Yamagata",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Yamagata",
+    "chPrefabName": "Query-Chan-SD_Yamagata"
+  },
+  {
+    "chName": "Query-Chan-SD_Yamaguchi",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Yamaguchi",
+    "chPrefabName": "Query-Chan-SD_Yamaguchi"
+  },
+  {
+    "chName": "Query-Chan-SD_Yamanashi",
+    "chType": "citizen",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Query-Chan-SD_Yamanashi",
+    "chPrefabName": "Query-Chan-SD_Yamanashi"
+  }
+]
