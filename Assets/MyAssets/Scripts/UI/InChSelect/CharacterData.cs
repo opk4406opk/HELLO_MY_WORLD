@@ -46,9 +46,6 @@ public class CharacterData : MonoBehaviour {
     [SerializeField]
     private UITexture txt_chFace;
 
-    private string loadPath = "Texture(RT)/";
-
-
     public void InitData()
     {
         lbl_name.text = _chName;
@@ -58,25 +55,6 @@ public class CharacterData : MonoBehaviour {
 
     private void SetTexture(string _textureName)
     {
-        switch(_textureName)
-        {
-            case "RT_FireFighter_00":
-                faceTexture = Resources.Load(loadPath + _textureName) as Texture;
-                break;
-            case "RT_Gang_01":
-                faceTexture = Resources.Load(loadPath + _textureName) as Texture;
-                break;
-            case "RT_Police_02":
-                faceTexture = Resources.Load(loadPath + _textureName) as Texture;
-                break;
-            case "RT_Sheriff_03":
-                faceTexture = Resources.Load(loadPath + _textureName) as Texture;
-                break;
-            case "RT_Trucker_04":
-                faceTexture = Resources.Load(loadPath + _textureName) as Texture;
-                break;
-        }
-    }
-
-
+		faceTexture = Resources.Load(string.Format(ConstFilePath.SELECT_CHARS_RT_PATH, _textureName)) as Texture;
+	}
 }

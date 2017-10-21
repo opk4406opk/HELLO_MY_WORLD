@@ -7,7 +7,7 @@ using UnityEditor;
 /// <summary>
 /// Json파일로 저장될 캐릭터 데이터 
 /// </summary>
-public class CharacterJsonDataFormat
+public struct CharacterJsonDataFormat
 {
 	public string chName;
 	public string chType;
