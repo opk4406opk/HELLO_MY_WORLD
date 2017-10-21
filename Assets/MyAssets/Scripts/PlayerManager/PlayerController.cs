@@ -24,6 +24,9 @@ public class PlayerController : MonoBehaviour {
     private Quaternion camOrigRotation;
     private Quaternion playerOrigRotation;
 
+	[Range(1.5f, 3.5f)]
+	public float moveSpeed = 1.5f;
+
     public void Init(Camera mainCam)
     {
         playerCamera = mainCam;
@@ -82,13 +85,46 @@ public class PlayerController : MonoBehaviour {
         // rot player
         gameObject.transform.localRotation = playerOrigRotation * xQuaternion;
     }
+
+	private void MovePlayer()
+	{
+		Vector3 dir;
+		if (Input.GetKeyDown(KeyCode.W))
+		{
+			dir = transform.forward;
+			Vector3 newPos = transform.position;
+			transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
+		}
+		else if (Input.GetKeyDown(KeyCode.S))
+		{
+			dir = -transform.forward;
+			Vector3 newPos = transform.position;
+			transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
+		}
+		else if (Input.GetKeyDown(KeyCode.A))
+		{
+			dir = transform.right;
+			Vector3 newPos = transform.position;
+			transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
+		}
+		else if (Input.GetKeyDown(KeyCode.D))
+		{
+			dir = -transform.right;
+			Vector3 newPos = transform.position;
+			transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
+		}
+	}
     
     private IEnumerator ControllProcess()
     {
         while (true)
         {
             CamFollowPlayer();
-            if(UIPopupManager.isAllpopupClose) RotationCamAndPlayer();
+			if (UIPopupManager.isAllpopupClose)
+			{
+				RotationCamAndPlayer();
+				MovePlayer();
+			}
             yield return null;
         }
     }

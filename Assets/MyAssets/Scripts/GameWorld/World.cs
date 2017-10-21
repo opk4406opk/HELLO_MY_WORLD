@@ -191,6 +191,7 @@ public class World : MonoBehaviour
   
     private void SetDefaultWorldData()
     {
+		// 펄린노이즈 알고리즘을 이용해 지형을 생성한다.
         for (int x = 0; x < worldX; x++)
         {
             for (int z = 0; z < worldZ; z++)
