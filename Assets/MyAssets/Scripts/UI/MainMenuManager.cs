@@ -25,13 +25,30 @@ public class MainMenuManager : MonoBehaviour {
 	}
 	private IEnumerator LoginProcess()
 	{
+		bool isTimeOut = false;
+		int maximumWaitSec = 5;
+		int waitSec = 0;
 		while (!isSuccessLogin)
 		{
 			//to do.
 			//waiting connect to login-server (http-Request).
-			yield return null;
+			if (waitSec == maximumWaitSec)
+			{
+				isTimeOut = true;
+				break;
+			}
+			KojeomLogger.DebugLog("Waiting LoginServer...");
+			yield return new WaitForSeconds(1.0f);
+			waitSec++;
 		}
-		Debug.Log("Success Login_server");
+		if(isTimeOut == false)
+		{
+			KojeomLogger.DebugLog("Success Login_server");
+		}
+		else
+		{
+			KojeomLogger.DebugLog("Waiting LoginServer TimeOut!", LOG_TYPE.ERROR);
+		}
 		SceneManager.LoadSceneAsync("SelectCharacter");
 	}
 	
@@ -46,6 +63,7 @@ public class MainMenuManager : MonoBehaviour {
         {
             GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.WORLD_LOAD_FAIL;
             GameMessage.SetMessage("게임 로딩에 실패했습니다.");
+			KojeomLogger.DebugLog("GameLoading Failed", LOG_TYPE.ERROR);
             UIPopupManager.OpenGameMessage();
         }
     }
