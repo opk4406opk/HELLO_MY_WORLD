@@ -853,10 +853,10 @@ public class UIInput : MonoBehaviour
 
 		RuntimePlatform rp = Application.platform;
 
-		bool isMac = (
-			rp == RuntimePlatform.OSXEditor ||
-			rp == RuntimePlatform.OSXPlayer ||
-			rp == RuntimePlatform.OSXWebPlayer);
+        bool isMac = (
+            rp == RuntimePlatform.OSXEditor ||
+            rp == RuntimePlatform.OSXPlayer);
+			//rp == RuntimePlatform.OSXWebPlayer); 2017.02 버전으로 업데이트후 에러나서 일단 주석처리. 
 
 		bool ctrl = isMac ?
 			((ev.modifiers & EventModifiers.Command) != 0) :

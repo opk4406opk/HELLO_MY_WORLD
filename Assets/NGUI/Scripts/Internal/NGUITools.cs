@@ -54,8 +54,11 @@ static public class NGUITools
 	{
 		get
 		{
-			return Application.platform != RuntimePlatform.WindowsWebPlayer &&
-				Application.platform != RuntimePlatform.OSXWebPlayer;
+            // 2017.02 버전으로 업데이트하면서 해당 구문이 에러.
+            // 일단 주석처리하고, fileAccess는 true로 고정.
+            //return Application.platform != RuntimePlatform.WindowsWebPlayer &&
+            //	Application.platform != RuntimePlatform.OSXWebPlayer;
+            return true;
 		}
 	}
 

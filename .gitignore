@@ -74,3 +74,4 @@ $RECYCLE.BIN/
 Assets/StreamingAssets/GameUserDB/userDB.db
 *.db
 *.db
+/.vs/HELLO_MY_WORLD/v15/Server/sqlite3
