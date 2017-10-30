@@ -79,7 +79,7 @@ public class PopupChData : MonoBehaviour
                     catch(SqliteException e)
                     {
                         // 이미 등록된 캐릭터이다.
-                        Debug.Log(e.Message);
+                        KojeomLogger.DebugLog(e.ToString(), LOG_TYPE.ERROR);
                     }
                 }
                 dbconn.Close();
@@ -111,7 +111,7 @@ public class PopupChData : MonoBehaviour
     /// </summary>
     private void CallBackPopupClose()
     {
-        SceneManager.UnloadScene("popup_chInfo");
+        SceneManager.UnloadSceneAsync("popup_chInfo");
     }
 
     private void SetData()

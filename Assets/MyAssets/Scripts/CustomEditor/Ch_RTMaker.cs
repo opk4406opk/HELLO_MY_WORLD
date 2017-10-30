@@ -63,7 +63,7 @@ public class Ch_RTMaker : EditorWindow
 				format.chFaceTextureName = p.name;
 				format.detailScript = "Something here..";
 				format.chLevel = "1";
-				format.chType = "citizen";
+				format.chType = idx.ToString();
 
 				datas[idx] = format;
 				idx++;
