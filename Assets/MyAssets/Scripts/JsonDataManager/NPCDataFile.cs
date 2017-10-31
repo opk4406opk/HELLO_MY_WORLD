@@ -33,8 +33,6 @@ public class NPCDataFile : MonoBehaviour {
     private JSONObject jsonObject;
     private TextAsset jsonFile;
 
-    
-
     private List<RoamingMerchantData> _roamingMerchantDatas = new List<RoamingMerchantData>();
     public List<RoamingMerchantData> roamingMerchantDatas
     {
@@ -46,11 +44,15 @@ public class NPCDataFile : MonoBehaviour {
         get { return _shopMerchantDatas; }
     }
 
+    public static NPCDataFile instance = null;
+
 	public void Init()
     {
         jsonFile =Resources.Load(ConstFilePath.TXT_NPC_DATAS) as TextAsset;
         jsonObject = new JSONObject(jsonFile.text);
         AccessData(jsonObject);
+
+        if (instance == null) instance = this;
     }
 
     private List<int> GetItemsID(string ids)

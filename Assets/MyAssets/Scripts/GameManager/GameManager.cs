@@ -7,32 +7,13 @@ using System.Collections.Generic;
 /// </summary>
 public class GameConfig
 {
-    private static readonly int _worldX = 32;
-    public static int worldX
-    {
-        get { return _worldX; }
-    }
-    private static readonly int _worldY = 32;
-    public static int worldY
-    {
-        get { return _worldY; }
-    }
-    private static readonly int _worldZ = 32;
-    public static int worldZ
-    {
-        get { return _worldZ; }
-    }
-    private static readonly int _chunkSize = 8;
-    public static int chunkSize
-    {
-        get { return _chunkSize; }
-    }
+    public static readonly int subWorldX = 32;
+    public static readonly int subWorldY = 32;
+    public static readonly int subWorldZ = 32;
+    public static readonly int subWorldChunkSize = 8;
 
-    private static readonly int _inGameFontSize = 10;
-    public static int inGameFontSize
-    {
-        get { return _inGameFontSize; }
-    }
+    public static readonly int inGameFontSize = 10;
+ 
 }
 
 /// <summary>
@@ -137,8 +118,8 @@ public class GameManager : MonoBehaviour
     {
         for (int idx = 0; idx < MAX_SUB_WORLD; ++idx)
         {
-            int subWorldPosX = subWorldData.GetPosValue(idx, "X") * GameConfig.worldX;
-            int subWorldPosZ = subWorldData.GetPosValue(idx, "Z") * GameConfig.worldZ;
+            int subWorldPosX = subWorldData.GetPosValue(idx, "X") * GameConfig.subWorldX;
+            int subWorldPosZ = subWorldData.GetPosValue(idx, "Z") * GameConfig.subWorldZ;
             string subWorldName = subWorldData.GetWorldName(idx, "WORLD_NAME");
 
             GameObject newSubWorld = Instantiate(worldPrefab, new Vector3(0, 0, 0),

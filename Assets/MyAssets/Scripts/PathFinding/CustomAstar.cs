@@ -159,8 +159,8 @@ public class CustomAstar
 		offsetX = data.offsetX;
 		offsetZ = data.offsetZ;
         worldBlockData = data.worldBlockData;
-        MAP_SIZE_X = GameConfig.worldX;
-        MAP_SIZE_Z = GameConfig.worldZ;
+        MAP_SIZE_X = GameConfig.subWorldX;
+        MAP_SIZE_Z = GameConfig.subWorldZ;
         pathFindMapData = new PathNode[MAP_SIZE_X, MAP_SIZE_Z];
         for (int x = 0; x < MAP_SIZE_X; x++)
             for (int z = 0; z < MAP_SIZE_Z; z++)

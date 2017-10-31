@@ -47,6 +47,8 @@ public class TileDataFile : MonoBehaviour {
     
     private TileInfo tileData;
 
+    public static TileDataFile instance = null;
+
     public void Init ()
     {
         _tileNameList = new List<string>();
@@ -57,6 +59,8 @@ public class TileDataFile : MonoBehaviour {
 
         AccessData(tileDataJsonObj);
         SetTileNameList();
+
+        if (instance == null) instance = this;
     }
 
     public TileInfo GetTileData(string _tileName)

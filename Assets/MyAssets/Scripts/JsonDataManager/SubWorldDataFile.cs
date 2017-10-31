@@ -17,12 +17,16 @@ public class SubWorldDataFile : MonoBehaviour
         get { return _maxSubWorld; }
     }
 
+    public static SubWorldDataFile instance = null;
+
     public void Init()
     {
         jsonDataSheet = new List<Dictionary<string, string>>();
         jsonFile = Resources.Load(ConstFilePath.TXT_SUB_WORLD_DEFAULT_DATAS) as TextAsset;
         subWorldJsonObj = new JSONObject(jsonFile.text);
         AccessData(subWorldJsonObj);
+
+        if (instance == null) instance = this;
     }
 
     public int GetPosValue(int idx, string str)

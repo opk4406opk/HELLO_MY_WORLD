@@ -54,11 +54,15 @@ public class CraftItemListDataFile : MonoBehaviour
         get { return _craftItems; }
     }
 
+    public static CraftItemListDataFile instance = null;
+
     public void Init()
     {
         jsonFile = Resources.Load(ConstFilePath.TXT_CRAFT_ITEM_LIST_DATAS) as TextAsset;
         craftItemListJsonObj = new JSONObject(jsonFile.text);
         AccessData(craftItemListJsonObj);
+
+        if (instance == null) instance = this;
     }
 
     private void AccessData(JSONObject jsonObj)

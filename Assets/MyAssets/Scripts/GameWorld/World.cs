@@ -80,13 +80,13 @@ public class World : MonoBehaviour
     public void Init(int offsetX, int offsetZ, TileDataFile tileDataFile)
 	{
         _customOctree.Init(new Vector3(offsetX, 0, offsetZ), 
-            new Vector3(GameConfig.worldX + offsetX ,GameConfig.worldY,
-            GameConfig.worldZ + offsetZ));
+            new Vector3(GameConfig.subWorldX + offsetX ,GameConfig.worldY,
+            GameConfig.subWorldZ + offsetZ));
         worldTileDataFile = tileDataFile;
-        worldX = GameConfig.worldX;
+        worldX = GameConfig.subWorldX;
         worldY = GameConfig.worldY;
-        worldZ = GameConfig.worldZ;
-        chunkSize = GameConfig.chunkSize;
+        worldZ = GameConfig.subWorldZ;
+        chunkSize = GameConfig.subWorldChunkSize;
         _worldOffsetX = offsetX;
         _worldOffsetZ = offsetZ;
 

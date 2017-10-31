@@ -40,12 +40,16 @@ public class ItemDataFile : MonoBehaviour
     private TextAsset jsonFile;
     private Dictionary<string, Dictionary<string, string>> jsonDataSheet;
 
+    public static ItemDataFile instance = null;
+
     public void Init()
     {
         jsonDataSheet = new Dictionary<string, Dictionary<string, string>>();
         jsonFile = Resources.Load(ConstFilePath.TXT_ITEM_DATAS) as TextAsset;
         itemDataJsonObj = new JSONObject(jsonFile.text);
         AccessData(itemDataJsonObj);
+
+        if (instance == null) instance = this;
     }
 
     public ItemInfo GetItemData(string id)
