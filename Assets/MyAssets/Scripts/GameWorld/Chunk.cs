@@ -152,7 +152,7 @@ public class Chunk : MonoBehaviour
     {
         if (x >= GameConfig.subWorldX ||
                x < 0 ||
-               y >= GameConfig.worldY ||
+               y >= GameConfig.subWorldY ||
                y < 0 ||
                z >= GameConfig.subWorldZ ||
                z < 0)

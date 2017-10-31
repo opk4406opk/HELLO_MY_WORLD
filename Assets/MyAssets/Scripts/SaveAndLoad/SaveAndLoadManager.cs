@@ -74,10 +74,10 @@ public class SaveAndLoadManager : MonoBehaviour {
     private void SubWorldToTotalWorld(int subWorldIdx)
     {
         for (int x = 0; x < GameConfig.subWorldX; ++x)
-            for (int y = 0; y < GameConfig.worldY; ++y)
+            for (int y = 0; y < GameConfig.subWorldY; ++y)
                 for (int z = 0; z < GameConfig.subWorldZ; ++z)
                 {
-                    mergeIdx = (x * GameConfig.worldY * GameConfig.subWorldZ) + (y * GameConfig.subWorldZ) + z;
+                    mergeIdx = (x * GameConfig.subWorldY * GameConfig.subWorldZ) + (y * GameConfig.subWorldZ) + z;
                     mergeWorldData[mergeIdx + mergeIdxOffset] = gameWorldList[subWorldIdx].worldBlockData[x, y, z].type;
                 }
         
@@ -152,10 +152,10 @@ public class SaveAndLoadManager : MonoBehaviour {
     private void TotalWorldToSubWorld(int subWorldIdx)
     {
         for (int x = 0; x < GameConfig.subWorldX; ++x)
-            for (int y = 0; y < GameConfig.worldY; ++y)
+            for (int y = 0; y < GameConfig.subWorldY; ++y)
                 for (int z = 0; z < GameConfig.subWorldZ; ++z)
                 {
-                    mergeIdx = (x * GameConfig.worldY * GameConfig.subWorldZ) + (y * GameConfig.subWorldZ) + z;
+                    mergeIdx = (x * GameConfig.subWorldY * GameConfig.subWorldZ) + (y * GameConfig.subWorldZ) + z;
                     gameWorldList[subWorldIdx].worldBlockData[x, y, z].type = mergeWorldData[mergeIdx + mergeIdxOffset];
                 }
 
@@ -181,7 +181,7 @@ public class SaveAndLoadManager : MonoBehaviour {
     private delegate void del_InSertMergeWorldSize();
     private void CalcWorldDataSize()
     {
-        int subWorldSize = GameConfig.subWorldX * GameConfig.worldY * GameConfig.subWorldZ;
+        int subWorldSize = GameConfig.subWorldX * GameConfig.subWorldY * GameConfig.subWorldZ;
         mergeWorldSize = (subWorldSize * gameWorldList.Count) + gameWorldList.Count;
 
         int recordNum = 0;

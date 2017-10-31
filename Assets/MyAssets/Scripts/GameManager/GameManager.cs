@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
         lootingSystem.Init();
 
         //InGameUI Init
-        blockSelector.Init(tileData);
+        blockSelector.Init();
 
         //GameWorld Init
         MAX_SUB_WORLD = subWorldData.maxSubWorld;

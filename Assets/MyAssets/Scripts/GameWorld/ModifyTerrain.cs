@@ -90,7 +90,7 @@ public class ModifyTerrain : MonoBehaviour
     {
       
         if((x < GameConfig.subWorldX) &&
-           (y < GameConfig.worldY) &&
+           (y < GameConfig.subWorldY) &&
            (z < GameConfig.subWorldZ) &&
            (x >= 0) && (y >= 0) && (z >= 0)) 
         {
@@ -163,7 +163,7 @@ public class ModifyTerrain : MonoBehaviour
         };
 
         if ((x < GameConfig.subWorldX) &&
-           (y < GameConfig.worldY) &&
+           (y < GameConfig.subWorldY) &&
            (z < GameConfig.subWorldZ) &&
            (x >= 0) && (y >= 0) && (z >= 0))
         {

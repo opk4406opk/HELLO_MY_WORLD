@@ -6,7 +6,6 @@ using System.Collections;
 /// </summary>
 public class BlockSelector : MonoBehaviour {
 
-    private TileDataFile tileDataFile;
     [SerializeField]
     private GameObject blockPrefab;
     [SerializeField]
@@ -20,10 +19,9 @@ public class BlockSelector : MonoBehaviour {
         get { return _curSelectBlockType; }
     }
 
-	public void Init(TileDataFile _tileDataFile)
+	public void Init()
     {
-        tileDataFile = _tileDataFile;
-        maxSelectBlocks = tileDataFile.tileNameList.Count;
+        maxSelectBlocks = TileDataFile.instance.tileNameList.Count;
         //default : grass block;
         curSelectBlockName = TileType.TILE_TYPE_GRASS;
         _curSelectBlockType = 1;
@@ -45,11 +43,11 @@ public class BlockSelector : MonoBehaviour {
             newBlock.transform.localPosition = new Vector3(0, 0, 0);
 
             Ed_OnSelectBlock = new EventDelegate(this, "OnSelectBlock");
-            Ed_OnSelectBlock.parameters[0].value = tileDataFile.tileNameList[idx];
+            Ed_OnSelectBlock.parameters[0].value = TileDataFile.instance.tileNameList[idx];
             newBlock.GetComponent<UIButton>().onClick.Add(Ed_OnSelectBlock);
 
             BlockData block = newBlock.GetComponent<BlockData>();
-            block.Init(tileDataFile.tileNameList[idx]);
+            block.Init(TileDataFile.instance.tileNameList[idx]);
         }
         uiGridObj.GetComponent<UIGrid>().Reposition();
     }
@@ -63,7 +61,7 @@ public class BlockSelector : MonoBehaviour {
 
     private void CalcBlockType()
     {
-       TileInfo tileData = tileDataFile.GetTileData(curSelectBlockName);
+       TileInfo tileData = TileDataFile.instance.GetTileData(curSelectBlockName);
         _curSelectBlockType = (byte)tileData.type;    
     }
 }
