@@ -68,7 +68,6 @@ public class World : MonoBehaviour
     }
     
     private readonly float INTERVAL_LOAD_TIME = 1.0f;
-    private TileDataFile worldTileDataFile;
     private int chunkNumber = 0;
 
     private CustomOctree _customOctree = new CustomOctree();
@@ -77,12 +76,11 @@ public class World : MonoBehaviour
         get { return _customOctree; }
     }
 
-    public void Init(int offsetX, int offsetZ, TileDataFile tileDataFile)
+    public void Init(int offsetX, int offsetZ)
 	{
         _customOctree.Init(new Vector3(offsetX, 0, offsetZ), 
             new Vector3(GameConfig.subWorldX + offsetX ,GameConfig.subWorldY,
             GameConfig.subWorldZ + offsetZ));
-        worldTileDataFile = tileDataFile;
         worldX = GameConfig.subWorldX;
         worldY = GameConfig.subWorldY;
         worldZ = GameConfig.subWorldZ;
@@ -161,7 +159,7 @@ public class World : MonoBehaviour
             _chunkGroup[x, y, z].worldCoordX = worldCoordX + _worldOffsetX;
             _chunkGroup[x, y, z].worldCoordY = worldCoordY;
             _chunkGroup[x, y, z].worldCoordZ = worldCoordZ + _worldOffsetZ;
-            _chunkGroup[x, y, z].Init(worldTileDataFile);
+            _chunkGroup[x, y, z].Init();
         }
 	}
 
@@ -202,8 +200,8 @@ public class World : MonoBehaviour
 
                 for (int y = 0; y < worldY; y++)
                 {
-                    if (y <= stone) _worldBlockData[x, y, z].type = (byte)worldTileDataFile.GetTileData(TileType.TILE_TYPE_STONE_BIG).type;
-                    else if (y <= grass + stone) _worldBlockData[x, y, z].type = (byte)worldTileDataFile.GetTileData(TileType.TILE_TYPE_GRASS).type;
+                    if (y <= stone) _worldBlockData[x, y, z].type = (byte)TileDataFile.instance.GetTileData(TileType.TILE_TYPE_STONE_BIG).type;
+                    else if (y <= grass + stone) _worldBlockData[x, y, z].type = (byte)TileDataFile.instance.GetTileData(TileType.TILE_TYPE_GRASS).type;
                 }
             }
         }

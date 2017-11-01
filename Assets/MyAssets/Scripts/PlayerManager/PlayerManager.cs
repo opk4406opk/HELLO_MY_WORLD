@@ -21,10 +21,13 @@ public class PlayerManager : MonoBehaviour {
 
     public Vector3 initPosition;
 
+    public static PlayerManager instance;
+
     public void Init()
     {
         charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
         CreateProcess();
+        instance = this;
     }
     private void CreateProcess()
     {

@@ -43,8 +43,6 @@ public struct CraftRawMaterial
 /// </summary>
 public class CraftItemListDataFile : MonoBehaviour
 {
-    [SerializeField]
-    private ItemDataFile itemDataFile;
     private JSONObject craftItemListJsonObj;
     private TextAsset jsonFile;
    
@@ -77,7 +75,7 @@ public class CraftItemListDataFile : MonoBehaviour
                     CraftItem craftItem = new CraftItem();
                     string id = e.keys[0];
                     craftItem.craftItemID = id;
-                    craftItem.craftItemName = itemDataFile.GetItemData(id).name;
+                    craftItem.craftItemName = ItemDataFile.instance.GetItemData(id).name;
                     List<CraftRawMaterial> rawMats = new List<CraftRawMaterial>();
                     foreach (var raw in e.list[0].list)
                     {

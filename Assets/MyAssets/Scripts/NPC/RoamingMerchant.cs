@@ -7,8 +7,7 @@ using UnityEngine;
 
 public class RoamingMerchant : Actor, INpc
 {
-    [SerializeField]
-    private NPCController actorController;
+    private ActorController actorController;
     [SerializeField]
     private RoamingNpcAI ai;
     [SerializeField]
@@ -27,7 +26,8 @@ public class RoamingMerchant : Actor, INpc
 
     public override void Init(Vector3 pos, World world)
     {
-        ((ActorController)actorController).Init(world);
+        actorController = gameObject.GetComponent<ActorController>();
+        actorController.Init(world);
         gameObject.transform.position = pos;
     }
 

@@ -35,34 +35,18 @@ public class GameStatus
 /// </summary>
 public class GameManager : MonoBehaviour
 {
-    private int MAX_SUB_WORLD = 0;
-
-    private List<World> _worldList = new List<World>();
-    public List<World> worldList
-    {
-        get { return _worldList; }
-    }
     #region Inspector variables.
     
     [SerializeField]
-    private SubWorldDataFile subWorldData;
+    private SubWorldDataFile subWorldDataFile;
     [SerializeField]
-    private TileDataFile tileData;
+    private TileDataFile tileDataFile;
     [SerializeField]
-    private ItemDataFile itemData;
+    private ItemDataFile itemDataFile;
     [SerializeField]
     private CraftItemListDataFile craftItemListDataFile;
     [SerializeField]
     private NPCDataFile npcDataFile;
-
-    [SerializeField]
-    private GameObject chunkPrefab;
-    [SerializeField]
-    private GameObject worldPrefab;
-    [SerializeField]
-    private Transform worldGroupTrans;
-    private Transform playerTrans;
-
     [SerializeField]
     private PlayerManager playerManager;
     [SerializeField]
@@ -71,6 +55,8 @@ public class GameManager : MonoBehaviour
     private SaveAndLoadManager saveAndLoadManager;
     [SerializeField]
     private LootingSystem lootingSystem;
+    [SerializeField]
+    private WorldManager worldManager;
 
     [SerializeField]
     private NPCManager npcManager;
@@ -79,16 +65,16 @@ public class GameManager : MonoBehaviour
     #endregion
     void Start ()
     {
-        //player Init
-        playerManager.Init();
-        playerTrans = playerManager.gamePlayer.transform;
-
-        //GameData Init
-        itemData.Init();
-        tileData.Init();
-        subWorldData.Init();
+        //GameDataFiles Init
+        // 제작아이템 데이타파일은 아이템데이타 파일을 읽어들인 후에 읽어야함.
+        itemDataFile.Init();
+        tileDataFile.Init();
+        subWorldDataFile.Init();
         craftItemListDataFile.Init();
         npcDataFile.Init();
+
+        //player Init
+        playerManager.Init();
 
         //LootingSystem Init;
         lootingSystem.Init();
@@ -97,8 +83,7 @@ public class GameManager : MonoBehaviour
         blockSelector.Init();
 
         //GameWorld Init
-        MAX_SUB_WORLD = subWorldData.maxSubWorld;
-        CreateGameWorld();
+        worldManager.Init();
 
         //saveAndLoad Init
         saveAndLoadManager.Init();
@@ -111,27 +96,5 @@ public class GameManager : MonoBehaviour
         actorCollideManager.Init();
 
         if (GameStatus.isLoadGame == true) { saveAndLoadManager.Load(); }
-
     }
-		
-    private void CreateGameWorld()
-    {
-        for (int idx = 0; idx < MAX_SUB_WORLD; ++idx)
-        {
-            int subWorldPosX = subWorldData.GetPosValue(idx, "X") * GameConfig.subWorldX;
-            int subWorldPosZ = subWorldData.GetPosValue(idx, "Z") * GameConfig.subWorldZ;
-            string subWorldName = subWorldData.GetWorldName(idx, "WORLD_NAME");
-
-            GameObject newSubWorld = Instantiate(worldPrefab, new Vector3(0, 0, 0),
-                new Quaternion(0, 0, 0, 0)) as GameObject;
-            newSubWorld.GetComponent<World>().chunkPrefab = chunkPrefab;
-            newSubWorld.GetComponent<World>().playerTrans = playerTrans;
-            newSubWorld.GetComponent<World>().Init(subWorldPosX, subWorldPosZ, tileData);
-            newSubWorld.GetComponent<World>().worldName = subWorldName;
-            newSubWorld.transform.parent = worldGroupTrans;
-            //add world.
-            _worldList.Add(newSubWorld.GetComponent<World>());
-        }
-    }
-	
 }

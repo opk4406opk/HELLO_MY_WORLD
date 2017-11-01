@@ -36,12 +36,12 @@ public class NPCController : MonoBehaviour, ActorController
         newPos += dir.normalized * Time.deltaTime * speed;
         gameObject.transform.position = newPos;
     }
-    void OnDrawGizmos()
-    {
-        Vector3 offsetPos = transform.position;
-        offsetPos.y += 1.0f;
-        Gizmos.DrawWireCube(offsetPos, new Vector3(obb.xRadius, obb.yRadius, obb.zRadius));
-    }
+    //void OnDrawGizmos()
+    //{
+    //    Vector3 offsetPos = transform.position;
+    //    offsetPos.y += 1.0f;
+    //    Gizmos.DrawWireCube(offsetPos, new Vector3(obb.xRadius, obb.yRadius, obb.zRadius));
+    //}
 
     void ActorController.LookAt(Vector3 dir)
     {

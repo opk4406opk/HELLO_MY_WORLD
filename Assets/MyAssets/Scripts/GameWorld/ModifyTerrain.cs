@@ -48,7 +48,7 @@ public class ModifyTerrain : MonoBehaviour
     }
     private void SelectWorld(Vector3 clickWorldPos)
     {
-        foreach (World w in gameMgr.worldList)
+        foreach (World w in WorldManager.instance.worldList)
         {
             if (CustomAABB.IsInterSectPoint(w.customOctree.rootMinBound,
                 w.customOctree.rootMaxBound, clickWorldPos))

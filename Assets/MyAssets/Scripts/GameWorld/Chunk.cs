@@ -67,8 +67,6 @@ public class Chunk : MonoBehaviour
         set { _update = value; }
     }
 
-    private TileDataFile worldTileData;
-
     void LateUpdate()
     {
         if (_update)
@@ -78,9 +76,8 @@ public class Chunk : MonoBehaviour
         }
     }
 
-    public void Init(TileDataFile tileDataFile)
+    public void Init()
     {
-        worldTileData = tileDataFile;
         chunkSize = GameConfig.subWorldChunkSize;
         mesh = GetComponent<MeshFilter>().mesh;
         GenerateMesh();
@@ -169,8 +166,8 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y, z));
         newVertices.Add(new Vector3(x, y, z));
 
-        string tileName = worldTileData.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
-        TileInfo tileData = worldTileData.GetTileData(tileName);
+        string tileName = TileDataFile.instance.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
+        TileInfo tileData = TileDataFile.instance.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;
@@ -186,8 +183,8 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x, y, z + 1));
         newVertices.Add(new Vector3(x, y - 1, z + 1));
 
-        string tileName = worldTileData.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
-        TileInfo tileData = worldTileData.GetTileData(tileName);
+        string tileName = TileDataFile.instance.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
+        TileInfo tileData = TileDataFile.instance.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;
@@ -204,8 +201,8 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y, z + 1));
         newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
 
-        string tileName = worldTileData.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
-        TileInfo tileData = worldTileData.GetTileData(tileName);
+        string tileName = TileDataFile.instance.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
+        TileInfo tileData = TileDataFile.instance.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;
@@ -222,8 +219,8 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y, z));
         newVertices.Add(new Vector3(x + 1, y - 1, z));
 
-        string tileName = worldTileData.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
-        TileInfo tileData = worldTileData.GetTileData(tileName);
+        string tileName = TileDataFile.instance.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
+        TileInfo tileData = TileDataFile.instance.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;
@@ -240,8 +237,8 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x, y, z));
         newVertices.Add(new Vector3(x, y - 1, z));
 
-        string tileName = worldTileData.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
-        TileInfo tileData = worldTileData.GetTileData(tileName);
+        string tileName = TileDataFile.instance.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
+        TileInfo tileData = TileDataFile.instance.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;
@@ -258,8 +255,8 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
         newVertices.Add(new Vector3(x, y - 1, z + 1));
 
-        string tileName = worldTileData.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
-        TileInfo tileData = worldTileData.GetTileData(tileName);
+        string tileName = TileDataFile.instance.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
+        TileInfo tileData = TileDataFile.instance.GetTileData(tileName);
 
         texturePos.x = tileData.posX;
         texturePos.y = tileData.posY;

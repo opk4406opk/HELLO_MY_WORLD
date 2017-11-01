@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class NPCManager : MonoBehaviour {
     [SerializeField]
-    private NPCDataFile npcDataFile;
-    [SerializeField]
-    private GameManager gameMangager;
-
-    [SerializeField]
     private GameObject prefab_roamingMerchantNPC;
     [SerializeField]
     private GameObject prefab_shopMerchantNPC;
@@ -26,10 +21,10 @@ public class NPCManager : MonoBehaviour {
 
     public void GenerateNPC()
     {
-        foreach(var data in npcDataFile.roamingMerchantDatas)
+        foreach(var data in NPCDataFile.instance.roamingMerchantDatas)
         {
             GameObject npc = Instantiate(prefab_roamingMerchantNPC, data.spwanPos, Quaternion.identity);
-            npc.GetComponent<RoamingMerchant>().Init(data.spwanPos, gameMangager.worldList[data.spwanWorld]);
+            npc.GetComponent<RoamingMerchant>().Init(data.spwanPos, WorldManager.instance.worldList[data.spwanWorld]);
             npc.GetComponent<RoamingMerchant>().sellingItemIDs = data.sellingItemsID;
             npc.GetComponent<RoamingMerchant>().textMeshController.Init(GameConfig.inGameFontSize);
             npc.GetComponent<RoamingMerchant>().textMeshController.SetText(data.name);
