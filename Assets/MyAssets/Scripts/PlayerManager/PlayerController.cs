@@ -27,12 +27,23 @@ public class PlayerController : MonoBehaviour {
 	[Range(1.5f, 3.5f)]
 	public float moveSpeed = 1.5f;
 
+    private IEnumerator controllProcess;
+
     public void Init(Camera mainCam)
     {
         playerCamera = mainCam;
         camOrigRotation = playerCamera.transform.localRotation;
         playerOrigRotation = gameObject.transform.localRotation;
-        StartCoroutine(ControllProcess());
+        controllProcess = ControllProcess();
+    }
+
+    public void StartControllProcess()
+    {
+        StartCoroutine(controllProcess);
+    }
+    public void StopControllProcess()
+    {
+        StopCoroutine(controllProcess);
     }
 
     private void CamFollowPlayer()
@@ -128,4 +139,5 @@ public class PlayerController : MonoBehaviour {
             yield return null;
         }
     }
+
 }

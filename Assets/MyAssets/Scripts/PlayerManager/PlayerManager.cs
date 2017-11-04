@@ -20,6 +20,7 @@ public class PlayerManager : MonoBehaviour {
     }
 
     public Vector3 initPosition;
+    private PlayerController controller;
 
     public static PlayerManager instance;
 
@@ -29,6 +30,21 @@ public class PlayerManager : MonoBehaviour {
         CreateProcess();
         instance = this;
     }
+    /// <summary>
+    /// 플레이어 컨트롤러를 시작합니다.
+    /// </summary>
+    public void StartController()
+    {
+        controller.StartControllProcess();
+    }
+    /// <summary>
+    /// 플레이어 컨트롤러를 중지합니다.
+    /// </summary>
+    public void StopController()
+    {
+        controller.StopControllProcess();
+    }
+
     private void CreateProcess()
     {
         string chType = System.String.Empty;
@@ -66,7 +82,7 @@ public class PlayerManager : MonoBehaviour {
         _gamePlayer = Instantiate(_prefab,
             initPosition,
             new Quaternion(0, 0, 0, 0)) as GameObject;
-        PlayerController controller = _gamePlayer.GetComponent<PlayerController>();
+        controller = _gamePlayer.GetComponent<PlayerController>();
         if(controller != null) controller.Init(Camera.main);
     }
 }

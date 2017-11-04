@@ -17,6 +17,12 @@ public class SubWorldDataFile : MonoBehaviour
         get { return _maxSubWorld; }
     }
 
+    private int _rowOffset;
+    public int rowOffset
+    {
+        get { return _rowOffset; }
+    }
+
     public static SubWorldDataFile instance = null;
 
     public void Init()
@@ -50,8 +56,14 @@ public class SubWorldDataFile : MonoBehaviour
                 //to do
                 break;
             case JSONObject.Type.ARRAY:
-                _maxSubWorld = jsonObj.Count;
-                for (int idx = 0; idx < jsonObj.Count; ++idx)
+                // ROW_OFFSET 정보를 뺀 나머지 오브젝트들의 갯수.
+                _maxSubWorld = jsonObj.Count - 1;
+                // row offset 값 가져오기.
+                string offset;
+                jsonObj.list[0].ToDictionary().TryGetValue("ROW_OFFSET", out offset);
+                _rowOffset = int.Parse(offset);
+                // 서브월드 정보 오브젝트들을 각각의 딕셔너리로 변환.
+                for (int idx = 1; idx < jsonObj.Count; ++idx)
                 {
                     jsonDataSheet.Add(jsonObj.list[idx].ToDictionary());
                 }

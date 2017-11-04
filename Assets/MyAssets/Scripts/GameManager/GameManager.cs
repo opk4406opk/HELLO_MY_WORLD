@@ -72,18 +72,21 @@ public class GameManager : MonoBehaviour
         subWorldDataFile.Init();
         craftItemListDataFile.Init();
         npcDataFile.Init();
-
+       
         //player Init
         playerManager.Init();
+
+        //GameWorld Init
+        worldManager.Init();
+
+        //player controller start.
+        playerManager.StartController();
 
         //LootingSystem Init;
         lootingSystem.Init();
 
         //InGameUI Init
         blockSelector.Init();
-
-        //GameWorld Init
-        worldManager.Init();
 
         //saveAndLoad Init
         saveAndLoadManager.Init();

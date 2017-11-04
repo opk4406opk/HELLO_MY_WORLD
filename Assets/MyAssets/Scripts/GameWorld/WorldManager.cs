@@ -1,6 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+/// <summary>
+/// 외부파일로 저장하게되는 World info.
+/// </summary>
+[Serializable]
+public class WorldDataFile
+{
+    public int idx;
+    public Block[,,] blockData;
+}
 
 public class WorldManager : MonoBehaviour
 {
@@ -42,9 +53,22 @@ public class WorldManager : MonoBehaviour
             newSubWorld.GetComponent<World>().playerTrans = PlayerManager.instance.gamePlayer.transform;
             newSubWorld.GetComponent<World>().Init(subWorldPosX, subWorldPosZ);
             newSubWorld.GetComponent<World>().worldName = subWorldName;
+            newSubWorld.GetComponent<World>().idx = idx;
             newSubWorld.transform.parent = worldGroupTrans;
             //add world.
             _worldList.Add(newSubWorld.GetComponent<World>());
         }
+    }
+    /// <summary>
+    /// 주어진 위치값으로 어느 subWorld에 포함되어있는지 확인 후 해당 World를 리턴.
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <returns></returns>
+    public World ContainedWorld(Vector3 pos)
+    {
+        int x = (int)pos.x / GameConfig.subWorldX;
+        int z = ((int)pos.z / GameConfig.subWorldZ) * SubWorldDataFile.instance.rowOffset;
+
+        return _worldList[x+z];
     }
 }

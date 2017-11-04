@@ -37,6 +37,11 @@ public class World : MonoBehaviour
         get { return _worldName; }
     }
 
+    /// <summary>
+    /// 월드 idx 넘버.
+    /// </summary>
+    public int idx;
+
     ///<summary>
     /// 월드의 모든 블록을 저장하는 배열.
     ///</summary>
@@ -102,10 +107,10 @@ public class World : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos()
-    {
-       // _customOctree.DrawFullTree();
-    }
+    //void OnDrawGizmos()
+    //{
+    //   // _customOctree.DrawFullTree();
+    //}
 
     private IEnumerator LoadProcess()
     {
