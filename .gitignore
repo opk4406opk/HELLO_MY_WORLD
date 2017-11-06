@@ -75,3 +75,9 @@ Assets/StreamingAssets/GameUserDB/userDB.db
 *.db
 *.db
 /.vs/HELLO_MY_WORLD/v15/Server/sqlite3
+
+# FMOD etc files
+/Assets/FMODStudioCache.asset
+/Assets/FMODStudioCache.asset.meta
+fmod.log
+fmod_editor.log
