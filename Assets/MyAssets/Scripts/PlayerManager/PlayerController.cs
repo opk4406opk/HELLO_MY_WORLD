@@ -24,10 +24,12 @@ public class PlayerController : MonoBehaviour {
     private Quaternion camOrigRotation;
     private Quaternion playerOrigRotation;
 
-	[Range(1.5f, 3.5f)]
-	public float moveSpeed = 1.5f;
+    [Range(3.5f, 15.5f)]
+    public float moveSpeed;
 
     private IEnumerator controllProcess;
+
+    private QuerySDMecanimController aniController;
 
     public void Init(Camera mainCam)
     {
@@ -35,6 +37,7 @@ public class PlayerController : MonoBehaviour {
         camOrigRotation = playerCamera.transform.localRotation;
         playerOrigRotation = gameObject.transform.localRotation;
         controllProcess = ControllProcess();
+        aniController = gameObject.GetComponent<QuerySDMecanimController>();
     }
 
     public void StartControllProcess()
@@ -97,33 +100,39 @@ public class PlayerController : MonoBehaviour {
         gameObject.transform.localRotation = playerOrigRotation * xQuaternion;
     }
 
-	private void MovePlayer()
+	private void Move()
 	{
-		Vector3 dir;
-		if (Input.GetKeyDown(KeyCode.W))
+        aniController.ChangeAnimation(QuerySDMecanimController.QueryChanSDAnimationType.NORMAL_RUN);
+        Vector3 dir;
+		if (Input.GetKey(KeyCode.W))
 		{
-			dir = transform.forward;
+            dir = transform.forward;
 			Vector3 newPos = transform.position;
 			transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
 		}
-		else if (Input.GetKeyDown(KeyCode.S))
+		else if (Input.GetKey(KeyCode.S))
 		{
 			dir = -transform.forward;
 			Vector3 newPos = transform.position;
 			transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
 		}
-		else if (Input.GetKeyDown(KeyCode.A))
+		else if (Input.GetKey(KeyCode.D))
 		{
 			dir = transform.right;
 			Vector3 newPos = transform.position;
 			transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
 		}
-		else if (Input.GetKeyDown(KeyCode.D))
+		else if (Input.GetKey(KeyCode.A))
 		{
 			dir = -transform.right;
 			Vector3 newPos = transform.position;
 			transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
-		}
+        }
+        else
+        {
+            // 움직임이 없는 상태.
+            aniController.ChangeAnimation(QuerySDMecanimController.QueryChanSDAnimationType.FUKUOKA_DANCE_1);
+        }
 	}
     
     private IEnumerator ControllProcess()
@@ -131,12 +140,25 @@ public class PlayerController : MonoBehaviour {
         while (true)
         {
             CamFollowPlayer();
-			if (UIPopupManager.isAllpopupClose)
+            SimpleGravityForce();
+            if (UIPopupManager.isAllpopupClose)
 			{
 				RotationCamAndPlayer();
-				MovePlayer();
+				Move();
 			}
             yield return null;
+        }
+    }
+
+    private void SimpleGravityForce()
+    {
+        World containWorld = WorldManager.instance.ContainedWorld(transform.position);
+        CollideInfo collideInfo = containWorld.customOctree.Collide(transform.position);
+        if (!collideInfo.isCollide)
+        {
+            transform.position = new Vector3(transform.position.x,
+                transform.position.y - 0.1f,
+                transform.position.z);
         }
     }
 

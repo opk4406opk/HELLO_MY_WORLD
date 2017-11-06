@@ -57,6 +57,8 @@ public class GameManager : MonoBehaviour
     private LootingSystem lootingSystem;
     [SerializeField]
     private WorldManager worldManager;
+    [SerializeField]
+    private GameSoundManager soundManager;
 
     [SerializeField]
     private NPCManager npcManager;
@@ -72,13 +74,16 @@ public class GameManager : MonoBehaviour
         subWorldDataFile.Init();
         craftItemListDataFile.Init();
         npcDataFile.Init();
-       
+
+        // sound init.
+        soundManager.Init();
+        GameSoundManager.instance.PlaySound(GAME_SOUND_TYPE.BGM_InGame);
         //player Init
         playerManager.Init();
 
         //GameWorld Init
         worldManager.Init();
-
+        
         //player controller start.
         playerManager.StartController();
 
