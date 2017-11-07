@@ -6,7 +6,7 @@
 <프로젝트 개요>
 
     사용엔진 : Unity3D
-    사용 라이브러리 : NGUI(3.x), Sqlite3, JSonObject, NewtonSoft.json, ITween
+    사용 라이브러리 : NGUI(3.x), Sqlite3, JSonObject, NewtonSoft.json, ITween, FMOD
     사용 언어 : C#
 
 p.s. 처음 프로젝트를 시작할 때 참고했던 튜토리얼이 있습니다. 보시면 도움이 될거라 생각하기에 링크 올립니다. 
