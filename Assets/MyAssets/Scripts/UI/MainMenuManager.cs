@@ -11,12 +11,18 @@ using System.Text;
 /// </summary>
 public class MainMenuManager : MonoBehaviour {
 
-	private bool isSuccessLogin = false;
+    private void Start()
+    {
+        GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_mainMenu);
+    }
+
+    private bool isSuccessProcessRun = false;
+    private bool isSuccessLogin = false;
 	public void OnClickStart()
 	{
 		GameNetworkManager.PostHttpRequest += PostLoginRequest;
 		GameNetworkManager.ConnectLoginServer();
-		StartCoroutine(LoginProcess());
+        if(isSuccessProcessRun == false) StartCoroutine(LoginProcess());
     }
 	private void PostLoginRequest(bool isSuccess)
 	{
@@ -25,7 +31,9 @@ public class MainMenuManager : MonoBehaviour {
 	}
 	private IEnumerator LoginProcess()
 	{
-		bool isTimeOut = false;
+        isSuccessProcessRun = true;
+
+        bool isTimeOut = false;
 		int maximumWaitSec = 5;
 		int waitSec = 0;
 		while (!isSuccessLogin)
@@ -49,7 +57,8 @@ public class MainMenuManager : MonoBehaviour {
 		{
 			KojeomLogger.DebugLog("Waiting LoginServer TimeOut!", LOG_TYPE.ERROR);
 		}
-		SceneManager.LoadSceneAsync("SelectCharacter");
+        GameSoundManager.GetInstnace().StopSound(GAME_SOUND_TYPE.BGM_mainMenu);
+        SceneManager.LoadSceneAsync("SelectCharacter");
 	}
 	
     public void OnClickLoad()

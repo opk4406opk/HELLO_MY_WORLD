@@ -76,8 +76,7 @@ public class GameManager : MonoBehaviour
         npcDataFile.Init();
 
         // sound init.
-        soundManager.Init();
-        GameSoundManager.instance.PlaySound(GAME_SOUND_TYPE.BGM_InGame);
+        GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_InGame);
         //player Init
         playerManager.Init();
 
