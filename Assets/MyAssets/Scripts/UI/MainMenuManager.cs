@@ -34,7 +34,7 @@ public class MainMenuManager : MonoBehaviour {
         isSuccessProcessRun = true;
 
         bool isTimeOut = false;
-		int maximumWaitSec = 5;
+		int maximumWaitSec = 1;
 		int waitSec = 0;
 		while (!isSuccessLogin)
 		{

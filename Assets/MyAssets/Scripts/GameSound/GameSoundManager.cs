@@ -39,7 +39,6 @@ public class GameSoundManager : MonoBehaviour {
         FMOD.Studio.EventInstance soundInst;
         soundInstances.TryGetValue(soundType, out soundInst);
         FMOD.RESULT ret = soundInst.stop(stopMode);
-        soundInst.release();
         KojeomLogger.DebugLog(string.Format("stop sound is {0}", ret));
     }
 
