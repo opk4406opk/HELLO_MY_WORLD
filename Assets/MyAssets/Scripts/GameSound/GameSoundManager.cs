@@ -1,12 +1,12 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
 public enum GAME_SOUND_TYPE
 {
     BGM_InGame = 0,
     BGM_mainMenu = 1
 }
 
-public class GameSoundManager : MonoBehaviour {
+public class GameSoundManager {
     private static string bankFileName = "hello_my_world_bank";
     private static Dictionary<GAME_SOUND_TYPE, FMOD.Studio.EventInstance> soundInstances;
     private static GameSoundManager instance;
@@ -24,6 +24,11 @@ public class GameSoundManager : MonoBehaviour {
         // 3d사운드의 경우 리스너와 사운드와의 거리설정이 있는데 이부분은 좀더 레퍼런스 문서를 찾아봐야한다.
         soundInstances.Add(GAME_SOUND_TYPE.BGM_mainMenu, FMODUnity.RuntimeManager.CreateInstance("event:/bgm/bgm_mainmenu_2d"));
         soundInstances.Add(GAME_SOUND_TYPE.BGM_InGame, FMODUnity.RuntimeManager.CreateInstance("event:/bgm/bgm_ingame_2d"));
+
+        foreach (var snd in soundInstances)
+        {
+            KojeomLogger.DebugLog(string.Format("key:{0} val(handle):{1}", snd.Key, snd.Value.handle));
+        }
     }
 
     public void PlaySound(GAME_SOUND_TYPE soundType)
