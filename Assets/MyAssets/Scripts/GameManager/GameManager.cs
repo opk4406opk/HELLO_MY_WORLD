@@ -59,6 +59,8 @@ public class GameManager : MonoBehaviour
     private WorldManager worldManager;
     [SerializeField]
     private GameSoundManager soundManager;
+    [SerializeField]
+    private WeatherManager weatherManager;
 
     [SerializeField]
     private NPCManager npcManager;
@@ -76,7 +78,7 @@ public class GameManager : MonoBehaviour
         npcDataFile.Init();
 
         // sound init.
-        GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_InGame);
+        //GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_InGame);
         //player Init
         playerManager.Init();
 
@@ -101,6 +103,10 @@ public class GameManager : MonoBehaviour
 
         //
         actorCollideManager.Init();
+
+        //
+        weatherManager.Init();
+        weatherManager.StartWeatherSystem();
 
         if (GameStatus.isLoadGame == true) { saveAndLoadManager.Load(); }
     }
