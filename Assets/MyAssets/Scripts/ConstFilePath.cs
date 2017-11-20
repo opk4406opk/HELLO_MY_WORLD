@@ -39,16 +39,7 @@ public class ConstFilePath
     ///  RenderTexture에 사용될 캐릭터 프리팹이 저장될 path.
     /// </summary>
     public readonly static string SAVE_PATH_FOR_SELECT_CHARS_PREFAB = "Assets/MyAssets/Resources/GamePrefabs/SelectChars/{0}.prefab";
-
-    /// <summary>
-    /// 게임사운드 프리팹이 있는 path.
-    /// </summary>
-    public readonly static string GAME_PREFAB_SOUNDS_PATH = "GamePrefabs/Sounds/{0}";
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public readonly static string WINDOW_PATH_BGM_SOUNDS = ".\\Assets\\MyAssets\\SoundSources\\bgm\\{0}";
+    
 }
 
 
