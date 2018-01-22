@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 /// <summary>
 /// 외부파일로 저장하게되는 World info.
 /// </summary>
+/// https://stackoverflow.com/questions/27932876/vector3-not-serializable-unity3d
 [Serializable]
 public class WorldDataFile
 {
@@ -38,7 +41,23 @@ public class WorldManager : MonoBehaviour
         instance = this;
     }
 
-    public void CreateGameWorld()
+    private void SaveSubWorldFile(string fileName, Block[,,] data, int idx)
+    {
+        Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
+        string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH +"{0}", fileName);
+        // 파일 생성.
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream fileStream = File.Open(savePath, FileMode.OpenOrCreate);
+
+        WorldDataFile dataFile = new WorldDataFile();
+        dataFile.blockData = data;
+        dataFile.idx = idx;
+        // 시리얼라이징.
+        bf.Serialize(fileStream, dataFile);
+        fileStream.Close();
+    }
+
+    private void CreateGameWorld()
     {
         maxSubWorld = SubWorldDataFile.instance.maxSubWorld;
         for (int idx = 0; idx < maxSubWorld; ++idx)
@@ -49,14 +68,17 @@ public class WorldManager : MonoBehaviour
 
             GameObject newSubWorld = Instantiate(worldPrefab, new Vector3(0, 0, 0),
                 new Quaternion(0, 0, 0, 0)) as GameObject;
-            newSubWorld.GetComponent<World>().chunkPrefab = chunkPrefab;
-            newSubWorld.GetComponent<World>().playerTrans = PlayerManager.instance.gamePlayer.transform;
-            newSubWorld.GetComponent<World>().Init(subWorldPosX, subWorldPosZ);
-            newSubWorld.GetComponent<World>().worldName = subWorldName;
-            newSubWorld.GetComponent<World>().idx = idx;
+            World subWorld = newSubWorld.GetComponent<World>();
+            subWorld.chunkPrefab = chunkPrefab;
+            subWorld.playerTrans = PlayerManager.instance.gamePlayer.transform;
+            subWorld.Init(subWorldPosX, subWorldPosZ);
+            subWorld.worldName = subWorldName;
+            subWorld.idx = idx;
             newSubWorld.transform.parent = worldGroupTrans;
             //add world.
-            _worldList.Add(newSubWorld.GetComponent<World>());
+            _worldList.Add(subWorld);
+            // 
+            //SaveSubWorldFile(subWorld.name, subWorld.worldBlockData, idx);
         }
     }
     /// <summary>
