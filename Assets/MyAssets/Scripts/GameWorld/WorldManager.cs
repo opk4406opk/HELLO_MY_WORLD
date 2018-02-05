@@ -40,7 +40,14 @@ public class WorldManager : MonoBehaviour
         CreateGameWorld();
         instance = this;
     }
-
+    /// <summary>
+    /// C# sereialization 기능을 이용한
+    /// subWorld를 외부파일로 저장하는 메소드.
+    /// 아직 테스트중.
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <param name="data"></param>
+    /// <param name="idx"></param>
     private void SaveSubWorldFile(string fileName, Block[,,] data, int idx)
     {
         Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);

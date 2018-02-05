@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
 /// <summary>
 /// 게임 월드의 설정을 관리하는 클래스.
 /// </summary>
@@ -67,6 +66,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private ActorCollideManager actorCollideManager;
     #endregion
+    
     void Start ()
     {
         //GameDataFiles Init
