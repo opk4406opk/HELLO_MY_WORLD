@@ -26,48 +26,48 @@ public class CustomSceneManager : MonoBehaviour
         UI_POPUP_CRAFTITEM = 12,
         UI_POPUP_CHAR_INFO = 13
     }
-    public static void LoadGameSceneAsync(SCENE_TYPE sceneType)
+    public static void LoadGameSceneAsync(SCENE_TYPE sceneType, LoadSceneMode loadMode = LoadSceneMode.Single)
     {
         switch (sceneType)
         {
             case SCENE_TYPE.MAIN_MENU:
-                SceneManager.LoadSceneAsync("MainMenu");
+                SceneManager.LoadSceneAsync("MainMenu", loadMode);
                 break;
             case SCENE_TYPE.MULTIPLAY_GAME_LOBBY:
-                SceneManager.LoadSceneAsync("MultiPlayGameLobby");
+                SceneManager.LoadSceneAsync("MultiPlayGameLobby", loadMode);
                 break;
             case SCENE_TYPE.SELECT_CHARACTERS:
-                SceneManager.LoadSceneAsync("SelectCharacter");
+                SceneManager.LoadSceneAsync("SelectCharacter", loadMode);
                 break;
             case SCENE_TYPE.IN_GAME:
-                SceneManager.LoadSceneAsync("InGame");
+                SceneManager.LoadSceneAsync("InGame", loadMode);
                 break;
             case SCENE_TYPE.GAME_LOADING:
-                SceneManager.LoadSceneAsync("GameLoading");
+                SceneManager.LoadSceneAsync("GameLoading", loadMode);
                 break;
             case SCENE_TYPE.UI_POPUP_SHOP:
-                SceneManager.LoadSceneAsync("popup_shop");
+                SceneManager.LoadSceneAsync("popup_shop", loadMode);
                 break;
             case SCENE_TYPE.UI_POPUP_SELL_ITEM:
-                SceneManager.LoadSceneAsync("popup_sellItem");
+                SceneManager.LoadSceneAsync("popup_sellItem", loadMode);
                 break;
             case SCENE_TYPE.UI_POPUP_MSESSAGE:
-                SceneManager.LoadSceneAsync("popup_message");
+                SceneManager.LoadSceneAsync("popup_message", loadMode);
                 break;
             case SCENE_TYPE.UI_POPUP_MENU:
-                SceneManager.LoadSceneAsync("popup_menu");
+                SceneManager.LoadSceneAsync("popup_menu", loadMode);
                 break;
             case SCENE_TYPE.UI_POPUP_ITEM_DATA:
-                SceneManager.LoadSceneAsync("popup_ItemData");
+                SceneManager.LoadSceneAsync("popup_ItemData", loadMode);
                 break;
             case SCENE_TYPE.UI_POPUP_INVENTORY:
-                SceneManager.LoadSceneAsync("popup_inventory");
+                SceneManager.LoadSceneAsync("popup_inventory", loadMode);
                 break;
             case SCENE_TYPE.UI_POPUP_CRAFTITEM:
-                SceneManager.LoadSceneAsync("popup_craftItem");
+                SceneManager.LoadSceneAsync("popup_craftItem", loadMode);
                 break;
             case SCENE_TYPE.UI_POPUP_CHAR_INFO:
-                SceneManager.LoadSceneAsync("popup_chInfo");
+                SceneManager.LoadSceneAsync("popup_chInfo", loadMode);
                 break;
             default:
                 break;

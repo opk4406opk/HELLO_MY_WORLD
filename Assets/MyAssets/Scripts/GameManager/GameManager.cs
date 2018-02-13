@@ -16,7 +16,7 @@ public class GameConfig
 }
 
 /// <summary>
-/// 게임 상태( Load, Save, etc...)를 관리하는 클래스.
+/// 게임 상태(single, multi, load, save)를 관리하는 클래스.
 /// </summary>
 public class GameStatus
 {
@@ -25,6 +25,13 @@ public class GameStatus
     {
         set { _isLoadGame = value; }
         get { return _isLoadGame; }
+    }
+
+    private static bool _isMultiPlay = false;
+    public static bool isMultiPlay
+    {
+        set { _isMultiPlay = value; }
+        get { return _isMultiPlay; }
     }
 }
 

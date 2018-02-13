@@ -116,7 +116,6 @@ public class PopupChData : MonoBehaviour
 
     private void SetData()
     {
-        
         string data;
         SceneToScene_Data.gameChDatas.TryGetValue("chName", out data);
         chName.text = data;

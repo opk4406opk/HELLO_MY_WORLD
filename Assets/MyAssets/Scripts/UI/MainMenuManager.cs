@@ -28,11 +28,14 @@ public class MainMenuManager : MonoBehaviour {
         }
         else
         {
+            //멀티플레이로 값 설정.
+            GameStatus.isMultiPlay = true;
+            //
             GameSoundManager.GetInstnace().StopSound(GAME_SOUND_TYPE.BGM_mainMenu);
             //init create netmgr.
             Instantiate(netMgr, new Vector3(0, 0, 0), Quaternion.identity);
-            KojeomLogger.DebugLog("Success Create GameNetworkManager, and then go lobby");
-            CustomSceneManager.LoadGameSceneAsync(CustomSceneManager.SCENE_TYPE.MULTIPLAY_GAME_LOBBY);
+            KojeomLogger.DebugLog("Success Create GameNetworkManager, and then select Characters scene.");
+            CustomSceneManager.LoadGameSceneAsync(CustomSceneManager.SCENE_TYPE.SELECT_CHARACTERS);
         }
     }
 
@@ -43,6 +46,9 @@ public class MainMenuManager : MonoBehaviour {
     /// </summary>
 	public void OnClickSinglePlay()
 	{
+        //싱글플레이 스테이터스 설정.
+        GameStatus.isMultiPlay = false;
+        //
 		GameNetworkManager.PostHttpRequest += PostLoginRequest;
 		GameNetworkManager.ConnectLoginServer();
         if(isSuccessProcessRun == false) StartCoroutine(LoginProcess());

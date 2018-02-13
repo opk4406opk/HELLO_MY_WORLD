@@ -4,7 +4,9 @@ using System.Net;
 using System.Text;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using UnityEngine;
 using UnityEngine.Networking;
+
 
 // ref : https://msdn.microsoft.com/ko-kr/library/system.net.httpwebrequest.begingetrequeststream(v=vs.110).aspx
 
@@ -68,9 +70,8 @@ public class GameNetworkManager : NetworkManager {
 		webReq.BeginGetRequestStream(new AsyncCallback(GetRequestStreamCallBack), webReq);
 	}
     #endregion
-
     //
-   
+
 }
 
 
