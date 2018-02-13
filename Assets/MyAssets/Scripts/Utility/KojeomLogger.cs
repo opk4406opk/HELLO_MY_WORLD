@@ -6,11 +6,12 @@ using System.Text;
 public enum LOG_TYPE
 {
 	NORMAL = 0,
-	ERROR = 1
+	ERROR = 1,
+    INFO = 2
 }
 public class KojeomLogger : MonoBehaviour {
 
-	public static void DebugLog(string log, LOG_TYPE logType = LOG_TYPE.NORMAL)
+	public static void DebugLog(string log, LOG_TYPE logType = LOG_TYPE.INFO)
 	{
 		if(Application.platform == RuntimePlatform.WindowsEditor)
 		{
@@ -24,6 +25,9 @@ public class KojeomLogger : MonoBehaviour {
 				case LOG_TYPE.ERROR:
 					changedLog.AppendFormat("<color=red><b>[ERROR]</b></color> {0}", log);
 					break;
+                case LOG_TYPE.INFO:
+                    changedLog.AppendFormat("<color=green><b>[INFO]</b></color> {0}", log);
+                    break;
 				default:
 					break;
 			}

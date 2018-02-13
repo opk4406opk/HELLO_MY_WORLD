@@ -4,22 +4,29 @@ using System.Net;
 using System.Text;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using UnityEngine.Networking;
 
 // ref : https://msdn.microsoft.com/ko-kr/library/system.net.httpwebrequest.begingetrequeststream(v=vs.110).aspx
 
+
+public struct HTTP_REQUEST_METHOD
+{
+    public static string POST = "POST";
+}
 /// <summary>
 /// 현재 unity3d 엔진에서 stable .NET 3.5 버전에 맞춘 테스트 네트워크매니저 class.
 /// </summary>
-public class GameNetworkManager {
-
-	public delegate void del_HttpRequest(bool isSuccessLogin);
-	public static event del_HttpRequest PostHttpRequest;
-	private readonly static string  addr = "http://127.0.0.1:8080";
-
-	private static void GetRequestStreamCallBack(IAsyncResult asynchronousResult)
+public class GameNetworkManager : NetworkManager {
+    // TEST_loginServer_func
+    // -> 구글 vm에 올려놓은 centOS http서버에 로그인 패킷을 날려보는 테스트 메소드.
+    #region TEST_loginServer_func
+    public delegate void del_HttpRequest(bool isSuccessLogin);
+    public static event del_HttpRequest PostHttpRequest;
+    private static void GetRequestStreamCallBack(IAsyncResult asynchronousResult)
 	{
-		// init dummyData
-		Dictionary<string, string> dummyData = new Dictionary<string, string>();
+      
+        // init dummyData
+        Dictionary<string, string> dummyData = new Dictionary<string, string>();
 		dummyData.Add("ip", "192.168.219.0");
 		dummyData.Add("user_name", "JJW");
 		JSONObject jsonData = new JSONObject(dummyData);
@@ -55,15 +62,16 @@ public class GameNetworkManager {
 	}
 	public static void ConnectLoginServer()
 	{
-		HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(new Uri(addr));
+        string addr = "http://127.0.0.1:8080";
+        HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(new Uri(addr));
 		webReq.Method = HTTP_REQUEST_METHOD.POST;
 		webReq.BeginGetRequestStream(new AsyncCallback(GetRequestStreamCallBack), webReq);
 	}
+    #endregion
+
+    //
+   
 }
 
 
 
-public struct HTTP_REQUEST_METHOD
-{
-	public static string POST = "POST";
-}
