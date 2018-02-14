@@ -58,7 +58,7 @@ public class PlayerManager : MonoBehaviour {
                 using (dbcmd = dbconn.CreateCommand())
                 {
                     dbconn.Open(); //Open connection to the database.
-                    string sqlQuery = "SELECT type FROM USER_INFO";
+                    string sqlQuery = "SELECT type FROM USER_SELECT_CHARACTER";
                     dbcmd.CommandText = sqlQuery;
                     IDataReader reader = dbcmd.ExecuteReader();
                     // 임시로 0번 레코드의 필드의 값만 쓴다. 

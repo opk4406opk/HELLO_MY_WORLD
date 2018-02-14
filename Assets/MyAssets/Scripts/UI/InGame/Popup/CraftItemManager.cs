@@ -163,8 +163,7 @@ public class CraftItemManager : MonoBehaviour {
             dbconn.Open(); //Open connection to the database.
             using (IDbCommand dbcmd = dbconn.CreateCommand())
             {
-                string sqlQuery = "UPDATE USER_ITEM SET amount = " + "'" + itemAmount + "'" +
-                    " WHERE id = " + "'" + itemID + "'";
+                string sqlQuery = string.Format("UPDATE USER_ITEM SET amount = '{0}' WHERE id = '{1}'", itemAmount, itemID);
                 dbcmd.CommandText = sqlQuery;
                 dbcmd.ExecuteNonQuery();
             }
@@ -182,8 +181,7 @@ public class CraftItemManager : MonoBehaviour {
             dbconn.Open(); //Open connection to the database.
             using (IDbCommand dbcmd = dbconn.CreateCommand())
             {
-                string sqlQuery = "DELETE FROM USER_ITEM WHERE id = " + "'" + itemID + "'";
-
+                string sqlQuery = string.Format("DELETE FROM USER_ITEM WHERE id = '{0}'", itemID);
                 dbcmd.CommandText = sqlQuery;
                 dbcmd.ExecuteNonQuery();
             }
@@ -211,8 +209,7 @@ public class CraftItemManager : MonoBehaviour {
         string conn = "URI=file:" + Application.dataPath +
                "/StreamingAssets/GameUserDB/userDB.db";
 
-        string sqlQuery = "SELECT amount FROM USER_ITEM WHERE id = "
-                          + "'" + itemID + "'";
+        string sqlQuery = string.Format("SELECT amount FROM USER_ITEM WHERE id = '{0}'", itemID);
         using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
         {
             dbconn.Open(); //Open connection to the database.

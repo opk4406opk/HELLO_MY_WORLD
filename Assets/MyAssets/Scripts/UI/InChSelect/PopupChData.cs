@@ -56,7 +56,8 @@ public class PopupChData : MonoBehaviour
     {
         PopupExitProcess();
     }
-    public void ClickGameStart()
+
+    public void OnClickSelect()
     {
         Action InsertInfo = () =>
         {
@@ -67,26 +68,80 @@ public class PopupChData : MonoBehaviour
                 dbconn.Open(); //Open connection to the database.
                 using (IDbCommand dbcmd = dbconn.CreateCommand())
                 {
-                    try
-                    {
-                        string sqlQuery = "INSERT INTO USER_INFO(name, level, type) " +
-                                          "VALUES(" + "'" + chName.text + "'" + ", " +
-                                          "'" + chLevel.text + "'" + ", " +
-                                          "'" + chType.text + "'" + ")";
-                        dbcmd.CommandText = sqlQuery;
-                        dbcmd.ExecuteNonQuery();
-                    }
-                    catch(SqliteException e)
-                    {
-                        // 이미 등록된 캐릭터이다.
-                        KojeomLogger.DebugLog(e.ToString(), LOG_TYPE.ERROR);
-                    }
+                    // 사용자가 선택한 캐릭터 히스토리 테이블에 저장.
+                    SQL_SelectCharInfoToHistory(dbcmd);
+                    //사용자가 선택한 캐릭터를 선택 테이블에 저장.
+                    SQL_SelectCharToSelectedData(dbcmd);
                 }
                 dbconn.Close();
             }
         };
         InsertInfo();
-        GameLoadingProcess();
+        if (GameStatus.isMultiPlay)
+        {
+            MultiPlayLobbyProcess();
+        }
+        else
+        {
+            GameLoadingProcess();
+        }
+    }
+
+    private void SQL_SelectCharInfoToHistory(IDbCommand dbcmd)
+    {
+        try
+        {
+            string sqlQuery = string.Format("INSERT INTO USER_SELECTED_CHAR_HISTORY(name, level, type) VALUES('{0}','{1}','{2}'",
+                    chName.text, chLevel.text, chType.text);
+            dbcmd.CommandText = sqlQuery;
+            dbcmd.ExecuteNonQuery();
+        }
+        catch(SqliteException e)
+        {
+            KojeomLogger.DebugLog(e.ToString(), LOG_TYPE.ERROR);
+        }
+    }
+
+    private void SQL_SelectCharToSelectedData(IDbCommand dbcmd)
+    {
+        try
+        {
+            string sqlQuery = "SELECT * FROM USER_SELECT_CHARACTER";
+            dbcmd.CommandText = sqlQuery;
+            dbcmd.ExecuteNonQuery();
+            IDataReader reader = dbcmd.ExecuteReader();
+            // SELECT 질의 후 데이터가 1개라도 있다면 UPDATE로 모든 데이터를 갱신한다.
+            // read()는 row가 1개이상이면 true, 아니면 false.
+            if (reader.Read())
+            {
+                reader.Close();
+                sqlQuery = string.Format("UPDATE USER_SELECT_CHARACTER SET name ='{0}', level ='{1}', type = '{2}'",
+                    chName.text, chLevel.text, chType.text);
+                dbcmd.CommandText = sqlQuery;
+                dbcmd.ExecuteNonQuery();
+            }
+            else
+            {
+                reader.Close();
+                sqlQuery = string.Format("INSERT INTO USER_SELECT_CHARACTER(name, level, type) VALUES('{0}','{1}','{2}'",
+                    chName.text, chLevel.text, chType.text);
+                dbcmd.CommandText = sqlQuery;
+                dbcmd.ExecuteNonQuery();
+            }
+        }
+        catch (SqliteException e)
+        {
+            KojeomLogger.DebugLog(e.ToString(), LOG_TYPE.ERROR);
+        }
+    }
+
+    private void MultiPlayLobbyProcess()
+    {
+        ScaleDownEffect("CallBackGoToLobby");
+    }
+    private void CallBackGoToLobby()
+    {
+        CustomSceneManager.LoadGameSceneAsync(CustomSceneManager.SCENE_TYPE.MULTIPLAY_GAME_LOBBY);
     }
 
     private void GameLoadingProcess()
@@ -98,7 +153,7 @@ public class PopupChData : MonoBehaviour
     /// </summary>
     private void CallBackGameLoading()
     {
-        SceneManager.LoadSceneAsync("GameLoading");
+        CustomSceneManager.LoadGameSceneAsync(CustomSceneManager.SCENE_TYPE.GAME_LOADING);
     }
 
     private void PopupExitProcess()
