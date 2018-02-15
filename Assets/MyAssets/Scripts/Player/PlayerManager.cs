@@ -8,7 +8,10 @@ using System.Text;
 /// 게임내 사용자(캐릭터)를 관리하는 클래스.
 /// </summary>
 public class PlayerManager : MonoBehaviour {
-    // 캐릭터 프리팹들.
+    /// <summary>
+    /// 캐릭터 프리팹들.
+    /// 배열의 인덱스번호는 캐릭터의 type 값과 1:1로 매칭된다.
+    /// </summary>
     [SerializeField]
     private GameObject[] charPrefabs;
 
@@ -20,12 +23,14 @@ public class PlayerManager : MonoBehaviour {
 
     public Vector3 initPosition;
     private PlayerController controller;
+    private GameObject playerPrefab;
 
     public static PlayerManager instance;
 
     public void Init()
     {
         charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
+        playerPrefab = GameNetworkManager.singleton.playerPrefab;
         CreateProcess();
         instance = this;
     }
@@ -61,8 +66,8 @@ public class PlayerManager : MonoBehaviour {
                     string sqlQuery = "SELECT type FROM USER_SELECT_CHARACTER";
                     dbcmd.CommandText = sqlQuery;
                     IDataReader reader = dbcmd.ExecuteReader();
-                    // 임시로 0번 레코드의 필드의 값만 쓴다. 
                     reader.Read();
+                    // select로 가져온 정보의 0번째 필드값을 가져온다. ( 여기서는 type 값이 된다. )
                     chType = reader.GetString(0);
                     reader.Close();
                     reader = null;
@@ -73,10 +78,10 @@ public class PlayerManager : MonoBehaviour {
         GetUserInfo();
 
         // instance character.
-        InstanceCharacter(charPrefabs[int.Parse(chType)]);
+        InstancingPlayer(charPrefabs[int.Parse(chType)]);
     }
    
-    private void InstanceCharacter(GameObject _prefab)
+    private void InstancingPlayer(GameObject _prefab)
     {
         _gamePlayer = Instantiate(_prefab,
             initPosition,

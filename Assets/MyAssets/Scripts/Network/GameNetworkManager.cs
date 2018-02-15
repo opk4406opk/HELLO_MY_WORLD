@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Networking.Match;
 
 
 // ref : https://msdn.microsoft.com/ko-kr/library/system.net.httpwebrequest.begingetrequeststream(v=vs.110).aspx
@@ -69,9 +70,24 @@ public class GameNetworkManager : NetworkManager {
 		webReq.Method = HTTP_REQUEST_METHOD.POST;
 		webReq.BeginGetRequestStream(new AsyncCallback(GetRequestStreamCallBack), webReq);
 	}
+
+
     #endregion
     //
+    public override NetworkClient StartHost(ConnectionConfig config, int maxConnections)
+    {
+        return base.StartHost(config, maxConnections);
+    }
 
+    public override NetworkClient StartHost(MatchInfo info)
+    {
+        return base.StartHost(info);
+    }
+
+    public override NetworkClient StartHost()
+    {
+        return base.StartHost();
+    }
 }
 
 
