@@ -8,8 +8,6 @@ public class MultiPlayLobbyManager : MonoBehaviour {
     private GameObject serverListElementPrefab;
     [SerializeField]
     private GameObject uiGridObj;
-    [SerializeField]
-    private CustomP2PLobby p2pLobbyManager;
 
     private void Start()
     {
