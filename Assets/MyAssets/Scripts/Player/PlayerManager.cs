@@ -4,6 +4,7 @@ using Mono.Data.Sqlite;
 using System.Data;
 using System;
 using System.Text;
+using System.Collections.Generic;
 /// <summary>
 /// 게임내 사용자(캐릭터)를 관리하는 클래스.
 /// </summary>
@@ -20,18 +21,20 @@ public class PlayerManager : MonoBehaviour {
     {
         get { return _gamePlayer; }
     }
-
+    //
     public Vector3 initPosition;
     private PlayerController controller;
-    private GameObject playerPrefab;
-
+    //
     public static PlayerManager instance;
-
+    //
+    private GameObject gamePlayerPrefab;
+    private List<GamePlayer> gamePlayerList;
     public void Init()
     {
+        gamePlayerList = new List<GamePlayer>();
         charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
-        playerPrefab = GameNetworkManager.singleton.playerPrefab;
         CreateProcess();
+        gamePlayerPrefab = GameNetworkManager.singleton.playerPrefab;
         instance = this;
     }
     /// <summary>
@@ -77,16 +80,23 @@ public class PlayerManager : MonoBehaviour {
         };
         GetUserInfo();
 
-        // instance character.
-        InstancingPlayer(charPrefabs[int.Parse(chType)]);
+        // create players.
+        // 테스트로 1개의 플레이어만 존재한다고 가정.
+        int characterType = int.Parse(chType);
+        for(int idx = 0; idx < 1; idx++)
+        {
+            GamePlayer gamePlayer = gamePlayerPrefab.GetComponent<GamePlayer>();
+            gamePlayer.Init(MakeGameChararacter(charPrefabs[characterType]), characterType);
+            gamePlayerList.Add(gamePlayer);
+        }
     }
    
-    private void InstancingPlayer(GameObject _prefab)
+    private GameCharacter MakeGameChararacter(GameObject _prefab)
     {
-        _gamePlayer = Instantiate(_prefab,
-            initPosition,
+        GameObject characterObject = Instantiate(_prefab, initPosition,
             new Quaternion(0, 0, 0, 0)) as GameObject;
-        controller = _gamePlayer.GetComponent<PlayerController>();
-        if(controller != null) controller.Init(Camera.main);
+        return characterObject.GetComponent<GameCharacter>();
+        //controller = _gamePlayer.GetComponent<PlayerController>();
+        //if(controller != null) controller.Init(Camera.main);
     }
 }

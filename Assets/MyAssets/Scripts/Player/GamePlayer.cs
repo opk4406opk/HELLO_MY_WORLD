@@ -2,26 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-[RequireComponent(typeof(NetworkTransform))]
-public class GamePlayer : NetworkBehaviour
+public class GamePlayer : MonoBehaviour
 {
-    [SyncVar]
-    public int characterType;
-    [SyncVar]
-    public string characterName;
-    private GameObject _charInstance;
-    public GameObject charInstance
+    private int _characterType;
+    private string _characterName;
+    private GameCharacter _charInstance;
+    public GameCharacter charInstance
     {
         get { return _charInstance; }
     }
-    public void Init(GameObject charInst, int charType)
+    public void Init(GameCharacter charInst, int charType, string charName = null)
     {
-        characterType = charType;
+        _characterName = charName;
+        _characterType = charType;
         _charInstance = charInst;
     }
-    public override void OnStartLocalPlayer()
-    {
-        KojeomLogger.DebugLog("Start Local Player");
-        base.OnStartLocalPlayer();
-    }
+    
 }
