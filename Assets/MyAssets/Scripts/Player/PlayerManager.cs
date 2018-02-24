@@ -16,14 +16,14 @@ public class PlayerManager : MonoBehaviour {
     [SerializeField]
     private GameObject[] charPrefabs;
 
-    private GameObject _gamePlayer;
-    public GameObject gamePlayer
+    private GameObject _myGamePlayer;
+    public GameObject myGamePlayer
     {
-        get { return _gamePlayer; }
+        get { return _myGamePlayer; }
     }
     //
     public Vector3 initPosition;
-    private PlayerController controller;
+    private PlayerController myPlayerController;
     //
     public static PlayerManager instance;
     //
@@ -33,8 +33,8 @@ public class PlayerManager : MonoBehaviour {
     {
         gamePlayerList = new List<GamePlayer>();
         charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
-        CreateProcess();
         gamePlayerPrefab = GameNetworkManager.singleton.playerPrefab;
+        CreateProcess();
         instance = this;
     }
     /// <summary>
@@ -42,14 +42,14 @@ public class PlayerManager : MonoBehaviour {
     /// </summary>
     public void StartController()
     {
-        controller.StartControllProcess();
+        myPlayerController.StartControllProcess();
     }
     /// <summary>
     /// 플레이어 컨트롤러를 중지합니다.
     /// </summary>
     public void StopController()
     {
-        controller.StopControllProcess();
+        myPlayerController.StopControllProcess();
     }
 
     private void CreateProcess()
@@ -81,14 +81,24 @@ public class PlayerManager : MonoBehaviour {
         GetUserInfo();
 
         // create players.
-        // 테스트로 1개의 플레이어만 존재한다고 가정.
+        // 테스트로 1개의 플레이어만 존재한다고 가정./////////////////////////////////////////
         int characterType = int.Parse(chType);
         for(int idx = 0; idx < 1; idx++)
         {
-            GamePlayer gamePlayer = gamePlayerPrefab.GetComponent<GamePlayer>();
+            // playerManager로 패런팅.
+            GameObject inst = Instantiate(gamePlayerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            inst.transform.parent = gameObject.transform;
+            inst.name = "MyPlayer";
+            //
+            GamePlayer gamePlayer = inst.GetComponent<GamePlayer>();
             gamePlayer.Init(MakeGameChararacter(charPrefabs[characterType]), characterType);
             gamePlayerList.Add(gamePlayer);
         }
+        //0번째 플레이어는 본인임을 의미한다.
+        _myGamePlayer = gamePlayerList[0].GetComponent<GamePlayer>().charInstance.gameObject;
+        myPlayerController = gamePlayerList[0].GetComponent<GamePlayer>().charInstance.GetController();
+        myPlayerController.Init(Camera.main);
+        //////////////////////////////////////////////////////////////////////////////////////
     }
    
     private GameCharacter MakeGameChararacter(GameObject _prefab)
@@ -96,7 +106,5 @@ public class PlayerManager : MonoBehaviour {
         GameObject characterObject = Instantiate(_prefab, initPosition,
             new Quaternion(0, 0, 0, 0)) as GameObject;
         return characterObject.GetComponent<GameCharacter>();
-        //controller = _gamePlayer.GetComponent<PlayerController>();
-        //if(controller != null) controller.Init(Camera.main);
     }
 }

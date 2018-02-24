@@ -16,6 +16,8 @@ public class GamePlayer : MonoBehaviour
         _characterName = charName;
         _characterType = charType;
         _charInstance = charInst;
+        // 캐릭터 인스턴스는 게임플레이어 하위종속으로 설정.
+        _charInstance.transform.parent = gameObject.transform;
     }
     
 }

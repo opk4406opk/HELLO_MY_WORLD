@@ -77,7 +77,7 @@ public class WorldManager : MonoBehaviour
                 new Quaternion(0, 0, 0, 0)) as GameObject;
             World subWorld = newSubWorld.GetComponent<World>();
             subWorld.chunkPrefab = chunkPrefab;
-            subWorld.playerTrans = PlayerManager.instance.gamePlayer.transform;
+            subWorld.playerTrans = PlayerManager.instance.myGamePlayer.transform;
             subWorld.Init(subWorldPosX, subWorldPosZ);
             subWorld.worldName = subWorldName;
             subWorld.idx = idx;

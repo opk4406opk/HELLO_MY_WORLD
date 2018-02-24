@@ -13,7 +13,7 @@ public class MainMenuManager : MonoBehaviour {
 
     private void Start()
     {
-        GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_mainMenu);
+        //GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_mainMenu);
     }
 
     /// <summary>
@@ -87,7 +87,7 @@ public class MainMenuManager : MonoBehaviour {
 			KojeomLogger.DebugLog("Waiting LoginServer TimeOut!", LOG_TYPE.ERROR);
 		}
         // 일단 http 로그인 서버에 접속이 실패 or 성공에 상관없이 다음 화면으로 넘어간다.
-        GameSoundManager.GetInstnace().StopSound(GAME_SOUND_TYPE.BGM_mainMenu);
+        //GameSoundManager.GetInstnace().StopSound(GAME_SOUND_TYPE.BGM_mainMenu);
         CustomSceneManager.LoadGameSceneAsync(CustomSceneManager.SCENE_TYPE.SELECT_CHARACTERS);
 	}
 	
