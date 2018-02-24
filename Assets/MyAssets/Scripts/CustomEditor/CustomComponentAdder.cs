@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 public class CustomComponentAdder : EditorWindow
@@ -40,3 +39,4 @@ public class CustomComponentAdder : EditorWindow
         KojeomLogger.DebugLog("GameCharacter 컴포넌트 할당 작업 완료.");
     }
 }
+#endif

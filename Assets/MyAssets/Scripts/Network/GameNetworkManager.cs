@@ -88,6 +88,20 @@ public class GameNetworkManager : NetworkManager {
     {
         return base.StartHost();
     }
+    // host(or server)에서 client가 접속할 때 발생되는 콜백 메소드.
+    public override void OnServerConnect(NetworkConnection conn)
+    {
+        base.OnServerConnect(conn);
+        KojeomLogger.DebugLog(string.Format("someone client[ip : {0}, conn_id : {1} ] is conneted this server",
+            conn.address, conn.connectionId));
+    }
+
+    // client입장에서 서버에 접속시에 불려지는 콜백 메소드.
+    public override void OnClientConnect(NetworkConnection conn)
+    {
+        base.OnClientConnect(conn);
+        KojeomLogger.DebugLog("connect to server..");
+    }
 }
 
 

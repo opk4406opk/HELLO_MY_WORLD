@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 
@@ -17,3 +16,4 @@ public class CheckForStandardAssets : MonoBehaviour {
 		
 	}
 }
+#endif

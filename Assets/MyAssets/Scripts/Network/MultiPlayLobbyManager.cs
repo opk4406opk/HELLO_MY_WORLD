@@ -47,8 +47,15 @@ public class MultiPlayLobbyManager : MonoBehaviour {
         KojeomLogger.DebugLog("Update Server List", LOG_TYPE.INFO);
     }
 
+    //테스트용 서버 컨넥트용 메소드.
+    public void OnClickConnectToHostWithIP()
+    {
+        KojeomLogger.DebugLog("Connect To Host With IP", LOG_TYPE.INFO);
+        var netClient = gameNetManager.StartClient();
+        netClient.Connect("127.0.0.1", 8080);
+    }
+
     private void UpdateServerList()
     {
-        
     }
 }
