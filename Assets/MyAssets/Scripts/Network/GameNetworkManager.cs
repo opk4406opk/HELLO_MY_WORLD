@@ -16,6 +16,20 @@ public struct HTTP_REQUEST_METHOD
 {
     public static string POST = "POST";
 }
+
+/// <summary>
+///  서버, 클라이언트간의 메세지를 주고받는 프로토콜 열거형.
+/// </summary>
+public enum GAME_NETWORK_PROTOCOL
+{
+    pushClientInfoToServer = 1000
+}
+
+public class GameNetPlayerData : MessageBase
+{
+    public int netId;
+    public string addr;
+}
 /// <summary>
 /// 현재 unity3d 엔진에서 stable .NET 3.5 버전에 맞춘 테스트 네트워크매니저 class.
 /// </summary>
@@ -74,26 +88,33 @@ public class GameNetworkManager : NetworkManager {
 
     #endregion
     //
+
+    public void InitServerSettings()
+    {
+        NetworkServer.RegisterHandler((short)GAME_NETWORK_PROTOCOL.pushClientInfoToServer,
+            OnReceiveClientInfo);
+    }
     public override NetworkClient StartHost(ConnectionConfig config, int maxConnections)
     {
+        InitServerSettings();
         return base.StartHost(config, maxConnections);
     }
 
     public override NetworkClient StartHost(MatchInfo info)
     {
+        InitServerSettings();
         return base.StartHost(info);
     }
 
     public override NetworkClient StartHost()
     {
+        InitServerSettings();
         return base.StartHost();
     }
     // host(or server)에서 client가 접속할 때 발생되는 콜백 메소드.
     public override void OnServerConnect(NetworkConnection conn)
     {
         base.OnServerConnect(conn);
-        KojeomLogger.DebugLog(string.Format("someone client[ip : {0}, conn_id : {1} ] is conneted this server",
-            conn.address, conn.connectionId));
     }
 
     // client입장에서 서버에 접속시에 불려지는 콜백 메소드.
@@ -101,6 +122,19 @@ public class GameNetworkManager : NetworkManager {
     {
         base.OnClientConnect(conn);
         KojeomLogger.DebugLog("connect to server..");
+        GameNetPlayerData msgData = new GameNetPlayerData();
+        msgData.netId = conn.connectionId;
+        msgData.addr = conn.address;
+        bool isSendSuccess = conn.Send((short)GAME_NETWORK_PROTOCOL.pushClientInfoToServer, msgData);
+
+        if (isSendSuccess) KojeomLogger.DebugLog("Send client info to server success ");
+        else KojeomLogger.DebugLog("Send client info to server failed ", LOG_TYPE.ERROR);
+    }
+
+    public void OnReceiveClientInfo(NetworkMessage netMsg)
+    {
+        GameNetPlayerData netPlayerData = netMsg.ReadMessage<GameNetPlayerData>();
+        KojeomLogger.DebugLog(string.Format("conneted clinet info [ connection_id : {0}, addr : {1} ]", netPlayerData.netId, netPlayerData.addr));
     }
 }
 

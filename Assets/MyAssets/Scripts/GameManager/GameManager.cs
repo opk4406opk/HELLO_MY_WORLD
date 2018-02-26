@@ -76,6 +76,7 @@ public class GameManager : MonoBehaviour
     
     void Start ()
     {
+        KojeomLogger.DebugLog("GameManager is Setup Start.");
         //GameDataFiles Init
         // 제작아이템 데이타파일은 아이템데이타 파일을 읽어들인 후에 읽어야함.
         itemDataFile.Init();
@@ -116,5 +117,6 @@ public class GameManager : MonoBehaviour
         weatherManager.StartWeatherSystem();
 
         if (GameStatus.isLoadGame == true) { saveAndLoadManager.Load(); }
+        KojeomLogger.DebugLog("GameManager is Setup End.");
     }
 }
