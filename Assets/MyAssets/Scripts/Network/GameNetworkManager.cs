@@ -29,6 +29,7 @@ public class GameNetPlayerData : MessageBase
 {
     public int netId;
     public string addr;
+    public int selectChType;
 }
 /// <summary>
 /// 현재 unity3d 엔진에서 stable .NET 3.5 버전에 맞춘 테스트 네트워크매니저 class.
@@ -122,9 +123,11 @@ public class GameNetworkManager : NetworkManager {
     {
         base.OnClientConnect(conn);
         KojeomLogger.DebugLog("connect to server..");
+
         GameNetPlayerData msgData = new GameNetPlayerData();
         msgData.netId = conn.connectionId;
         msgData.addr = conn.address;
+        msgData.selectChType = GameDBHelper.GetSelectCharType();
         bool isSendSuccess = conn.Send((short)GAME_NETWORK_PROTOCOL.pushClientInfoToServer, msgData);
 
         if (isSendSuccess) KojeomLogger.DebugLog("Send client info to server success ");
@@ -134,7 +137,8 @@ public class GameNetworkManager : NetworkManager {
     public void OnReceiveClientInfo(NetworkMessage netMsg)
     {
         GameNetPlayerData netPlayerData = netMsg.ReadMessage<GameNetPlayerData>();
-        KojeomLogger.DebugLog(string.Format("conneted clinet info [ connection_id : {0}, addr : {1} ]", netPlayerData.netId, netPlayerData.addr));
+        KojeomLogger.DebugLog(string.Format("conneted clinet info [ connection_id : {0}, addr : {1}, selectChType : {2} ]",
+            netPlayerData.netId, netPlayerData.addr, netPlayerData.selectChType));
     }
 }
 
