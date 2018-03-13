@@ -33,7 +33,14 @@ public class PlayerManager : MonoBehaviour {
     {
         gamePlayerList = new List<GamePlayer>();
         charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
-        gamePlayerPrefab = GameNetworkManager.singleton.playerPrefab;
+        if(GameStatus.isMultiPlay == true)
+        {
+            gamePlayerPrefab = GameNetworkManager.singleton.playerPrefab;
+        }
+        else if(GameStatus.isMultiPlay == false)
+        {
+            gamePlayerPrefab = Resources.Load<GameObject>(ConstFilePath.GAME_NET_PLAYER_PREFAB);
+        }
         CreateProcess();
         instance = this;
     }
@@ -79,26 +86,40 @@ public class PlayerManager : MonoBehaviour {
             }
         };
         GetUserInfo();
-
-        // create players.
-        // 테스트로 1개의 플레이어만 존재한다고 가정./////////////////////////////////////////
-        int characterType = int.Parse(chType);
-        for(int idx = 0; idx < 1; idx++)
+        //
+        if(GameStatus.isMultiPlay == true)
         {
-            // playerManager로 패런팅.
-            GameObject inst = Instantiate(gamePlayerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            inst.transform.parent = gameObject.transform;
-            inst.name = "MyPlayer";
-            //
-            GamePlayer gamePlayer = inst.GetComponent<GamePlayer>();
-            gamePlayer.Init(MakeGameChararacter(charPrefabs[characterType]), characterType);
-            gamePlayerList.Add(gamePlayer);
+            CreatePlayerMultiMode();
+        }else if(GameStatus.isMultiPlay == false)
+        {
+            CreatePlayerSingleMode(int.Parse(chType));
         }
+    }
+
+    private void CreatePlayerSingleMode(int myChType)
+    {
+        CreatePlayer(myChType, new Vector3(0, 0, 0));
         //0번째 플레이어는 본인임을 의미한다.
         _myGamePlayer = gamePlayerList[0].GetComponent<GamePlayer>().charInstance.gameObject;
         myPlayerController = gamePlayerList[0].GetComponent<GamePlayer>().charInstance.GetController();
         myPlayerController.Init(Camera.main);
-        //////////////////////////////////////////////////////////////////////////////////////
+    }
+
+    private void CreatePlayerMultiMode()
+    {
+        // to do
+    }
+
+    private void CreatePlayer(int chType, Vector3 initPos)
+    {
+        // playerManager로 패런팅.
+        GameObject inst = Instantiate(gamePlayerPrefab, initPos, Quaternion.identity);
+        inst.transform.parent = gameObject.transform;
+        inst.name = "MyPlayer";
+        //
+        GamePlayer gamePlayer = inst.GetComponent<GamePlayer>();
+        gamePlayer.Init(MakeGameChararacter(charPrefabs[chType]), chType);
+        gamePlayerList.Add(gamePlayer);
     }
    
     private GameCharacter MakeGameChararacter(GameObject _prefab)

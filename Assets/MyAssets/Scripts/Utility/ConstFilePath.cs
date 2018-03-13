@@ -49,6 +49,11 @@ public class ConstFilePath
     /// 게임네트워크매니저 프리팹 path.
     /// </summary>
     public readonly static string GAME_NET_MGR_PREFAB = "GamePrefabs/Network/GameNetworkManager";
+
+    /// <summary>
+    /// 네트워크 게임에서 사용될 플레이어 프리팹 path.
+    /// </summary>
+    public readonly static string GAME_NET_PLAYER_PREFAB = "GamePrefabs/Network/GamePlayer";
 }
 
 
