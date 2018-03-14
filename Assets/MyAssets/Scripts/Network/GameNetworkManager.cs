@@ -116,13 +116,14 @@ public class GameNetworkManager : NetworkManager {
     public override void OnServerConnect(NetworkConnection conn)
     {
         base.OnServerConnect(conn);
+        KojeomLogger.DebugLog(string.Format("Conn ID : {0}, user ip : {1} 유저가 서버로 접속했습니다.", conn.connectionId, conn.address), LOG_TYPE.NETWORK_SERVER_INFO);
     }
 
     // client입장에서 서버에 접속시에 불려지는 콜백 메소드.
     public override void OnClientConnect(NetworkConnection conn)
     {
         base.OnClientConnect(conn);
-        KojeomLogger.DebugLog("connect to server..");
+        KojeomLogger.DebugLog("서버로 접속을 했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
 
         GameNetPlayerData msgData = new GameNetPlayerData();
         msgData.netId = conn.connectionId;
@@ -130,7 +131,7 @@ public class GameNetworkManager : NetworkManager {
         msgData.selectChType = GameDBHelper.GetSelectCharType();
         bool isSendSuccess = conn.Send((short)GAME_NETWORK_PROTOCOL.pushClientInfoToServer, msgData);
 
-        if (isSendSuccess) KojeomLogger.DebugLog("Send client info to server success ");
+        if (isSendSuccess) KojeomLogger.DebugLog("Send client info to server success ", LOG_TYPE.NETWORK_CLIENT_INFO);
         else KojeomLogger.DebugLog("Send client info to server failed ", LOG_TYPE.ERROR);
     }
 
@@ -138,7 +139,17 @@ public class GameNetworkManager : NetworkManager {
     {
         GameNetPlayerData netPlayerData = netMsg.ReadMessage<GameNetPlayerData>();
         KojeomLogger.DebugLog(string.Format("conneted clinet info [ connection_id : {0}, addr : {1}, selectChType : {2} ]",
-            netPlayerData.netId, netPlayerData.addr, netPlayerData.selectChType));
+            netPlayerData.netId, netPlayerData.addr, netPlayerData.selectChType), LOG_TYPE.NETWORK_SERVER_INFO);
+    }
+
+    public void SpawnFromServer(GameObject spawnObj)
+    {
+        NetworkServer.Spawn(spawnObj);
+    }
+
+    public void SpawnWithAuthoFromServer(GameObject spawnObj, NetworkConnection userConn)
+    {
+        NetworkServer.SpawnWithClientAuthority(spawnObj, userConn);
     }
 }
 
