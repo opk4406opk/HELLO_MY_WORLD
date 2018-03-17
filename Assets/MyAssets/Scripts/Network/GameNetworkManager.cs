@@ -33,15 +33,10 @@ public class GameNetPlayerData : MessageBase
 
 public class GameNetUser
 {
-    public int connectionID;
-    public string address;
-    public int selectChType;
-
-    public GameNetUser(int connID, string addr, int selectCharType)
+    public NetworkClient client;
+    public GameNetUser(NetworkClient client)
     {
-        connectionID = connID;
-        address = addr;
-        selectChType = selectCharType;
+        this.client = client;
     }
 }
 
@@ -120,7 +115,7 @@ public class GameNetworkManager : NetworkManager {
     public void InitServerSettings()
     {
         NetworkServer.RegisterHandler((short)GAME_NETWORK_PROTOCOL.pushClientInfoToServer,
-            OnReceiveClientInfo);
+            OnRecvClientConnectInfo);
     }
     public override NetworkClient StartHost(ConnectionConfig config, int maxConnections)
     {
@@ -163,13 +158,16 @@ public class GameNetworkManager : NetworkManager {
         else KojeomLogger.DebugLog("Send client info to server failed ", LOG_TYPE.ERROR);
     }
 
-    public void OnReceiveClientInfo(NetworkMessage netMsg)
+    public void OnRecvClientConnectInfo(NetworkMessage netMsg)
     {
         GameNetPlayerData netPlayerData = netMsg.ReadMessage<GameNetPlayerData>();
         KojeomLogger.DebugLog(string.Format("conneted clinet info [ connection_id : {0}, addr : {1}, selectChType : {2} ]",
             netPlayerData.connectionID, netPlayerData.address, netPlayerData.selectChType), LOG_TYPE.NETWORK_SERVER_INFO);
-        // 접속한 유저를 유저리스트에 등록.
-        _netUserList.Add(new GameNetUser(netPlayerData.connectionID, netPlayerData.address, netPlayerData.selectChType));
+    }
+
+    public void AddGamePlayer(NetworkClient client)
+    {
+        _netUserList.Add(new GameNetUser(client));
     }
 }
 
