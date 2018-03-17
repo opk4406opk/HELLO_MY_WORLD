@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Text;
-using System.Data;
-using Mono.Data.Sqlite;
+﻿using UnityEngine;
+using UnityEngine.Networking;
 
 public class MultiPlayLobbyManager : MonoBehaviour {
 
@@ -11,8 +7,6 @@ public class MultiPlayLobbyManager : MonoBehaviour {
     private GameObject serverListElementPrefab;
     [SerializeField]
     private GameObject uiGridObj;
-    //
-    private GameNetworkManager gameNetManager;
 
     private static MultiPlayLobbyManager _instance;
     public static MultiPlayLobbyManager instance
@@ -20,26 +14,18 @@ public class MultiPlayLobbyManager : MonoBehaviour {
         get
         {
             if(_instance == null) KojeomLogger.DebugLog("MultiPlayLobbyManager Singleton is NULL", LOG_TYPE.ERROR);
-      
             return _instance;
         }
     }
     private void Start()
     {
-        gameNetManager = GameObject.FindWithTag("NetworkManager").GetComponent<GameNetworkManager>();
-        if(gameNetManager == null)
-        {
-            KojeomLogger.DebugLog("GameNetmanager is null", LOG_TYPE.ERROR);
-            return;
-        }
-        // set singleton.
         _instance = this;
     }
 
     public void OnClickStartHost()
     {
         KojeomLogger.DebugLog("StartHost", LOG_TYPE.INFO);
-        gameNetManager.StartHost();
+        GameNetworkManager.GetInstance().StartHost();
     }
 
     public void OnClickUpdateServerList()
@@ -51,7 +37,7 @@ public class MultiPlayLobbyManager : MonoBehaviour {
     public void OnClickConnectToHostWithIP()
     {
         KojeomLogger.DebugLog("Connect To Host With IP", LOG_TYPE.INFO);
-        var netClient = gameNetManager.StartClient();
+        var netClient = GameNetworkManager.GetInstance().StartClient();
         netClient.Connect("127.0.0.1", 8080);
     }
 

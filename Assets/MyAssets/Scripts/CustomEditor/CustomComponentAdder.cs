@@ -26,14 +26,10 @@ public class CustomComponentAdder : EditorWindow
             if(element.GetComponent<GameCharacter>() == null)
             {
                 element.AddComponent<GameCharacter>();
-                PlayerController controller = element.GetComponent<PlayerController>();
-                element.GetComponent<GameCharacter>().SetController(controller);
             }
             else
             {
-                KojeomLogger.DebugLog("이미 GameCharacter 컴포넌트가 붙어있습니다. 컨트롤러만 할당합니다.");
-                PlayerController controller = element.GetComponent<PlayerController>();
-                element.GetComponent<GameCharacter>().SetController(controller);
+                KojeomLogger.DebugLog("이미 GameCharacter 컴포넌트가 붙어있습니다.");
             }
         }
         KojeomLogger.DebugLog("GameCharacter 컴포넌트 할당 작업 완료.");

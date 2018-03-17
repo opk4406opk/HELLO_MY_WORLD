@@ -8,6 +8,8 @@ using System.Collections.Generic;
 public class PlayerController : MonoBehaviour {
 
     private Camera playerCamera;
+    private GameObject player;
+    //
     private List<float> camRotArrayX = new List<float>();
     private List<float> camRotArrayY = new List<float>();
     private float camRotationX = 0F;
@@ -31,13 +33,16 @@ public class PlayerController : MonoBehaviour {
 
     private QuerySDMecanimController aniController;
 
-    public void Init(Camera mainCam)
+    public void Init(Camera mainCam, GameObject playerObject)
     {
+        //
+        player = playerObject;
         playerCamera = mainCam;
+        //
         camOrigRotation = playerCamera.transform.localRotation;
-        playerOrigRotation = gameObject.transform.localRotation;
+        playerOrigRotation = player.transform.localRotation;
         controllProcess = ControllProcess();
-        aniController = gameObject.GetComponent<QuerySDMecanimController>();
+        aniController = player.GetComponent<GamePlayer>().charInstance.GetAniController();
     }
 
     public void StartControllProcess()
@@ -51,7 +56,7 @@ public class PlayerController : MonoBehaviour {
 
     private void CamFollowPlayer()
     {
-        Vector3 playerPos =  gameObject.transform.position;
+        Vector3 playerPos = player.transform.position;
         playerPos.y += 5.0f;
         playerCamera.transform.position = playerPos;
     }
@@ -97,7 +102,7 @@ public class PlayerController : MonoBehaviour {
         // rot cam
         playerCamera.transform.localRotation = camOrigRotation * xQuaternion * yQuaternion;
         // rot player
-        gameObject.transform.localRotation = playerOrigRotation * xQuaternion;
+        player.transform.localRotation = playerOrigRotation * xQuaternion;
     }
 
 	private void Move()
@@ -106,27 +111,27 @@ public class PlayerController : MonoBehaviour {
         Vector3 dir;
 		if (Input.GetKey(KeyCode.W))
 		{
-            dir = transform.forward;
-			Vector3 newPos = transform.position;
-			transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
+            dir = player.transform.forward;
+			Vector3 newPos = player.transform.position;
+            player.transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
 		}
 		else if (Input.GetKey(KeyCode.S))
 		{
-			dir = -transform.forward;
-			Vector3 newPos = transform.position;
-			transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
+			dir = -player.transform.forward;
+			Vector3 newPos = player.transform.position;
+            player.transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
 		}
 		else if (Input.GetKey(KeyCode.D))
 		{
-			dir = transform.right;
-			Vector3 newPos = transform.position;
-			transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
+			dir = player.transform.right;
+			Vector3 newPos = player.transform.position;
+            player.transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
 		}
 		else if (Input.GetKey(KeyCode.A))
 		{
-			dir = -transform.right;
-			Vector3 newPos = transform.position;
-			transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
+			dir = -player.transform.right;
+			Vector3 newPos = player.transform.position;
+            player.transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
         }
         else
         {
@@ -152,13 +157,13 @@ public class PlayerController : MonoBehaviour {
 
     private void SimpleGravityForce()
     {
-        World containWorld = WorldManager.instance.ContainedWorld(transform.position);
-        CollideInfo collideInfo = containWorld.customOctree.Collide(transform.position);
+        World containWorld = WorldManager.instance.ContainedWorld(player.transform.position);
+        CollideInfo collideInfo = containWorld.customOctree.Collide(player.transform.position);
         if (!collideInfo.isCollide)
         {
-            transform.position = new Vector3(transform.position.x,
-                transform.position.y - 0.1f,
-                transform.position.z);
+            player.transform.position = new Vector3(player.transform.position.x,
+                player.transform.position.y - 0.1f,
+                player.transform.position.z);
         }
     }
 

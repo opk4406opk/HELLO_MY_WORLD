@@ -3,7 +3,6 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Collections.Generic;
-using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
@@ -27,10 +26,25 @@ public enum GAME_NETWORK_PROTOCOL
 
 public class GameNetPlayerData : MessageBase
 {
-    public int netId;
-    public string addr;
+    public int connectionID;
+    public string address;
     public int selectChType;
 }
+
+public class GameNetUser
+{
+    public int connectionID;
+    public string address;
+    public int selectChType;
+
+    public GameNetUser(int connID, string addr, int selectCharType)
+    {
+        connectionID = connID;
+        address = addr;
+        selectChType = selectCharType;
+    }
+}
+
 /// <summary>
 /// 현재 unity3d 엔진에서 stable .NET 3.5 버전에 맞춘 테스트 네트워크매니저 class.
 /// </summary>
@@ -90,6 +104,19 @@ public class GameNetworkManager : NetworkManager {
     #endregion
     //
 
+    private List<GameNetUser> _netUserList = new List<GameNetUser>();
+    public List<GameNetUser> netUserList
+    {
+        get { return _netUserList; }
+    }
+
+    private static GameNetworkManager instance;
+    public static GameNetworkManager GetInstance()
+    {
+        if (instance == null) instance = GameObject.FindWithTag("NetworkManager").GetComponent<GameNetworkManager>();
+        return instance;
+    }
+
     public void InitServerSettings()
     {
         NetworkServer.RegisterHandler((short)GAME_NETWORK_PROTOCOL.pushClientInfoToServer,
@@ -116,7 +143,8 @@ public class GameNetworkManager : NetworkManager {
     public override void OnServerConnect(NetworkConnection conn)
     {
         base.OnServerConnect(conn);
-        KojeomLogger.DebugLog(string.Format("Conn ID : {0}, user ip : {1} 유저가 서버로 접속했습니다.", conn.connectionId, conn.address), LOG_TYPE.NETWORK_SERVER_INFO);
+        KojeomLogger.DebugLog(string.Format("Conn ID : {0}, user ip : {1} 유저가 서버로 접속했습니다.",
+            conn.connectionId, conn.address), LOG_TYPE.NETWORK_SERVER_INFO);
     }
 
     // client입장에서 서버에 접속시에 불려지는 콜백 메소드.
@@ -126,8 +154,8 @@ public class GameNetworkManager : NetworkManager {
         KojeomLogger.DebugLog("서버로 접속을 했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
 
         GameNetPlayerData msgData = new GameNetPlayerData();
-        msgData.netId = conn.connectionId;
-        msgData.addr = conn.address;
+        msgData.connectionID = conn.connectionId;
+        msgData.address = conn.address;
         msgData.selectChType = GameDBHelper.GetSelectCharType();
         bool isSendSuccess = conn.Send((short)GAME_NETWORK_PROTOCOL.pushClientInfoToServer, msgData);
 
@@ -139,17 +167,9 @@ public class GameNetworkManager : NetworkManager {
     {
         GameNetPlayerData netPlayerData = netMsg.ReadMessage<GameNetPlayerData>();
         KojeomLogger.DebugLog(string.Format("conneted clinet info [ connection_id : {0}, addr : {1}, selectChType : {2} ]",
-            netPlayerData.netId, netPlayerData.addr, netPlayerData.selectChType), LOG_TYPE.NETWORK_SERVER_INFO);
-    }
-
-    public void SpawnFromServer(GameObject spawnObj)
-    {
-        NetworkServer.Spawn(spawnObj);
-    }
-
-    public void SpawnWithAuthoFromServer(GameObject spawnObj, NetworkConnection userConn)
-    {
-        NetworkServer.SpawnWithClientAuthority(spawnObj, userConn);
+            netPlayerData.connectionID, netPlayerData.address, netPlayerData.selectChType), LOG_TYPE.NETWORK_SERVER_INFO);
+        // 접속한 유저를 유저리스트에 등록.
+        _netUserList.Add(new GameNetUser(netPlayerData.connectionID, netPlayerData.address, netPlayerData.selectChType));
     }
 }
 

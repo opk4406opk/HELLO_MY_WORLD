@@ -18,7 +18,6 @@ public class KojeomLogger : MonoBehaviour {
 		if(Application.platform == RuntimePlatform.WindowsEditor)
 		{
 			StringBuilder changedLog = new StringBuilder();
-			
 			switch (logType)
 			{
 				case LOG_TYPE.NORMAL:

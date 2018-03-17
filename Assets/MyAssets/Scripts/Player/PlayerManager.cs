@@ -5,6 +5,7 @@ using System.Data;
 using System;
 using System.Text;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 /// <summary>
 /// 게임내 사용자(캐릭터)를 관리하는 클래스.
 /// </summary>
@@ -22,7 +23,7 @@ public class PlayerManager : MonoBehaviour {
         get { return _myGamePlayer; }
     }
     //
-    public Vector3 initPosition;
+    public Vector3 gamePlayerInitPosition;
     private PlayerController myPlayerController;
     //
     public static PlayerManager instance;
@@ -89,8 +90,10 @@ public class PlayerManager : MonoBehaviour {
         //
         if(GameStatus.isMultiPlay == true)
         {
-            CreatePlayerMultiMode();
-        }else if(GameStatus.isMultiPlay == false)
+            KojeomLogger.DebugLog("멀티모드로 캐릭터를 생성.");
+            CreatePlayerMultiMode(int.Parse(chType));
+        }
+        else if(GameStatus.isMultiPlay == false)
         {
             CreatePlayerSingleMode(int.Parse(chType));
         }
@@ -98,34 +101,57 @@ public class PlayerManager : MonoBehaviour {
 
     private void CreatePlayerSingleMode(int myChType)
     {
-        CreatePlayer(myChType, new Vector3(0, 0, 0));
+        //싱글모드 이므로, 본인만 생성하면 된다.
+        CreateGamePlayer(myChType, gamePlayerInitPosition, "MyPlayer");
         //0번째 플레이어는 본인임을 의미한다.
         _myGamePlayer = gamePlayerList[0].GetComponent<GamePlayer>().charInstance.gameObject;
-        myPlayerController = gamePlayerList[0].GetComponent<GamePlayer>().charInstance.GetController();
-        myPlayerController.Init(Camera.main);
+        myPlayerController = gamePlayerList[0].GetComponent<GamePlayer>().GetController();
     }
 
-    private void CreatePlayerMultiMode()
+    private void CreatePlayerMultiMode(int myChType)
     {
-        // to do
+        // 우선, 본인 캐릭터부터 생성.
+        CreateGamePlayerForMulti(myChType, gamePlayerInitPosition, "MyPlayer", true);
+        //0번째 플레이어는 본인임을 의미한다.
+        _myGamePlayer = gamePlayerList[0].GetComponent<GamePlayer>().charInstance.gameObject;
+        myPlayerController = gamePlayerList[0].GetComponent<GamePlayer>().GetController();
+        //
     }
 
-    private void CreatePlayer(int chType, Vector3 initPos)
+    private void CreateGamePlayer(int chType, Vector3 initPos, string playerName)
     {
         // playerManager로 패런팅.
         GameObject inst = Instantiate(gamePlayerPrefab, initPos, Quaternion.identity);
         inst.transform.parent = gameObject.transform;
-        inst.name = "MyPlayer";
+        inst.name = playerName;
         //
         GamePlayer gamePlayer = inst.GetComponent<GamePlayer>();
         gamePlayer.Init(MakeGameChararacter(charPrefabs[chType]), chType);
         gamePlayerList.Add(gamePlayer);
     }
    
+    private void CreateGamePlayerForMulti(int chType, Vector3 initPos, string playerName, bool isAutho)
+    {
+        // playerManager로 패런팅.
+        GameObject inst = Instantiate(gamePlayerPrefab, initPos, Quaternion.identity);
+        inst.transform.parent = gameObject.transform;
+        inst.name = playerName;
+        // spawnning from server.
+        if (isAutho == false) GameNetworkSpawner.GetInstance().CmdSpawnFromServer(inst);
+        else GameNetworkSpawner.GetInstance().CmdSpawnWithAuthoFromServer(inst);
+
+        GamePlayer gamePlayer = inst.GetComponent<GamePlayer>();
+        gamePlayer.Init(MakeGameChararacter(charPrefabs[chType]), chType);
+        gamePlayerList.Add(gamePlayer);
+    }
     private GameCharacter MakeGameChararacter(GameObject _prefab)
     {
-        GameObject characterObject = Instantiate(_prefab, initPosition,
+        GameObject characterObject = Instantiate(_prefab, new Vector3(0, 0, 0),
             new Quaternion(0, 0, 0, 0)) as GameObject;
-        return characterObject.GetComponent<GameCharacter>();
+        //
+        GameCharacter gameChar = characterObject.GetComponent<GameCharacter>();
+        gameChar.Init();
+        return gameChar;
     }
+
 }

@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-[RequireComponent(typeof(NetworkTransform))]
-public class GameCharacter : NetworkBehaviour {
-
-    [SerializeField]
-    private PlayerController controller;
-    public PlayerController GetController()
+public class GameCharacter : MonoBehaviour {
+    private QuerySDMecanimController aniController;
+    public void Init()
     {
-        return controller;
+        aniController = gameObject.GetComponent<QuerySDMecanimController>();
     }
-    public void SetController(PlayerController _controller)
+
+    public QuerySDMecanimController GetAniController()
     {
-        controller = _controller;
+        return aniController;
     }
 }
