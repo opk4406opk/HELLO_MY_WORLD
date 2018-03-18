@@ -99,6 +99,14 @@ public class GameNetworkManager : NetworkManager {
     #endregion
     //
 
+    [SerializeField]
+    private GameNetworkSpawner networkSpanwer;
+    public GameNetworkSpawner GetNetworkSpawner()
+    {
+        return networkSpanwer;
+    }
+    
+    // 0번째 유저는 본인을 의미한다.
     private List<GameNetUser> _netUserList = new List<GameNetUser>();
     public List<GameNetUser> netUserList
     {
@@ -163,11 +171,6 @@ public class GameNetworkManager : NetworkManager {
         GameNetPlayerData netPlayerData = netMsg.ReadMessage<GameNetPlayerData>();
         KojeomLogger.DebugLog(string.Format("conneted clinet info [ connection_id : {0}, addr : {1}, selectChType : {2} ]",
             netPlayerData.connectionID, netPlayerData.address, netPlayerData.selectChType), LOG_TYPE.NETWORK_SERVER_INFO);
-    }
-
-    public void AddGamePlayer(NetworkClient client)
-    {
-        _netUserList.Add(new GameNetUser(client));
     }
 }
 

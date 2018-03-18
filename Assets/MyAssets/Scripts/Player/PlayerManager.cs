@@ -14,8 +14,8 @@ public class PlayerManager : MonoBehaviour {
     /// 캐릭터 프리팹들.
     /// 배열의 인덱스번호는 캐릭터의 type 값과 1:1로 매칭된다.
     /// </summary>
-    [SerializeField]
-    private GameObject[] charPrefabs;
+    //[SerializeField]
+   // private GameObject[] charPrefabs;
 
     private GameObject _myGamePlayer;
     public GameObject myGamePlayer
@@ -33,7 +33,7 @@ public class PlayerManager : MonoBehaviour {
     public void Init()
     {
         gamePlayerList = new List<GamePlayer>();
-        charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
+        //charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
         if(GameStatus.isMultiPlay == true)
         {
             gamePlayerPrefab = GameNetworkManager.singleton.playerPrefab;
@@ -126,7 +126,7 @@ public class PlayerManager : MonoBehaviour {
         inst.name = playerName;
         //
         GamePlayer gamePlayer = inst.GetComponent<GamePlayer>();
-        gamePlayer.Init(MakeGameChararacter(charPrefabs[chType]), chType);
+        gamePlayer.Init(MakeGameChararacter(PrefabStorage.GetInstance().GetCharacterPrefab(chType)), chType);
         gamePlayerList.Add(gamePlayer);
     }
    
@@ -137,11 +137,11 @@ public class PlayerManager : MonoBehaviour {
         inst.transform.parent = gameObject.transform;
         inst.name = playerName;
         // spawnning from server.
-        if (isAutho == false) GameNetworkSpawner.GetInstance().CmdSpawnFromServer(inst);
-        else GameNetworkSpawner.GetInstance().CmdSpawnWithAuthoFromServer(inst);
+        if (isAutho == false) GameNetworkManager.GetInstance().GetNetworkSpawner().CmdSpawnFromServer(inst);
+        else GameNetworkManager.GetInstance().GetNetworkSpawner().CmdSpawnWithAuthoFromServer(inst);
 
         GamePlayer gamePlayer = inst.GetComponent<GamePlayer>();
-        gamePlayer.Init(MakeGameChararacter(charPrefabs[chType]), chType);
+        gamePlayer.Init(MakeGameChararacter(PrefabStorage.GetInstance().GetCharacterPrefab(chType)), chType);
         gamePlayerList.Add(gamePlayer);
     }
     private GameCharacter MakeGameChararacter(GameObject _prefab)

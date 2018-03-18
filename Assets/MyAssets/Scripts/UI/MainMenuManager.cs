@@ -14,6 +14,7 @@ public class MainMenuManager : MonoBehaviour {
     private void Start()
     {
         //GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_mainMenu);
+        PrefabStorage.GetInstance();
     }
 
     /// <summary>

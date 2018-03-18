@@ -4,13 +4,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class GameNetworkSpawner : NetworkBehaviour {
-
-    private static GameNetworkSpawner netSpawner;
-    public static GameNetworkSpawner GetInstance()
-    {
-        if (netSpawner == null) netSpawner = new GameNetworkSpawner();
-        return netSpawner;
-    }
     [Command]
     public void CmdSpawnFromServer(GameObject spawnObj)
     {

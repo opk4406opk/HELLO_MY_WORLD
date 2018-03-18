@@ -14,6 +14,7 @@ public class GamePlayer : NetworkBehaviour
     }
     public void Init(GameCharacter charInst, int charType, string charName = null)
     {
+        KojeomLogger.DebugLog(string.Format("GamePlayer Init start [CharName : {0}]", charName));
         _characterName = charName;
         _characterType = charType;
         _charInstance = charInst;
@@ -27,5 +28,14 @@ public class GamePlayer : NetworkBehaviour
     {
         return playerController;
     }
-    
+
+    public override void OnStartAuthority()
+    {
+        KojeomLogger.DebugLog("this gameplayer client with Authority", LOG_TYPE.NETWORK_CLIENT_INFO);
+    }
+
+    public override void OnStartClient()
+    {
+        KojeomLogger.DebugLog("this gameplayer client", LOG_TYPE.NETWORK_CLIENT_INFO);
+    }
 }
