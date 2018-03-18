@@ -12,12 +12,12 @@ public class GamePlayer : NetworkBehaviour
     {
         get { return _charInstance; }
     }
-    public void Init(GameCharacter charInst, int charType, string charName = null)
+    public void Init(int charType, string charName = null)
     {
         KojeomLogger.DebugLog(string.Format("GamePlayer Init start [CharName : {0}]", charName));
         _characterName = charName;
         _characterType = charType;
-        _charInstance = charInst;
+        _charInstance = MakeGameChararacter(PrefabStorage.GetInstance().GetCharacterPrefab(charType));
         // 캐릭터 인스턴스는 게임플레이어 하위종속으로 설정.
         _charInstance.transform.parent = gameObject.transform;
         _charInstance.transform.localPosition = new Vector3(0, 0, 0);
@@ -27,6 +27,16 @@ public class GamePlayer : NetworkBehaviour
     public PlayerController GetController()
     {
         return playerController;
+    }
+
+    private GameCharacter MakeGameChararacter(GameObject _prefab)
+    {
+        GameObject characterObject = Instantiate(_prefab, new Vector3(0, 0, 0),
+            new Quaternion(0, 0, 0, 0)) as GameObject;
+        //
+        GameCharacter gameChar = characterObject.GetComponent<GameCharacter>();
+        gameChar.Init();
+        return gameChar;
     }
 
     public override void OnStartAuthority()

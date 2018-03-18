@@ -126,7 +126,7 @@ public class PlayerManager : MonoBehaviour {
         inst.name = playerName;
         //
         GamePlayer gamePlayer = inst.GetComponent<GamePlayer>();
-        gamePlayer.Init(MakeGameChararacter(PrefabStorage.GetInstance().GetCharacterPrefab(chType)), chType);
+        gamePlayer.Init(chType);
         gamePlayerList.Add(gamePlayer);
     }
    
@@ -141,17 +141,7 @@ public class PlayerManager : MonoBehaviour {
         else GameNetworkManager.GetInstance().GetNetworkSpawner().CmdSpawnWithAuthoFromServer(inst);
 
         GamePlayer gamePlayer = inst.GetComponent<GamePlayer>();
-        gamePlayer.Init(MakeGameChararacter(PrefabStorage.GetInstance().GetCharacterPrefab(chType)), chType);
+        gamePlayer.Init(chType);
         gamePlayerList.Add(gamePlayer);
     }
-    private GameCharacter MakeGameChararacter(GameObject _prefab)
-    {
-        GameObject characterObject = Instantiate(_prefab, new Vector3(0, 0, 0),
-            new Quaternion(0, 0, 0, 0)) as GameObject;
-        //
-        GameCharacter gameChar = characterObject.GetComponent<GameCharacter>();
-        gameChar.Init();
-        return gameChar;
-    }
-
 }
