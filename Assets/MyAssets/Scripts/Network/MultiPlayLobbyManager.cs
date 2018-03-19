@@ -25,7 +25,7 @@ public class MultiPlayLobbyManager : MonoBehaviour {
     public void OnClickStartHost()
     {
         KojeomLogger.DebugLog("StartHost", LOG_TYPE.INFO);
-        var netClient = GameNetworkManager.GetInstance().StartHost();
+        GameNetworkManager.GetInstance().StartHost();
     }
 
     public void OnClickUpdateServerList()

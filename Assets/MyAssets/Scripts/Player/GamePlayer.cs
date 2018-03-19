@@ -4,7 +4,12 @@ using UnityEngine;
 using UnityEngine.Networking;
 public class GamePlayer : NetworkBehaviour
 {
-    private PlayerController playerController;
+    private bool _isMyPlayer = false;
+    public bool isMyPlayer
+    {
+        get { return _isMyPlayer; }
+    }
+    private GamePlayerController playerController;
     private int _characterType;
     private string _characterName;
     private GameCharacter _charInstance;
@@ -14,6 +19,9 @@ public class GamePlayer : NetworkBehaviour
     }
     public void Init(int charType, string charName = null)
     {
+        //test code.
+        DontDestroyOnLoad(this);
+        //
         KojeomLogger.DebugLog(string.Format("GamePlayer Init start [CharName : {0}]", charName));
         _characterName = charName;
         _characterType = charType;
@@ -21,12 +29,22 @@ public class GamePlayer : NetworkBehaviour
         // 캐릭터 인스턴스는 게임플레이어 하위종속으로 설정.
         _charInstance.transform.parent = gameObject.transform;
         _charInstance.transform.localPosition = new Vector3(0, 0, 0);
-        playerController = gameObject.GetComponent<PlayerController>();
-        playerController.Init(Camera.main, gameObject);
+        //
+        playerController = gameObject.GetComponent<GamePlayerController>();
     }
-    public PlayerController GetController()
+    public GamePlayerController GetController()
     {
         return playerController;
+    }
+
+    public void SetPosition(Vector3 pos)
+    {
+        transform.position = pos;
+    }
+
+    public NetworkIdentity GetNetworkIdentity()
+    {
+        return gameObject.GetComponent<NetworkIdentity>();
     }
 
     private GameCharacter MakeGameChararacter(GameObject _prefab)
@@ -41,6 +59,7 @@ public class GamePlayer : NetworkBehaviour
 
     public override void OnStartAuthority()
     {
+        _isMyPlayer = true;
         KojeomLogger.DebugLog("this gameplayer client with Authority", LOG_TYPE.NETWORK_CLIENT_INFO);
     }
 

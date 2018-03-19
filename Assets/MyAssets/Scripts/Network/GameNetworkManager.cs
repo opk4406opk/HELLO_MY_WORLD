@@ -33,10 +33,14 @@ public class GameNetPlayerData : MessageBase
 
 public class GameNetUser
 {
-    public NetworkClient client;
-    public GameNetUser(NetworkClient client)
+    public GamePlayer gamePlayer;
+    public NetworkConnection conn;
+    public string userName;
+    public GameNetUser(string userName, NetworkConnection conn, GamePlayer gamePlayer)
     {
-        this.client = client;
+        this.conn = conn;
+        this.userName = userName;
+        this.gamePlayer = gamePlayer;
     }
 }
 
@@ -146,8 +150,9 @@ public class GameNetworkManager : NetworkManager {
     public override void OnServerConnect(NetworkConnection conn)
     {
         base.OnServerConnect(conn);
-        KojeomLogger.DebugLog(string.Format("Conn ID : {0}, user ip : {1} 유저가 서버로 접속했습니다.",
-            conn.connectionId, conn.address), LOG_TYPE.NETWORK_SERVER_INFO);
+        NetworkServer.SetClientReady(conn);
+        KojeomLogger.DebugLog(string.Format("[Connection_Info-->{0}] 클라이언트가 서버에 접속했습니다.", conn),
+            LOG_TYPE.NETWORK_SERVER_INFO);
     }
 
     // client입장에서 서버에 접속시에 불려지는 콜백 메소드.
@@ -172,6 +177,7 @@ public class GameNetworkManager : NetworkManager {
         KojeomLogger.DebugLog(string.Format("conneted clinet info [ connection_id : {0}, addr : {1}, selectChType : {2} ]",
             netPlayerData.connectionID, netPlayerData.address, netPlayerData.selectChType), LOG_TYPE.NETWORK_SERVER_INFO);
     }
+    
 }
 
 

@@ -10,13 +10,6 @@ using UnityEngine.Networking;
 /// 게임내 사용자(캐릭터)를 관리하는 클래스.
 /// </summary>
 public class PlayerManager : MonoBehaviour {
-    /// <summary>
-    /// 캐릭터 프리팹들.
-    /// 배열의 인덱스번호는 캐릭터의 type 값과 1:1로 매칭된다.
-    /// </summary>
-    //[SerializeField]
-   // private GameObject[] charPrefabs;
-
     private GameObject _myGamePlayer;
     public GameObject myGamePlayer
     {
@@ -24,16 +17,13 @@ public class PlayerManager : MonoBehaviour {
     }
     //
     public Vector3 gamePlayerInitPosition;
-    private PlayerController myPlayerController;
+    private GamePlayerController myPlayerController;
     //
     public static PlayerManager instance;
     //
     private GameObject gamePlayerPrefab;
-    private List<GamePlayer> gamePlayerList;
     public void Init()
     {
-        gamePlayerList = new List<GamePlayer>();
-        //charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
         if(GameStatus.isMultiPlay == true)
         {
             gamePlayerPrefab = GameNetworkManager.singleton.playerPrefab;
@@ -88,37 +78,27 @@ public class PlayerManager : MonoBehaviour {
         };
         GetUserInfo();
         //
-        if(GameStatus.isMultiPlay == true)
+        if(GameStatus.isMultiPlay == false)
         {
-            KojeomLogger.DebugLog("멀티모드로 캐릭터를 생성.");
-            CreatePlayerMultiMode(int.Parse(chType));
+            CreatePlayer(int.Parse(chType));
         }
-        else if(GameStatus.isMultiPlay == false)
+        else if(GameStatus.isMultiPlay == true)
         {
-            CreatePlayerSingleMode(int.Parse(chType));
+            //0번째 유저는 자기자신(myself)을 의미한다.
+            GameNetworkManager.GetInstance().netUserList[0].gamePlayer.SetPosition(gamePlayerInitPosition);
+            _myGamePlayer = GameNetworkManager.GetInstance().netUserList[0].gamePlayer.gameObject;
         }
+        _myGamePlayer.GetComponent<GamePlayerController>().Init(Camera.main, _myGamePlayer);
+        myPlayerController = _myGamePlayer.GetComponent<GamePlayer>().GetController();
     }
 
-    private void CreatePlayerSingleMode(int myChType)
+    private void CreatePlayer(int myChType)
     {
         //싱글모드 이므로, 본인만 생성하면 된다.
-        CreateGamePlayer(myChType, gamePlayerInitPosition, "MyPlayer");
-        //0번째 플레이어는 본인임을 의미한다.
-        _myGamePlayer = gamePlayerList[0].GetComponent<GamePlayer>().charInstance.gameObject;
-        myPlayerController = gamePlayerList[0].GetComponent<GamePlayer>().GetController();
+        CreateSingleGamePlayer(myChType, gamePlayerInitPosition, "MyPlayer");
     }
 
-    private void CreatePlayerMultiMode(int myChType)
-    {
-        // 우선, 본인 캐릭터부터 생성.
-        CreateGamePlayerForMulti(myChType, gamePlayerInitPosition, "MyPlayer", true);
-        //0번째 플레이어는 본인임을 의미한다.
-        _myGamePlayer = gamePlayerList[0].GetComponent<GamePlayer>().charInstance.gameObject;
-        myPlayerController = gamePlayerList[0].GetComponent<GamePlayer>().GetController();
-        //
-    }
-
-    private void CreateGamePlayer(int chType, Vector3 initPos, string playerName)
+    private void CreateSingleGamePlayer(int chType, Vector3 initPos, string playerName)
     {
         // playerManager로 패런팅.
         GameObject inst = Instantiate(gamePlayerPrefab, initPos, Quaternion.identity);
@@ -127,21 +107,8 @@ public class PlayerManager : MonoBehaviour {
         //
         GamePlayer gamePlayer = inst.GetComponent<GamePlayer>();
         gamePlayer.Init(chType);
-        gamePlayerList.Add(gamePlayer);
+        //
+        _myGamePlayer = gamePlayer.gameObject;
     }
    
-    private void CreateGamePlayerForMulti(int chType, Vector3 initPos, string playerName, bool isAutho)
-    {
-        // playerManager로 패런팅.
-        GameObject inst = Instantiate(gamePlayerPrefab, initPos, Quaternion.identity);
-        inst.transform.parent = gameObject.transform;
-        inst.name = playerName;
-        // spawnning from server.
-        if (isAutho == false) GameNetworkManager.GetInstance().GetNetworkSpawner().CmdSpawnFromServer(inst);
-        else GameNetworkManager.GetInstance().GetNetworkSpawner().CmdSpawnWithAuthoFromServer(inst);
-
-        GamePlayer gamePlayer = inst.GetComponent<GamePlayer>();
-        gamePlayer.Init(chType);
-        gamePlayerList.Add(gamePlayer);
-    }
 }

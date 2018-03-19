@@ -4,8 +4,7 @@ using System.Collections.Generic;
 
 // ref # 1 : http://wiki.unity3d.com/index.php/SmoothMouseLook
 
-
-public class PlayerController : MonoBehaviour {
+public class GamePlayerController : MonoBehaviour {
 
     private Camera playerCamera;
     private GameObject player;
