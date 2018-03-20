@@ -166,7 +166,7 @@ public class GameNetworkManager : NetworkManager {
         msgData.address = conn.address;
         msgData.selectChType = GameDBHelper.GetSelectCharType();
         bool isSendSuccess = conn.Send((short)GAME_NETWORK_PROTOCOL.pushClientInfoToServer, msgData);
-
+        
         if (isSendSuccess) KojeomLogger.DebugLog("Send client info to server success ", LOG_TYPE.NETWORK_CLIENT_INFO);
         else KojeomLogger.DebugLog("Send client info to server failed ", LOG_TYPE.ERROR);
     }
