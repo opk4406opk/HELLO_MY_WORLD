@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityEditor;
-
 /// <summary>
 /// Json파일로 저장될 캐릭터 데이터 
 /// </summary>
@@ -185,3 +185,4 @@ public class Ch_RTMaker : EditorWindow
 
     }
 }
+#endif

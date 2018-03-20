@@ -33,7 +33,7 @@ public class ChSelectManager : MonoBehaviour
         SceneToScene_Data.gameChDatas.Add("chType", chData.chType);
         SceneToScene_Data.gameChDatas.Add("detailScript", chData.detailScript);
 
-        SceneManager.LoadSceneAsync("popup_chInfo", LoadSceneMode.Additive);
+        CustomSceneManager.LoadGameSceneAsync(CustomSceneManager.SCENE_TYPE.UI_POPUP_CHAR_INFO, LoadSceneMode.Additive);
     }
     
     private void LoadCharDatas()

@@ -16,7 +16,7 @@ public class GameConfig
 }
 
 /// <summary>
-/// 게임 상태( Load, Save, etc...)를 관리하는 클래스.
+/// 게임 상태(single, multi, load, save)를 관리하는 클래스.
 /// </summary>
 public class GameStatus
 {
@@ -25,6 +25,13 @@ public class GameStatus
     {
         set { _isLoadGame = value; }
         get { return _isLoadGame; }
+    }
+
+    private static bool _isMultiPlay = false;
+    public static bool isMultiPlay
+    {
+        set { _isMultiPlay = value; }
+        get { return _isMultiPlay; }
     }
 }
 
@@ -69,6 +76,7 @@ public class GameManager : MonoBehaviour
     
     void Start ()
     {
+        KojeomLogger.DebugLog("GameManager is Setup Start.");
         //GameDataFiles Init
         // 제작아이템 데이타파일은 아이템데이타 파일을 읽어들인 후에 읽어야함.
         itemDataFile.Init();
@@ -109,5 +117,6 @@ public class GameManager : MonoBehaviour
         weatherManager.StartWeatherSystem();
 
         if (GameStatus.isLoadGame == true) { saveAndLoadManager.Load(); }
+        KojeomLogger.DebugLog("GameManager is Setup End.");
     }
 }

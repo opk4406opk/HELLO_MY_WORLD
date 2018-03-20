@@ -13,13 +13,43 @@ public class MainMenuManager : MonoBehaviour {
 
     private void Start()
     {
-        GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_mainMenu);
+        //GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_mainMenu);
+        PrefabStorage.GetInstance();
+    }
+
+    /// <summary>
+    /// 멀티플레이(p2p).
+    /// </summary>
+    public void OnClickMultiPlay()
+    {
+        GameObject netMgr = Resources.Load<GameObject>(ConstFilePath.GAME_NET_MGR_PREFAB);
+        if (netMgr == null)
+        {
+            KojeomLogger.DebugLog("GameNetworkManager creation is Failed.", LOG_TYPE.ERROR);
+        }
+        else
+        {
+            //멀티플레이로 값 설정.
+            GameStatus.isMultiPlay = true;
+            //
+            GameSoundManager.GetInstnace().StopSound(GAME_SOUND_TYPE.BGM_mainMenu);
+            //init create netmgr.
+            Instantiate(netMgr, new Vector3(0, 0, 0), Quaternion.identity);
+            KojeomLogger.DebugLog("Success Create GameNetworkManager, and then select Characters scene.");
+            CustomSceneManager.LoadGameSceneAsync(CustomSceneManager.SCENE_TYPE.SELECT_CHARACTERS);
+        }
     }
 
     private bool isSuccessProcessRun = false;
     private bool isSuccessLogin = false;
-	public void OnClickStart()
+    /// <summary>
+    /// 싱글플레이.
+    /// </summary>
+	public void OnClickSinglePlay()
 	{
+        //싱글플레이 스테이터스 설정.
+        GameStatus.isMultiPlay = false;
+        //
 		GameNetworkManager.PostHttpRequest += PostLoginRequest;
 		GameNetworkManager.ConnectLoginServer();
         if(isSuccessProcessRun == false) StartCoroutine(LoginProcess());
@@ -57,10 +87,14 @@ public class MainMenuManager : MonoBehaviour {
 		{
 			KojeomLogger.DebugLog("Waiting LoginServer TimeOut!", LOG_TYPE.ERROR);
 		}
-        GameSoundManager.GetInstnace().StopSound(GAME_SOUND_TYPE.BGM_mainMenu);
-        SceneManager.LoadSceneAsync("SelectCharacter");
+        // 일단 http 로그인 서버에 접속이 실패 or 성공에 상관없이 다음 화면으로 넘어간다.
+        //GameSoundManager.GetInstnace().StopSound(GAME_SOUND_TYPE.BGM_mainMenu);
+        CustomSceneManager.LoadGameSceneAsync(CustomSceneManager.SCENE_TYPE.SELECT_CHARACTERS);
 	}
 	
+    /// <summary>
+    /// 싱글플레이 시에 사용될 기능.
+    /// </summary>
     public void OnClickLoad()
     {
         if(ChkIsFile())

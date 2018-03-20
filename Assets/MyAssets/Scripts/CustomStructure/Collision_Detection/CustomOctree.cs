@@ -67,7 +67,7 @@ public struct CollideInfo
     public bool isCollide;
     public Vector3 hitBlockCenter;
 }
-public class CustomOctree : MonoBehaviour
+public class CustomOctree
 {
     private COTNode root;
     // 블록생성시 정중앙을 0,0,0으로 맞추기 위해 x,y,z 에 -0.5f, +0.5f, -0.5f 씩 오프셋이 적용되어 있다.

@@ -7,7 +7,7 @@ public class NPCController : MonoBehaviour, ActorController
 {
     [SerializeField]
     private Animator animator;
-    private CustomOBB obb = new CustomOBB();
+    private CustomOBB obb;
     private World containWorld;
     [SerializeField]
     private Transform maxExtent;
@@ -55,6 +55,7 @@ public class NPCController : MonoBehaviour, ActorController
     void ActorController.Init(World world)
     {
         containWorld = world;
+        obb = new CustomOBB();
         obb.Init(transform, maxExtent);
         StartCoroutine(SimpleGravityForce());
     }
