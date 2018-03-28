@@ -15,6 +15,13 @@ public class PlayerManager : MonoBehaviour {
     {
         get { return _myGamePlayer; }
     }
+
+    private List<GamePlayer> _gamePlayerList = new List<GamePlayer>();
+    public List<GamePlayer> gamePlayerList
+    {
+        get { return _gamePlayerList; }
+    }
+
     //
     public Vector3 gamePlayerInitPosition;
     private GamePlayerController myPlayerController;
@@ -78,37 +85,35 @@ public class PlayerManager : MonoBehaviour {
         };
         GetUserInfo();
         //
-        if(GameStatus.isMultiPlay == false)
+        CreatePlayer(int.Parse(chType));
+    }
+
+    private void CreatePlayer(int myChType)
+    {
+        if (GameStatus.isMultiPlay)
         {
-            CreatePlayer(int.Parse(chType));
+            // to do
         }
-        else if(GameStatus.isMultiPlay == true)
+        else
         {
-            //0번째 유저는 자기자신(myself)을 의미한다.
-            GameNetworkManager.GetInstance().netUserList[0].gamePlayer.SetPosition(gamePlayerInitPosition);
-            _myGamePlayer = GameNetworkManager.GetInstance().netUserList[0].gamePlayer.gameObject;
+            //싱글모드 이므로, 본인만 생성하면 된다.
+            _myGamePlayer = CreateSingleGamePlayer(myChType, "MyPlayer");
         }
         _myGamePlayer.GetComponent<GamePlayerController>().Init(Camera.main, _myGamePlayer);
         myPlayerController = _myGamePlayer.GetComponent<GamePlayer>().GetController();
     }
 
-    private void CreatePlayer(int myChType)
-    {
-        //싱글모드 이므로, 본인만 생성하면 된다.
-        CreateSingleGamePlayer(myChType, gamePlayerInitPosition, "MyPlayer");
-    }
-
-    private void CreateSingleGamePlayer(int chType, Vector3 initPos, string playerName)
+    private GameObject CreateSingleGamePlayer(int chType, string playerName)
     {
         // playerManager로 패런팅.
-        GameObject inst = Instantiate(gamePlayerPrefab, initPos, Quaternion.identity);
+        GameObject inst = Instantiate(gamePlayerPrefab, new Vector3(0,0,0), Quaternion.identity);
         inst.transform.parent = gameObject.transform;
         inst.name = playerName;
         //
         GamePlayer gamePlayer = inst.GetComponent<GamePlayer>();
-        gamePlayer.Init(chType);
-        //
-        _myGamePlayer = gamePlayer.gameObject;
+        gamePlayer.Init(chType, playerName, gamePlayerInitPosition);
+        _gamePlayerList.Add(gamePlayer);
+
+        return inst;
     }
-   
 }

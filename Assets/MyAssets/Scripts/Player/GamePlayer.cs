@@ -4,11 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 public class GamePlayer : NetworkBehaviour
 {
-    private bool _isMyPlayer = false;
-    public bool isMyPlayer
-    {
-        get { return _isMyPlayer; }
-    }
+    public bool isMyPlayer;
     private GamePlayerController playerController;
     private int _characterType;
     private string _characterName;
@@ -17,12 +13,24 @@ public class GamePlayer : NetworkBehaviour
     {
         get { return _charInstance; }
     }
-    public void Init(int charType, string charName = null)
+
+    private int _netConnectionId;
+    public int netConnectionId
     {
-        //test code.
+        get { return _netConnectionId; }
+    }
+
+    private NetworkIdentity networkIdentity;
+
+    public void Init(int charType, string charName, Vector3 initPos, int netConnId = 0)
+    {
+        // init position.
+        gameObject.transform.position = initPos;
+        //test code.   
         DontDestroyOnLoad(this);
         //
-        KojeomLogger.DebugLog(string.Format("GamePlayer Init start [CharName : {0}]", charName));
+        KojeomLogger.DebugLog("GamePlayer Init ", LOG_TYPE.INFO);
+        _netConnectionId = netConnId;
         _characterName = charName;
         _characterType = charType;
         _charInstance = MakeGameChararacter(PrefabStorage.GetInstance().GetCharacterPrefab(charType));
@@ -31,6 +39,7 @@ public class GamePlayer : NetworkBehaviour
         _charInstance.transform.localPosition = new Vector3(0, 0, 0);
         //
         playerController = gameObject.GetComponent<GamePlayerController>();
+        networkIdentity = gameObject.GetComponent<NetworkIdentity>();
     }
     public GamePlayerController GetController()
     {
@@ -44,7 +53,7 @@ public class GamePlayer : NetworkBehaviour
 
     public NetworkIdentity GetNetworkIdentity()
     {
-        return gameObject.GetComponent<NetworkIdentity>();
+        return networkIdentity;
     }
 
     private GameCharacter MakeGameChararacter(GameObject _prefab)
@@ -59,12 +68,12 @@ public class GamePlayer : NetworkBehaviour
 
     public override void OnStartAuthority()
     {
-        _isMyPlayer = true;
-        KojeomLogger.DebugLog("this gameplayer client with Authority", LOG_TYPE.NETWORK_CLIENT_INFO);
+        isMyPlayer = true;
+        KojeomLogger.DebugLog("[START_CLIENT] this gameplayer client with Authority", LOG_TYPE.NETWORK_CLIENT_INFO);
     }
 
     public override void OnStartClient()
     {
-        KojeomLogger.DebugLog("this gameplayer client", LOG_TYPE.NETWORK_CLIENT_INFO);
+        KojeomLogger.DebugLog("[START_CLIENT] this gameplayer client", LOG_TYPE.NETWORK_CLIENT_INFO);
     }
 }

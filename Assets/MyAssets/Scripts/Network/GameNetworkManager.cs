@@ -33,14 +33,14 @@ public class GameNetPlayerData : MessageBase
 
 public class GameNetUser
 {
-    public GamePlayer gamePlayer;
-    public NetworkConnection conn;
+    public int selectCharType;
+    public int connectionID;
     public string userName;
-    public GameNetUser(string userName, NetworkConnection conn, GamePlayer gamePlayer)
+    public GameNetUser(string userName, int connnectionID, int selectCharType)
     {
-        this.conn = conn;
+        this.connectionID = connnectionID;
         this.userName = userName;
-        this.gamePlayer = gamePlayer;
+        this.selectCharType = selectCharType;
     }
 }
 
@@ -103,6 +103,8 @@ public class GameNetworkManager : NetworkManager {
     #endregion
     //
 
+    public bool isHost = false;
+
     [SerializeField]
     private GameNetworkSpawner networkSpanwer;
     public GameNetworkSpawner GetNetworkSpawner()
@@ -110,7 +112,6 @@ public class GameNetworkManager : NetworkManager {
         return networkSpanwer;
     }
     
-    // 0번째 유저는 본인을 의미한다.
     private List<GameNetUser> _netUserList = new List<GameNetUser>();
     public List<GameNetUser> netUserList
     {
@@ -150,7 +151,6 @@ public class GameNetworkManager : NetworkManager {
     public override void OnServerConnect(NetworkConnection conn)
     {
         base.OnServerConnect(conn);
-        NetworkServer.SetClientReady(conn);
         KojeomLogger.DebugLog(string.Format("[Connection_Info-->{0}] 클라이언트가 서버에 접속했습니다.", conn),
             LOG_TYPE.NETWORK_SERVER_INFO);
     }
@@ -158,17 +158,35 @@ public class GameNetworkManager : NetworkManager {
     // client입장에서 서버에 접속시에 불려지는 콜백 메소드.
     public override void OnClientConnect(NetworkConnection conn)
     {
-        base.OnClientConnect(conn);
-        KojeomLogger.DebugLog("서버로 접속을 했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
-
+        // 게임유저 데이터 메세지 생성.
         GameNetPlayerData msgData = new GameNetPlayerData();
         msgData.connectionID = conn.connectionId;
         msgData.address = conn.address;
-        msgData.selectChType = GameDBHelper.GetSelectCharType();
+        int charType = GameDBHelper.GetSelectCharType();
+        msgData.selectChType = charType;
+        // NetworkManager 프리팹에서 autoCreatePlayer 옵션을 true로 하는 경우,
+        // 해당 로컬 컨넥션에 대해 자동으로 ClientScene.AddPlayer(0)을 호출한다.
+        //base.OnClientConnect(conn);
+        //ClientScene.Ready(conn);
+        bool isSuccesAddPlayer = ClientScene.AddPlayer(conn, 0, msgData);
+        if (isSuccesAddPlayer == true) KojeomLogger.DebugLog("ClientScene.AddPlayer is Success.", LOG_TYPE.NETWORK_CLIENT_INFO);
+        else KojeomLogger.DebugLog("ClientScene.AddPlayer is Failed.", LOG_TYPE.NETWORK_CLIENT_INFO);
+        //
+        KojeomLogger.DebugLog("서버로 접속을 했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
+        KojeomLogger.DebugLog(string.Format("ClientScene localPlayers count : {0}",
+            ClientScene.localPlayers.Count),
+            LOG_TYPE.NETWORK_CLIENT_INFO);
+       
         bool isSendSuccess = conn.Send((short)GAME_NETWORK_PROTOCOL.pushClientInfoToServer, msgData);
         
         if (isSendSuccess) KojeomLogger.DebugLog("Send client info to server success ", LOG_TYPE.NETWORK_CLIENT_INFO);
         else KojeomLogger.DebugLog("Send client info to server failed ", LOG_TYPE.ERROR);
+        //
+        if (isHost == false)
+        {
+            GameNetUser netUser = new GameNetUser("Player", conn.connectionId, charType);
+            _netUserList.Add(netUser);
+        }
     }
 
     public void OnRecvClientConnectInfo(NetworkMessage netMsg)
@@ -176,8 +194,41 @@ public class GameNetworkManager : NetworkManager {
         GameNetPlayerData netPlayerData = netMsg.ReadMessage<GameNetPlayerData>();
         KojeomLogger.DebugLog(string.Format("conneted clinet info [ connection_id : {0}, addr : {1}, selectChType : {2} ]",
             netPlayerData.connectionID, netPlayerData.address, netPlayerData.selectChType), LOG_TYPE.NETWORK_SERVER_INFO);
+        //
+        GameNetUser netUser = new GameNetUser("Player", netPlayerData.connectionID, netPlayerData.selectChType);
+        _netUserList.Add(netUser);
+    }
+
+    // 테스트 메소드.
+    public bool IsSameUserInList(int connectionID)
+    {
+        var user = _netUserList.Find((netUser) => 
+        {
+            if(netUser.connectionID == connectionID)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        });
+        if (user == null) return false;
+        else return true;
     }
     
+    public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId, NetworkReader extraMessageReader)
+    {
+        var msg = extraMessageReader.ReadMessage<GameNetPlayerData>();
+        KojeomLogger.DebugLog(string.Format("[method::OnServerAddPlayer] netConn : {0}, playerControllerId : {1}",
+           conn, playerControllerId), LOG_TYPE.NETWORK_SERVER_INFO);
+        // instancing..
+        GameObject instance = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        GamePlayer gamePlayer = instance.GetComponent<GamePlayer>();
+        gamePlayer.Init(msg.selectChType, "PLAYER", new Vector3(10 ,15 ,0), conn.connectionId);
+        // 네트워크 서버에 플레이어 등록.
+        NetworkServer.AddPlayerForConnection(conn, instance, playerControllerId);
+    }
 }
 
 

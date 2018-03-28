@@ -30,10 +30,10 @@ public class KojeomLogger : MonoBehaviour {
                     changedLog.AppendFormat("<color=green><b>[INFO]</b></color> {0}", log);
                     break;
                 case LOG_TYPE.NETWORK_SERVER_INFO:
-                    changedLog.AppendFormat("<color=#66FF33><b>[NETWORK_SERVER_INFO]</b></color> {0}", log);
+                    changedLog.AppendFormat("<color=#99CCFF><b>[NETWORK_SERVER_INFO]</b></color> {0}", log);
                     break;
                 case LOG_TYPE.NETWORK_CLIENT_INFO:
-                    changedLog.AppendFormat("<color=#33FF99><b>[NETWORK_CLIENT_INFO]</b></color> {0}", log);
+                    changedLog.AppendFormat("<color=#6633FF><b>[NETWORK_CLIENT_INFO]</b></color> {0}", log);
                     break;
                 default:
 					break;

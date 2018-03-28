@@ -73,10 +73,31 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private ActorCollideManager actorCollideManager;
     #endregion
-    
+
+    public static GameManager instance = null;
+
     void Start ()
     {
-        KojeomLogger.DebugLog("GameManager is Setup Start.");
+        instance = this;
+        InitDataFiles();
+        // 싱글플레이는 바로 매니저클래스들을 초기화한다.
+        if(GameStatus.isMultiPlay == false)
+        {
+            InitManagers();
+        }
+        else
+        {
+            // 멀티플레이의 경우, 서버로 유저들이 접속-> 플레이어 생성까지 완료된 상태를 기다린 후에
+            // 매니저 클래스들을 초기화 한다.
+            StartCoroutine(WatingInit());
+        }
+    }
+    /// <summary>
+    /// 게임에 사용되는 데이터파일들을 초기화합니다. ( 게임 매니저 초기화보다 먼저 호출되야 합니다. )
+    /// </summary>
+    private void InitDataFiles()
+    {
+        KojeomLogger.DebugLog("게임 데이터 파일 초기화 시작.");
         //GameDataFiles Init
         // 제작아이템 데이타파일은 아이템데이타 파일을 읽어들인 후에 읽어야함.
         itemDataFile.Init();
@@ -84,7 +105,14 @@ public class GameManager : MonoBehaviour
         subWorldDataFile.Init();
         craftItemListDataFile.Init();
         npcDataFile.Init();
-
+        KojeomLogger.DebugLog("게임 데이터 파일 초기화 완료.");
+    }
+    /// <summary>
+    /// 게임내 각종 매니저 클래스들을 초기화합니다. ( 게임 데이터파일들이 초기화 된 이후에 호출되야 합니다. )
+    /// </summary>
+    public void InitManagers()
+    {
+        KojeomLogger.DebugLog("게임매니저 클래스들을 초기화 합니다.");
         // sound init.
         //GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_InGame);
         //player Init
@@ -92,7 +120,7 @@ public class GameManager : MonoBehaviour
 
         //GameWorld Init
         worldManager.Init();
-        
+
         //player controller start.
         playerManager.StartController();
 
@@ -117,6 +145,16 @@ public class GameManager : MonoBehaviour
         weatherManager.StartWeatherSystem();
 
         if (GameStatus.isLoadGame == true) { saveAndLoadManager.Load(); }
-        KojeomLogger.DebugLog("GameManager is Setup End.");
+        KojeomLogger.DebugLog("게임매니저 클래스 초기화 완료.");
+    }
+
+    private IEnumerator WatingInit()
+    {
+        KojeomLogger.DebugLog("네트워크 접속이 완료 된 이후에 매니저클래스들을 초기화 합니다.");
+        while (GameNetworkManager.GetInstance().netUserList.Count < 0)
+        {
+            yield return null;
+        }
+        InitManagers();
     }
 }
