@@ -4,7 +4,12 @@ using UnityEngine;
 using UnityEngine.Networking;
 public class GamePlayer : NetworkBehaviour
 {
-    public bool isMyPlayer;
+    [SerializeField]
+    private bool _isMyPlayer;
+    public bool isMyPlayer
+    {
+        get { return _isMyPlayer; }
+    }
     private GamePlayerController playerController;
     private int _characterType;
     private string _characterName;
@@ -14,12 +19,8 @@ public class GamePlayer : NetworkBehaviour
         get { return _charInstance; }
     }
 
-    private int _netConnectionId;
-    public int netConnectionId
-    {
-        get { return _netConnectionId; }
-    }
-
+    [SerializeField]
+    private int netConnectionId;
     private NetworkIdentity networkIdentity;
 
     public void Init(int charType, string charName, Vector3 initPos, int netConnId = 0)
@@ -30,7 +31,7 @@ public class GamePlayer : NetworkBehaviour
         DontDestroyOnLoad(this);
         //
         KojeomLogger.DebugLog("GamePlayer Init ", LOG_TYPE.INFO);
-        _netConnectionId = netConnId;
+        netConnectionId = netConnId;
         _characterName = charName;
         _characterType = charType;
         _charInstance = MakeGameChararacter(PrefabStorage.GetInstance().GetCharacterPrefab(charType));
@@ -56,6 +57,16 @@ public class GamePlayer : NetworkBehaviour
         return networkIdentity;
     }
 
+    public int GetNetworkConnectionID()
+    {
+        return netConnectionId;
+    }
+    
+    public bool IsMyPlayer()
+    {
+        return _isMyPlayer;
+    }
+
     private GameCharacter MakeGameChararacter(GameObject _prefab)
     {
         GameObject characterObject = Instantiate(_prefab, new Vector3(0, 0, 0),
@@ -68,12 +79,23 @@ public class GamePlayer : NetworkBehaviour
 
     public override void OnStartAuthority()
     {
-        isMyPlayer = true;
-        KojeomLogger.DebugLog("[START_CLIENT] this gameplayer client with Authority", LOG_TYPE.NETWORK_CLIENT_INFO);
+        _isMyPlayer = true;
+        KojeomLogger.DebugLog(string.Format("[connectionID : {0}] this gameplayer client with Authority", netConnectionId),
+            LOG_TYPE.NETWORK_CLIENT_INFO);
     }
 
     public override void OnStartClient()
     {
-        KojeomLogger.DebugLog("[START_CLIENT] this gameplayer client", LOG_TYPE.NETWORK_CLIENT_INFO);
+        KojeomLogger.DebugLog(string.Format("[connectionID : {0}] this gameplayer client", netConnectionId),
+            LOG_TYPE.NETWORK_CLIENT_INFO);
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        KojeomLogger.DebugLog(string.Format("[connectionID : {0}] this gameplayer LocalPlayer", netConnectionId),
+           LOG_TYPE.NETWORK_CLIENT_INFO);
+        // 로컬 플레이어로서 초기화되면, 유저리스트에서 본인을 찾아 게임플레이어 객체를 할당해준다.
+        var myUser = GameNetworkManager.GetInstance().FindUserInList(netConnectionId);
+        myUser.gamePlayer = this;
     }
 }

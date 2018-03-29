@@ -150,11 +150,16 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator WatingInit()
     {
-        KojeomLogger.DebugLog("네트워크 접속이 완료 된 이후에 매니저클래스들을 초기화 합니다.");
-        while (GameNetworkManager.GetInstance().netUserList.Count < 0)
+        KojeomLogger.DebugLog("네트워크 접속이 완료될 때 까지 대기합니다.");
+        while (true)
         {
+            if(GameNetworkManager.GetInstance().GetMyGamePlayer() != null)
+            {
+                break;
+            }
             yield return null;
         }
+        KojeomLogger.DebugLog("네트워크 접속 -> 플레이어 생성까지 완료되었습니다. 매니저들을 초기화합니다.");
         InitManagers();
     }
 }

@@ -26,6 +26,7 @@ public enum GAME_NETWORK_PROTOCOL
 
 public class GameNetPlayerData : MessageBase
 {
+    public string playerName;
     public int connectionID;
     public string address;
     public int selectChType;
@@ -33,14 +34,16 @@ public class GameNetPlayerData : MessageBase
 
 public class GameNetUser
 {
+    public GamePlayer gamePlayer;
     public int selectCharType;
     public int connectionID;
     public string userName;
-    public GameNetUser(string userName, int connnectionID, int selectCharType)
+    public GameNetUser(string userName, int connnectionID, int selectCharType, GamePlayer gamePlayer = null)
     {
         this.connectionID = connnectionID;
         this.userName = userName;
         this.selectCharType = selectCharType;
+        this.gamePlayer = gamePlayer;
     }
 }
 
@@ -156,14 +159,33 @@ public class GameNetworkManager : NetworkManager {
     }
 
     // client입장에서 서버에 접속시에 불려지는 콜백 메소드.
+    // 이 메소드 코드 흐름을 보기좋게 정리할 필요가 있다.
     public override void OnClientConnect(NetworkConnection conn)
     {
         // 게임유저 데이터 메세지 생성.
         GameNetPlayerData msgData = new GameNetPlayerData();
         msgData.connectionID = conn.connectionId;
         msgData.address = conn.address;
+        msgData.playerName = "PLAYER";
         int charType = GameDBHelper.GetSelectCharType();
         msgData.selectChType = charType;
+
+        KojeomLogger.DebugLog("서버로 접속을 했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
+        KojeomLogger.DebugLog(string.Format("ClientScene localPlayers count : {0}",
+            ClientScene.localPlayers.Count),
+            LOG_TYPE.NETWORK_CLIENT_INFO);
+        // 서버로 접속한 게임 유저에 대한 데이터를 전송한다.
+        bool isSendSuccess = conn.Send((short)GAME_NETWORK_PROTOCOL.pushClientInfoToServer, msgData);
+        if (isSendSuccess) KojeomLogger.DebugLog("Send client info to server success ", LOG_TYPE.NETWORK_CLIENT_INFO);
+        else KojeomLogger.DebugLog("Send client info to server failed ", LOG_TYPE.ERROR);
+        // 전송 후, 게임 유저에 대한 정보를 유저목록에 등록한다.
+        if (isHost == false)
+        {
+            GameNetUser netUser = new GameNetUser("PLAYER", conn.connectionId, charType);
+            KojeomLogger.DebugLog(string.Format("유저리스트에 클라이언트 유저를 등록합니다. user : {0}", netUser),
+                LOG_TYPE.NETWORK_CLIENT_INFO);
+            _netUserList.Add(netUser);
+        }
         // NetworkManager 프리팹에서 autoCreatePlayer 옵션을 true로 하는 경우,
         // 해당 로컬 컨넥션에 대해 자동으로 ClientScene.AddPlayer(0)을 호출한다.
         //base.OnClientConnect(conn);
@@ -172,21 +194,6 @@ public class GameNetworkManager : NetworkManager {
         if (isSuccesAddPlayer == true) KojeomLogger.DebugLog("ClientScene.AddPlayer is Success.", LOG_TYPE.NETWORK_CLIENT_INFO);
         else KojeomLogger.DebugLog("ClientScene.AddPlayer is Failed.", LOG_TYPE.NETWORK_CLIENT_INFO);
         //
-        KojeomLogger.DebugLog("서버로 접속을 했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
-        KojeomLogger.DebugLog(string.Format("ClientScene localPlayers count : {0}",
-            ClientScene.localPlayers.Count),
-            LOG_TYPE.NETWORK_CLIENT_INFO);
-       
-        bool isSendSuccess = conn.Send((short)GAME_NETWORK_PROTOCOL.pushClientInfoToServer, msgData);
-        
-        if (isSendSuccess) KojeomLogger.DebugLog("Send client info to server success ", LOG_TYPE.NETWORK_CLIENT_INFO);
-        else KojeomLogger.DebugLog("Send client info to server failed ", LOG_TYPE.ERROR);
-        //
-        if (isHost == false)
-        {
-            GameNetUser netUser = new GameNetUser("Player", conn.connectionId, charType);
-            _netUserList.Add(netUser);
-        }
     }
 
     public void OnRecvClientConnectInfo(NetworkMessage netMsg)
@@ -195,11 +202,11 @@ public class GameNetworkManager : NetworkManager {
         KojeomLogger.DebugLog(string.Format("conneted clinet info [ connection_id : {0}, addr : {1}, selectChType : {2} ]",
             netPlayerData.connectionID, netPlayerData.address, netPlayerData.selectChType), LOG_TYPE.NETWORK_SERVER_INFO);
         //
-        GameNetUser netUser = new GameNetUser("Player", netPlayerData.connectionID, netPlayerData.selectChType);
+        GameNetUser netUser = new GameNetUser(netPlayerData.playerName, netPlayerData.connectionID, netPlayerData.selectChType);
         _netUserList.Add(netUser);
     }
 
-    // 테스트 메소드.
+    // 테스트 메소드. 퍼포먼스문제가 있다.
     public bool IsSameUserInList(int connectionID)
     {
         var user = _netUserList.Find((netUser) => 
@@ -216,6 +223,32 @@ public class GameNetworkManager : NetworkManager {
         if (user == null) return false;
         else return true;
     }
+    // 테스트 메소드. 퍼포먼스문제가 있다.
+    public GameNetUser FindUserInList(int connectionID)
+    {
+        var user = _netUserList.Find((netUser) =>
+        {
+            if (netUser.connectionID == connectionID)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        });
+        return user;
+    }
+    // 테스트 메소드. 퍼포먼스문제가 있다.
+    public GamePlayer GetMyGamePlayer()
+    {
+        var user = FindUserInList(client.connection.connectionId);
+        if((user != null) && (user.gamePlayer != null))
+        {
+            if(user.gamePlayer.isMyPlayer) return user.gamePlayer;
+        }
+        return null;
+    }
     
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId, NetworkReader extraMessageReader)
     {
@@ -224,8 +257,10 @@ public class GameNetworkManager : NetworkManager {
            conn, playerControllerId), LOG_TYPE.NETWORK_SERVER_INFO);
         // instancing..
         GameObject instance = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        instance.name = msg.playerName;
+        // gamePlayer info init.
         GamePlayer gamePlayer = instance.GetComponent<GamePlayer>();
-        gamePlayer.Init(msg.selectChType, "PLAYER", new Vector3(10 ,15 ,0), conn.connectionId);
+        gamePlayer.Init(msg.selectChType, msg.playerName, PlayerManager.myPlayerInitPosition, conn.connectionId);
         // 네트워크 서버에 플레이어 등록.
         NetworkServer.AddPlayerForConnection(conn, instance, playerControllerId);
     }
