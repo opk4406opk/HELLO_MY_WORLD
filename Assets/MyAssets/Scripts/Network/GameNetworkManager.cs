@@ -182,7 +182,8 @@ public class GameNetworkManager : NetworkManager {
         if (isHost == false)
         {
             GameNetUser netUser = new GameNetUser("PLAYER", conn.connectionId, charType);
-            KojeomLogger.DebugLog(string.Format("유저리스트에 클라이언트 유저를 등록합니다. user : {0}", netUser),
+            KojeomLogger.DebugLog(string.Format("유저리스트에 클라이언트 유저를 등록합니다. user_connID : {0}, name : {1}, chType : {2}",
+                netUser.connectionID, netUser.userName, netUser.selectCharType),
                 LOG_TYPE.NETWORK_CLIENT_INFO);
             _netUserList.Add(netUser);
         }
@@ -260,7 +261,7 @@ public class GameNetworkManager : NetworkManager {
         instance.name = msg.playerName;
         // gamePlayer info init.
         GamePlayer gamePlayer = instance.GetComponent<GamePlayer>();
-        gamePlayer.Init(msg.selectChType, msg.playerName, PlayerManager.myPlayerInitPosition, conn.connectionId);
+        gamePlayer.Init(msg.selectChType, msg.playerName, PlayerManager.myPlayerInitPosition);
         // 네트워크 서버에 플레이어 등록.
         NetworkServer.AddPlayerForConnection(conn, instance, playerControllerId);
     }
