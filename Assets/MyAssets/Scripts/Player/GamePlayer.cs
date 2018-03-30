@@ -11,7 +11,9 @@ public class GamePlayer : NetworkBehaviour
         get { return _isMyPlayer; }
     }
     private GamePlayerController playerController;
+    [SerializeField]
     private int _characterType;
+    [SerializeField]
     private string _characterName;
     private GameCharacter _charInstance;
     public GameCharacter charInstance
@@ -27,7 +29,7 @@ public class GamePlayer : NetworkBehaviour
         //test code.   
         DontDestroyOnLoad(this);
         //
-        KojeomLogger.DebugLog("GamePlayer Init ", LOG_TYPE.INFO);
+        KojeomLogger.DebugLog("게임플레이어 초기화 시작. ", LOG_TYPE.INFO);
         _characterName = charName;
         _characterType = charType;
         _charInstance = MakeGameChararacter(PrefabStorage.GetInstance().GetCharacterPrefab(charType));
@@ -36,6 +38,7 @@ public class GamePlayer : NetworkBehaviour
         _charInstance.transform.localPosition = new Vector3(0, 0, 0);
         //
         playerController = gameObject.GetComponent<GamePlayerController>();
+        KojeomLogger.DebugLog("게임플레이어 초기화 완료. ", LOG_TYPE.INFO);
     }
     public GamePlayerController GetController()
     {
@@ -89,6 +92,10 @@ public class GamePlayer : NetworkBehaviour
            LOG_TYPE.NETWORK_CLIENT_INFO);
         // 로컬 플레이어로서 초기화되면, 유저리스트에서 본인을 찾아 게임플레이어 객체를 할당해준다.
         var myUser = GameNetworkManager.GetInstance().FindUserInList(networkIdentity.connectionToServer.connectionId);
+        if(GameNetworkManager.GetInstance().isHost == false)
+        {
+            Init(myUser.selectCharType, myUser.userName, PlayerManager.myPlayerInitPosition);
+        }
         myUser.gamePlayer = this;
     }
 }
