@@ -26,7 +26,9 @@ public class MultiPlayLobbyManager : MonoBehaviour {
     {
         KojeomLogger.DebugLog("StartHost", LOG_TYPE.INFO);
         var netClient = GameNetworkManager.GetInstance().StartHost();
+        //
         GameNetworkManager.GetInstance().isHost = true;
+        GameNetworkManager.GetInstance().Init();
     }
 
     public void OnClickUpdateServerList()
@@ -39,7 +41,9 @@ public class MultiPlayLobbyManager : MonoBehaviour {
     {
         KojeomLogger.DebugLog("Connect To Host With IP", LOG_TYPE.INFO);
         var netClient = GameNetworkManager.GetInstance().StartClient();
+        //
         GameNetworkManager.GetInstance().isHost = false;
+        GameNetworkManager.GetInstance().Init();
         netClient.Connect("127.0.0.1", 8080);
     }
 

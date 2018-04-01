@@ -85,6 +85,7 @@ public class PlayerManager : MonoBehaviour {
         {
             // to do
             myGamePlayer = GameNetworkManager.GetInstance().GetMyGamePlayer().gameObject;
+            GameNetworkManager.GetInstance().ReqInGameUserList();
         }
         else
         {

@@ -18,10 +18,17 @@ public struct HTTP_REQUEST_METHOD
 
 /// <summary>
 ///  서버, 클라이언트간의 메세지를 주고받는 프로토콜 열거형.
+///  통신 프로토콜의 접두사는 아래와 같다.
+///
+///  1. push : 클라이언트에서 서버로 특정 데이터를 전달.
+///  2. req : 클라이언트에서 서버로 특정 데이터를 요청.
+///  3. res : 서버에서 클라이언트로 특정 데이터를 전달.
 /// </summary>
 public enum GAME_NETWORK_PROTOCOL
 {
-    pushClientInfoToServer = 1000
+    push_clientInfo = 1000,
+    res_inGameUserList = 1001,
+    req_inGameUserList = 1002
 }
 
 public class GameNetPlayerData : MessageBase
@@ -30,6 +37,26 @@ public class GameNetPlayerData : MessageBase
     public int connectionID;
     public string address;
     public int selectChType;
+}
+
+// 서버로 특정 데이터를 요청시에 보내는 클라이언트 정보 메세지.
+public class ReqNetClientInfo : MessageBase
+{
+    public int connectionID;
+}
+
+/// <summary>
+/// 네트워크 통신에 사용되는 게임유저 데이터 구조체.
+/// </summary>
+public struct GameNetUserData
+{
+    public int selectCharType;
+    public int connectionID;
+    public string userName;
+}
+public class ResGameUserList : MessageBase
+{
+    public GameNetUserData[] userList;
 }
 
 public class GameNetUser
@@ -46,6 +73,15 @@ public class GameNetUser
         this.gamePlayer = gamePlayer;
     }
 }
+
+/*
+ - 메서드(method) 접두사 정리 -
+
+    1. Req : 클라이언트에서 서버로 요청하는 경우. (request)
+    2. OnRecvFromClient : 서버에서 클라이언트의 요청을 수신하는 경우. (receive)
+    3. OnRevFromServer : 클라이언트에서 서버의 응답을 수신하는 경우. (receive) 
+    4. Res : 서버에서 클라이언트로 데이터를 전송하는 경우. (response)
+*/
 
 /// <summary>
 /// 현재 unity3d 엔진에서 stable .NET 3.5 버전에 맞춘 테스트 네트워크매니저 class.
@@ -127,27 +163,42 @@ public class GameNetworkManager : NetworkManager {
         if (instance == null) instance = GameObject.FindWithTag("NetworkManager").GetComponent<GameNetworkManager>();
         return instance;
     }
-
-    public void InitServerSettings()
+    
+    public void Init()
     {
-        NetworkServer.RegisterHandler((short)GAME_NETWORK_PROTOCOL.pushClientInfoToServer,
-            OnRecvClientConnectInfo);
+        KojeomLogger.DebugLog("게임네트워크 매니저 초기화 시작.");
+        ServerSettings();
+        ClientSettings();
+        KojeomLogger.DebugLog("게임네트워크 매니저 초기화 완료.");
     }
+
+    private void ServerSettings()
+    {
+        //server setting
+        NetworkServer.RegisterHandler((short)GAME_NETWORK_PROTOCOL.push_clientInfo,
+            OnRecvFromClient_ConnectInfo);
+        NetworkServer.RegisterHandler((short)GAME_NETWORK_PROTOCOL.req_inGameUserList,
+            OnRecvFromClient_ReqGameUserList);
+    }
+    private void ClientSettings()
+    {
+        //client setting
+        client.RegisterHandler((short)GAME_NETWORK_PROTOCOL.res_inGameUserList,
+            OnRecvFromServer_GameUserList);
+    }
+    
     public override NetworkClient StartHost(ConnectionConfig config, int maxConnections)
     {
-        InitServerSettings();
         return base.StartHost(config, maxConnections);
     }
 
     public override NetworkClient StartHost(MatchInfo info)
     {
-        InitServerSettings();
         return base.StartHost(info);
     }
 
     public override NetworkClient StartHost()
     {
-        InitServerSettings();
         return base.StartHost();
     }
     // host(or server)에서 client가 접속할 때 발생되는 콜백 메소드.
@@ -174,8 +225,8 @@ public class GameNetworkManager : NetworkManager {
         KojeomLogger.DebugLog(string.Format("ClientScene localPlayers count : {0}",
             ClientScene.localPlayers.Count),
             LOG_TYPE.NETWORK_CLIENT_INFO);
-        // 서버로 접속한 게임 유저에 대한 데이터를 전송한다.
-        bool isSendSuccess = conn.Send((short)GAME_NETWORK_PROTOCOL.pushClientInfoToServer, msgData);
+        // 게임 유저에 대한 데이터를 서버로 전송한다.
+        bool isSendSuccess = conn.Send((short)GAME_NETWORK_PROTOCOL.push_clientInfo, msgData);
         if (isSendSuccess) KojeomLogger.DebugLog("Send client info to server success ", LOG_TYPE.NETWORK_CLIENT_INFO);
         else KojeomLogger.DebugLog("Send client info to server failed ", LOG_TYPE.ERROR);
         // 전송 후, 게임 유저에 대한 정보를 유저목록에 등록한다.
@@ -196,15 +247,60 @@ public class GameNetworkManager : NetworkManager {
         else KojeomLogger.DebugLog("ClientScene.AddPlayer is Failed.", LOG_TYPE.NETWORK_CLIENT_INFO);
         //
     }
-
-    public void OnRecvClientConnectInfo(NetworkMessage netMsg)
+    private void OnRecvFromClient_ConnectInfo(NetworkMessage netMsg)
     {
-        GameNetPlayerData netPlayerData = netMsg.ReadMessage<GameNetPlayerData>();
+        var netPlayerData = netMsg.ReadMessage<GameNetPlayerData>();
         KojeomLogger.DebugLog(string.Format("conneted clinet info [ connection_id : {0}, addr : {1}, selectChType : {2} ]",
             netPlayerData.connectionID, netPlayerData.address, netPlayerData.selectChType), LOG_TYPE.NETWORK_SERVER_INFO);
         //
         GameNetUser netUser = new GameNetUser(netPlayerData.playerName, netPlayerData.connectionID, netPlayerData.selectChType);
         _netUserList.Add(netUser);
+    }
+
+    private void OnRecvFromClient_ReqGameUserList(NetworkMessage netMsg)
+    {
+        var netClientInfo = netMsg.ReadMessage<ReqNetClientInfo>();
+        // 데이터 세팅.
+        GameNetUserData[] userDatas = new GameNetUserData[_netUserList.Count];
+        for(int idx = 0; idx < _netUserList.Count; idx++)
+        {
+            userDatas[idx].connectionID = _netUserList[idx].connectionID;
+            userDatas[idx].selectCharType = _netUserList[idx].selectCharType;
+            userDatas[idx].userName = _netUserList[idx].userName;
+        }
+        ResGameUserList resUserList = new ResGameUserList();
+        resUserList.userList = userDatas;
+        //
+        ResNetUserList(netClientInfo.connectionID, resUserList);
+    }
+    private void ResNetUserList(int clientConnID, ResGameUserList resUserList)
+    {
+        NetworkServer.SendToClient(clientConnID, (short)GAME_NETWORK_PROTOCOL.res_inGameUserList,
+            resUserList);
+    }
+
+    private void OnRecvFromServer_GameUserList(NetworkMessage netMsg)
+    {
+        var userListInfo = netMsg.ReadMessage<ResGameUserList>();
+        KojeomLogger.DebugLog("서버로부터 유저리스트를 응답받았습니다.",LOG_TYPE.NETWORK_CLIENT_INFO);
+        var userList = userListInfo.userList;
+        for(int idx = 0; idx < userListInfo.userList.GetLength(0); idx++)
+        {
+            KojeomLogger.DebugLog(string.Format("[user_info] connID : {0}, name : {1}, charType : {2}",
+                userList[idx].connectionID, userList[idx].userName,
+                userList[idx].selectCharType));
+        }
+    }
+
+
+    public void ReqInGameUserList()
+    {
+        ReqNetClientInfo reqClientInfo = new ReqNetClientInfo();
+        reqClientInfo.connectionID = client.connection.connectionId;
+        bool isSuccess = client.connection.Send((short)GAME_NETWORK_PROTOCOL.req_inGameUserList, reqClientInfo);
+
+        if (isSuccess == true) KojeomLogger.DebugLog("게임유저리스트 요청을 서버로 전달했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
+        else KojeomLogger.DebugLog("게임유저리스트 요청이 실패했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
     }
 
     // 테스트 메소드. 퍼포먼스문제가 있다.
