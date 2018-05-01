@@ -19,9 +19,10 @@ public class Chunk : MonoBehaviour
     private List<int> newTriangles = new List<int>();
     private List<Vector2> newUV = new List<Vector2>();
     /// <summary>
-    ///  256 x 256(pixel) tileSheet 기준. 1tile(16pixel) 이 차지하는 텍스처 좌표값.  16/256
+    /// size per tile.
+    ///  ex) 256 x 256(pixel) tileSheet 기준. 1tile(16pixel) 이 차지하는 텍스처 좌표값.  16/256
     /// </summary>
-    private float tUnit = 0.0625f;
+    private float tUnit;
     private Vector2 texturePos;
     private Mesh mesh;
     private int faceCount;
@@ -78,7 +79,9 @@ public class Chunk : MonoBehaviour
 
     public void Init()
     {
-        chunkSize = GameConfig.subWorldChunkSize;
+        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
+        chunkSize = gameConfig.chunk_size;
+        tUnit = gameConfig.one_tile_unit;
         mesh = GetComponent<MeshFilter>().mesh;
         GenerateMesh();
     }
@@ -147,11 +150,12 @@ public class Chunk : MonoBehaviour
     
     private byte CheckBlock(int x, int y, int z)
     {
-        if (x >= GameConfig.subWorldX ||
+        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
+        if (x >= gameConfig.sub_world_x_size ||
                x < 0 ||
-               y >= GameConfig.subWorldY ||
+               y >= gameConfig.sub_world_y_size ||
                y < 0 ||
-               z >= GameConfig.subWorldZ ||
+               z >= gameConfig.sub_world_z_size ||
                z < 0)
         {
             return (byte)1;

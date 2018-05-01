@@ -1,19 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-/// <summary>
-/// 게임 월드의 설정을 관리하는 클래스.
-/// </summary>
-public class GameConfig
-{
-    public static readonly int subWorldX = 32;
-    public static readonly int subWorldY = 32;
-    public static readonly int subWorldZ = 32;
-    public static readonly int subWorldChunkSize = 8;
-
-    public static readonly int inGameFontSize = 10;
- 
-}
 
 /// <summary>
 /// 게임 상태(single, multi, load, save)를 관리하는 클래스.
@@ -54,6 +41,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private NPCDataFile npcDataFile;
     [SerializeField]
+    private GameConfigDataFile gameConfigDataFile;
+    [SerializeField]
     private PlayerManager playerManager;
     [SerializeField]
     private BlockSelector blockSelector;
@@ -67,6 +56,8 @@ public class GameManager : MonoBehaviour
     private GameSoundManager soundManager;
     [SerializeField]
     private WeatherManager weatherManager;
+    [SerializeField]
+    private InputManager inputManager;
 
     [SerializeField]
     private NPCManager npcManager;
@@ -100,6 +91,7 @@ public class GameManager : MonoBehaviour
         KojeomLogger.DebugLog("게임 데이터 파일 초기화 시작.");
         //GameDataFiles Init
         // 제작아이템 데이타파일은 아이템데이타 파일을 읽어들인 후에 읽어야함.
+        gameConfigDataFile.Init();
         itemDataFile.Init();
         tileDataFile.Init();
         subWorldDataFile.Init();
@@ -117,32 +109,26 @@ public class GameManager : MonoBehaviour
         //GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_InGame);
         //player Init
         playerManager.Init();
-
         //GameWorld Init
         worldManager.Init();
-
         //player controller start.
         playerManager.StartController();
-
         //LootingSystem Init;
         lootingSystem.Init();
-
         //InGameUI Init
         blockSelector.Init();
-
         //saveAndLoad Init
         saveAndLoadManager.Init();
-
         //
         npcManager.Init();
         npcManager.GenerateNPC();
-
         //
         actorCollideManager.Init();
-
         //
         weatherManager.Init();
         weatherManager.StartWeatherSystem();
+        //
+        inputManager.Init();
 
         if (GameStatus.isLoadGame == true) { saveAndLoadManager.Load(); }
         KojeomLogger.DebugLog("게임매니저 클래스 초기화 완료.");

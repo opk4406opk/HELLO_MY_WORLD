@@ -31,6 +31,11 @@ public class InputManager : MonoBehaviour {
     }
     private INPUT_STATE inputState = INPUT_STATE.NONE;
 
+    public void Init()
+    {
+        modifyTerrian.Init();
+    }
+
     void Update ()
     {
         ChkInputState();

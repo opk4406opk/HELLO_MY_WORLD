@@ -156,11 +156,14 @@ public class CustomAstar
 
 	public void Init(PathFinderInitData data)
     {
+        //
+        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
+        //
 		offsetX = data.offsetX;
 		offsetZ = data.offsetZ;
         worldBlockData = data.worldBlockData;
-        MAP_SIZE_X = GameConfig.subWorldX;
-        MAP_SIZE_Z = GameConfig.subWorldZ;
+        MAP_SIZE_X = gameConfig.sub_world_x_size;
+        MAP_SIZE_Z = gameConfig.sub_world_z_size;
         pathFindMapData = new PathNode[MAP_SIZE_X, MAP_SIZE_Z];
         for (int x = 0; x < MAP_SIZE_X; x++)
             for (int z = 0; z < MAP_SIZE_Z; z++)

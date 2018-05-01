@@ -66,11 +66,12 @@ public class WorldManager : MonoBehaviour
 
     private void CreateGameWorld()
     {
+        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
         maxSubWorld = SubWorldDataFile.instance.maxSubWorld;
         for (int idx = 0; idx < maxSubWorld; ++idx)
         {
-            int subWorldPosX = SubWorldDataFile.instance.GetPosValue(idx, "X") * GameConfig.subWorldX;
-            int subWorldPosZ = SubWorldDataFile.instance.GetPosValue(idx, "Z") * GameConfig.subWorldZ;
+            int subWorldPosX = SubWorldDataFile.instance.GetPosValue(idx, "X") * gameConfig.sub_world_x_size;
+            int subWorldPosZ = SubWorldDataFile.instance.GetPosValue(idx, "Z") * gameConfig.sub_world_z_size;
             string subWorldName = SubWorldDataFile.instance.GetWorldName(idx, "WORLD_NAME");
 
             GameObject newSubWorld = Instantiate(worldPrefab, new Vector3(0, 0, 0),
@@ -95,8 +96,9 @@ public class WorldManager : MonoBehaviour
     /// <returns></returns>
     public World ContainedWorld(Vector3 pos)
     {
-        int x = (int)pos.x / GameConfig.subWorldX;
-        int z = ((int)pos.z / GameConfig.subWorldZ) * SubWorldDataFile.instance.rowOffset;
+        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
+        int x = (int)pos.x / gameConfig.sub_world_x_size;
+        int z = ((int)pos.z / gameConfig.sub_world_z_size) * SubWorldDataFile.instance.rowOffset;
 
         return _worldList[x+z];
     }

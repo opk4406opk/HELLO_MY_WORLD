@@ -21,12 +21,13 @@ public class NPCManager : MonoBehaviour {
 
     public void GenerateNPC()
     {
+        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
         foreach(var data in NPCDataFile.instance.roamingMerchantDatas)
         {
             GameObject npc = Instantiate(prefab_roamingMerchantNPC, data.spwanPos, Quaternion.identity);
             npc.GetComponent<RoamingMerchant>().Init(data.spwanPos, WorldManager.instance.worldList[data.spwanWorld]);
             npc.GetComponent<RoamingMerchant>().sellingItemIDs = data.sellingItemsID;
-            npc.GetComponent<RoamingMerchant>().textMeshController.Init(GameConfig.inGameFontSize);
+            npc.GetComponent<RoamingMerchant>().textMeshController.Init(gameConfig.ingame_font_size);
             npc.GetComponent<RoamingMerchant>().textMeshController.SetText(data.name);
             _npcs.Add(npc.GetComponent<RoamingMerchant>());
         }
