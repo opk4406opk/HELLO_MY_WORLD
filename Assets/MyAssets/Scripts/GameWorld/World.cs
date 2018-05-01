@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
- 
+
 /// <summary>
 /// 게임내 월드를 생성 및 관리하는 클래스.
 /// </summary>
@@ -194,14 +193,14 @@ public class World : MonoBehaviour
   
     private void SetDefaultWorldData()
     {
-		// 펄린노이즈 알고리즘을 이용해 지형을 생성한다.
+        // 펄린노이즈 알고리즘을 이용해 지형을 생성한다.
         for (int x = 0; x < worldX; x++)
         {
             for (int z = 0; z < worldZ; z++)
             {
-                int stone = PerlinNoise(x, 0, z, 10, 3, 1.2f);
-                stone += PerlinNoise(x, 300, z, 20, 4, 0) + 10;
-                int grass = PerlinNoise(x, 100, z, 50, 3, 0) + 1;
+                int stone = PerlinNoise(x, 0, z, 10, Utility.RandomInteger(2, 8), Utility.RandomFloat(0.2f, 1.5f));
+                stone += PerlinNoise(x, 300, z, 20, Utility.RandomInteger(2, 4), 0) + 10;
+                int grass = PerlinNoise(x, 100, z, 50, Utility.RandomInteger(1, 5), 0) + 1;
 
                 for (int y = 0; y < worldY; y++)
                 {

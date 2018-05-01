@@ -16,4 +16,22 @@ public class Utility : MonoBehaviour {
         }
         return v;
     }
+
+    public static float RandomFloat(float min, float max)
+    {
+        Random.InitState((int)System.DateTime.Now.Ticks);
+        return Random.Range(min, max);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="min"> inclusive </param>
+    /// <param name="max"> exclusive </param>
+    /// <returns></returns>
+    public static int RandomInteger(int min, int max)
+    {
+        Random.InitState((int)System.DateTime.Now.Ticks);
+        return Random.Range(min, max);
+    }
 }
