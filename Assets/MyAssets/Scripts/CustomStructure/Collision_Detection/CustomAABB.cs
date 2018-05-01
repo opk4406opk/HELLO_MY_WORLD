@@ -50,6 +50,17 @@ public struct CustomAABB {
         _centerPos = (_maxExtent + _minExtent) / 2;
     }
 
+    /// <summary>
+    /// 유니티엔진에서 제공하는 BoxCollider를 이용해 CustomAABB를 생성.
+    /// </summary>
+    /// <param name="boxColl"></param>
+    public void MakeAABB(BoxCollider boxColl)
+    {
+        _minExtent = boxColl.bounds.min;
+        _maxExtent = boxColl.bounds.max;
+        _centerPos = (_maxExtent + _minExtent) / 2;
+    }
+
     public bool IsInterSectPoint(Vector3 point)
     {
         if ((point.x > _minExtent.x && point.x < _maxExtent.x ) &&

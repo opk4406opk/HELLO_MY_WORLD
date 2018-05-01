@@ -7,7 +7,9 @@ using System.Collections.Generic;
 public class GamePlayerController : MonoBehaviour {
 
     private Camera playerCamera;
-    private GameObject player;
+    private GameCharacter playerGameCharacter;
+    private QuerySDMecanimController aniController;
+    private BoxCollider boxCollider;
     //
     private List<float> camRotArrayX = new List<float>();
     private List<float> camRotArrayY = new List<float>();
@@ -27,21 +29,20 @@ public class GamePlayerController : MonoBehaviour {
 
     [Range(3.5f, 15.5f)]
     public float moveSpeed;
-
     private IEnumerator controllProcess;
 
-    private QuerySDMecanimController aniController;
-
-    public void Init(Camera mainCam, GameObject playerObject)
+    public void Init(Camera mainCam, GameCharacter gameChar)
     {
         //
-        player = playerObject;
+        playerGameCharacter = gameChar;
         playerCamera = mainCam;
         //
         camOrigRotation = playerCamera.transform.localRotation;
-        playerOrigRotation = player.transform.localRotation;
+        playerOrigRotation = playerGameCharacter.transform.localRotation;
         controllProcess = ControllProcess();
-        aniController = player.GetComponent<GamePlayer>().charInstance.GetAniController();
+        //
+        aniController = playerGameCharacter.GetAniController();
+        boxCollider = playerGameCharacter.GetBoxCollider();
     }
 
     public void StartControllProcess()
@@ -55,7 +56,7 @@ public class GamePlayerController : MonoBehaviour {
 
     private void CamFollowPlayer()
     {
-        Vector3 playerPos = player.transform.position;
+        Vector3 playerPos = playerGameCharacter.transform.position;
         playerPos.y += 5.0f;
         playerCamera.transform.position = playerPos;
     }
@@ -101,7 +102,7 @@ public class GamePlayerController : MonoBehaviour {
         // rot cam
         playerCamera.transform.localRotation = camOrigRotation * xQuaternion * yQuaternion;
         // rot player
-        player.transform.localRotation = playerOrigRotation * xQuaternion;
+        playerGameCharacter.transform.localRotation = playerOrigRotation * xQuaternion;
     }
 
 	private void Move()
@@ -110,27 +111,27 @@ public class GamePlayerController : MonoBehaviour {
         Vector3 dir;
 		if (Input.GetKey(KeyCode.W))
 		{
-            dir = player.transform.forward;
-			Vector3 newPos = player.transform.position;
-            player.transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
+            dir = playerGameCharacter.transform.forward;
+			Vector3 newPos = playerGameCharacter.transform.position;
+            playerGameCharacter.transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
 		}
 		else if (Input.GetKey(KeyCode.S))
 		{
-			dir = -player.transform.forward;
-			Vector3 newPos = player.transform.position;
-            player.transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
+			dir = -playerGameCharacter.transform.forward;
+			Vector3 newPos = playerGameCharacter.transform.position;
+            playerGameCharacter.transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
 		}
 		else if (Input.GetKey(KeyCode.D))
 		{
-			dir = player.transform.right;
-			Vector3 newPos = player.transform.position;
-            player.transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
+			dir = playerGameCharacter.transform.right;
+			Vector3 newPos = playerGameCharacter.transform.position;
+            playerGameCharacter.transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
 		}
 		else if (Input.GetKey(KeyCode.A))
 		{
-			dir = -player.transform.right;
-			Vector3 newPos = player.transform.position;
-            player.transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
+			dir = -playerGameCharacter.transform.right;
+			Vector3 newPos = playerGameCharacter.transform.position;
+            playerGameCharacter.transform.position = newPos + (dir * moveSpeed * Time.deltaTime);
         }
         else
         {
@@ -156,13 +157,13 @@ public class GamePlayerController : MonoBehaviour {
 
     private void SimpleGravityForce()
     {
-        World containWorld = WorldManager.instance.ContainedWorld(player.transform.position);
-        CollideInfo collideInfo = containWorld.customOctree.Collide(player.transform.position);
+        World containWorld = WorldManager.instance.ContainedWorld(playerGameCharacter.transform.position);
+        CollideInfo collideInfo = containWorld.customOctree.Collide(playerGameCharacter.GetCustomAABB());
         if (!collideInfo.isCollide)
         {
-            player.transform.position = new Vector3(player.transform.position.x,
-                player.transform.position.y - 0.1f,
-                player.transform.position.z);
+            playerGameCharacter.transform.position = new Vector3(playerGameCharacter.transform.position.x,
+                playerGameCharacter.transform.position.y - 0.1f,
+                playerGameCharacter.transform.position.z);
         }
     }
 

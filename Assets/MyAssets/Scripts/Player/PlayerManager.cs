@@ -92,7 +92,8 @@ public class PlayerManager : MonoBehaviour {
             //싱글모드 이므로, 본인만 생성하면 된다.
             myGamePlayer = CreateSingleGamePlayer(myChType, "MyPlayer");
         }
-        myGamePlayer.GetComponent<GamePlayerController>().Init(Camera.main, myGamePlayer);
+        myGamePlayer.GetComponent<GamePlayerController>().Init(Camera.main,
+            myGamePlayer.GetComponent<GamePlayer>().charInstance);
         myGamePlayer.transform.parent = gameObject.transform;
         myPlayerController = myGamePlayer.GetComponent<GamePlayer>().GetController();
     }
