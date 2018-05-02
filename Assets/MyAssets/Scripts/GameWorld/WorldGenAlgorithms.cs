@@ -34,8 +34,6 @@ public class WorldGenAlgorithms {
                 stone += param.baseOffset;
                 int grass = PerlinNoise(x, 32, z, 1, Utility.RandomInteger(3, 6), 1) + 1;
 
-                KojeomLogger.DebugLog(string.Format("stone : {0}, grass :{1}", stone, grass));
-
                 for (int y = 0; y < gameConfig.sub_world_y_size; y++)
                 {
                     if (y <= stone) refWorldBlockData[x, y, z].type = (byte)TileDataFile.instance.
