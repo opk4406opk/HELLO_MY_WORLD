@@ -45,37 +45,86 @@ public class WorldGenAlgorithms {
                 }
             }
         }
+        SimpleGenCircleCave(refWorldBlockData);
     }
 
-    private static void FloodFill(FloodFillNode node, byte targetType, byte replaceType, Block[,,] worldBlockData)
+    /// <summary>
+    /// flood fill 알고리즘을 이용한 원 모양의 동굴 생성.
+    /// </summary>
+    /// <param name="refWorldBlockData"></param>
+    private static void SimpleGenCircleCave(Block[,,] refWorldBlockData)
     {
+        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
+        int startX = Utility.RandomInteger(3, gameConfig.sub_world_x_size - 16);
+        int maxX = Utility.RandomInteger(startX, gameConfig.sub_world_x_size);
+        //
+        int startZ = Utility.RandomInteger(3, gameConfig.sub_world_z_size - 16);
+        int maxZ = Utility.RandomInteger(startX, gameConfig.sub_world_z_size);
+        //
+        int maxY = Utility.RandomInteger(10, gameConfig.sub_world_y_size - 10);
+        int startY = Utility.RandomInteger(5, maxY - 1);
+        for (int x = startX; x < maxX; x++)
+        {
+            for (int z = startZ; z < maxZ; z++)
+            {
+                for (int y = startY; y < maxY; y++)
+                {
+                    int cave = PerlinNoise(x, y * 3, z, 2, 18, 1);
+                    if (cave > y)
+                    {
+                        refWorldBlockData[x, y, z].type = (byte)TileDataFile.instance.
+                            GetTileInfo(TileType.NONE).type;
+                        FloodFill(new FloodFillNode(x, y, z), TileType.SAND, TileType.NONE,
+                                    refWorldBlockData, 4);
+                    }
+                }
+            }
+        }
+    }
+
+    private static void FloodFill(FloodFillNode node, TileType targetType,
+        TileType replaceType, Block[,,] worldBlockData, int depth)
+    {
+        if (depth == 0) return;
+        depth--;
+
         FloodFillNode leftNode = new FloodFillNode(node.x - 1, node.y, node.z);
         FloodFillNode rightNode = new FloodFillNode(node.x + 1, node.y, node.z);
         FloodFillNode topNode = new FloodFillNode(node.x, node.y + 1, node.z);
         FloodFillNode bottomNode = new FloodFillNode(node.x, node.y - 1, node.z);
+        FloodFillNode frontNode = new FloodFillNode(node.x, node.y, node.z + 1);
+        FloodFillNode backNode = new FloodFillNode(node.x, node.y, node.z -1);
 
-        if(worldBlockData[node.x, node.y, node.z].type == targetType)
+        if (worldBlockData[node.x, node.y, node.z].type == (byte)targetType)
         {
             return;
         }
         else
         {
-            worldBlockData[node.x, node.y, node.z].type = replaceType;
+            worldBlockData[node.x, node.y, node.z].type = (byte)replaceType;
             if (leftNode.IsInBoundary())
             {
-                FloodFill(leftNode, targetType, replaceType, worldBlockData);
+                FloodFill(leftNode, targetType, replaceType, worldBlockData, depth);
             }
             if (rightNode.IsInBoundary())
             {
-                FloodFill(rightNode, targetType, replaceType, worldBlockData);
+                FloodFill(rightNode, targetType, replaceType, worldBlockData, depth);
             }
             if (topNode.IsInBoundary())
             {
-                FloodFill(topNode, targetType, replaceType, worldBlockData);
+                FloodFill(topNode, targetType, replaceType, worldBlockData, depth);
             }
             if (bottomNode.IsInBoundary())
             {
-                FloodFill(bottomNode, targetType, replaceType, worldBlockData);
+                FloodFill(bottomNode, targetType, replaceType, worldBlockData, depth);
+            }
+            if (frontNode.IsInBoundary())
+            {
+                FloodFill(frontNode, targetType, replaceType, worldBlockData, depth);
+            }
+            if (backNode.IsInBoundary())
+            {
+                FloodFill(backNode, targetType, replaceType, worldBlockData, depth);
             }
         }
     }
