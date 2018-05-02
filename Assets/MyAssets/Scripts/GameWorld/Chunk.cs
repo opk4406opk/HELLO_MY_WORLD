@@ -259,7 +259,6 @@ public class Chunk : MonoBehaviour
 
     private void CreateFace(Vector2 texturePos)
     {
-
         newTriangles.Add(faceCount * 4); //1
         newTriangles.Add(faceCount * 4 + 1); //2
         newTriangles.Add(faceCount * 4 + 2); //3

@@ -2,6 +2,20 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
+public enum INPUT_STATE
+{
+    NONE = 0,
+    CREATE = 1,
+    DELETE = 2,
+    ATTACK = 3,
+    INVEN_OPEN = 4,
+    MENU_OPEN = 5,
+    CRAFT_ITEM_OPEN = 6,
+    TALK_NPC_KEYBORAD = 7,
+    TALK_NPC_MOUSE = 8,
+    CHARACTER_MOVE = 9,
+    CHARACTER_IDLE = 10
+}
 /// <summary>
 /// 게임내 입력관리를 하는 클래스.
 /// </summary>
@@ -15,22 +29,21 @@ public class InputManager : MonoBehaviour {
     private Vector3 clickPos;
     private Ray ray;
 
-    private enum INPUT_STATE
-    {
-        NONE = 0,
-        CREATE = 1,
-        DELETE = 2,
-        ATTACK = 3,
-        INVEN_OPEN = 4,
-        MENU_OPEN = 5,
-        CRAFT_ITEM_OPEN = 6,
-        TALK_NPC_KEYBORAD = 7,
-        TALK_NPC_MOUSE = 8
-    }
     private INPUT_STATE inputState = INPUT_STATE.NONE;
+
+    private static InputManager _singleton = null;
+    public static InputManager singleton
+    {
+        get
+        {
+            if (_singleton == null) KojeomLogger.DebugLog("InputManager 초기화 되지 않았습니다", LOG_TYPE.ERROR);
+            return _singleton;
+        }
+    }
 
     public void Init()
     {
+        _singleton = this;
         modifyTerrian.Init();
     }
 
@@ -39,6 +52,11 @@ public class InputManager : MonoBehaviour {
         ChkInputState();
         MouseInputProcess();
         KeyBoardInputProcess();
+    }
+
+    public INPUT_STATE GetInputState()
+    {
+        return inputState;
     }
 
     private void ChkInputState()
@@ -73,9 +91,14 @@ public class InputManager : MonoBehaviour {
         {
             inputState = INPUT_STATE.TALK_NPC_KEYBORAD;
         }
+        else if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) ||
+            Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+        {
+            inputState = INPUT_STATE.CHARACTER_MOVE;
+        }
         else
         {
-            inputState = INPUT_STATE.NONE;
+            inputState = INPUT_STATE.CHARACTER_IDLE;
         }
     }
 

@@ -107,6 +107,7 @@ public class GameManager : MonoBehaviour
         KojeomLogger.DebugLog("게임매니저 클래스들을 초기화 합니다.");
         // sound init.
         //GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_InGame);
+        inputManager.Init();
         //player Init
         playerManager.Init();
         //GameWorld Init
@@ -127,8 +128,6 @@ public class GameManager : MonoBehaviour
         //
         weatherManager.Init();
         //weatherManager.StartWeatherSystem();
-        //
-        inputManager.Init();
 
         if (GameStatus.isLoadGame == true) { saveAndLoadManager.Load(); }
         KojeomLogger.DebugLog("게임매니저 클래스 초기화 완료.");
