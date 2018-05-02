@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private PlayerManager playerManager;
     [SerializeField]
-    private BlockSelector blockSelector;
+    private BeltItemSelector beltItemSelector;
     [SerializeField]
     private SaveAndLoadManager saveAndLoadManager;
     [SerializeField]
@@ -116,7 +116,7 @@ public class GameManager : MonoBehaviour
         //LootingSystem Init;
         lootingSystem.Init();
         //InGameUI Init
-        blockSelector.Init();
+        beltItemSelector.Init();
         //saveAndLoad Init
         saveAndLoadManager.Init();
         //

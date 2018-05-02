@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public struct MakeWorldParam
+{
+    public int baseOffset;
+}
 /// <summary>
 /// 게임내 월드를 생성 및 관리하는 클래스.
 /// </summary>
@@ -98,7 +102,10 @@ public class World : MonoBehaviour
         InitChunkGroup();
         if (GameStatus.isLoadGame == false)
         {
-            SetDefaultWorldData();
+            MakeWorldParam param;
+            param.baseOffset = Utility.RandomInteger(2, 29);
+            SetDefaultWorldData(param);
+            //
             _loadProcessRoutine = LoadProcess();
             StartCoroutine(_loadProcessRoutine);
         }
@@ -193,24 +200,9 @@ public class World : MonoBehaviour
         }
     }
   
-    private void SetDefaultWorldData()
+    private void SetDefaultWorldData(MakeWorldParam param)
     {
-        // 펄린노이즈 알고리즘을 이용해 지형을 생성한다.
-        for (int x = 0; x < worldX; x++)
-        {
-            for (int z = 0; z < worldZ; z++)
-            {
-                int stone = PerlinNoise(x, 0, z, 10, Utility.RandomInteger(2, 8), Utility.RandomFloat(0.2f, 1.5f));
-                stone += PerlinNoise(x, 300, z, 20, Utility.RandomInteger(2, 4), 0) + 10;
-                int grass = PerlinNoise(x, 100, z, 50, Utility.RandomInteger(1, 5), 0) + 1;
-
-                for (int y = 0; y < worldY; y++)
-                {
-                    if (y <= stone) _worldBlockData[x, y, z].type = (byte)TileDataFile.instance.GetTileData(TileType.TILE_TYPE_STONE_BIG).type;
-                    else if (y <= grass + stone) _worldBlockData[x, y, z].type = (byte)TileDataFile.instance.GetTileData(TileType.TILE_TYPE_GRASS).type;
-                }
-            }
-        }
+        WorldGenAlgorithms.DefaultGenWorld(_worldBlockData, param);
     }
 
     private void InitChunkGroup()
@@ -220,6 +212,7 @@ public class World : MonoBehaviour
 
     private int PerlinNoise (int x, int y, int z, float scale, float height, float power)
 	{
+        // noise value 0 to 1
 		float rValue;
 		rValue = Noise.GetNoise (((double)x) / scale, ((double)y) / scale, ((double)z) / scale);
 		rValue *= height;

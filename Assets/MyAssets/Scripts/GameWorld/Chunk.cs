@@ -99,7 +99,7 @@ public class Chunk : MonoBehaviour
                     blockIdxY = relativeY + _worldDataIdxY;
                     blockIdxZ = relativeZ + _worldDataIdxZ;
                     //This code will run for every block in the chunk
-                    if (CheckBlock(blockIdxX, blockIdxY, blockIdxZ) != 0)
+                    if (GetBlockType(blockIdxX, blockIdxY, blockIdxZ) != 0)
                     {
                         //if (Block(x, y + 1, z) == 0) CubeTop(x, y, z, Block(x, y, z));
                         //if (Block(x, y - 1, z) == 0) CubeBot(x, y, z, Block(x, y, z));
@@ -113,12 +113,12 @@ public class Chunk : MonoBehaviour
                         cubeY = relativeY + _worldCoordY;
                         cubeZ = relativeZ + _worldCoordZ;
 
-                        CubeTopFace(cubeX, cubeY, cubeZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
-                        CubeBotFace(cubeX, cubeY, cubeZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
-                        CubeNorthFace(cubeX, cubeY, cubeZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
-                        CubeSouthFace(cubeX, cubeY, cubeZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
-                        CubeEastFace(cubeX, cubeY, cubeZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
-                        CubeWestFace(cubeX, cubeY, cubeZ, CheckBlock(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
+                        CubeTopFace(cubeX, cubeY, cubeZ, GetBlockType(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
+                        CubeBotFace(cubeX, cubeY, cubeZ, GetBlockType(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
+                        CubeNorthFace(cubeX, cubeY, cubeZ, GetBlockType(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
+                        CubeSouthFace(cubeX, cubeY, cubeZ, GetBlockType(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
+                        CubeEastFace(cubeX, cubeY, cubeZ, GetBlockType(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
+                        CubeWestFace(cubeX, cubeY, cubeZ, GetBlockType(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
 
                         // points 배열은 실제 블록을 생성할 때 쓰이는 8개의 포인트로 실제 월드 좌표값이다.
                         // 따라서, 이를 이용해 블록의 AABB의 Min, Max Extent 값을 정한다.
@@ -148,7 +148,7 @@ public class Chunk : MonoBehaviour
         UpdateMesh();
     }
     
-    private byte CheckBlock(int x, int y, int z)
+    private TileType GetBlockType(int x, int y, int z)
     {
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
         if (x >= gameConfig.sub_world_x_size ||
@@ -158,28 +158,26 @@ public class Chunk : MonoBehaviour
                z >= gameConfig.sub_world_z_size ||
                z < 0)
         {
-            return (byte)1;
+            return TileType.NONE;
         }
-        return _world.worldBlockData[x, y, z].type;
+        return (TileType)_world.worldBlockData[x, y, z].type;
     }
 
-    private void CubeTopFace(float x, float y, float z, byte block, int blockIdxX, int blockIdxY, int blockIdxZ)
+    private void CubeTopFace(float x, float y, float z, TileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
     {
         newVertices.Add(new Vector3(x, y, z + 1));
         newVertices.Add(new Vector3(x + 1, y, z + 1));
         newVertices.Add(new Vector3(x + 1, y, z));
         newVertices.Add(new Vector3(x, y, z));
 
-        string tileName = TileDataFile.instance.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
-        TileInfo tileData = TileDataFile.instance.GetTileData(tileName);
-
-        texturePos.x = tileData.posX;
-        texturePos.y = tileData.posY;
+        TileInfo tileInfo = TileDataFile.instance.GetTileInfo(tileType);
+        texturePos.x = tileInfo.posX;
+        texturePos.y = tileInfo.posY;
 
         CreateFace(texturePos);
     }
 
-    private  void CubeNorthFace(float x, float y, float z, byte block, int blockIdxX, int blockIdxY, int blockIdxZ)
+    private  void CubeNorthFace(float x, float y, float z, TileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
     {
 
         newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
@@ -187,17 +185,15 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x, y, z + 1));
         newVertices.Add(new Vector3(x, y - 1, z + 1));
 
-        string tileName = TileDataFile.instance.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
-        TileInfo tileData = TileDataFile.instance.GetTileData(tileName);
-
-        texturePos.x = tileData.posX;
-        texturePos.y = tileData.posY;
+        TileInfo tileInfo = TileDataFile.instance.GetTileInfo(tileType);
+        texturePos.x = tileInfo.posX;
+        texturePos.y = tileInfo.posY;
 
         CreateFace(texturePos);
 
     }
 
-    private void CubeEastFace(float x, float y, float z, byte block, int blockIdxX, int blockIdxY, int blockIdxZ)
+    private void CubeEastFace(float x, float y, float z, TileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
     {
 
         newVertices.Add(new Vector3(x + 1, y - 1, z));
@@ -205,17 +201,15 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y, z + 1));
         newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
 
-        string tileName = TileDataFile.instance.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
-        TileInfo tileData = TileDataFile.instance.GetTileData(tileName);
-
-        texturePos.x = tileData.posX;
-        texturePos.y = tileData.posY;
+        TileInfo tileInfo = TileDataFile.instance.GetTileInfo(tileType);
+        texturePos.x = tileInfo.posX;
+        texturePos.y = tileInfo.posY;
 
         CreateFace(texturePos);
 
     }
 
-    private void CubeSouthFace(float x, float y, float z, byte block, int blockIdxX, int blockIdxY, int blockIdxZ)
+    private void CubeSouthFace(float x, float y, float z, TileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
     {
 
         newVertices.Add(new Vector3(x, y - 1, z));
@@ -223,17 +217,15 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y, z));
         newVertices.Add(new Vector3(x + 1, y - 1, z));
 
-        string tileName = TileDataFile.instance.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
-        TileInfo tileData = TileDataFile.instance.GetTileData(tileName);
-
-        texturePos.x = tileData.posX;
-        texturePos.y = tileData.posY;
+        TileInfo tileInfo = TileDataFile.instance.GetTileInfo(tileType);
+        texturePos.x = tileInfo.posX;
+        texturePos.y = tileInfo.posY;
 
         CreateFace(texturePos);
 
     }
 
-    private void CubeWestFace(float x, float y, float z, byte block, int blockIdxX, int blockIdxY, int blockIdxZ)
+    private void CubeWestFace(float x, float y, float z, TileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
     {
 
         newVertices.Add(new Vector3(x, y - 1, z + 1));
@@ -241,17 +233,15 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x, y, z));
         newVertices.Add(new Vector3(x, y - 1, z));
 
-        string tileName = TileDataFile.instance.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
-        TileInfo tileData = TileDataFile.instance.GetTileData(tileName);
-
-        texturePos.x = tileData.posX;
-        texturePos.y = tileData.posY;
+        TileInfo tileInfo = TileDataFile.instance.GetTileInfo(tileType);
+        texturePos.x = tileInfo.posX;
+        texturePos.y = tileInfo.posY;
 
         CreateFace(texturePos);
 
     }
 
-    private void CubeBotFace(float x, float y, float z, byte block, int blockIdxX, int blockIdxY, int blockIdxZ)
+    private void CubeBotFace(float x, float y, float z, TileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
     {
 
         newVertices.Add(new Vector3(x, y - 1, z));
@@ -259,11 +249,9 @@ public class Chunk : MonoBehaviour
         newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
         newVertices.Add(new Vector3(x, y - 1, z + 1));
 
-        string tileName = TileDataFile.instance.GetTileName(CheckBlock(blockIdxX, blockIdxY, blockIdxZ));
-        TileInfo tileData = TileDataFile.instance.GetTileData(tileName);
-
-        texturePos.x = tileData.posX;
-        texturePos.y = tileData.posY;
+        TileInfo tileInfo = TileDataFile.instance.GetTileInfo(tileType);
+        texturePos.x = tileInfo.posX;
+        texturePos.y = tileInfo.posY;
 
         CreateFace(texturePos);
 

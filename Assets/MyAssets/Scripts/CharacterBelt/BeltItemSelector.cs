@@ -1,18 +1,34 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-/// <summary>
-/// 게임내에서 사용자가 사용하고 싶은 블록을 선택하는 벨트를 관리하는 클래스.
-/// </summary>
-public class BlockSelector : MonoBehaviour {
+public abstract class ABeltItem : MonoBehaviour
+{
+    protected UIButton uiButton;
+    [SerializeField]
+    protected UISprite uiSprite;
+    public abstract void Init(string spriteName);
+}
 
+/// <summary>
+/// 게임내에서 사용자가 사용하고 싶은 아이템을 선택하는 벨트를 관리하는 클래스.
+/// </summary>
+public class BeltItemSelector : MonoBehaviour {
+
+    private static BeltItemSelector _singleton = null;
+    public static BeltItemSelector singleton
+    {
+        get
+        {
+            if (_singleton == null) KojeomLogger.DebugLog("BeltItemSelector 제대로 초기화 되지 않았습니다", LOG_TYPE.ERROR);
+            return _singleton;
+        }
+    }
     [SerializeField]
     private GameObject blockPrefab;
     [SerializeField]
     private GameObject uiGridObj;
 
     private int maxSelectBlocks = 0;
-    private string curSelectBlockName;
     private byte _curSelectBlockType;
     public byte curSelectBlockType
     {
@@ -21,11 +37,11 @@ public class BlockSelector : MonoBehaviour {
 
 	public void Init()
     {
-        maxSelectBlocks = TileDataFile.instance.tileNameList.Count;
+        _singleton = this;
+        maxSelectBlocks = TileDataFile.instance.GetTileInfoCount();
         //default : grass block;
-        curSelectBlockName = TileType.TILE_TYPE_GRASS;
         _curSelectBlockType = 1;
-
+        //
         CreateSelectBlock();
     }
 	
@@ -42,26 +58,14 @@ public class BlockSelector : MonoBehaviour {
             newBlock.transform.localScale = new Vector3(1, 1, 1);
             newBlock.transform.localPosition = new Vector3(0, 0, 0);
 
-            Ed_OnSelectBlock = new EventDelegate(this, "OnSelectBlock");
-            Ed_OnSelectBlock.parameters[0].value = TileDataFile.instance.tileNameList[idx];
-            newBlock.GetComponent<UIButton>().onClick.Add(Ed_OnSelectBlock);
-
-            BlockData block = newBlock.GetComponent<BlockData>();
-            block.Init(TileDataFile.instance.tileNameList[idx]);
+            var tileInfo = TileDataFile.instance.GetTileInfo((TileType)idx);
+            BeltItemBlockData block = newBlock.GetComponent<BeltItemBlockData>();
+            block.Init(tileInfo.name);
         }
         uiGridObj.GetComponent<UIGrid>().Reposition();
     }
 
-    private EventDelegate Ed_OnSelectBlock;
-    private void OnSelectBlock(string name)
+    public void OnSelectBlock(GameObject selectedBlock)
     {
-        curSelectBlockName = name;
-        CalcBlockType();
-    }
-
-    private void CalcBlockType()
-    {
-       TileInfo tileData = TileDataFile.instance.GetTileData(curSelectBlockName);
-        _curSelectBlockType = (byte)tileData.type;    
     }
 }

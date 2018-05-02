@@ -10,8 +10,6 @@ public class InputManager : MonoBehaviour {
     [SerializeField]
     private ModifyTerrain modifyTerrian;
     [SerializeField]
-    private BlockSelector blockSelector;
-    [SerializeField]
     private ActorCollideManager actorCollideManager;
 
     private Vector3 clickPos;
@@ -94,7 +92,7 @@ public class InputManager : MonoBehaviour {
             case INPUT_STATE.CREATE:
                 inputState = INPUT_STATE.NONE;
                 if(UIPopupManager.isAllpopupClose == true)
-                    modifyTerrian.AddBlockCursor(ray, clickPos, blockSelector.curSelectBlockType);
+                    modifyTerrian.AddBlockCursor(ray, clickPos, BeltItemSelector.singleton.curSelectBlockType);
                 break;
             case INPUT_STATE.DELETE:
                 inputState = INPUT_STATE.NONE;
