@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class PlayerIdleState : IState
 {
-    private GameCharacter playerGameCharacter;
+    private GamePlayer gamePlayer;
     private QuerySDMecanimController aniController;
 
-    public PlayerIdleState(GameCharacter player)
+    public PlayerIdleState(GamePlayer player)
     {
-        playerGameCharacter = player;
-        aniController = playerGameCharacter.GetAniController();
+        gamePlayer = player;
+        aniController = gamePlayer.charInstance.GetAniController();
     }
     public void InitState()
     {

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class GamePlayerController : MonoBehaviour {
 
     private Camera playerCamera;
-    private GameCharacter playerGameCharacter;
+    private GamePlayer gamePlayer;
     //
     #region cam_option
     private List<float> camRotArrayX = new List<float>();
@@ -34,18 +34,19 @@ public class GamePlayerController : MonoBehaviour {
     private PlayerIdleState idleState;
     private PlayerStateController stateController;
 
-    public void Init(Camera mainCam, GameCharacter gameChar)
+    public void Init(Camera mainCam, GamePlayer player)
     {
         //
-        playerGameCharacter = gameChar;
+        gamePlayer = player;
         playerCamera = mainCam;
         //
         camOrigRotation = playerCamera.transform.localRotation;
-        playerOrigRotation = playerGameCharacter.transform.localRotation;
+        // 게임 플레이어가 아닌, 하위 오브젝트인 캐릭터 오브젝트의 방향을 변경해야한다.
+        playerOrigRotation = gamePlayer.transform.localRotation;
         controllProcess = ControllProcess();
         //
-        moveState = new PlayerMoveState(playerGameCharacter);
-        idleState = new PlayerIdleState(playerGameCharacter);
+        moveState = new PlayerMoveState(gamePlayer);
+        idleState = new PlayerIdleState(gamePlayer);
         stateController = new PlayerStateController();
         stateController.SetState(idleState);
     }
@@ -61,7 +62,7 @@ public class GamePlayerController : MonoBehaviour {
 
     private void CamFollowPlayer()
     {
-        Vector3 playerPos = playerGameCharacter.transform.position;
+        Vector3 playerPos = gamePlayer.transform.position;
         playerPos.y += 2.0f;
         playerCamera.transform.position = playerPos;
     }
@@ -107,7 +108,7 @@ public class GamePlayerController : MonoBehaviour {
         // rot cam
         playerCamera.transform.localRotation = camOrigRotation * xQuaternion * yQuaternion;
         // rot player
-        playerGameCharacter.transform.localRotation = playerOrigRotation * xQuaternion;
+        gamePlayer.transform.localRotation = playerOrigRotation * xQuaternion;
     }
 
     private IEnumerator ControllProcess()
@@ -136,13 +137,17 @@ public class GamePlayerController : MonoBehaviour {
 
     private void SimpleGravityForce()
     {
-        World containWorld = WorldManager.instance.ContainedWorld(playerGameCharacter.transform.position);
-        CollideInfo collideInfo = containWorld.customOctree.Collide(playerGameCharacter.GetCustomAABB());
+        World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
+        CollideInfo collideInfo = containWorld.customOctree.Collide(gamePlayer.charInstance.GetCustomAABB());
         if (!collideInfo.isCollide)
         {
-            playerGameCharacter.transform.position = new Vector3(playerGameCharacter.transform.position.x,
-                playerGameCharacter.transform.position.y - 0.1f,
-                playerGameCharacter.transform.position.z);
+            gamePlayer.transform.position = new Vector3(gamePlayer.transform.position.x,
+                gamePlayer.transform.position.y - 0.1f,
+                gamePlayer.transform.position.z);
+        }
+        else
+        {
+            KojeomLogger.DebugLog(string.Format("캐릭터가 밟고 서있는 Node center : {0}", collideInfo.hitBlockCenter));
         }
     }
 }

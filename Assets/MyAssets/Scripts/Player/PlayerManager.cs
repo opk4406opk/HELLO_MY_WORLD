@@ -11,7 +11,7 @@ using UnityEngine.Networking;
 /// </summary>
 public class PlayerManager : MonoBehaviour {
     //
-    public GameObject myGamePlayer;
+    public GamePlayer myGamePlayer;
 
     //
     public static Vector3 myPlayerInitPosition = new Vector3(10.0f, 18.0f, 0.0f);
@@ -84,7 +84,7 @@ public class PlayerManager : MonoBehaviour {
         if (GameStatus.isMultiPlay)
         {
             // to do
-            myGamePlayer = GameNetworkManager.GetInstance().GetMyGamePlayer().gameObject;
+            myGamePlayer = GameNetworkManager.GetInstance().GetMyGamePlayer();
             GameNetworkManager.GetInstance().ReqInGameUserList();
         }
         else
@@ -92,13 +92,13 @@ public class PlayerManager : MonoBehaviour {
             //싱글모드 이므로, 본인만 생성하면 된다.
             myGamePlayer = CreateSingleGamePlayer(myChType, "MyPlayer");
         }
-        myGamePlayer.GetComponent<GamePlayerController>().Init(Camera.main,
-            myGamePlayer.GetComponent<GamePlayer>().charInstance);
+        myGamePlayer.GetController().Init(Camera.main, myGamePlayer);
+        //Player Manager 하위 종속으로 변경.
         myGamePlayer.transform.parent = gameObject.transform;
-        myPlayerController = myGamePlayer.GetComponent<GamePlayer>().GetController();
+        myPlayerController = myGamePlayer.GetController();
     }
 
-    private GameObject CreateSingleGamePlayer(int chType, string playerName)
+    private GamePlayer CreateSingleGamePlayer(int chType, string playerName)
     {
         // playerManager로 패런팅.
         GameObject inst = Instantiate(gamePlayerPrefab, new Vector3(0,0,0), Quaternion.identity);
@@ -107,6 +107,6 @@ public class PlayerManager : MonoBehaviour {
         GamePlayer gamePlayer = inst.GetComponent<GamePlayer>();
         gamePlayer.Init(chType, playerName, myPlayerInitPosition);
 
-        return inst;
+        return gamePlayer;
     }
 }
