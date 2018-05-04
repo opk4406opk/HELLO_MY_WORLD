@@ -45,7 +45,7 @@ public class CustomComponentAdder : EditorWindow
             if (element.GetComponent<BoxCollider>() == null)
             {
                 var coll = element.AddComponent<BoxCollider>();
-                coll.size = new Vector3(0.5f, 1.0f, 0.5f);
+                coll.size = new Vector3(0.3f, 0.7f, 0.3f);
                 coll.center = new Vector3(0.0f, 0.5f, 0.0f);
             }
             else

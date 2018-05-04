@@ -34,7 +34,7 @@ public class PlayerMoveState : IState
     private void Move()
     {
         Vector3 dir, newPos = Vector3.zero;
-        Vector3 origin = gamePlayer.transform.position;
+        Vector3 originPos = gamePlayer.transform.position;
         if (Input.GetKey(KeyCode.W))
         {
             dir = gamePlayer.transform.forward;
@@ -57,5 +57,12 @@ public class PlayerMoveState : IState
         }
         newPos = gamePlayer.transform.position + (dir * moveSpeed * Time.deltaTime);
         gamePlayer.transform.position = newPos;
+        //
+        World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
+        var collideInfo = containWorld.customOctree.Collide(gamePlayer.charInstance.GetCustomAABB());
+        if (collideInfo.isCollide)
+        {
+            gamePlayer.transform.position = originPos;
+        }
     }
 }

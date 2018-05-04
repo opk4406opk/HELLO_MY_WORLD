@@ -138,7 +138,9 @@ public class GamePlayerController : MonoBehaviour {
     private void SimpleGravityForce()
     {
         World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
-        CollideInfo collideInfo = containWorld.customOctree.Collide(gamePlayer.charInstance.GetCustomAABB());
+        Vector3 bottonOffsetedPos = gamePlayer.transform.position;
+        bottonOffsetedPos -= new Vector3(0.0f, 0.1f, 0.0f);
+        CollideInfo collideInfo = containWorld.customOctree.Collide(bottonOffsetedPos);
         if (!collideInfo.isCollide)
         {
             gamePlayer.transform.position = new Vector3(gamePlayer.transform.position.x,

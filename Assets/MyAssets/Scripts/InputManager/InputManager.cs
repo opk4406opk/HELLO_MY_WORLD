@@ -29,7 +29,7 @@ public class InputManager : MonoBehaviour {
     private Vector3 clickPos;
     private Ray ray;
 
-    private INPUT_STATE inputState = INPUT_STATE.NONE;
+    private INPUT_STATE curInputState = INPUT_STATE.NONE;
 
     private static InputManager _singleton = null;
     public static InputManager singleton
@@ -56,7 +56,7 @@ public class InputManager : MonoBehaviour {
 
     public INPUT_STATE GetInputState()
     {
-        return inputState;
+        return curInputState;
     }
 
     private void ChkInputState()
@@ -66,39 +66,39 @@ public class InputManager : MonoBehaviour {
             GetMouseInput();
             if (actorCollideManager.IsNpcCollide(ray))
             {
-                inputState = INPUT_STATE.TALK_NPC_MOUSE;
+                curInputState = INPUT_STATE.TALK_NPC_MOUSE;
             }
-            else inputState = INPUT_STATE.CREATE;
+            else curInputState = INPUT_STATE.CREATE;
         }
         else if (Input.GetMouseButtonDown(1))
         {
             GetMouseInput();
-            inputState = INPUT_STATE.DELETE;
+            curInputState = INPUT_STATE.DELETE;
         }
         else if(Input.GetKeyDown(KeyCode.I))
         {
-            inputState = INPUT_STATE.INVEN_OPEN;
+            curInputState = INPUT_STATE.INVEN_OPEN;
         }
         else if (Input.GetKeyDown(KeyCode.F10))
         {
-            inputState = INPUT_STATE.MENU_OPEN;
+            curInputState = INPUT_STATE.MENU_OPEN;
         }
         else if (Input.GetKeyDown(KeyCode.U))
         {
-            inputState = INPUT_STATE.CRAFT_ITEM_OPEN;
+            curInputState = INPUT_STATE.CRAFT_ITEM_OPEN;
         }
         else if (Input.GetKeyDown(KeyCode.F))
         {
-            inputState = INPUT_STATE.TALK_NPC_KEYBORAD;
+            curInputState = INPUT_STATE.TALK_NPC_KEYBORAD;
         }
         else if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) ||
             Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
         {
-            inputState = INPUT_STATE.CHARACTER_MOVE;
+            curInputState = INPUT_STATE.CHARACTER_MOVE;
         }
         else
         {
-            inputState = INPUT_STATE.CHARACTER_IDLE;
+            curInputState = INPUT_STATE.CHARACTER_IDLE;
         }
     }
 
@@ -110,21 +110,21 @@ public class InputManager : MonoBehaviour {
 
     private void MouseInputProcess()
     {
-        switch (inputState)
+        switch (curInputState)
         {
             case INPUT_STATE.CREATE:
-                inputState = INPUT_STATE.NONE;
+                curInputState = INPUT_STATE.NONE;
                 if(UIPopupManager.isAllpopupClose == true)
                     modifyTerrian.AddBlockCursor(ray, clickPos, BeltItemSelector.singleton.curSelectBlockType);
                 break;
             case INPUT_STATE.DELETE:
-                inputState = INPUT_STATE.NONE;
+                curInputState = INPUT_STATE.NONE;
                 if (UIPopupManager.isAllpopupClose == true)
                     // 0번은 None type의 블록이다. 이 부분에 대해서는 따로 열거형을 쓰거나 해야겠다.
                     modifyTerrian.ReplaceBlockCursor(ray, clickPos, 0);
                 break;
             case INPUT_STATE.TALK_NPC_MOUSE:
-                inputState = INPUT_STATE.NONE;
+                curInputState = INPUT_STATE.NONE;
                 UIPopupManager.OpenShop();
                 break;
             default:
@@ -134,22 +134,22 @@ public class InputManager : MonoBehaviour {
 
     private void KeyBoardInputProcess()
     {
-        switch (inputState)
+        switch (curInputState)
         {
             case INPUT_STATE.INVEN_OPEN:
-                inputState = INPUT_STATE.NONE;
+                curInputState = INPUT_STATE.NONE;
                 UIPopupManager.OpenInven();
                 break;
             case INPUT_STATE.MENU_OPEN:
-                inputState = INPUT_STATE.NONE;
+                curInputState = INPUT_STATE.NONE;
                 UIPopupManager.OpenInGameMenu();
                 break;
             case INPUT_STATE.CRAFT_ITEM_OPEN:
-                inputState = INPUT_STATE.NONE;
+                curInputState = INPUT_STATE.NONE;
                 UIPopupManager.OpenCraftItem();
                 break;
             case INPUT_STATE.TALK_NPC_KEYBORAD:
-                inputState = INPUT_STATE.NONE;
+                curInputState = INPUT_STATE.NONE;
                 UIPopupManager.OpenShop();
                 break;
             default:
