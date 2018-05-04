@@ -58,6 +58,8 @@ public class GameManager : MonoBehaviour
     private WeatherManager weatherManager;
     [SerializeField]
     private InputManager inputManager;
+    [SerializeField]
+    private KojeomCoroutineHelper kojeomCoroutineHelper;
 
     [SerializeField]
     private NPCManager npcManager;
@@ -107,6 +109,7 @@ public class GameManager : MonoBehaviour
         KojeomLogger.DebugLog("게임매니저 클래스들을 초기화 합니다.");
         // sound init.
         //GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_InGame);
+        kojeomCoroutineHelper.Init();
         inputManager.Init();
         //player Init
         playerManager.Init();

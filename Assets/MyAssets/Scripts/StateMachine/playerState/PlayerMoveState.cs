@@ -8,6 +8,8 @@ public class PlayerMoveState : IState
     private GamePlayer gamePlayer;
     private QuerySDMecanimController aniController;
     private BoxCollider boxCollider;
+    private KeyCode curPressedKey;
+
     public PlayerMoveState(GamePlayer player)
     {
         gamePlayer = player;
@@ -24,6 +26,7 @@ public class PlayerMoveState : IState
 
     public void ReleaseState()
     {
+        curPressedKey = KeyCode.None;
     }
 
     public void UpdateState()
@@ -33,21 +36,22 @@ public class PlayerMoveState : IState
 
     private void Move()
     {
+        curPressedKey = InputManager.singleton.GetInputData().keyCode;
         Vector3 dir, newPos = Vector3.zero;
         Vector3 originPos = gamePlayer.transform.position;
-        if (Input.GetKey(KeyCode.W))
+        if (curPressedKey == KeyCode.W)
         {
             dir = gamePlayer.transform.forward;
         }
-        else if (Input.GetKey(KeyCode.S))
+        else if (curPressedKey == KeyCode.S)
         {
             dir = -gamePlayer.transform.forward;
         }
-        else if (Input.GetKey(KeyCode.D))
+        else if (curPressedKey == KeyCode.D)
         {
             dir = gamePlayer.transform.right;
         }
-        else if (Input.GetKey(KeyCode.A))
+        else if (curPressedKey == KeyCode.A)
         {
             dir = -gamePlayer.transform.right;
         }
@@ -55,6 +59,7 @@ public class PlayerMoveState : IState
         {
             return;
         }
+        KojeomLogger.DebugLog("player moving..");
         newPos = gamePlayer.transform.position + (dir * moveSpeed * Time.deltaTime);
         gamePlayer.transform.position = newPos;
         //
