@@ -40,7 +40,7 @@ public class BeltItemSelector : MonoBehaviour {
         _singleton = this;
         maxSelectBlocks = TileDataFile.instance.GetTileInfoCount();
         //default : grass block;
-        _curSelectBlockType = 1;
+        _curSelectBlockType = (byte)TileType.GRASS;
         //
         CreateSelectBlock();
     }
