@@ -163,8 +163,7 @@ public class InputManager : MonoBehaviour {
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
                 if (UIPopupManager.isAllpopupClose == true)
-                    // 0번은 None type의 블록이다. 이 부분에 대해서는 따로 열거형을 쓰거나 해야겠다.
-                    modifyTerrian.ReplaceBlockCursor(ray, clickPos, 0);
+                    modifyTerrian.ReplaceBlockCursor(ray, clickPos, (byte)TileType.NONE);
                 break;
             case INPUT_STATE.TALK_NPC_MOUSE:
                 curInputData.state = INPUT_STATE.NONE;
