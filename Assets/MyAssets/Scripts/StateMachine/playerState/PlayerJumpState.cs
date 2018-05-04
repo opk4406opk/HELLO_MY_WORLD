@@ -24,7 +24,7 @@ public class PlayerJumpState : IState
         originPos = gamePlayer.transform.position;
         destPos = originPos + (gamePlayer.transform.up * jumpScale);
 
-        KojeomCoroutineHelper.singleton.StartCoroutineService(Jump());
+        KojeomCoroutineHelper.singleton.StartCoroutineService(Jump(), "Jump");
     }
 
     public void ReleaseState()
@@ -37,7 +37,6 @@ public class PlayerJumpState : IState
 
     private System.Collections.IEnumerator Jump()
     {
-        KojeomLogger.DebugLog("player jump start..");
         while (t <= 1.0f)
         {
             World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
@@ -50,11 +49,9 @@ public class PlayerJumpState : IState
                 Vector3 newPos = Vector3.Lerp(originPos, destPos, t);
                 gamePlayer.transform.position = newPos;
                 t += Time.deltaTime;
-                KojeomLogger.DebugLog(string.Format("t : {0}", t));
             }
             yield return null;
         }
         t = 0.0f;
-        KojeomLogger.DebugLog("player jump end..");
     }
 }

@@ -7,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public class KojeomCoroutineHelper : MonoBehaviour {
 
+    private Dictionary<string, IEnumerator> routines;
+
     private static KojeomCoroutineHelper _singleton = null;
     public static KojeomCoroutineHelper singleton
     {
@@ -18,13 +20,33 @@ public class KojeomCoroutineHelper : MonoBehaviour {
     }
     public void Init()
     {
+        routines = new Dictionary<string, IEnumerator>();
         _singleton = this;
     }
 
-    public void StartCoroutineService(IEnumerator routine)
+    public void ReleaseRoutine(string routineName)
     {
-        KojeomLogger.DebugLog(string.Format("[CoRoutine-Helper] routine start : {0}", routine.ToString()));
-        StartCoroutine(routine);
+        var isReleaseSuccess = routines.Remove(routineName);
+        if (isReleaseSuccess)
+        {
+            KojeomLogger.DebugLog(string.Format("[CoRoutine-Helper] {0} coroutine은 제대로 해제 되었습니다.", routineName));
+        }
+    }
+
+    public void StartCoroutineService(IEnumerator routine, string routineName)
+    {
+        var isFind = routines.ContainsKey(routineName);
+        if(isFind == false)
+        {
+            routines.Add(routineName, routine);
+            KojeomLogger.DebugLog(string.Format("[CoRoutine-Helper] routine start : {0}", routine.ToString()));
+            StartCoroutine(routine);
+        }
+        else
+        {
+            KojeomLogger.DebugLog(string.Format("[CoRoutine-Helper] routine name : {0} 이 이미 동작하고 있습니다.",
+                routine.ToString()));
+        }
     }
     
 }

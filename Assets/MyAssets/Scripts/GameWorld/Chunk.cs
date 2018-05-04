@@ -99,7 +99,7 @@ public class Chunk : MonoBehaviour
                     blockIdxY = relativeY + _worldDataIdxY;
                     blockIdxZ = relativeZ + _worldDataIdxZ;
                     //This code will run for every block in the chunk
-                    if (GetBlockType(blockIdxX, blockIdxY, blockIdxZ) != 0)
+                    if (GetBlockType(blockIdxX, blockIdxY, blockIdxZ) != TileType.NONE)
                     {
                         //if (Block(x, y + 1, z) == 0) CubeTop(x, y, z, Block(x, y, z));
                         //if (Block(x, y - 1, z) == 0) CubeBot(x, y, z, Block(x, y, z));
@@ -131,11 +131,8 @@ public class Chunk : MonoBehaviour
                         points[5] = new Vector3(cubeX + 1, cubeY - 1, cubeZ);
                         points[6] = new Vector3(cubeX + 1, cubeY - 1, cubeZ + 1);
                         points[7] = new Vector3(cubeX, cubeY - 1, cubeZ + 1);
-                        // 블록 생성시 정중앙을 맞추기 위해 추가했던 offset 값을 제거한다.
+                        // 블록 생성시 6개의 면들의 위치를 조정하기 위해 추가했던 offset 값을 제거한다.
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].center = new Vector3(cubeX + 0.5f, cubeY - 0.5f, cubeZ + 0.5f);
-                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].blockDataPosX = blockIdxX;
-                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].blockDataPosY = blockIdxY;
-                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].blockDataPosZ = blockIdxZ;
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].isRendered = true;
                         // 월드맵에 생성된 블록의 중앙점을 이용해 Octree의 노드를 생성합니다.
                         _world.customOctree.Add(_world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].center);

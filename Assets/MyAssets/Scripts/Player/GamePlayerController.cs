@@ -174,20 +174,21 @@ public class GamePlayerController : MonoBehaviour {
         World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
         Vector3 bottomOffsetedPos = gamePlayer.transform.position;
         bottomOffsetedPos -= new Vector3(0.0f, 0.1f, 0.0f);
+
         CollideInfo collideInfo = containWorld.customOctree.Collide(bottomOffsetedPos);
+        var collidePos = collideInfo.hitBlockCenter;
+        var collidedBlock = containWorld.worldBlockData[(int)collidePos.x,
+            (int)collidePos.y, (int)collidePos.z];
         if (!collideInfo.isCollide)
         {
             gamePlayer.transform.position = new Vector3(gamePlayer.transform.position.x,
                 gamePlayer.transform.position.y - 0.1f,
                 gamePlayer.transform.position.z);
         }
-        else
+        else if(collidedBlock.type != (byte)TileType.NONE)
         {
-            KojeomLogger.DebugLog(string.Format("캐릭터가 밟고 서있는 Node center : {0}", collideInfo.hitBlockCenter));
-            if(curPlayerState == GAMEPLAYER_STATE.jumping)
-            {
-                curPlayerState = GAMEPLAYER_STATE.idle;
-            }
+            KojeomLogger.DebugLog(string.Format("캐릭터가 밟고 서있는 collide center : {0}, collided block : {1}",
+                collideInfo.hitBlockCenter, collidedBlock));
         }
     }
 }
