@@ -4,6 +4,12 @@ using System.Collections.Generic;
 
 // ref # 1 : http://wiki.unity3d.com/index.php/SmoothMouseLook
 
+public enum GAMEPLAYER_STATE
+{
+    walking = 0,
+    idle = 1,
+    jumping = 2
+}
 public class GamePlayerController : MonoBehaviour {
 
     private Camera playerCamera;
@@ -32,7 +38,9 @@ public class GamePlayerController : MonoBehaviour {
 
     private PlayerMoveState moveState;
     private PlayerIdleState idleState;
+    private PlayerJumpState jumpState;
     private PlayerStateController stateController;
+    private GAMEPLAYER_STATE curPlayerState;
 
     public void Init(Camera mainCam, GamePlayer player)
     {
@@ -47,8 +55,10 @@ public class GamePlayerController : MonoBehaviour {
         //
         moveState = new PlayerMoveState(gamePlayer);
         idleState = new PlayerIdleState(gamePlayer);
+        jumpState = new PlayerJumpState(gamePlayer);
         stateController = new PlayerStateController();
         stateController.SetState(idleState);
+        curPlayerState = GAMEPLAYER_STATE.idle;
     }
 
     public void StartControllProcess()
@@ -58,6 +68,11 @@ public class GamePlayerController : MonoBehaviour {
     public void StopControllProcess()
     {
         StopCoroutine(controllProcess);
+    }
+
+    public void SetPlayerState(GAMEPLAYER_STATE state)
+    {
+        curPlayerState = state;
     }
 
     private void CamFollowPlayer()
@@ -119,17 +134,36 @@ public class GamePlayerController : MonoBehaviour {
             SimpleGravityForce();
             if (UIPopupManager.isAllpopupClose)
 			{
-                switch (InputManager.singleton.GetInputState())
+                var inputData = InputManager.singleton.GetInputData();
+                if (inputData.state == INPUT_STATE.CHARACTER_MOVE)
                 {
-                    case INPUT_STATE.CHARACTER_MOVE:
-                        stateController.SetState(moveState);
-                        break;
-                    case INPUT_STATE.CHARACTER_IDLE:
+                    curPlayerState = GAMEPLAYER_STATE.walking;
+                }
+                else if (inputData.state == INPUT_STATE.CHARACTER_JUMP)
+                {
+                    curPlayerState = GAMEPLAYER_STATE.jumping;
+                }
+                else if(inputData.state == INPUT_STATE.NONE)
+                {
+                    curPlayerState = GAMEPLAYER_STATE.idle;
+                }
+                KojeomLogger.DebugLog(string.Format("player_state : {0}", curPlayerState));
+
+                switch (curPlayerState)
+                {
+                    case GAMEPLAYER_STATE.idle:
                         stateController.SetState(idleState);
+                        break;
+                    case GAMEPLAYER_STATE.jumping:
+                        stateController.SetState(jumpState);
+                        break;
+                    case GAMEPLAYER_STATE.walking:
+                        stateController.SetState(moveState);
                         break;
                 }
                 stateController.UpdateState();
-				RotationCamAndPlayer();
+
+                RotationCamAndPlayer();
 			}
             yield return null;
         }
@@ -138,9 +172,9 @@ public class GamePlayerController : MonoBehaviour {
     private void SimpleGravityForce()
     {
         World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
-        Vector3 bottonOffsetedPos = gamePlayer.transform.position;
-        bottonOffsetedPos -= new Vector3(0.0f, 0.1f, 0.0f);
-        CollideInfo collideInfo = containWorld.customOctree.Collide(bottonOffsetedPos);
+        Vector3 bottomOffsetedPos = gamePlayer.transform.position;
+        bottomOffsetedPos -= new Vector3(0.0f, 0.1f, 0.0f);
+        CollideInfo collideInfo = containWorld.customOctree.Collide(bottomOffsetedPos);
         if (!collideInfo.isCollide)
         {
             gamePlayer.transform.position = new Vector3(gamePlayer.transform.position.x,
@@ -150,6 +184,10 @@ public class GamePlayerController : MonoBehaviour {
         else
         {
             KojeomLogger.DebugLog(string.Format("캐릭터가 밟고 서있는 Node center : {0}", collideInfo.hitBlockCenter));
+            if(curPlayerState == GAMEPLAYER_STATE.jumping)
+            {
+                curPlayerState = GAMEPLAYER_STATE.idle;
+            }
         }
     }
 }
