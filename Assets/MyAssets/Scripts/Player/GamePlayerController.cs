@@ -176,9 +176,7 @@ public class GamePlayerController : MonoBehaviour {
         bottomOffsetedPos -= new Vector3(0.0f, 0.1f, 0.0f);
 
         CollideInfo collideInfo = containWorld.customOctree.Collide(bottomOffsetedPos);
-        var collidePos = collideInfo.hitBlockCenter;
-        var collidedBlock = containWorld.worldBlockData[(int)collidePos.x,
-            (int)collidePos.y, (int)collidePos.z];
+        var collidedBlock = collideInfo.GetBlock();
         if (!collideInfo.isCollide)
         {
             gamePlayer.transform.position = new Vector3(gamePlayer.transform.position.x,
@@ -187,8 +185,8 @@ public class GamePlayerController : MonoBehaviour {
         }
         else if(collidedBlock.type != (byte)TileType.NONE)
         {
-            KojeomLogger.DebugLog(string.Format("캐릭터가 밟고 서있는 collide center : {0}, collided block : {1}",
-                collideInfo.hitBlockCenter, collidedBlock));
+            KojeomLogger.DebugLog(string.Format("캐릭터가 밟고 서있는 collide center : {0}, collided block center : {1}",
+                collideInfo.hitBlockCenter, collidedBlock.center));
         }
     }
 }
