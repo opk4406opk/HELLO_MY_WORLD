@@ -6,9 +6,10 @@ using System.Collections.Generic;
 
 public enum GAMEPLAYER_STATE
 {
-    walking = 0,
+    move = 0,
     idle = 1,
-    jumping = 2
+    jump = 2,
+    moving_jump = 3
 }
 public class GamePlayerController : MonoBehaviour {
 
@@ -39,7 +40,9 @@ public class GamePlayerController : MonoBehaviour {
     private PlayerMoveState moveState;
     private PlayerIdleState idleState;
     private PlayerJumpState jumpState;
-    private PlayerStateController stateController;
+    private PlayerStateController moveStateController;
+    private PlayerStateController jumpStateController;
+    private PlayerStateController poseStateController;
     private GAMEPLAYER_STATE curPlayerState;
 
     public void Init(Camera mainCam, GamePlayer player)
@@ -56,8 +59,9 @@ public class GamePlayerController : MonoBehaviour {
         moveState = new PlayerMoveState(gamePlayer);
         idleState = new PlayerIdleState(gamePlayer);
         jumpState = new PlayerJumpState(gamePlayer);
-        stateController = new PlayerStateController();
-        stateController.SetState(idleState);
+        moveStateController = new PlayerStateController();
+        jumpStateController = new PlayerStateController();
+        poseStateController = new PlayerStateController();
         curPlayerState = GAMEPLAYER_STATE.idle;
     }
 
@@ -137,31 +141,49 @@ public class GamePlayerController : MonoBehaviour {
                 var inputData = InputManager.singleton.GetInputData();
                 if (inputData.state == INPUT_STATE.CHARACTER_MOVE)
                 {
-                    curPlayerState = GAMEPLAYER_STATE.walking;
-                }
-                else if (inputData.state == INPUT_STATE.CHARACTER_JUMP)
-                {
-                    curPlayerState = GAMEPLAYER_STATE.jumping;
+                    curPlayerState = GAMEPLAYER_STATE.move;
                 }
                 else if(inputData.state == INPUT_STATE.NONE)
                 {
                     curPlayerState = GAMEPLAYER_STATE.idle;
                 }
-                KojeomLogger.DebugLog(string.Format("player_state : {0}", curPlayerState));
+
+                var overlappedInputs = InputManager.singleton.GetOverlappedInputData();
+                if(overlappedInputs.Count > 0)
+                {
+                    var input = overlappedInputs.Dequeue();
+                    if(input.state == INPUT_STATE.CHARACTER_JUMP && curPlayerState == GAMEPLAYER_STATE.move)
+                    {
+                        curPlayerState = GAMEPLAYER_STATE.moving_jump;
+                    }
+                    else if (input.state == INPUT_STATE.CHARACTER_JUMP && curPlayerState != GAMEPLAYER_STATE.move)
+                    {
+                        curPlayerState = GAMEPLAYER_STATE.jump;
+                    }
+                }
+                KojeomLogger.DebugLog(string.Format("curPlayerState : {0}", curPlayerState));
 
                 switch (curPlayerState)
                 {
+                    case GAMEPLAYER_STATE.move:
+                        moveStateController.SetState(moveState);
+                        moveStateController.UpdateState();
+                        break;
+                    case GAMEPLAYER_STATE.jump:
+                        jumpStateController.SetState(jumpState);
+                        jumpStateController.UpdateState();
+                        break;
                     case GAMEPLAYER_STATE.idle:
-                        stateController.SetState(idleState);
+                        poseStateController.SetState(idleState);
+                        poseStateController.UpdateState();
                         break;
-                    case GAMEPLAYER_STATE.jumping:
-                        stateController.SetState(jumpState);
-                        break;
-                    case GAMEPLAYER_STATE.walking:
-                        stateController.SetState(moveState);
+                    case GAMEPLAYER_STATE.moving_jump:
+                        jumpStateController.SetState(jumpState);
+                        jumpStateController.UpdateState();
+                        moveStateController.SetState(moveState);
+                        moveStateController.UpdateState();
                         break;
                 }
-                stateController.UpdateState();
 
                 RotationCamAndPlayer();
 			}
@@ -185,8 +207,7 @@ public class GamePlayerController : MonoBehaviour {
         }
         else if(collidedBlock.type != (byte)TileType.NONE)
         {
-            KojeomLogger.DebugLog(string.Format("캐릭터가 밟고 서있는 collide center : {0}, collided block center : {1}",
-                collideInfo.hitBlockCenter, collidedBlock.center));
+            KojeomCoroutineHelper.singleton.ReleaseRoutine("Jump");
         }
     }
 }

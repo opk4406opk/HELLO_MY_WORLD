@@ -3,27 +3,23 @@
 public class PlayerJumpState : IState
 {
     private float jumpScale;
+    private float jumpSpeed;
     private GamePlayer gamePlayer;
     private QuerySDMecanimController aniController;
-
-    private Vector3 destPos;
-    private Vector3 originPos;
 
     private float t;
 
     public PlayerJumpState(GamePlayer player)
     {
         gamePlayer = player;
-        jumpScale = 0.5f;
+        jumpSpeed = 2.5f;
+        jumpScale = 1.8f;
         t = 0.0f;
         aniController = gamePlayer.charInstance.GetAniController();
     }
     public void InitState()
     {
         aniController.ChangeAnimation(QuerySDMecanimController.QueryChanSDAnimationType.NORMAL_FLY_UP);
-        originPos = gamePlayer.transform.position;
-        destPos = originPos + (gamePlayer.transform.up * jumpScale);
-
         KojeomCoroutineHelper.singleton.StartCoroutineService(Jump(), "Jump");
     }
 
@@ -37,6 +33,9 @@ public class PlayerJumpState : IState
 
     private System.Collections.IEnumerator Jump()
     {
+        //
+        Vector3 startPos = gamePlayer.transform.position;
+        Vector3 destPos = startPos + (gamePlayer.transform.up * jumpScale);
         while (t <= 1.0f)
         {
             World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
@@ -46,9 +45,13 @@ public class PlayerJumpState : IState
             CollideInfo collideInfo = containWorld.customOctree.Collide(topOffsetedPos);
             if (collideInfo.isCollide == false)
             {
-                Vector3 newPos = Vector3.Lerp(originPos, destPos, t);
+                startPos = gamePlayer.transform.position;
+                destPos.x = startPos.x;
+                destPos.z = startPos.z;
+
+                Vector3 newPos = Vector3.Lerp(startPos, destPos, t);
                 gamePlayer.transform.position = newPos;
-                t += Time.deltaTime;
+                t += (Time.deltaTime * jumpSpeed);
             }
             yield return null;
         }
