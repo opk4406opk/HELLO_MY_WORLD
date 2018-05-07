@@ -37,6 +37,7 @@ public class PlayerMoveState : IState
     private void Move()
     {
         curPressedKey = InputManager.singleton.GetInputData().keyCode;
+        KojeomLogger.DebugLog(string.Format("curPressedKey : {0}", curPressedKey));
         Vector3 dir, newPos = Vector3.zero;
         Vector3 originPos = gamePlayer.transform.position;
         if (curPressedKey == KeyCode.W)
@@ -62,11 +63,13 @@ public class PlayerMoveState : IState
         KojeomLogger.DebugLog("player moving..");
         newPos = gamePlayer.transform.position + (dir * moveSpeed * Time.deltaTime);
         gamePlayer.transform.position = newPos;
-        //
+
         World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
         var collideInfo = containWorld.customOctree.Collide(gamePlayer.charInstance.GetCustomAABB());
         if (collideInfo.isCollide)
         {
+            KojeomLogger.DebugLog(string.Format("player가 이동하는 위치에 Block (pos : {0})이 존재합니다. 이동하지 않습니다.", 
+                collideInfo.hitBlockCenter));
             gamePlayer.transform.position = originPos;
         }
     }

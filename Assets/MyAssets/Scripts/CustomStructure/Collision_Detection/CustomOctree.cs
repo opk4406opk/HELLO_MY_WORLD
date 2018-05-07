@@ -66,6 +66,11 @@ public struct CollideInfo
 {
     public bool isCollide;
     public Vector3 hitBlockCenter;
+    public Block GetBlock()
+    {
+        var containWorld = WorldManager.instance.ContainedWorld(hitBlockCenter);
+        return containWorld.worldBlockData[(int)hitBlockCenter.x, (int)hitBlockCenter.y, (int)hitBlockCenter.z];
+    }
 }
 public class CustomOctree
 {

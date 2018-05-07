@@ -17,6 +17,9 @@ public class PlayerStateController {
 
     public void UpdateState()
     {
-        curState.UpdateState();
+        if(curState != null)
+        {
+            curState.UpdateState();
+        }
     }
 }

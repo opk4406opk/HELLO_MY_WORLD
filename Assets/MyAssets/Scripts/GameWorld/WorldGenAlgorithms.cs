@@ -30,9 +30,9 @@ public class WorldGenAlgorithms {
         {
             for (int z = 0; z < gameConfig.sub_world_z_size; z++)
             {
-                int stone = PerlinNoise(x, 32, z, 3, Utility.RandomInteger(1, 3), 2);
+                int stone = PerlinNoise(x, 20, z, 3, Utility.RandomInteger(1, 3), 2);
                 stone += param.baseOffset;
-                int grass = PerlinNoise(x, 32, z, 1, Utility.RandomInteger(3, 6), 1) + 1;
+                int grass = PerlinNoise(x, 21, z, 1, Utility.RandomInteger(1, 2), 1) + 1;
 
                 for (int y = 0; y < gameConfig.sub_world_y_size; y++)
                 {

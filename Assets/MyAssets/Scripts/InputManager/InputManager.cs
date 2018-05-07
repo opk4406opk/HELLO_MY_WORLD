@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 public struct InputData
@@ -36,6 +36,7 @@ public class InputManager : MonoBehaviour {
     private Ray ray;
 
     private InputData curInputData;
+    private Queue<InputData> overlappedInputs;
 
     private static InputManager _singleton = null;
     public static InputManager singleton
@@ -52,12 +53,14 @@ public class InputManager : MonoBehaviour {
         _singleton = this;
         curInputData.state = INPUT_STATE.NONE;
         curInputData.keyCode = KeyCode.None;
+        overlappedInputs = new Queue<InputData>();
         modifyTerrian.Init();
     }
 
     void Update ()
     {
-        CheckInputState();
+        CheckSingleInputState();
+        CheckOverlapInputState();
         MouseInputProcess();
         KeyBoardInputProcess();
     }
@@ -66,8 +69,23 @@ public class InputManager : MonoBehaviour {
     {
         return curInputData;
     }
+    public Queue<InputData> GetOverlappedInputData()
+    {
+        return overlappedInputs;
+    }
 
-    private void CheckInputState()
+    private void CheckOverlapInputState()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            InputData input;
+            input.state = INPUT_STATE.CHARACTER_JUMP;
+            input.keyCode = KeyCode.Space;
+            overlappedInputs.Enqueue(input);
+        }
+    }
+
+    private void CheckSingleInputState()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -129,11 +147,11 @@ public class InputManager : MonoBehaviour {
             curInputData.state = INPUT_STATE.CHARACTER_MOVE;
             curInputData.keyCode = KeyCode.D;
         }
-        else if (Input.GetKeyDown(KeyCode.Space))
-        {
-            curInputData.state = INPUT_STATE.CHARACTER_JUMP;
-            curInputData.keyCode = KeyCode.I;
-        }
+        //else if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    curInputData.state = INPUT_STATE.CHARACTER_JUMP;
+        //    curInputData.keyCode = KeyCode.Space;
+        //}
         else
         {
             curInputData.state = INPUT_STATE.NONE;
