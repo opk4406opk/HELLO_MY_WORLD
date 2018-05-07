@@ -13,6 +13,8 @@ public class DayAndNightManager : MonoBehaviour, IManager
     
     public void Init()
     {
+        // sun, moon이 회전하는 중심지점을 (0,0,0)으로 지정한다.
+        // 임시적인 값으로, 전체 생성되는 월드맵의 정 중앙을 기준으로 회전해야한다.
         targetPos = Vector3.zero;
     }
 
