@@ -6,3 +6,8 @@ public interface INpc
 {
     void Talk();
 }
+
+public interface IMerchantNPC
+{
+    List<int> GetSellingItemIds();
+}

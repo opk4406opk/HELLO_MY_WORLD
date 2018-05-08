@@ -107,7 +107,7 @@ public class MainMenuManager : MonoBehaviour {
             GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.WORLD_LOAD_FAIL;
             GameMessage.SetMessage("게임 로딩에 실패했습니다.");
 			KojeomLogger.DebugLog("GameLoading Failed", LOG_TYPE.ERROR);
-            UIPopupManager.OpenGameMessage();
+            UIPopupManager.OpenPopupUI(POPUP_TYPE.gameMessage);
         }
     }
     

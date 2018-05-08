@@ -10,8 +10,8 @@ abstract public class NPCData
     public float dp;
     public string name;
     public string type;
-    public Vector3 spwanPos;
-    public int spwanWorld;
+    public Vector3 spawnPos;
+    public int spawnWorld;
 }
 public class RoamingMerchantData : NPCData
 {
@@ -21,15 +21,13 @@ public class ShopMerchantData : NPCData
 {
     public List<int> sellingItemsID;
 }
-
 public class NPC_TYPE
 {
     public static readonly string TYPE_SHOP_MERCHANT = "shop_merchant";
     public static readonly string TYPE_ROAMING_MERCHANT = "roaming_merchant";
 }
-
 public class NPCDataFile : MonoBehaviour {
-
+    
     private JSONObject jsonObject;
     private TextAsset jsonFile;
 
@@ -103,9 +101,9 @@ public class NPCDataFile : MonoBehaviour {
                         data.ToDictionary().TryGetValue("hp", out value);
                         npcData.hp = float.Parse(value);
                         data.ToDictionary().TryGetValue("spawn_world", out value);
-                        npcData.spwanWorld = int.Parse(value);
+                        npcData.spawnWorld = int.Parse(value);
                         data.ToDictionary().TryGetValue("spawn_position", out value);
-                        npcData.spwanPos = GetSpwanPos(value);
+                        npcData.spawnPos = GetSpwanPos(value);
                         data.ToDictionary().TryGetValue("selling_items_id", out value);
                         npcData.sellingItemsID = GetItemsID(value);
 
@@ -128,9 +126,9 @@ public class NPCDataFile : MonoBehaviour {
                         data.ToDictionary().TryGetValue("hp", out value);
                         npcData.hp = float.Parse(value);
                         data.ToDictionary().TryGetValue("spawn_world", out value);
-                        npcData.spwanWorld = int.Parse(value);
+                        npcData.spawnWorld = int.Parse(value);
                         data.ToDictionary().TryGetValue("spawn_position", out value);
-                        npcData.spwanPos = GetSpwanPos(value);
+                        npcData.spawnPos = GetSpwanPos(value);
                         data.ToDictionary().TryGetValue("selling_items_id", out value);
                         npcData.sellingItemsID = GetItemsID(value);
 

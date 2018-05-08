@@ -9,7 +9,8 @@ public enum LOG_TYPE
 	ERROR = 1,
     INFO = 2,
     NETWORK_SERVER_INFO = 3,
-    NETWORK_CLIENT_INFO = 4
+    NETWORK_CLIENT_INFO = 4,
+    SYSTEM = 5
 }
 public class KojeomLogger : MonoBehaviour {
 
@@ -34,6 +35,9 @@ public class KojeomLogger : MonoBehaviour {
                     break;
                 case LOG_TYPE.NETWORK_CLIENT_INFO:
                     changedLog.AppendFormat("<color=#6633FF><b>[NETWORK_CLIENT_INFO]</b></color> {0}", log);
+                    break;
+                case LOG_TYPE.SYSTEM:
+                    changedLog.AppendFormat("<color=white><b>[SYSTEM]</b></color> {0}", log);
                     break;
                 default:
 					break;

@@ -31,7 +31,7 @@ public class PopupSellItem : MonoBehaviour {
 
     void Start()
     {
-        maxSell = int.Parse(SceneToScene_Data.popupItemInfo.amount);
+        maxSell = int.Parse(ShopUIManager.singleton.GetLastestSelectItem().amount);
         slider_sellQuantity.numberOfSteps = maxSell;
         SetData();
         ScaleUpEffect();
@@ -79,15 +79,15 @@ public class PopupSellItem : MonoBehaviour {
 
     private void CallBackPopupClose()
     {
-        UIPopupManager.CloseSellItemData();
+        UIPopupManager.ClosePopupUI(POPUP_TYPE.sellItem);
     }
 
     private void SetData()
     {
-        lbl_itemTitle.text = SceneToScene_Data.popupItemInfo.name;
-        spr_itemImg.spriteName = SceneToScene_Data.popupItemInfo.name;
-        lbl_itemType.text = SceneToScene_Data.popupItemInfo.type;
-        lbl_itemAmount.text = SceneToScene_Data.popupItemInfo.amount;
-        lbl_itemDetailInfo.text = SceneToScene_Data.popupItemInfo.detailInfo;
+        lbl_itemTitle.text = ShopUIManager.singleton.GetLastestSelectItem().itemName;
+        spr_itemImg.spriteName = ShopUIManager.singleton.GetLastestSelectItem().itemName;
+        lbl_itemType.text = ShopUIManager.singleton.GetLastestSelectItem().type;
+        lbl_itemAmount.text = ShopUIManager.singleton.GetLastestSelectItem().amount;
+        lbl_itemDetailInfo.text = ShopUIManager.singleton.GetLastestSelectItem().detailInfo;
     }
 }
