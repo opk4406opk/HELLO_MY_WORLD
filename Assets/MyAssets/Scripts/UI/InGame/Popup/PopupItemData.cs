@@ -55,15 +55,24 @@ public class PopupItemData : MonoBehaviour
 
     private void CallBackPopupClose()
     {
-        UIPopupManager.CloseItemData();
+        UIPopupManager.ClosePopupUI(POPUP_TYPE.itemData);
     }
 
     private void SetData()
     {
-        lbl_itemTitle.text = SceneToScene_Data.popupItemInfo.name;
-        spr_itemImg.spriteName = SceneToScene_Data.popupItemInfo.name;
-        lbl_itemType.text = SceneToScene_Data.popupItemInfo.type;
-        lbl_itemAmount.text = SceneToScene_Data.popupItemInfo.amount;
-        lbl_itemDetailInfo.text = SceneToScene_Data.popupItemInfo.detailInfo;
+        ItemData selectedItemData = new ItemData();
+        if (UIPopupManager.isInvenOpen)
+        {
+            selectedItemData = InventoryUIManager.singleton.GetLastestSelectItem();
+        }
+        else if (UIPopupManager.isCraftItemOpen)
+        {
+            selectedItemData = InventoryUIManager.singleton.GetLastestSelectItem();
+        }
+        lbl_itemTitle.text = selectedItemData.itemName;
+        spr_itemImg.spriteName = selectedItemData.itemName;
+        lbl_itemType.text = selectedItemData.type;
+        lbl_itemAmount.text = selectedItemData.amount;
+        lbl_itemDetailInfo.text = selectedItemData.detailInfo;
     }
 }

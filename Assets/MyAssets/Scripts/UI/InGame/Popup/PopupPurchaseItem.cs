@@ -54,15 +54,16 @@ public class PopupPurchaseItem : MonoBehaviour {
             IDbCommand dbcmd;
             using (dbconn = (IDbConnection)new SqliteConnection(conn))
             {
+                var seletedItemData = ShopUIManager.singleton.GetLastestSelectItem();
                 using (dbcmd = dbconn.CreateCommand())
                 {
                     try
                     {
                         dbconn.Open(); //Open connection to the database.
                         string sqlQuery = "INSERT INTO USER_ITEM (name, type, amount, id) VALUES("
-                                           + "'" + SceneToScene_Data.popupItemInfo.name + "'" + "," + "'" +
-                                           SceneToScene_Data.popupItemInfo.type + "'" + "," + quantity + ","
-                                           + SceneToScene_Data.popupItemInfo.id + ")";
+                                           + "'" + seletedItemData.name + "'" + "," + "'" +
+                                           seletedItemData.type + "'" + "," + quantity + ","
+                                           + seletedItemData.id + ")";
                         dbcmd.CommandText = sqlQuery;
                         dbcmd.ExecuteNonQuery();
 
@@ -73,7 +74,7 @@ public class PopupPurchaseItem : MonoBehaviour {
                         if (SQLiteErrorCode.Constraint == e.ErrorCode)
                         {
                             string sqlQuery = "SELECT amount FROM USER_ITEM WHERE id = "
-                                        + "'" + SceneToScene_Data.popupItemInfo.id + "'";
+                                        + "'" + seletedItemData.id + "'";
                             dbcmd.CommandText = sqlQuery;
                             IDataReader reader = dbcmd.ExecuteReader();
                             reader.Read();
@@ -82,7 +83,7 @@ public class PopupPurchaseItem : MonoBehaviour {
                             reader.Close();
 
                             sqlQuery = "UPDATE USER_ITEM SET amount = " + "'" + itemAmount + "'" +
-                                        " WHERE id = " + "'" + SceneToScene_Data.popupItemInfo.id + "'";
+                                        " WHERE id = " + "'" + seletedItemData.id + "'";
                             dbcmd.CommandText = sqlQuery;
                             dbcmd.ExecuteNonQuery();
 
@@ -129,15 +130,15 @@ public class PopupPurchaseItem : MonoBehaviour {
 
     private void CallBackPopupClose()
     {
-        UIPopupManager.ClosePurchaseItemData();
+        UIPopupManager.ClosePopupUI(POPUP_TYPE.purchaseItem);
     }
 
     private void SetData()
     {
-        lbl_itemTitle.text = SceneToScene_Data.popupItemInfo.name;
-        spr_itemImg.spriteName = SceneToScene_Data.popupItemInfo.name;
-        lbl_itemType.text = SceneToScene_Data.popupItemInfo.type;
-        lbl_itemAmount.text = SceneToScene_Data.popupItemInfo.amount;
-        lbl_itemDetailInfo.text = SceneToScene_Data.popupItemInfo.detailInfo;
+        lbl_itemTitle.text = ShopUIManager.singleton.GetLastestSelectItem().itemName;
+        spr_itemImg.spriteName = ShopUIManager.singleton.GetLastestSelectItem().itemName;
+        lbl_itemType.text = ShopUIManager.singleton.GetLastestSelectItem().type;
+        lbl_itemAmount.text = ShopUIManager.singleton.GetLastestSelectItem().amount;
+        lbl_itemDetailInfo.text = ShopUIManager.singleton.GetLastestSelectItem().detailInfo;
     }
 }

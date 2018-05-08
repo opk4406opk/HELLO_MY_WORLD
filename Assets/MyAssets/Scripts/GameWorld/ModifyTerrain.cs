@@ -103,7 +103,7 @@ public class ModifyTerrain : MonoBehaviour
         {
             GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.CANT_CREATE_BLOCK;
             GameMessage.SetMessage("허용 범위를 벗어나 블록 생성이 불가능합니다. (구조적 문제로 인해 수정중입니다. 기다려주세요.)");
-            UIPopupManager.OpenGameMessage();
+            UIPopupManager.OpenPopupUI(POPUP_TYPE.gameMessage);
         }
     }
     private void SetBlockForDelete(int x, int y, int z, byte block)
@@ -178,7 +178,7 @@ public class ModifyTerrain : MonoBehaviour
         {
             GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.CANT_CREATE_BLOCK;
             GameMessage.SetMessage("허용 범위를 벗어나 블록 생성이 불가능합니다. (구조적 문제로 인해 수정중입니다. 기다려주세요.)");
-            UIPopupManager.OpenGameMessage();
+            UIPopupManager.OpenPopupUI(POPUP_TYPE.gameMessage);
         }
         
     }

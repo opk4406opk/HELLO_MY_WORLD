@@ -2,6 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public interface IManager
+{
+    void Init();
+    void ResetManager();
+}
+
 /// <summary>
 /// 게임 상태(single, multi, load, save)를 관리하는 클래스.
 /// </summary>
@@ -60,6 +66,8 @@ public class GameManager : MonoBehaviour
     private InputManager inputManager;
     [SerializeField]
     private KojeomCoroutineHelper kojeomCoroutineHelper;
+    [SerializeField]
+    private DayAndNightManager dayAndNightManager;
 
     [SerializeField]
     private NPCManager npcManager;
@@ -71,6 +79,8 @@ public class GameManager : MonoBehaviour
 
     void Start ()
     {
+        KojeomLogger.DebugLog(string.Format("Multi_game : {0}, Loaded_game : {1}",
+               GameStatus.isMultiPlay, GameStatus.isLoadGame), LOG_TYPE.SYSTEM);
         instance = this;
         InitDataFiles();
         // 싱글플레이는 바로 매니저클래스들을 초기화한다.
@@ -109,6 +119,9 @@ public class GameManager : MonoBehaviour
         KojeomLogger.DebugLog("게임매니저 클래스들을 초기화 합니다.");
         // sound init.
         //GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_InGame);
+        dayAndNightManager.Init();
+        dayAndNightManager.StartDayAndNight();
+        //
         kojeomCoroutineHelper.Init();
         inputManager.Init();
         //player Init
@@ -129,8 +142,9 @@ public class GameManager : MonoBehaviour
         //
         actorCollideManager.Init();
         //
+        // 날씨 매니저의 경우, 향후 4계절/눈/비 등을 관리한다.
+        // 프로토타입의 수준으로 기능이 매우 미흡한 수준임.
         weatherManager.Init();
-        //weatherManager.StartWeatherSystem();
 
         if (GameStatus.isLoadGame == true) { saveAndLoadManager.Load(); }
         KojeomLogger.DebugLog("게임매니저 클래스 초기화 완료.");

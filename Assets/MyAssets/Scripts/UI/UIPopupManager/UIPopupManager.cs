@@ -2,6 +2,19 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
+public enum POPUP_TYPE
+{
+    inven = 0,
+    craftItem = 1,
+    shop = 2,
+    //
+    gameMenu = 3,
+    gameMessage = 4,
+    //
+    itemData = 5,
+    purchaseItem = 6,
+    sellItem = 7
+}
 
 /// <summary>
 /// InGame Scene에서 UIPopup 창을 관리하는 클래스.
@@ -76,133 +89,114 @@ public class UIPopupManager : MonoBehaviour {
                 return _isAllPopupClose;
         }
     }
-   
 
-	public static void OpenInven()
+    public static void OpenPopupUI(POPUP_TYPE popuptype)
     {
-        if(_isInvenOpen == false)
+        switch (popuptype)
         {
-            SceneManager.LoadSceneAsync("popup_inventory", LoadSceneMode.Additive);
-            _isInvenOpen = true;
-            _isAllPopupClose = false;
+            case POPUP_TYPE.craftItem:
+                if (_isCraftItemOpen == false)
+                {
+                    SceneManager.LoadSceneAsync("popup_craftItem", LoadSceneMode.Additive);
+                    _isCraftItemOpen = true;
+                    _isAllPopupClose = false;
+                }
+                break;
+            case POPUP_TYPE.inven:
+                if (_isInvenOpen == false)
+                {
+                    SceneManager.LoadSceneAsync("popup_inventory", LoadSceneMode.Additive);
+                    _isInvenOpen = true;
+                    _isAllPopupClose = false;
+                }
+                break;
+            case POPUP_TYPE.shop:
+                if (_isShopOpen == false)
+                {
+                    SceneManager.LoadSceneAsync("popup_shop", LoadSceneMode.Additive);
+                    _isShopOpen = true;
+                    _isAllPopupClose = false;
+                }
+                break;
+            case POPUP_TYPE.gameMenu:
+                if (_isGameMenuOpen == false)
+                {
+                    SceneManager.LoadSceneAsync("popup_menu", LoadSceneMode.Additive);
+                    _isGameMenuOpen = true;
+                    _isAllPopupClose = false;
+                }
+                break;
+            case POPUP_TYPE.gameMessage:
+                if (_isGameMessageOpen == false)
+                {
+                    SceneManager.LoadSceneAsync("popup_message", LoadSceneMode.Additive);
+                    _isGameMessageOpen = true;
+                    _isAllPopupClose = false;
+                }
+                break;
+            case POPUP_TYPE.itemData:
+                if (_isItemDataOpen == false)
+                {
+                    SceneManager.LoadSceneAsync("popup_ItemData", LoadSceneMode.Additive);
+                    _isItemDataOpen = true;
+                    _isAllPopupClose = false;
+                }
+                break;
+            case POPUP_TYPE.purchaseItem:
+                if (_isPurchaseItemOpen == false)
+                {
+                    SceneManager.LoadSceneAsync("popup_purChaseItem", LoadSceneMode.Additive);
+                    _isPurchaseItemOpen = true;
+                    _isAllPopupClose = false;
+                }
+                break;
+            case POPUP_TYPE.sellItem:
+                if (_isSellItemOpen == false)
+                {
+                    SceneManager.LoadSceneAsync("popup_sellItem", LoadSceneMode.Additive);
+                    _isSellItemOpen = true;
+                    _isAllPopupClose = false;
+                }
+                break;
         }
     }
 
-    public static void CloseInven()
+    public static void ClosePopupUI(POPUP_TYPE popuptype)
     {
-        SceneManager.UnloadSceneAsync("popup_inventory");
-        _isInvenOpen = false;
-    }
-
-    public static void OpenInGameMenu()
-    {
-        if (_isGameMenuOpen == false)
+        switch (popuptype)
         {
-            SceneManager.LoadSceneAsync("popup_menu", LoadSceneMode.Additive);
-            _isGameMenuOpen = true;
-            _isAllPopupClose = false;
+            case POPUP_TYPE.craftItem:
+                SceneManager.UnloadSceneAsync("popup_craftItem");
+                _isCraftItemOpen = false;
+                break;
+            case POPUP_TYPE.inven:
+                SceneManager.UnloadSceneAsync("popup_inventory");
+                _isInvenOpen = false;
+                break;
+            case POPUP_TYPE.shop:
+                SceneManager.UnloadSceneAsync("popup_shop");
+                _isShopOpen = false;
+                break;
+            case POPUP_TYPE.gameMenu:
+                SceneManager.UnloadSceneAsync("popup_menu");
+                _isGameMenuOpen = false;
+                break;
+            case POPUP_TYPE.gameMessage:
+                SceneManager.UnloadSceneAsync("popup_message");
+                _isGameMessageOpen = false;
+                break;
+            case POPUP_TYPE.itemData:
+                SceneManager.UnloadSceneAsync("popup_ItemData");
+                _isItemDataOpen = false;
+                break;
+            case POPUP_TYPE.purchaseItem:
+                SceneManager.UnloadSceneAsync("popup_purChaseItem");
+                _isPurchaseItemOpen = false;
+                break;
+            case POPUP_TYPE.sellItem:
+                SceneManager.UnloadSceneAsync("popup_sellItem");
+                _isSellItemOpen = false;
+                break;
         }
-    }
-
-    public static void CloseInGameMenu()
-    {
-        SceneManager.UnloadSceneAsync("popup_menu");
-        _isGameMenuOpen = false;
-    }
-
-    public static void OpenGameMessage()
-    {
-        if(_isGameMessageOpen == false)
-        {
-            SceneManager.LoadSceneAsync("popup_message", LoadSceneMode.Additive);
-            _isGameMessageOpen = true;
-            _isAllPopupClose = false;
-        }
-    }
-
-    public static void CloseGameMessage()
-    {
-        SceneManager.UnloadSceneAsync("popup_message");
-        _isGameMessageOpen = false;
-    }
-
-    public static void OpenItemData()
-    {
-        if(_isItemDataOpen == false)
-        {
-            SceneManager.LoadSceneAsync("popup_ItemData", LoadSceneMode.Additive);
-            _isItemDataOpen = true;
-            _isAllPopupClose = false;
-        }
-    }
-
-    public static void CloseItemData()
-    {
-        SceneManager.UnloadSceneAsync("popup_ItemData");
-        _isItemDataOpen = false;
-    }
-
-    public static void OpenCraftItem()
-    {
-        if(_isCraftItemOpen == false)
-        {
-            SceneManager.LoadSceneAsync("popup_craftItem", LoadSceneMode.Additive);
-            _isCraftItemOpen = true;
-            _isAllPopupClose = false;
-        }
-    }
-
-    public static void CloseCraftItem()
-    {
-        SceneManager.UnloadSceneAsync("popup_craftItem");
-        _isCraftItemOpen = false;
-    }
-
-    public static void OpenShop()
-    {
-        if (_isShopOpen == false)
-        {
-            SceneManager.LoadSceneAsync("popup_shop", LoadSceneMode.Additive);
-            _isShopOpen = true;
-            _isAllPopupClose = false;
-        }
-    }
-
-    public static void CloseShop()
-    {
-        SceneManager.UnloadSceneAsync("popup_shop");
-        _isShopOpen = false;
-    }
-
-    public static void OpenPurchaseItemData()
-    {
-        if(_isPurchaseItemOpen == false)
-        {
-            SceneManager.LoadSceneAsync("popup_purChaseItem", LoadSceneMode.Additive);
-            _isPurchaseItemOpen = true;
-            _isAllPopupClose = false;
-        }
-    }
-
-    public static void ClosePurchaseItemData()
-    {
-        SceneManager.UnloadSceneAsync("popup_purChaseItem");
-        _isPurchaseItemOpen = false;
-    }
-
-    public static void OpenSellItemData()
-    {
-        if (_isSellItemOpen == false)
-        {
-            SceneManager.LoadSceneAsync("popup_sellItem", LoadSceneMode.Additive);
-            _isSellItemOpen = true;
-            _isAllPopupClose = false;
-        }
-    }
-
-    public static void CloseSellItemData()
-    {
-        SceneManager.UnloadSceneAsync("popup_sellItem");
-        _isSellItemOpen = false;
     }
 }
