@@ -12,7 +12,4 @@ public class SceneToScene_Data : MonoBehaviour {
     {
         get { return _gameChDatas; }
     }
-
-    public static List<int> shopItemIDs;
-    public static PopupUI_ItemInfo popupItemInfo;
 }

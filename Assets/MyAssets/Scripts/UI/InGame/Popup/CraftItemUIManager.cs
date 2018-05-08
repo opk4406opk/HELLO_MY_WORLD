@@ -5,7 +5,7 @@ using Mono.Data.Sqlite;
 using System.Data;
 using System.Text;
 
-public class CraftItemManager : MonoBehaviour {
+public class CraftItemUIManager : MonoBehaviour {
 
     [SerializeField]
     private GameObject itemSlotPrefab;
@@ -23,17 +23,21 @@ public class CraftItemManager : MonoBehaviour {
     private readonly int defaultItemSlot = 9;
     private List<ItemData> itemSlotList = new List<ItemData>();
 
-    private CraftItemListDataFile craftItemDataFile;
-    private ItemDataFile itemDataFile;  
-    
+    private ItemData lastestSelectItem;
+
+    private static CraftItemUIManager _singleton = null;
+    public static CraftItemUIManager singleton
+    {
+        get
+        {
+            if (_singleton == null) KojeomLogger.DebugLog("CraftItemUIManager 제대로 초기화 되지 않았습니다", LOG_TYPE.ERROR);
+            return _singleton;
+        }
+    }
+
     void Start ()
     {
-        GameObject obj = GameObject.Find("craftItemListDataFile");
-        craftItemDataFile = obj.GetComponent<CraftItemListDataFile>();
-
-        obj = GameObject.Find("ItemDataFile");
-        itemDataFile = obj.GetComponent<ItemDataFile>();
-
+        _singleton = this;
         spr_afterItemImg.spriteName = string.Empty;
 
         Ed_OnClickQuantityList = new EventDelegate(this, "OnClickQuantTityList");
@@ -42,6 +46,11 @@ public class CraftItemManager : MonoBehaviour {
         CreateEmptySlot(defaultItemSlot);
         SetDropDownList();
         ScaleUpEffect();
+    }
+
+    public ItemData GetLastestSelectItem()
+    {
+        return lastestSelectItem;
     }
     
     public void OnClickMakeItem()
@@ -55,7 +64,7 @@ public class CraftItemManager : MonoBehaviour {
         {
             // consume user materials, and user item info update
             CraftItem item;
-            craftItemDataFile.craftItems.TryGetValue(selectCraftItemList.value, out item);
+            CraftItemListDataFile.instance.craftItems.TryGetValue(selectCraftItemList.value, out item);
             foreach (CraftRawMaterial raw in item.rawMaterials)
             {
                 int userMatAmount = GetUserMaterialAmount(raw.id);
@@ -66,7 +75,7 @@ public class CraftItemManager : MonoBehaviour {
             }
 
             // Set CraftItem to user
-            ItemInfo itemInfo = itemDataFile.GetItemData(item.craftItemID);
+            ItemInfo itemInfo = ItemDataFile.instance.GetItemData(item.craftItemID);
             int craftItemType = int.Parse(itemInfo.type);
             SetCraftItemToUser(item.craftItemID, item.craftItemName,
                 int.Parse(selectQuantityList.value),
@@ -74,13 +83,13 @@ public class CraftItemManager : MonoBehaviour {
 
             GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.CRAFT_ITEM_SUCCESS;
             GameMessage.SetMessage("아이템 제작에 성공했습니다.");
-            UIPopupManager.OpenGameMessage();
+            UIPopupManager.OpenPopupUI(POPUP_TYPE.gameMessage);
         }
         else
         {
             GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.CRAFT_ITEM_FAIL;
             GameMessage.SetMessage("수량부족으로 아이템 제작이 불가능합니다.");
-            UIPopupManager.OpenGameMessage();
+            UIPopupManager.OpenPopupUI(POPUP_TYPE.gameMessage);
         }
     }
 
@@ -194,7 +203,7 @@ public class CraftItemManager : MonoBehaviour {
         bool isPossibleMakeItem = false;
 
         CraftItem item;
-        craftItemDataFile.craftItems.TryGetValue(selectCraftItemList.value, out item);
+        CraftItemListDataFile.instance.craftItems.TryGetValue(selectCraftItemList.value, out item);
         foreach (CraftRawMaterial raw in item.rawMaterials)
         {
             isPossibleMakeItem = ChkMaterialAmount(raw.id,
@@ -241,7 +250,7 @@ public class CraftItemManager : MonoBehaviour {
 
     private void SetDropDownList()
     {
-        foreach(var craftItem in craftItemDataFile.craftItems)
+        foreach(var craftItem in CraftItemListDataFile.instance.craftItems)
         {
             selectCraftItemList.AddItem(craftItem.Value.craftItemName);
         }
@@ -259,7 +268,7 @@ public class CraftItemManager : MonoBehaviour {
     private void UpdateConsumeAmount()
     {
         CraftItem item;
-        craftItemDataFile.craftItems.TryGetValue(selectCraftItemList.value, out item);
+        CraftItemListDataFile.instance.craftItems.TryGetValue(selectCraftItemList.value, out item);
         int slotIdx = 0;
         foreach (CraftRawMaterial raw in item.rawMaterials)
         {
@@ -285,7 +294,8 @@ public class CraftItemManager : MonoBehaviour {
         spr_afterItemImg.spriteName = selectItemName;
 
         CraftItem item;
-        craftItemDataFile.craftItems.TryGetValue(selectItemName, out item);
+        CraftItemListDataFile.instance.craftItems.TryGetValue(selectItemName, out item);
+        var itemDataFile = ItemDataFile.instance;
         int slotIdx = 0;
         foreach (CraftRawMaterial raw in item.rawMaterials)
         {
@@ -310,14 +320,8 @@ public class CraftItemManager : MonoBehaviour {
     private EventDelegate Ed_OnClickItem;
     private void OnClickItem(ItemData itemData)
     {
-        SceneToScene_Data.popupItemInfo.Clear();
-        SceneToScene_Data.popupItemInfo.id = itemData.id;
-        SceneToScene_Data.popupItemInfo.name = itemData.itemName;
-        SceneToScene_Data.popupItemInfo.type = itemData.type;
-        SceneToScene_Data.popupItemInfo.amount = itemData.amount;
-        SceneToScene_Data.popupItemInfo.detailInfo = itemData.detailInfo;
-
-        UIPopupManager.OpenItemData();
+        lastestSelectItem = itemData;
+        UIPopupManager.OpenPopupUI(POPUP_TYPE.itemData);
     }
 
     private void ClearItemSlot()
@@ -382,6 +386,6 @@ public class CraftItemManager : MonoBehaviour {
 
     private void CallBackPopupClose()
     {
-        UIPopupManager.CloseCraftItem();
+        UIPopupManager.ClosePopupUI(POPUP_TYPE.craftItem);
     }
 }

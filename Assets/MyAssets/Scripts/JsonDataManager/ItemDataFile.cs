@@ -13,23 +13,6 @@ public struct ItemInfo
     public string detailInfo;
 }
 
-public struct PopupUI_ItemInfo
-{
-    public string id;
-    public string name;
-    public string type;
-    public string amount;
-    public string detailInfo;
-    public void Clear()
-    {
-        id = null;
-        name = null;
-        type = null;
-        amount = null;
-        detailInfo = null;
-    }
-}
-
 /// <summary>
 /// 게임 Item 데이터를 가지고 있는 클래스. (json)
 /// </summary>

@@ -9,7 +9,7 @@ using System.Text;
 /// <summary>
 /// 게임내 사용자의 인벤토리를 관리하는 클래스.
 /// </summary>
-public class InventoryManager : MonoBehaviour {
+public class InventoryUIManager : MonoBehaviour {
 
     [SerializeField]
     private GameObject itemSlotPrefab;
@@ -24,19 +24,29 @@ public class InventoryManager : MonoBehaviour {
     // DB에서 추출한 유저 아이템정보를 담아두는 리스트.
     private List<USER_ITEM> userItemList = new List<USER_ITEM>();
 
-    private ItemDataFile gameItemDataFile;
+    private static InventoryUIManager _singleton = null;
+    public static InventoryUIManager singleton
+    {
+        get
+        {
+            if (_singleton == null) KojeomLogger.DebugLog("InventoryUIManager 제대로 초기화 되지 않았습니다", LOG_TYPE.ERROR);
+            return _singleton;
+        }
+    }
+
+    private ItemData lastestSelectItem;
 
     void Start ()
     {
-        if(gameItemDataFile == null)
-        {
-            GameObject obj = GameObject.Find("ItemDataFile");
-            gameItemDataFile = obj.GetComponent<ItemDataFile>();
-
-        }
+        _singleton = this;
         CreateEmptySlot(defaultItemSlot);
         SettingUserItem();
         ScaleUpEffect();
+    }
+
+    public ItemData GetLastestSelectItem()
+    {
+        return lastestSelectItem;
     }
 
     private void ScaleUpEffect()
@@ -72,7 +82,7 @@ public class InventoryManager : MonoBehaviour {
     /// </summary>
     private void CallBackPopupClose()
     {
-        UIPopupManager.CloseInven();
+        UIPopupManager.ClosePopupUI(POPUP_TYPE.inven);
     }
 
     private void CreateEmptySlot(int _num)
@@ -137,7 +147,7 @@ public class InventoryManager : MonoBehaviour {
             itemSlotList[itemSlotIdx].amount = uitem.amount.ToString();
             itemSlotList[itemSlotIdx].type = uitem.type.ToString();
             // set item detail info
-            ItemInfo itemInfo = gameItemDataFile.GetItemData(uitem.id);
+            ItemInfo itemInfo = ItemDataFile.instance.GetItemData(uitem.id);
             itemSlotList[itemSlotIdx].detailInfo = itemInfo.detailInfo;
 
             itemSlotList[itemSlotIdx].InitAllData();
@@ -154,14 +164,8 @@ public class InventoryManager : MonoBehaviour {
     private EventDelegate Ed_OnClickItem;
     private void OnClickItem(ItemData itemData)
     {
-        SceneToScene_Data.popupItemInfo.Clear();
-        SceneToScene_Data.popupItemInfo.id = itemData.id;
-        SceneToScene_Data.popupItemInfo.name = itemData.itemName;
-        SceneToScene_Data.popupItemInfo.type = itemData.type;
-        SceneToScene_Data.popupItemInfo.amount = itemData.amount;
-        SceneToScene_Data.popupItemInfo.detailInfo = itemData.detailInfo;
-        
-        UIPopupManager.OpenItemData();
+        lastestSelectItem = itemData;
+        UIPopupManager.OpenPopupUI(POPUP_TYPE.itemData);
     }
 
 }

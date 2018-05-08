@@ -79,6 +79,8 @@ public class GameManager : MonoBehaviour
 
     void Start ()
     {
+        KojeomLogger.DebugLog(string.Format("Multi_game : {0}, Loaded_game : {1}",
+               GameStatus.isMultiPlay, GameStatus.isLoadGame), LOG_TYPE.SYSTEM);
         instance = this;
         InitDataFiles();
         // 싱글플레이는 바로 매니저클래스들을 초기화한다.

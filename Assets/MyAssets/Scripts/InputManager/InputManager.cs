@@ -186,7 +186,7 @@ public class InputManager : MonoBehaviour {
             case INPUT_STATE.TALK_NPC_MOUSE:
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
-                UIPopupManager.OpenShop();
+                UIPopupManager.OpenPopupUI(POPUP_TYPE.shop);
                 break;
             default:
                 break;
@@ -200,22 +200,22 @@ public class InputManager : MonoBehaviour {
             case INPUT_STATE.INVEN_OPEN:
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
-                UIPopupManager.OpenInven();
+                UIPopupManager.OpenPopupUI(POPUP_TYPE.inven);
                 break;
             case INPUT_STATE.MENU_OPEN:
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
-                UIPopupManager.OpenInGameMenu();
+                UIPopupManager.OpenPopupUI(POPUP_TYPE.gameMenu);
                 break;
             case INPUT_STATE.CRAFT_ITEM_OPEN:
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
-                UIPopupManager.OpenCraftItem();
+                UIPopupManager.OpenPopupUI(POPUP_TYPE.craftItem);
                 break;
             case INPUT_STATE.TALK_NPC_KEYBORAD:
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
-                UIPopupManager.OpenShop();
+                UIPopupManager.OpenPopupUI(POPUP_TYPE.shop);
                 break;
             default:
                 break;

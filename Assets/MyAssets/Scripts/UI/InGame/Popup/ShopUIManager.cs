@@ -6,7 +6,7 @@ using System.Data;
 using System.Text;
 using UnityEngine;
 
-public class ShopManager : MonoBehaviour {
+public class ShopUIManager : MonoBehaviour {
 
     [SerializeField]
     private GameObject invenItemSlotPrefab;
@@ -23,21 +23,32 @@ public class ShopManager : MonoBehaviour {
     private readonly int defaultItemSlot = 10;
     private List<ItemData> invenItemSlotList = new List<ItemData>();
     private List<ItemData> shopItemSlotList = new List<ItemData>();
-    // 아이템 정보가 기록되어 있는 데이터파일.
-    private ItemDataFile gameItemDataFile;
+
+    private static ShopUIManager _singleton = null;
+    public static ShopUIManager singleton
+    {
+        get
+        {
+            if (_singleton == null) KojeomLogger.DebugLog("ShopUIManager 제대로 초기화 되지 않았습니다", LOG_TYPE.ERROR);
+            return _singleton;
+        }
+    }
+
+    private ItemData lastestSelectItem;
 
     void Start()
     {
-        if(gameItemDataFile == null)
-        {
-            GameObject obj = GameObject.Find("ItemDataFile");
-            gameItemDataFile = obj.GetComponent<ItemDataFile>();
-        }
+        _singleton = this;
         CreateInvenEmptySlot(defaultItemSlot);
         CreateShopEmptySlot(defaultItemSlot);
         SettingUserItem();
         SettingShopItem();
         ScaleUpEffect();
+    }
+
+    public ItemData GetLastestSelectItem()
+    {
+        return lastestSelectItem;
     }
 
     private void ScaleUpEffect()
@@ -74,7 +85,7 @@ public class ShopManager : MonoBehaviour {
     /// </summary>
     private void CallBackPopupClose()
     {
-        UIPopupManager.CloseShop();
+        UIPopupManager.ClosePopupUI(POPUP_TYPE.shop);
     }
 
     private void CreateInvenEmptySlot(int _num)
@@ -117,11 +128,11 @@ public class ShopManager : MonoBehaviour {
 
     private void SettingShopItem()
     {
-        List<int> shopItemIDs = SceneToScene_Data.shopItemIDs;
-        List<ItemInfo> shopItems = new List<ItemInfo>();
-        foreach(var id in shopItemIDs)
+        var shopSellingItemIds = ((RoamingMerchant)NPCManager.singleton.GetLastestClickedActor()).GetSellingItemIds();
+        List <ItemInfo> shopItems = new List<ItemInfo>();
+        foreach(var id in shopSellingItemIds)
         {
-            shopItems.Add(gameItemDataFile.GetItemData(id.ToString()));
+            shopItems.Add(ItemDataFile.instance.GetItemData(id.ToString()));
         }
 
         int moreEmptySlot = shopItems.Count;
@@ -150,14 +161,8 @@ public class ShopManager : MonoBehaviour {
     private EventDelegate Ed_OnClickShopItem;
     private void OnClickShopItem(ItemData itemData)
     {
-        SceneToScene_Data.popupItemInfo.Clear();
-        SceneToScene_Data.popupItemInfo.id = itemData.id;
-        SceneToScene_Data.popupItemInfo.name = itemData.itemName;
-        SceneToScene_Data.popupItemInfo.type = itemData.type;
-        SceneToScene_Data.popupItemInfo.amount = itemData.amount;
-        SceneToScene_Data.popupItemInfo.detailInfo = itemData.detailInfo;
-
-        UIPopupManager.OpenPurchaseItemData();
+        lastestSelectItem = itemData;
+        UIPopupManager.OpenPopupUI(POPUP_TYPE.purchaseItem);
     }
 
     private void SettingUserItem()
@@ -206,7 +211,7 @@ public class ShopManager : MonoBehaviour {
             invenItemSlotList[itemSlotIdx].amount = uitem.amount.ToString();
             invenItemSlotList[itemSlotIdx].type = uitem.type.ToString();
             // set item detail info
-            ItemInfo itemInfo = gameItemDataFile.GetItemData(uitem.id);
+            ItemInfo itemInfo = ItemDataFile.instance.GetItemData(uitem.id);
             invenItemSlotList[itemSlotIdx].detailInfo = itemInfo.detailInfo;
 
             invenItemSlotList[itemSlotIdx].InitAllData();
@@ -223,13 +228,7 @@ public class ShopManager : MonoBehaviour {
     private EventDelegate Ed_OnClickUserItem;
     private void OnClickUserItem(ItemData itemData)
     {
-        SceneToScene_Data.popupItemInfo.Clear();
-        SceneToScene_Data.popupItemInfo.id = itemData.id;
-        SceneToScene_Data.popupItemInfo.name = itemData.itemName;
-        SceneToScene_Data.popupItemInfo.type = itemData.type;
-        SceneToScene_Data.popupItemInfo.amount = itemData.amount;
-        SceneToScene_Data.popupItemInfo.detailInfo = itemData.detailInfo;
-
-        UIPopupManager.OpenSellItemData();
+        lastestSelectItem = itemData;
+        UIPopupManager.OpenPopupUI(POPUP_TYPE.sellItem);
     }
 }
