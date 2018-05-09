@@ -13,13 +13,14 @@ public enum POPUP_TYPE
     //
     itemData = 5,
     purchaseItem = 6,
-    sellItem = 7
+    sellItem = 7,
+    charInfo = 8
 }
 
 /// <summary>
 /// InGame Scene에서 UIPopup 창을 관리하는 클래스.
 /// </summary>
-public class UIPopupManager : MonoBehaviour {
+public class UIPopupSupervisor : MonoBehaviour {
 
     private static bool _isInvenOpen = false;
     public static bool isInvenOpen
@@ -158,6 +159,9 @@ public class UIPopupManager : MonoBehaviour {
                     _isAllPopupClose = false;
                 }
                 break;
+            case POPUP_TYPE.charInfo:
+                SceneManager.LoadSceneAsync("popup_chInfo", LoadSceneMode.Additive);
+                break;
         }
     }
 
@@ -196,6 +200,9 @@ public class UIPopupManager : MonoBehaviour {
             case POPUP_TYPE.sellItem:
                 SceneManager.UnloadSceneAsync("popup_sellItem");
                 _isSellItemOpen = false;
+                break;
+            case POPUP_TYPE.charInfo:
+                SceneManager.UnloadSceneAsync("popup_chInfo");
                 break;
         }
     }

@@ -136,7 +136,7 @@ public class GamePlayerController : MonoBehaviour {
         {
             CamFollowPlayer();
             SimpleGravityForce();
-            if (UIPopupManager.isAllpopupClose)
+            if (UIPopupSupervisor.isAllpopupClose)
 			{
                 var inputData = InputManager.singleton.GetInputData();
                 if (inputData.state == INPUT_STATE.CHARACTER_MOVE)

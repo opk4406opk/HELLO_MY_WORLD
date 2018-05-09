@@ -141,7 +141,7 @@ public class PopupChData : MonoBehaviour
     }
     private void CallBackGoToLobby()
     {
-        CustomSceneManager.LoadGameSceneAsync(CustomSceneManager.SCENE_TYPE.MULTIPLAY_GAME_LOBBY);
+        GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.MULTIPLAY_GAME_LOBBY);
     }
 
     private void GameLoadingProcess()
@@ -153,7 +153,7 @@ public class PopupChData : MonoBehaviour
     /// </summary>
     private void CallBackGameLoading()
     {
-        CustomSceneManager.LoadGameSceneAsync(CustomSceneManager.SCENE_TYPE.GAME_LOADING);
+        GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.GAME_LOADING);
     }
 
     private void PopupExitProcess()
@@ -166,19 +166,15 @@ public class PopupChData : MonoBehaviour
     /// </summary>
     private void CallBackPopupClose()
     {
-        SceneManager.UnloadSceneAsync("popup_chInfo");
+        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.charInfo);
     }
 
     private void SetData()
     {
-        string data;
-        SceneToScene_Data.gameChDatas.TryGetValue("chName", out data);
-        chName.text = data;
-        SceneToScene_Data.gameChDatas.TryGetValue("chLevel", out data);
-        chLevel.text = data;
-        SceneToScene_Data.gameChDatas.TryGetValue("chType", out data);
-        chType.text = data;
-        SceneToScene_Data.gameChDatas.TryGetValue("detailScript", out data);
-        chDetailScript.text = data;
+        var selectCharData = ChSelectManager.singleton.GetSelectCharData();
+        chName.text = selectCharData.chName;
+        chLevel.text = selectCharData.chLevel.ToString();
+        chType.text = selectCharData.chType;
+        chDetailScript.text = selectCharData.detailScript;
     }
 }

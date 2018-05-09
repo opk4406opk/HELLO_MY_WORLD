@@ -46,7 +46,7 @@ public class RoamingMerchant : Actor, INpc, IMerchantNPC
     {
         // to do.
         OnClickedActor(this);
-        UIPopupManager.OpenPopupUI(POPUP_TYPE.shop);
+        UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.shop);
     }
 
     public override ACTOR_TYPE GetActorType()

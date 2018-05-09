@@ -82,7 +82,7 @@ public class InventoryUIManager : MonoBehaviour {
     /// </summary>
     private void CallBackPopupClose()
     {
-        UIPopupManager.ClosePopupUI(POPUP_TYPE.inven);
+        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.inven);
     }
 
     private void CreateEmptySlot(int _num)
@@ -165,7 +165,7 @@ public class InventoryUIManager : MonoBehaviour {
     private void OnClickItem(ItemData itemData)
     {
         lastestSelectItem = itemData;
-        UIPopupManager.OpenPopupUI(POPUP_TYPE.itemData);
+        UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.itemData);
     }
 
 }

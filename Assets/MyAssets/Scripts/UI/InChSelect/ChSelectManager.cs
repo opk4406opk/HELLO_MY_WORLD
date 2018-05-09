@@ -18,22 +18,35 @@ public class ChSelectManager : MonoBehaviour
     [SerializeField]
     private GameObject uiGridObj;
 
+    private static ChSelectManager _singleton = null;
+    public static ChSelectManager singleton
+    {
+        get
+        {
+            if (_singleton == null) KojeomLogger.DebugLog("ChSelectManager 제대로 초기화 되지 않았습니다", LOG_TYPE.ERROR);
+            return _singleton;
+        }
+    }
+
+    private CharacterData lastestSelectChar;
+
     public void Start()
     {
+        _singleton = this;
         LoadCharDatas();
         CreateChCard();
+    }
+
+    public CharacterData GetSelectCharData()
+    {
+        return lastestSelectChar;
     }
 
     private EventDelegate Ed_OnClickChCard;
     private void OnClickChCard(CharacterData chData)
     {
-        SceneToScene_Data.gameChDatas.Clear();
-        SceneToScene_Data.gameChDatas.Add("chName", chData.chName);
-        SceneToScene_Data.gameChDatas.Add("chLevel", chData.chLevel.ToString());
-        SceneToScene_Data.gameChDatas.Add("chType", chData.chType);
-        SceneToScene_Data.gameChDatas.Add("detailScript", chData.detailScript);
-
-        CustomSceneManager.LoadGameSceneAsync(CustomSceneManager.SCENE_TYPE.UI_POPUP_CHAR_INFO, LoadSceneMode.Additive);
+        lastestSelectChar = chData;
+        UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.charInfo);
     }
     
     private void LoadCharDatas()

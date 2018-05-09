@@ -36,7 +36,7 @@ public class MainMenuManager : MonoBehaviour {
             //init create netmgr.
             Instantiate(netMgr, new Vector3(0, 0, 0), Quaternion.identity);
             KojeomLogger.DebugLog("Success Create GameNetworkManager, and then select Characters scene.");
-            CustomSceneManager.LoadGameSceneAsync(CustomSceneManager.SCENE_TYPE.SELECT_CHARACTERS);
+            GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.SELECT_CHARACTERS);
         }
     }
 
@@ -89,7 +89,7 @@ public class MainMenuManager : MonoBehaviour {
 		}
         // 일단 http 로그인 서버에 접속이 실패 or 성공에 상관없이 다음 화면으로 넘어간다.
         GameSoundManager.GetInstnace().StopSound(GAME_SOUND_TYPE.BGM_mainMenu);
-        CustomSceneManager.LoadGameSceneAsync(CustomSceneManager.SCENE_TYPE.SELECT_CHARACTERS);
+        GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.SELECT_CHARACTERS);
 	}
 	
     /// <summary>
@@ -107,7 +107,7 @@ public class MainMenuManager : MonoBehaviour {
             GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.WORLD_LOAD_FAIL;
             GameMessage.SetMessage("게임 로딩에 실패했습니다.");
 			KojeomLogger.DebugLog("GameLoading Failed", LOG_TYPE.ERROR);
-            UIPopupManager.OpenPopupUI(POPUP_TYPE.gameMessage);
+            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMessage);
         }
     }
     

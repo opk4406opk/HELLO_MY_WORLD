@@ -25,13 +25,13 @@ public class InGameMenuManager : MonoBehaviour {
         {
             GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.WORLD_SAVE_SUCCESS;
             GameMessage.SetMessage("게임 세이브에 성공했습니다.");
-            UIPopupManager.OpenPopupUI(POPUP_TYPE.gameMessage);
+            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMessage);
         }
         else
         {
             GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.WORLD_SAVE_FAIL;
             GameMessage.SetMessage("게임 세이브에 실패했습니다.");
-            UIPopupManager.OpenPopupUI(POPUP_TYPE.gameMessage);
+            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMessage);
         }
     }
 
@@ -41,13 +41,13 @@ public class InGameMenuManager : MonoBehaviour {
         {
             GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.WORLD_LOAD_SUCCESS;
             GameMessage.SetMessage("게임 로드에 성공했습니다.");
-            UIPopupManager.OpenPopupUI(POPUP_TYPE.gameMessage);
+            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMessage);
         }
         else
         {
             GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.WORLD_LOAD_FAIL;
             GameMessage.SetMessage("게임 로드에 실패했습니다.");
-            UIPopupManager.OpenPopupUI(POPUP_TYPE.gameMessage);
+            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMessage);
         }
     }
 
@@ -58,7 +58,7 @@ public class InGameMenuManager : MonoBehaviour {
 
     private void CallBackPopupClose()
     {
-        UIPopupManager.ClosePopupUI(POPUP_TYPE.gameMenu);
+        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.gameMenu);
     }
 
     public void OnClickExit()
