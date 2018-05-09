@@ -13,19 +13,9 @@ public interface IManager
 /// </summary>
 public class GameStatus
 {
-    private static bool _isLoadGame = false;
-    public static bool isLoadGame
-    {
-        set { _isLoadGame = value; }
-        get { return _isLoadGame; }
-    }
-
-    private static bool _isMultiPlay = false;
-    public static bool isMultiPlay
-    {
-        set { _isMultiPlay = value; }
-        get { return _isMultiPlay; }
-    }
+    public static bool isLoadGame = false;
+    public static bool isMultiPlay = false;
+    public static bool isSingleHostPlay = false;
 }
 
 /// <summary>
@@ -79,21 +69,11 @@ public class GameManager : MonoBehaviour
 
     void Start ()
     {
-        KojeomLogger.DebugLog(string.Format("Multi_game : {0}, Loaded_game : {1}",
-               GameStatus.isMultiPlay, GameStatus.isLoadGame), LOG_TYPE.SYSTEM);
+        KojeomLogger.DebugLog(string.Format("Multi_game : {0}, Loaded_game : {1}, SingleHost_game : {2}",
+               GameStatus.isMultiPlay, GameStatus.isLoadGame, GameStatus.isSingleHostPlay), LOG_TYPE.SYSTEM);
         instance = this;
         InitDataFiles();
-        // 싱글플레이는 바로 매니저클래스들을 초기화한다.
-        if(GameStatus.isMultiPlay == false)
-        {
-            InitManagers();
-        }
-        else
-        {
-            // 멀티플레이의 경우, 서버로 유저들이 접속-> 플레이어 생성까지 완료된 상태를 기다린 후에
-            // 매니저 클래스들을 초기화 한다.
-            StartCoroutine(WatingInit());
-        }
+        StartCoroutine(WatingLogin());
     }
     /// <summary>
     /// 게임에 사용되는 데이터파일들을 초기화합니다. ( 게임 매니저 초기화보다 먼저 호출되야 합니다. )
@@ -150,9 +130,9 @@ public class GameManager : MonoBehaviour
         KojeomLogger.DebugLog("게임매니저 클래스 초기화 완료.");
     }
 
-    private IEnumerator WatingInit()
+    private IEnumerator WatingLogin()
     {
-        KojeomLogger.DebugLog("네트워크 접속이 완료될 때 까지 대기합니다.");
+        KojeomLogger.DebugLog("네트워크 접속이 완료될 때 까지 대기합니다.", LOG_TYPE.SYSTEM);
         while (true)
         {
             if(GameNetworkManager.GetInstance().GetMyGamePlayer() != null)
@@ -161,7 +141,7 @@ public class GameManager : MonoBehaviour
             }
             yield return null;
         }
-        KojeomLogger.DebugLog("네트워크 접속 -> 플레이어 생성까지 완료되었습니다. 매니저들을 초기화합니다.");
+        KojeomLogger.DebugLog("네트워크 접속 -> 플레이어 생성까지 완료되었습니다. 매니저들을 초기화합니다.", LOG_TYPE.SYSTEM);
         InitManagers();
     }
 }

@@ -83,7 +83,7 @@ public class PopupChData : MonoBehaviour
         }
         else
         {
-            GameLoadingProcess();
+            SingleGameProcess();
         }
     }
 
@@ -144,16 +144,18 @@ public class PopupChData : MonoBehaviour
         GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.MULTIPLAY_GAME_LOBBY);
     }
 
-    private void GameLoadingProcess()
+    private void SingleGameProcess()
     {
-        ScaleDownEffect("CallBackGameLoading");
+        ScaleDownEffect("CallBackSingleGameProcess");
     }
     /// <summary>
-    /// ScaleDown 애니메이션이 종료된 후, 호출되어지는 InGame 로딩 메소드.
+    /// ScaleDown 애니메이션이 종료된 후, 호출되어지는 singleGame Process.
     /// </summary>
-    private void CallBackGameLoading()
+    private void CallBackSingleGameProcess()
     {
-        GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.GAME_LOADING);
+        var netClient = GameNetworkManager.GetInstance().StartHost();
+        GameNetworkManager.GetInstance().isHost = true;
+        GameNetworkManager.GetInstance().Init();
     }
 
     private void PopupExitProcess()
