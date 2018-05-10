@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
                GameStatus.isMultiPlay, GameStatus.isLoadGame, GameStatus.isSingleHostPlay), LOG_TYPE.SYSTEM);
         instance = this;
         InitDataFiles();
-        StartCoroutine(WatingLogin());
+        StartCoroutine(WaitingLogin());
     }
     /// <summary>
     /// 게임에 사용되는 데이터파일들을 초기화합니다. ( 게임 매니저 초기화보다 먼저 호출되야 합니다. )
@@ -130,7 +130,7 @@ public class GameManager : MonoBehaviour
         KojeomLogger.DebugLog("게임매니저 클래스 초기화 완료.");
     }
 
-    private IEnumerator WatingLogin()
+    private IEnumerator WaitingLogin()
     {
         KojeomLogger.DebugLog("네트워크 접속이 완료될 때 까지 대기합니다.", LOG_TYPE.SYSTEM);
         while (true)
