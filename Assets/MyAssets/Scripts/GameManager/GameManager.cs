@@ -16,6 +16,20 @@ public class GameStatus
     public static bool isLoadGame = false;
     public static bool isMultiPlay = false;
     public static bool isSingleHostPlay = false;
+    public static bool isInGameSceneStart
+    {
+        get
+        {
+            if(isMultiPlay == false && isSingleHostPlay == false)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
 }
 
 /// <summary>
@@ -72,9 +86,32 @@ public class GameManager : MonoBehaviour
         KojeomLogger.DebugLog(string.Format("Multi_game : {0}, Loaded_game : {1}, SingleHost_game : {2}",
                GameStatus.isMultiPlay, GameStatus.isLoadGame, GameStatus.isSingleHostPlay), LOG_TYPE.SYSTEM);
         instance = this;
+        // single or multi play 게임이 아니라면
+        // InGame Scene에서 바로 시작하는 경우 ( in editor mode )
+        if (GameStatus.isInGameSceneStart)
+        {
+            InitInGameSceneStart();
+        }
         InitDataFiles();
         StartCoroutine(WaitingLogin());
     }
+
+    /// <summary>
+    /// InGameScene에서 바로 시작되는 경우에 호출되는 초기화 메소드.
+    /// </summary>
+    private void InitInGameSceneStart()
+    {
+        //
+        GameObject netMgr = Resources.Load<GameObject>(ConstFilePath.GAME_NET_MGR_PREFAB);
+        Instantiate(netMgr, new Vector3(0, 0, 0), Quaternion.identity);
+        //
+        KojeomLogger.DebugLog("StartHost", LOG_TYPE.INFO);
+        GameNetworkManager.GetInstance().onlineScene = "InGame";
+        var netClient = GameNetworkManager.GetInstance().StartHost();
+        GameNetworkManager.GetInstance().isHost = true;
+        GameNetworkManager.GetInstance().Init();
+    }
+
     /// <summary>
     /// 게임에 사용되는 데이터파일들을 초기화합니다. ( 게임 매니저 초기화보다 먼저 호출되야 합니다. )
     /// </summary>
