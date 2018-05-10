@@ -132,10 +132,16 @@ public class Chunk : MonoBehaviour
                         points[6] = new Vector3(cubeX + 1, cubeY - 1, cubeZ + 1);
                         points[7] = new Vector3(cubeX, cubeY - 1, cubeZ + 1);
                         // 블록 생성시 6개의 면들의 위치를 조정하기 위해 추가했던 offset 값을 제거한다.
-                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].center = new Vector3(cubeX + 0.5f, cubeY - 0.5f, cubeZ + 0.5f);
+                        // x, z 는 0.5f 씩 더해주고, y는 0.5f 빼준다.
+                        float blockCenterX = cubeX + 0.5f;
+                        float blockCenterY = cubeY - 0.5f;
+                        float blockCenterZ = cubeZ + 0.5f;
+                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerX = blockCenterX;
+                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerY = blockCenterY;
+                        _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerZ = blockCenterZ;
                         _world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].isRendered = true;
                         // 월드맵에 생성된 블록의 중앙점을 이용해 Octree의 노드를 생성합니다.
-                        _world.customOctree.Add(_world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].center);
+                        _world.customOctree.Add(new Vector3(blockCenterX, blockCenterY, blockCenterZ));
                     }
 
                 }
