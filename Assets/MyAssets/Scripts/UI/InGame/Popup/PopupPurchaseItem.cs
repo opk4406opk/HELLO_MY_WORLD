@@ -130,7 +130,7 @@ public class PopupPurchaseItem : MonoBehaviour {
 
     private void CallBackPopupClose()
     {
-        UIPopupManager.ClosePopupUI(POPUP_TYPE.purchaseItem);
+        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.purchaseItem);
     }
 
     private void SetData()

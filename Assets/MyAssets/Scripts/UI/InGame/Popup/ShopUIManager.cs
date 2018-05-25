@@ -85,7 +85,7 @@ public class ShopUIManager : MonoBehaviour {
     /// </summary>
     private void CallBackPopupClose()
     {
-        UIPopupManager.ClosePopupUI(POPUP_TYPE.shop);
+        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.shop);
     }
 
     private void CreateInvenEmptySlot(int _num)
@@ -162,7 +162,7 @@ public class ShopUIManager : MonoBehaviour {
     private void OnClickShopItem(ItemData itemData)
     {
         lastestSelectItem = itemData;
-        UIPopupManager.OpenPopupUI(POPUP_TYPE.purchaseItem);
+        UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.purchaseItem);
     }
 
     private void SettingUserItem()
@@ -229,6 +229,6 @@ public class ShopUIManager : MonoBehaviour {
     private void OnClickUserItem(ItemData itemData)
     {
         lastestSelectItem = itemData;
-        UIPopupManager.OpenPopupUI(POPUP_TYPE.sellItem);
+        UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.sellItem);
     }
 }

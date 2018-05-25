@@ -174,19 +174,19 @@ public class InputManager : MonoBehaviour {
             case INPUT_STATE.CREATE:
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
-                if(UIPopupManager.isAllpopupClose == true)
+                if(UIPopupSupervisor.isAllpopupClose == true)
                     modifyTerrian.AddBlockCursor(ray, clickPos, BeltItemSelector.singleton.curSelectBlockType);
                 break;
             case INPUT_STATE.DELETE:
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
-                if (UIPopupManager.isAllpopupClose == true)
+                if (UIPopupSupervisor.isAllpopupClose == true)
                     modifyTerrian.ReplaceBlockCursor(ray, clickPos, (byte)TileType.NONE);
                 break;
             case INPUT_STATE.TALK_NPC_MOUSE:
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
-                UIPopupManager.OpenPopupUI(POPUP_TYPE.shop);
+                UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.shop);
                 break;
             default:
                 break;
@@ -200,22 +200,22 @@ public class InputManager : MonoBehaviour {
             case INPUT_STATE.INVEN_OPEN:
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
-                UIPopupManager.OpenPopupUI(POPUP_TYPE.inven);
+                UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.inven);
                 break;
             case INPUT_STATE.MENU_OPEN:
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
-                UIPopupManager.OpenPopupUI(POPUP_TYPE.gameMenu);
+                UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMenu);
                 break;
             case INPUT_STATE.CRAFT_ITEM_OPEN:
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
-                UIPopupManager.OpenPopupUI(POPUP_TYPE.craftItem);
+                UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.craftItem);
                 break;
             case INPUT_STATE.TALK_NPC_KEYBORAD:
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
-                UIPopupManager.OpenPopupUI(POPUP_TYPE.shop);
+                UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.shop);
                 break;
             default:
                 break;

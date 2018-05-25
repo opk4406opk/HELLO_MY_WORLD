@@ -12,7 +12,6 @@ using UnityEngine.Networking;
 public class PlayerManager : MonoBehaviour {
     //
     public GamePlayer myGamePlayer;
-
     //
     public static Vector3 myPlayerInitPosition = new Vector3(10.0f, 18.0f, 0.0f);
     private GamePlayerController myPlayerController;
@@ -22,14 +21,7 @@ public class PlayerManager : MonoBehaviour {
     private GameObject gamePlayerPrefab;
     public void Init()
     {
-        if(GameStatus.isMultiPlay == true)
-        {
-            gamePlayerPrefab = GameNetworkManager.singleton.playerPrefab;
-        }
-        else if(GameStatus.isMultiPlay == false)
-        {
-            gamePlayerPrefab = Resources.Load<GameObject>(ConstFilePath.GAME_NET_PLAYER_PREFAB);
-        }
+        gamePlayerPrefab = GameNetworkManager.singleton.playerPrefab;
         CreateProcess();
         instance = this;
     }
@@ -81,16 +73,11 @@ public class PlayerManager : MonoBehaviour {
 
     private void CreatePlayer(int myChType)
     {
-        if (GameStatus.isMultiPlay)
+        myGamePlayer = GameNetworkManager.GetInstance().GetMyGamePlayer();
+        // 멀티게임의 경우, gameUserList를 요청한다.
+        if (GameStatus.isMultiPlay == true)
         {
-            // to do
-            myGamePlayer = GameNetworkManager.GetInstance().GetMyGamePlayer();
             GameNetworkManager.GetInstance().ReqInGameUserList();
-        }
-        else
-        {
-            //싱글모드 이므로, 본인만 생성하면 된다.
-            myGamePlayer = CreateSingleGamePlayer(myChType, "MyPlayer");
         }
         myGamePlayer.GetController().Init(Camera.main, myGamePlayer);
         //Player Manager 하위 종속으로 변경.
@@ -98,11 +85,14 @@ public class PlayerManager : MonoBehaviour {
         myPlayerController = myGamePlayer.GetController();
     }
 
+    [Obsolete("this is legacy method. Don't used it.")]
     private GamePlayer CreateSingleGamePlayer(int chType, string playerName)
     {
         // playerManager로 패런팅.
         GameObject inst = Instantiate(gamePlayerPrefab, new Vector3(0,0,0), Quaternion.identity);
         inst.name = playerName;
+        var netIdentity = gameObject.GetComponent<NetworkIdentity>();
+        
         //
         GamePlayer gamePlayer = inst.GetComponent<GamePlayer>();
         gamePlayer.Init(chType, playerName, myPlayerInitPosition);

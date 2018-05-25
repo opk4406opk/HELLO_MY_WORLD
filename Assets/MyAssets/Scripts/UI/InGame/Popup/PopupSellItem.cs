@@ -79,7 +79,7 @@ public class PopupSellItem : MonoBehaviour {
 
     private void CallBackPopupClose()
     {
-        UIPopupManager.ClosePopupUI(POPUP_TYPE.sellItem);
+        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.sellItem);
     }
 
     private void SetData()

@@ -83,13 +83,13 @@ public class CraftItemUIManager : MonoBehaviour {
 
             GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.CRAFT_ITEM_SUCCESS;
             GameMessage.SetMessage("아이템 제작에 성공했습니다.");
-            UIPopupManager.OpenPopupUI(POPUP_TYPE.gameMessage);
+            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMessage);
         }
         else
         {
             GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.CRAFT_ITEM_FAIL;
             GameMessage.SetMessage("수량부족으로 아이템 제작이 불가능합니다.");
-            UIPopupManager.OpenPopupUI(POPUP_TYPE.gameMessage);
+            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMessage);
         }
     }
 
@@ -321,7 +321,7 @@ public class CraftItemUIManager : MonoBehaviour {
     private void OnClickItem(ItemData itemData)
     {
         lastestSelectItem = itemData;
-        UIPopupManager.OpenPopupUI(POPUP_TYPE.itemData);
+        UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.itemData);
     }
 
     private void ClearItemSlot()
@@ -386,6 +386,6 @@ public class CraftItemUIManager : MonoBehaviour {
 
     private void CallBackPopupClose()
     {
-        UIPopupManager.ClosePopupUI(POPUP_TYPE.craftItem);
+        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.craftItem);
     }
 }

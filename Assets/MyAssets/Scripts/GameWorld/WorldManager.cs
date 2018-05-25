@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
@@ -43,7 +44,6 @@ public class WorldManager : MonoBehaviour
     /// <summary>
     /// C# sereialization 기능을 이용한
     /// subWorld를 외부파일로 저장하는 메소드.
-    /// 아직 테스트중.
     /// </summary>
     /// <param name="fileName"></param>
     /// <param name="data"></param>
@@ -86,7 +86,7 @@ public class WorldManager : MonoBehaviour
             //add world.
             _worldList.Add(subWorld);
             // 
-            //SaveSubWorldFile(subWorld.name, subWorld.worldBlockData, idx);
+            SaveSubWorldFile(subWorld.name, subWorld.worldBlockData, idx);
         }
     }
     /// <summary>

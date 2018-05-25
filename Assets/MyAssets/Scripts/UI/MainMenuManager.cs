@@ -15,12 +15,14 @@ public class MainMenuManager : MonoBehaviour {
     {
         GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_mainMenu);
         PrefabStorage.GetInstance();
+        CreateNetWorkManager();
     }
 
     /// <summary>
-    /// 멀티플레이(p2p).
+    /// 네트워크 매니저를 생성.
+    /// (single, multi 게임에 상관없이 생성한다.)
     /// </summary>
-    public void OnClickMultiPlay()
+    private void CreateNetWorkManager()
     {
         GameObject netMgr = Resources.Load<GameObject>(ConstFilePath.GAME_NET_MGR_PREFAB);
         if (netMgr == null)
@@ -29,15 +31,21 @@ public class MainMenuManager : MonoBehaviour {
         }
         else
         {
-            //멀티플레이로 값 설정.
-            GameStatus.isMultiPlay = true;
-            //
-            GameSoundManager.GetInstnace().StopSound(GAME_SOUND_TYPE.BGM_mainMenu);
             //init create netmgr.
             Instantiate(netMgr, new Vector3(0, 0, 0), Quaternion.identity);
             KojeomLogger.DebugLog("Success Create GameNetworkManager, and then select Characters scene.");
-            CustomSceneManager.LoadGameSceneAsync(CustomSceneManager.SCENE_TYPE.SELECT_CHARACTERS);
         }
+    }
+
+    /// <summary>
+    /// 멀티플레이(p2p).
+    /// </summary>
+    public void OnClickMultiPlay()
+    {
+        //멀티플레이로 값 설정.
+        GameStatus.isMultiPlay = true;
+        //
+        GameStartProcess();
     }
 
     private bool isSuccessProcessRun = false;
@@ -49,11 +57,23 @@ public class MainMenuManager : MonoBehaviour {
 	{
         //싱글플레이 스테이터스 설정.
         GameStatus.isMultiPlay = false;
+        // 싱글플레이-> sing host 플레이로 설정.
+        GameStatus.isSingleHostPlay = true;
         //
-		GameNetworkManager.PostHttpRequest += PostLoginRequest;
-		GameNetworkManager.ConnectLoginServer();
-        if(isSuccessProcessRun == false) StartCoroutine(LoginProcess());
+        GameStartProcess();
     }
+
+    /// <summary>
+    /// 게임시작
+    /// -> 로그인 서버에 접속 후 실패/성공에 상관없이 캐릭터 선택창으로 이동.
+    /// </summary>
+    private void GameStartProcess()
+    {
+        GameNetworkManager.PostHttpRequest += PostLoginRequest;
+        GameNetworkManager.ConnectLoginServer();
+        if (isSuccessProcessRun == false) StartCoroutine(LoginProcess());
+    }
+
 	private void PostLoginRequest(bool isSuccess)
 	{
 		if (isSuccess) isSuccessLogin = true;
@@ -89,7 +109,7 @@ public class MainMenuManager : MonoBehaviour {
 		}
         // 일단 http 로그인 서버에 접속이 실패 or 성공에 상관없이 다음 화면으로 넘어간다.
         GameSoundManager.GetInstnace().StopSound(GAME_SOUND_TYPE.BGM_mainMenu);
-        CustomSceneManager.LoadGameSceneAsync(CustomSceneManager.SCENE_TYPE.SELECT_CHARACTERS);
+        GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.SELECT_CHARACTERS);
 	}
 	
     /// <summary>
@@ -107,7 +127,7 @@ public class MainMenuManager : MonoBehaviour {
             GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.WORLD_LOAD_FAIL;
             GameMessage.SetMessage("게임 로딩에 실패했습니다.");
 			KojeomLogger.DebugLog("GameLoading Failed", LOG_TYPE.ERROR);
-            UIPopupManager.OpenPopupUI(POPUP_TYPE.gameMessage);
+            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMessage);
         }
     }
     

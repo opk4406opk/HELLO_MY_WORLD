@@ -118,7 +118,7 @@ public class MessageManager : MonoBehaviour {
 
     private void CallBackClose()
     {
-        UIPopupManager.ClosePopupUI(POPUP_TYPE.gameMessage);
+        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.gameMessage);
     }
 
 }

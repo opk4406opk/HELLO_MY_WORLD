@@ -55,17 +55,17 @@ public class PopupItemData : MonoBehaviour
 
     private void CallBackPopupClose()
     {
-        UIPopupManager.ClosePopupUI(POPUP_TYPE.itemData);
+        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.itemData);
     }
 
     private void SetData()
     {
         ItemData selectedItemData = new ItemData();
-        if (UIPopupManager.isInvenOpen)
+        if (UIPopupSupervisor.isInvenOpen)
         {
             selectedItemData = InventoryUIManager.singleton.GetLastestSelectItem();
         }
-        else if (UIPopupManager.isCraftItemOpen)
+        else if (UIPopupSupervisor.isCraftItemOpen)
         {
             selectedItemData = InventoryUIManager.singleton.GetLastestSelectItem();
         }
