@@ -26,6 +26,7 @@ public class WorldManager : MonoBehaviour
     [SerializeField]
     private Transform worldGroupTrans;
 
+    private Dictionary<int, string> subWorldFileNameCache= new Dictionary<int, string>();
 
     private List<World> _worldList = new List<World>();
     public List<World> worldList
@@ -64,6 +65,24 @@ public class WorldManager : MonoBehaviour
         fileStream.Close();
     }
 
+    /// <summary>
+    /// 특정 idx를 가진 서브월드를 로드합니다.
+    /// </summary>
+    /// <param name="subWorldIdx"></param>
+    /// <returns></returns>
+    private WorldDataFile LoadSubWorldFile(int subWorldIdx)
+    {
+        string fileName;
+        subWorldFileNameCache.TryGetValue(subWorldIdx, out fileName);
+        string filePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", fileName);
+        // 파일 열기.
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream fileStream = File.Open(filePath, FileMode.OpenOrCreate);
+        // deserializing.
+        var deserializedData = bf.Deserialize(fileStream);
+        return deserializedData as WorldDataFile;
+    }
+
     private void CreateGameWorld()
     {
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
@@ -86,7 +105,8 @@ public class WorldManager : MonoBehaviour
             //add world.
             _worldList.Add(subWorld);
             // 
-            SaveSubWorldFile(subWorld.name, subWorld.worldBlockData, idx);
+            subWorldFileNameCache.Add(idx, subWorld.worldName);
+            SaveSubWorldFile(subWorld.worldName, subWorld.worldBlockData, idx);
         }
     }
     /// <summary>
