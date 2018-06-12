@@ -58,14 +58,24 @@ public class BeltItemSelector : MonoBehaviour {
             newBlock.transform.localScale = new Vector3(1, 1, 1);
             newBlock.transform.localPosition = new Vector3(0, 0, 0);
 
-            var tileInfo = TileDataFile.instance.GetTileInfo((TileType)idx);
+            var btnComponent = newBlock.GetComponent<UIButton>();
+            var onSelectBlock = new EventDelegate(this, "OnSelectBlock");
+            onSelectBlock.parameters[0].value = newBlock;
+            btnComponent.onClick.Add(onSelectBlock);
+
+            var blockTileType = (TileType)idx;
+            var tileInfo = TileDataFile.instance.GetTileInfo(blockTileType);
             BeltItemBlockData block = newBlock.GetComponent<BeltItemBlockData>();
             block.Init(tileInfo.name);
+            block.SetBlockTileType(blockTileType);
         }
         uiGridObj.GetComponent<UIGrid>().Reposition();
     }
 
     public void OnSelectBlock(GameObject selectedBlock)
     {
+        var beltBlockData = selectedBlock.GetComponent<BeltItemBlockData>();
+        KojeomLogger.DebugLog(string.Format("{0} 블록아이템을 선택했습니다.", beltBlockData.GetBlockTileType()));
+        _curSelectBlockType = (byte)beltBlockData.GetBlockTileType();
     }
 }
