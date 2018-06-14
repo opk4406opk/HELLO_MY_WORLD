@@ -72,6 +72,9 @@ public class GameManager : MonoBehaviour
     private KojeomCoroutineHelper kojeomCoroutineHelper;
     [SerializeField]
     private DayAndNightManager dayAndNightManager;
+    //
+    [SerializeField]
+    private InGameUISupervisor ingameUISupervisor;
 
     [SerializeField]
     private NPCManager npcManager;
@@ -158,6 +161,8 @@ public class GameManager : MonoBehaviour
         npcManager.GenerateNPC();
         //
         actorCollideManager.Init();
+        //
+        ingameUISupervisor.Init();
         //
         // 날씨 매니저의 경우, 향후 4계절/눈/비 등을 관리한다.
         // 프로토타입의 수준으로 기능이 매우 미흡한 수준임.

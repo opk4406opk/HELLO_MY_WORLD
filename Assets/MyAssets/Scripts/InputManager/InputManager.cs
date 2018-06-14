@@ -59,10 +59,13 @@ public class InputManager : MonoBehaviour {
 
     void Update ()
     {
-        CheckSingleInputState();
-        CheckOverlapInputState();
-        MouseInputProcess();
-        KeyBoardInputProcess();
+       if(IsBeltItemClicked() == false)
+       {
+            CheckSingleInputState();
+            CheckOverlapInputState();
+            MouseInputProcess();
+            KeyBoardInputProcess();
+        }
     }
 
     public InputData GetInputData()
@@ -72,6 +75,26 @@ public class InputManager : MonoBehaviour {
     public Queue<InputData> GetOverlappedInputData()
     {
         return overlappedInputs;
+    }
+
+    private bool IsBeltItemClicked()
+    {
+        if (Input.GetMouseButtonDown(0) && InGameUISupervisor.singleton != null)
+        {
+            var ingameUICamera = InGameUISupervisor.singleton.GetIngameUICamera();
+            var ray = ingameUICamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hitInfo;
+            var isCollide = Physics.Raycast(ray, out hitInfo);
+            //
+            KojeomLogger.DebugLog(string.Format("isColldie anything : {0}", isCollide));
+            if (isCollide)
+            {
+                var isBeltCollide = hitInfo.collider.CompareTag("UserBeltCollider");
+                KojeomLogger.DebugLog(hitInfo.collider.tag);
+                if (isBeltCollide) return true;
+            }
+        }
+        return false;
     }
 
     private void CheckOverlapInputState()
