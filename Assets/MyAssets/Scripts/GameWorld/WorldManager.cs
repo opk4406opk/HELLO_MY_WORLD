@@ -46,23 +46,26 @@ public class WorldManager : MonoBehaviour
     /// C# sereialization 기능을 이용한
     /// subWorld를 외부파일로 저장하는 메소드.
     /// </summary>
-    /// <param name="fileName"></param>
-    /// <param name="data"></param>
-    /// <param name="idx"></param>
-    private void SaveSubWorldFile(string fileName, Block[,,] data, int idx)
+    private void SaveSubWorldFile()
     {
         Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
-        string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH +"{0}", fileName);
-        // 파일 생성.
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream fileStream = File.Open(savePath, FileMode.OpenOrCreate);
+        int idx = 0;
+        foreach(var world in _worldList)
+        {
+            string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", world.worldName);
+            // 파일 생성.
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream fileStream = File.Open(savePath, FileMode.OpenOrCreate);
 
-        WorldDataFile dataFile = new WorldDataFile();
-        dataFile.blockData = data;
-        dataFile.idx = idx;
-        // 시리얼라이징.
-        bf.Serialize(fileStream, dataFile);
-        fileStream.Close();
+            WorldDataFile dataFile = new WorldDataFile();
+            dataFile.blockData = world.worldBlockData;
+            dataFile.idx = idx;
+            // 시리얼라이징.
+            bf.Serialize(fileStream, dataFile);
+            fileStream.Close();
+            //
+            idx++;
+        }
     }
 
     /// <summary>
@@ -106,7 +109,7 @@ public class WorldManager : MonoBehaviour
             _worldList.Add(subWorld);
             // 
             subWorldFileNameCache.Add(idx, subWorld.worldName);
-            SaveSubWorldFile(subWorld.worldName, subWorld.worldBlockData, idx);
+            SaveSubWorldFile();
         }
     }
     /// <summary>

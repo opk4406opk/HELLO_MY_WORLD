@@ -139,6 +139,7 @@ public class GameManager : MonoBehaviour
         KojeomLogger.DebugLog("게임매니저 클래스들을 초기화 합니다.");
         // sound init.
         //GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_InGame);
+        //
         dayAndNightManager.Init();
         dayAndNightManager.StartDayAndNight();
         //

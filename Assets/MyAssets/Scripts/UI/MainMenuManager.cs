@@ -2,14 +2,15 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
 using System.IO;
-using System.Text;
 
 /// <summary>
 /// 첫 게임메인화면을 관리하는 클래스.
 /// </summary>
 public class MainMenuManager : MonoBehaviour {
+
+    [Range(1, 15)]
+    public int maximumWaitSec = 8;
 
     private void Start()
     {
@@ -84,7 +85,6 @@ public class MainMenuManager : MonoBehaviour {
         isSuccessProcessRun = true;
 
         bool isTimeOut = false;
-		int maximumWaitSec = 1;
 		int waitSec = 0;
 		while (!isSuccessLogin)
 		{

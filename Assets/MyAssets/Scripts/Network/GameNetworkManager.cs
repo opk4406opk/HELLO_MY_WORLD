@@ -132,7 +132,11 @@ public class GameNetworkManager : NetworkManager {
 	}
 	public static void ConnectLoginServer()
 	{
-        string addr = "http://127.0.0.1:8080";
+        var gameServerData = GameServerDataFile.singleton.GetGameServerData();
+        string addr = string.Format("http://{0}:{1}",
+            gameServerData.login_server_ip,
+            gameServerData.login_server_port);
+        KojeomLogger.DebugLog(string.Format("{0} 로그인서버로 접속 시도합니다.", addr), LOG_TYPE.SYSTEM);
         HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(new Uri(addr));
 		webReq.Method = HTTP_REQUEST_METHOD.POST;
 		webReq.BeginGetRequestStream(new AsyncCallback(GetRequestStreamCallBack), webReq);
