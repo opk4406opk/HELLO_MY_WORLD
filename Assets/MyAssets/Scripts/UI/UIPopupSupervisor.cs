@@ -14,7 +14,9 @@ public enum POPUP_TYPE
     itemData = 5,
     purchaseItem = 6,
     sellItem = 7,
-    charInfo = 8
+    charInfo = 8,
+    // network.
+    waitingConnect = 9
 }
 
 /// <summary>
@@ -69,6 +71,12 @@ public class UIPopupSupervisor : MonoBehaviour {
         get { return _isSellItemOpen; }
     }
 
+    private static bool _isWaitingConnectOpen = false;
+    public static bool isWaitingConnectOpen
+    {
+        get { return _isWaitingConnectOpen; }
+    }
+
     private static bool _isAllPopupClose = false;
     public static bool isAllpopupClose
     {
@@ -81,7 +89,8 @@ public class UIPopupSupervisor : MonoBehaviour {
                (_isCraftItemOpen == false) &&
                (_isShopOpen == false) &&
                (_isPurchaseItemOpen == false) &&
-               (_isSellItemOpen == false))
+               (_isSellItemOpen == false) &&
+               (_isWaitingConnectOpen == false))
             {
                 _isAllPopupClose = true;
                 return _isAllPopupClose;
@@ -162,6 +171,15 @@ public class UIPopupSupervisor : MonoBehaviour {
             case POPUP_TYPE.charInfo:
                 SceneManager.LoadSceneAsync("popup_chInfo", LoadSceneMode.Additive);
                 break;
+            case POPUP_TYPE.waitingConnect:
+                if(_isWaitingConnectOpen == false)
+                {
+                    SceneManager.LoadSceneAsync("popup_waitingConnect", LoadSceneMode.Additive);
+                    _isWaitingConnectOpen = true;
+                    _isAllPopupClose = false;
+                }
+                
+                break;
         }
     }
 
@@ -203,6 +221,10 @@ public class UIPopupSupervisor : MonoBehaviour {
                 break;
             case POPUP_TYPE.charInfo:
                 SceneManager.UnloadSceneAsync("popup_chInfo");
+                break;
+            case POPUP_TYPE.waitingConnect:
+                SceneManager.UnloadSceneAsync("popup_waitingConnect");
+                _isWaitingConnectOpen = false;
                 break;
         }
     }

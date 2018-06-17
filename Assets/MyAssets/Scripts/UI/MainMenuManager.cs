@@ -9,12 +9,13 @@ using System.IO;
 /// </summary>
 public class MainMenuManager : MonoBehaviour {
 
-    [Range(1, 15)]
+    [Range(1, 300)]
     public int maximumWaitSec = 8;
 
     private void Start()
     {
-        GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_mainMenu);
+        // 사운드는 일단 주석처리.
+        //GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_mainMenu);
         PrefabStorage.GetInstance();
         CreateNetWorkManager();
     }
@@ -105,9 +106,10 @@ public class MainMenuManager : MonoBehaviour {
 		}
 		else
 		{
-			KojeomLogger.DebugLog("Waiting LoginServer TimeOut!", LOG_TYPE.ERROR);
+            KojeomLogger.DebugLog("Waiting LoginServer TimeOut!", LOG_TYPE.ERROR);
 		}
         // 일단 http 로그인 서버에 접속이 실패 or 성공에 상관없이 다음 화면으로 넘어간다.
+        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.waitingConnect);
         GameSoundManager.GetInstnace().StopSound(GAME_SOUND_TYPE.BGM_mainMenu);
         GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.SELECT_CHARACTERS);
 	}
