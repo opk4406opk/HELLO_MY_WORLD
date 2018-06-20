@@ -7,10 +7,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
 
-
 // ref : https://msdn.microsoft.com/ko-kr/library/system.net.httpwebrequest.begingetrequeststream(v=vs.110).aspx
-
-
 public struct HTTP_REQUEST_METHOD
 {
     public static string POST = "POST";
@@ -94,12 +91,9 @@ public class GameNetworkManager : NetworkManager {
     public static event del_HttpRequest PostHttpRequest;
     private static void GetRequestStreamCallBack(IAsyncResult asynchronousResult)
 	{
-      
-        // init dummyData
-        Dictionary<string, string> dummyData = new Dictionary<string, string>();
-		dummyData.Add("ip", "192.168.219.0");
-		dummyData.Add("user_name", "JJW");
-		JSONObject jsonData = new JSONObject(dummyData);
+        Dictionary<string, string> loginData = new Dictionary<string, string>();
+		loginData.Add("user_name", "TEST_CLIENT0");
+		JSONObject jsonData = new JSONObject(loginData);
 		byte[] byteData = Encoding.ASCII.GetBytes(jsonData.ToString());
 		// set Request.
 		HttpWebRequest req = (HttpWebRequest)asynchronousResult.AsyncState;
