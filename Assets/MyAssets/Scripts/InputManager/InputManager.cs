@@ -20,7 +20,8 @@ public enum INPUT_STATE
     TALK_NPC_KEYBORAD = 7,
     TALK_NPC_MOUSE = 8,
     CHARACTER_MOVE = 9,
-    CHARACTER_JUMP = 10
+    CHARACTER_JUMP = 10,
+    CHATTING_TOGGLE = 11
 }
 /// <summary>
 /// 게임내 입력관리를 하는 클래스.
@@ -170,6 +171,11 @@ public class InputManager : MonoBehaviour {
             curInputData.state = INPUT_STATE.CHARACTER_MOVE;
             curInputData.keyCode = KeyCode.D;
         }
+        else if (Input.GetKey(KeyCode.BackQuote))
+        {
+            curInputData.state = INPUT_STATE.CHATTING_TOGGLE;
+            curInputData.keyCode = KeyCode.BackQuote;
+        }
         //else if (Input.GetKeyDown(KeyCode.Space))
         //{
         //    curInputData.state = INPUT_STATE.CHARACTER_JUMP;
@@ -239,6 +245,14 @@ public class InputManager : MonoBehaviour {
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
                 UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.shop);
+                break;
+            case INPUT_STATE.CHATTING_TOGGLE:
+                curInputData.state = INPUT_STATE.NONE;
+                curInputData.keyCode = KeyCode.None;
+                if (InGameUISupervisor.singleton != null)
+                {
+                    InGameUISupervisor.singleton.ToggleChattingLog();
+                }
                 break;
             default:
                 break;

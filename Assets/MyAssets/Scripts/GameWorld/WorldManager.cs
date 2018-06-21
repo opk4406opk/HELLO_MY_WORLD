@@ -109,7 +109,10 @@ public class WorldManager : MonoBehaviour
             _worldList.Add(subWorld);
             // 
             subWorldFileNameCache.Add(idx, subWorld.worldName);
-            SaveSubWorldFile();
+            if(GameManager.instance != null && GameManager.instance.isSubWorldDataSave == true)
+            {
+                SaveSubWorldFile();
+            }
         }
     }
     /// <summary>

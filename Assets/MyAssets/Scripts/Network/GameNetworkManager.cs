@@ -25,7 +25,19 @@ public enum GAME_NETWORK_PROTOCOL
 {
     push_clientInfo = 1000,
     res_inGameUserList = 1001,
-    req_inGameUserList = 1002
+    req_inGameUserList = 1002,
+    push_ChatMsgToServer = 1003,
+    res_ChatMsgToAllUser = 1004
+}
+
+public class PushGameChatMsg : MessageBase
+{
+    public string gameChatMessage;
+}
+
+public class ResChatMsg : MessageBase
+{
+    public string gameChatMessage;
 }
 
 public class GameNetPlayerData : MessageBase
@@ -78,6 +90,7 @@ public class GameNetUser
     2. OnRecvFromClient : 서버에서 클라이언트의 요청을 수신하는 경우. (receive)
     3. OnRevFromServer : 클라이언트에서 서버의 응답을 수신하는 경우. (receive) 
     4. Res : 서버에서 클라이언트로 데이터를 전송하는 경우. (response)
+    5. Push : 클라이언트에서 서버로 데이터를 전달할 때 ( push )
 */
 
 /// <summary>
@@ -176,16 +189,21 @@ public class GameNetworkManager : NetworkManager {
     private void ServerSettings()
     {
         //server setting
+        // 프로토콜에 대한 메소드를 등록한다.
         NetworkServer.RegisterHandler((short)GAME_NETWORK_PROTOCOL.push_clientInfo,
             OnRecvFromClient_ConnectInfo);
         NetworkServer.RegisterHandler((short)GAME_NETWORK_PROTOCOL.req_inGameUserList,
             OnRecvFromClient_ReqGameUserList);
+        NetworkServer.RegisterHandler((short)GAME_NETWORK_PROTOCOL.push_ChatMsgToServer,
+            OnRecvFromClient_PushGameChatMsg);
     }
     private void ClientSettings()
     {
         //client setting
         client.RegisterHandler((short)GAME_NETWORK_PROTOCOL.res_inGameUserList,
             OnRecvFromServer_GameUserList);
+        client.RegisterHandler((short)GAME_NETWORK_PROTOCOL.res_ChatMsgToAllUser,
+            OnRecvFromServer_gameChatMsg);
     }
     
     public override NetworkClient StartHost(ConnectionConfig config, int maxConnections)
@@ -293,6 +311,30 @@ public class GameNetworkManager : NetworkManager {
         }
     }
 
+    private void OnRecvFromClient_PushGameChatMsg(NetworkMessage netMsg)
+    {
+        var msg = netMsg.ReadMessage<PushGameChatMsg>();
+        ResChatMsg responseChatMsg = new ResChatMsg();
+        responseChatMsg.gameChatMessage = msg.gameChatMessage;
+        bool isSuccess = NetworkServer.SendToAll((short)GAME_NETWORK_PROTOCOL.res_ChatMsgToAllUser, responseChatMsg);
+
+        if (isSuccess == true) KojeomLogger.DebugLog("게임채팅 메세지를 모든 클라이언트에 전송 했습니다.", LOG_TYPE.NETWORK_SERVER_INFO);
+        else KojeomLogger.DebugLog("게임채팅 메세지를 모든 클라이언트에 전송 실패했습니다.", LOG_TYPE.NETWORK_SERVER_INFO);
+    }
+
+    private void OnRecvFromServer_gameChatMsg(NetworkMessage netMsg)
+    {
+        var msg = netMsg.ReadMessage<ResChatMsg>();
+        KojeomLogger.DebugLog(
+            string.Format("{0} : 채팅 메세지를 서버로부터 수신했습니다.", msg.gameChatMessage), 
+            LOG_TYPE.NETWORK_CLIENT_INFO);
+        if(InGameUISupervisor.singleton != null)
+        {
+            InGameUISupervisor.singleton.SetMsgToChattingLog(msg.gameChatMessage,
+                client.connection.connectionId.ToString());
+        }
+    }
+
 
     public void ReqInGameUserList()
     {
@@ -302,6 +344,16 @@ public class GameNetworkManager : NetworkManager {
 
         if (isSuccess == true) KojeomLogger.DebugLog("게임유저리스트 요청을 서버로 전달했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
         else KojeomLogger.DebugLog("게임유저리스트 요청이 실패했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
+    }
+
+    public void PushChatMessage(string chatMessage)
+    {
+        PushGameChatMsg pushChatMsg = new PushGameChatMsg();
+        pushChatMsg.gameChatMessage = chatMessage;
+        bool isSuccess = client.connection.Send((short)GAME_NETWORK_PROTOCOL.push_ChatMsgToServer, pushChatMsg);
+
+        if (isSuccess == true) KojeomLogger.DebugLog("게임채팅 메세지 데이터를 서버로 전달했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
+        else KojeomLogger.DebugLog("게임채팅 메세지 데이터 전달에 실패했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
     }
 
     // 테스트 메소드. 퍼포먼스문제가 있다.

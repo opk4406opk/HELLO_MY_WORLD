@@ -136,57 +136,60 @@ public class GamePlayerController : MonoBehaviour {
         {
             CamFollowPlayer();
             SimpleGravityForce();
-            if (UIPopupSupervisor.isAllpopupClose)
-			{
-                var inputData = InputManager.singleton.GetInputData();
-                if (inputData.state == INPUT_STATE.CHARACTER_MOVE)
+            if(InGameUISupervisor.singleton != null)
+            {
+                var state = InGameUISupervisor.singleton.chattingBoardState;
+                if (state == CHATTING_BOARD_STATE.CLOSE && UIPopupSupervisor.isAllpopupClose)
                 {
-                    curPlayerState = GAMEPLAYER_STATE.move;
-                }
-                else if(inputData.state == INPUT_STATE.NONE)
-                {
-                    curPlayerState = GAMEPLAYER_STATE.idle;
-                }
-
-                var overlappedInputs = InputManager.singleton.GetOverlappedInputData();
-                if(overlappedInputs.Count > 0)
-                {
-                    var input = overlappedInputs.Dequeue();
-                    if(input.state == INPUT_STATE.CHARACTER_JUMP && curPlayerState == GAMEPLAYER_STATE.move)
+                    var inputData = InputManager.singleton.GetInputData();
+                    if (inputData.state == INPUT_STATE.CHARACTER_MOVE)
                     {
-                        curPlayerState = GAMEPLAYER_STATE.moving_jump;
+                        curPlayerState = GAMEPLAYER_STATE.move;
                     }
-                    else if (input.state == INPUT_STATE.CHARACTER_JUMP && curPlayerState != GAMEPLAYER_STATE.move)
+                    else if (inputData.state == INPUT_STATE.NONE)
                     {
-                        curPlayerState = GAMEPLAYER_STATE.jump;
+                        curPlayerState = GAMEPLAYER_STATE.idle;
                     }
-                }
-                KojeomLogger.DebugLog(string.Format("curPlayerState : {0}", curPlayerState));
 
-                switch (curPlayerState)
-                {
-                    case GAMEPLAYER_STATE.move:
-                        moveStateController.SetState(moveState);
-                        moveStateController.UpdateState();
-                        break;
-                    case GAMEPLAYER_STATE.jump:
-                        jumpStateController.SetState(jumpState);
-                        jumpStateController.UpdateState();
-                        break;
-                    case GAMEPLAYER_STATE.idle:
-                        poseStateController.SetState(idleState);
-                        poseStateController.UpdateState();
-                        break;
-                    case GAMEPLAYER_STATE.moving_jump:
-                        jumpStateController.SetState(jumpState);
-                        jumpStateController.UpdateState();
-                        moveStateController.SetState(moveState);
-                        moveStateController.UpdateState();
-                        break;
-                }
+                    var overlappedInputs = InputManager.singleton.GetOverlappedInputData();
+                    if (overlappedInputs.Count > 0)
+                    {
+                        var input = overlappedInputs.Dequeue();
+                        if (input.state == INPUT_STATE.CHARACTER_JUMP && curPlayerState == GAMEPLAYER_STATE.move)
+                        {
+                            curPlayerState = GAMEPLAYER_STATE.moving_jump;
+                        }
+                        else if (input.state == INPUT_STATE.CHARACTER_JUMP && curPlayerState != GAMEPLAYER_STATE.move)
+                        {
+                            curPlayerState = GAMEPLAYER_STATE.jump;
+                        }
+                    }
+                    KojeomLogger.DebugLog(string.Format("curPlayerState : {0}", curPlayerState));
 
-                RotationCamAndPlayer();
-			}
+                    switch (curPlayerState)
+                    {
+                        case GAMEPLAYER_STATE.move:
+                            moveStateController.SetState(moveState);
+                            moveStateController.UpdateState();
+                            break;
+                        case GAMEPLAYER_STATE.jump:
+                            jumpStateController.SetState(jumpState);
+                            jumpStateController.UpdateState();
+                            break;
+                        case GAMEPLAYER_STATE.idle:
+                            poseStateController.SetState(idleState);
+                            poseStateController.UpdateState();
+                            break;
+                        case GAMEPLAYER_STATE.moving_jump:
+                            jumpStateController.SetState(jumpState);
+                            jumpStateController.UpdateState();
+                            moveStateController.SetState(moveState);
+                            moveStateController.UpdateState();
+                            break;
+                    }
+                    RotationCamAndPlayer();
+                }
+            }
             yield return null;
         }
     }

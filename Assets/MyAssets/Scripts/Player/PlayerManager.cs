@@ -13,7 +13,7 @@ public class PlayerManager : MonoBehaviour {
     //
     public GamePlayer myGamePlayer;
     //
-    public static Vector3 myPlayerInitPosition = new Vector3(10.0f, 18.0f, 0.0f);
+    public static Vector3 myPlayerInitPosition = new Vector3(10.0f, 32.0f, 0.0f);
     private GamePlayerController myPlayerController;
     //
     public static PlayerManager instance;
