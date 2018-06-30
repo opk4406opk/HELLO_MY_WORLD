@@ -4,6 +4,8 @@ public struct GameServerData
 {
     public string login_server_ip;
     public int login_server_port;
+    public string gamelog_server_ip;
+    public int gamelog_server_port;
 }
 
 public class GameServerDataFile {
@@ -48,6 +50,12 @@ public class GameServerDataFile {
                 //
                 data.TryGetValue("login_server_port", out extractedData);
                 gameServerData.login_server_port = int.Parse(extractedData);
+                //
+                data.TryGetValue("gamelog_server_ip", out extractedData);
+                gameServerData.gamelog_server_ip = extractedData;
+                //
+                data.TryGetValue("gamelog_server_port", out extractedData);
+                gameServerData.gamelog_server_port = int.Parse(extractedData);
                 break;
             default:
                 break;

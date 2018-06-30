@@ -41,7 +41,7 @@ public class GameDBHelper
         if (platform == RuntimePlatform.Android)
         {
             dbFilePath = string.Format("URI=file:{0}{1}", Application.streamingAssetsPath, "/GameUserDB/userDB.db");
-            if (dbFilePath.Contains(":///") == true)
+            if (dbFilePath.Contains("://") == true)
             {
                 WWW www = new WWW(dbFilePath);
                 var downloaded = www.bytesDownloaded;

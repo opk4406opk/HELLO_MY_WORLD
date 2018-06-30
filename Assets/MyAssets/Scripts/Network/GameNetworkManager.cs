@@ -414,6 +414,23 @@ public class GameNetworkManager : NetworkManager {
         // 네트워크 서버에 플레이어 등록.
         NetworkServer.AddPlayerForConnection(conn, instance, playerControllerId);
     }
+    /// <summary>
+    /// 로컬 Node.js 게임 로그 서버로 로그를 전달합니다.(http-post)
+    /// ip : 127.0.0.1
+    /// port : 8080
+    /// </summary>
+    /// <param name="log"></param>
+    public static void LogPushToLoggerServer(string log)
+    {
+        var serverData = GameServerDataFile.singleton.GetGameServerData();
+        string url = string.Format("httP://{0}:{1}", serverData.gamelog_server_ip,
+            serverData.gamelog_server_port);
+        using (UnityWebRequest www = UnityWebRequest.Post(url, log))
+        {
+            // yield return 으로 예외처리를 해야하지만, 로그를 그냥 보내는것이므로 생략한다.
+            www.SendWebRequest();
+        }
+    }
 }
 
 
