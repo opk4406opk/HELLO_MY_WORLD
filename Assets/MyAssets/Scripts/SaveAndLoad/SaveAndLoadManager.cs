@@ -100,8 +100,7 @@ public class SaveAndLoadManager : MonoBehaviour {
 
         del_GetMergeWorldSize GetMergeWorldSize = () =>
         {
-            string conn = "URI=file:" + Application.dataPath +
-              "/StreamingAssets/GameUserDB/userDB.db";
+            string conn = GameDBHelper.GetInstance().GetGameDBPath();
 
             IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
             IDbCommand dbcmd = dbconn.CreateCommand();
@@ -190,8 +189,7 @@ public class SaveAndLoadManager : MonoBehaviour {
         int recordNum = 0;
         del_GetRecordNum GetRecordNum = () =>
         {
-            string conn = "URI=file:" + Application.dataPath +
-               "/StreamingAssets/GameUserDB/userDB.db";
+            string conn = GameDBHelper.GetInstance().GetGameDBPath();
 
             IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
             IDbCommand dbcmd = dbconn.CreateCommand();
@@ -212,8 +210,7 @@ public class SaveAndLoadManager : MonoBehaviour {
 
         del_UpdateMergeWorldSize UpdateMergeWorldSize = () =>
         {
-            string conn = "URI=file:" + Application.dataPath +
-               "/StreamingAssets/GameUserDB/userDB.db";
+            string conn = GameDBHelper.GetInstance().GetGameDBPath();
 
             IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
             IDbCommand dbcmd = dbconn.CreateCommand();
@@ -232,8 +229,7 @@ public class SaveAndLoadManager : MonoBehaviour {
 
         del_InSertMergeWorldSize InSertMergeWorldSize = () =>
         {
-            string conn = "URI=file:" + Application.dataPath +
-               "/StreamingAssets/GameUserDB/userDB.db";
+            string conn = GameDBHelper.GetInstance().GetGameDBPath();
 
             IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
             IDbCommand dbcmd = dbconn.CreateCommand();

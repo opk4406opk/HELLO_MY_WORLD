@@ -237,7 +237,7 @@ public class GameNetworkManager : NetworkManager {
         msgData.connectionID = conn.connectionId;
         msgData.address = conn.address;
         msgData.playerName = "PLAYER";
-        int charType = GameDBHelper.GetSelectCharType();
+        int charType = GameDBHelper.GetInstance().GetSelectCharType();
         msgData.selectChType = charType;
 
         KojeomLogger.DebugLog("서버로 접속을 했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);

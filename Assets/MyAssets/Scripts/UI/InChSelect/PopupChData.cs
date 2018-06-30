@@ -61,8 +61,7 @@ public class PopupChData : MonoBehaviour
     {
         Action InsertInfo = () =>
         {
-            string conn = "URI=file:" + Application.dataPath +
-               "/StreamingAssets/GameUserDB/userDB.db";
+            string conn = GameDBHelper.GetInstance().GetGameDBPath();
             using (IDbConnection dbconn = new SqliteConnection(conn))
             {
                 dbconn.Open(); //Open connection to the database.

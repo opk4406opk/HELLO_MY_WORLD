@@ -111,7 +111,7 @@ public class ModifyTerrain : MonoBehaviour
         Action<byte> UpdateUserItem = (byte blockType) =>
         {
             StringBuilder conn = new StringBuilder();
-            conn.AppendFormat("URI=file:{0}/StreamingAssets/GameUserDB/userDB.db", Application.dataPath);
+            conn.AppendFormat(GameDBHelper.GetInstance().GetGameDBPath(), Application.dataPath);
 
             IDbConnection dbconn;
             IDbCommand dbcmd;

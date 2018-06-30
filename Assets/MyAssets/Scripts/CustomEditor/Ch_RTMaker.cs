@@ -41,8 +41,11 @@ public class Ch_RTMaker : EditorWindow
     {
         EditorGUILayout.BeginToggleGroup("Func", true);
 		if (GUILayout.Button("CharsPrefabs To CharDataJosnFile")) CreateCharsDataFile();
-		if (GUILayout.Button("Open CharacterInfo file")) ClickOpenFile();
-		if (GUILayout.Button("Start CreateCharacterPrefabs")) CreateRenderTextureFiles();
+        if (GUILayout.Button("Create CharacterPrefabs"))
+        {
+            ClickOpenFile();
+            CreateRenderTextureFiles();
+        }
 
         EditorGUILayout.EndToggleGroup();
     }
@@ -148,9 +151,10 @@ public class Ch_RTMaker : EditorWindow
 		// ref : https://docs.unity3d.com/Manual/Layers.html
 		cam.cullingMask = 1 << LayerMask.NameToLayer("PlayerCharacter");
 		cam.farClipPlane = 1.0f;
+        cam.clearFlags = CameraClearFlags.Nothing;
 
 		StringBuilder targetRT_Path = new StringBuilder();
-        targetRT_Path.AppendFormat(ConstFilePath.SELECT_CHARS_RT_PATH, rtFileName);
+        targetRT_Path.AppendFormat(ConstFilePath.SELECT_CHARS_RT_RESOURCES_PATH, rtFileName);
 		//FileStream fs = File.Open(targetRT_Path.ToString(), FileMode.Open);
 		// RenderTexture는 Texture 상속, 그리고 Texture는 오브젝트 상속.
 		RenderTexture rt = Resources.Load<RenderTexture>(targetRT_Path.ToString());
