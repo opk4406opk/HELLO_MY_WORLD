@@ -16,7 +16,11 @@ public struct USER_ITEM
     public int type;
     public int amount;
 }
-
+/// streamingAssets 경로에 대한 문서.
+/// https://docs.unity3d.com/ScriptReference/Application-streamingAssetsPath.html
+/// https://docs.unity3d.com/Manual/StreamingAssets.html
+/// 안드로이드에서 sqlite3 사용 하는 방법 문서.
+/// https://answers.unity.com/questions/872068/dllnotfoundexception-sqlite3.html
 public class GameDBHelper
 {
     private static GameDBHelper instance;
@@ -27,7 +31,6 @@ public class GameDBHelper
     }
     /// <summary>
     /// 게임 DB파일이 있는 path.
-    /// https://docs.unity3d.com/ScriptReference/Application-streamingAssetsPath.html
     /// </summary>
     private string dbConnectionPath;
     private GameDBHelper()
@@ -40,19 +43,21 @@ public class GameDBHelper
         var platform = Application.platform;
         if (platform == RuntimePlatform.Android)
         {
-            //"jar:file://" + Application.dataPath + "!/assets/" + DatabaseName
-            //string dbFilePath = string.Format("jar:file://{0}!assets/userDB.db", Application.dataPath);
             string dbFilePath = System.IO.Path.Combine(Application.streamingAssetsPath, "userDB.db");
-            KojeomLogger.DebugLog(string.Format("Android DB file Path : {0}", dbFilePath));
-            if (File.Exists(dbFilePath) == false)
+            KojeomLogger.DebugLog(string.Format("Android DB file Path : {0}", dbFilePath), LOG_TYPE.DATABASE);
+            if (File.Exists(dbFilePath))
             {
-                dbFilePath = string.Format("{0}{1}", Application.persistentDataPath, "/userDB.db");
+                KojeomLogger.DebugLog("DB file is Exist", LOG_TYPE.DATABASE);
+            }
+            else
+            {
+                KojeomLogger.DebugLog("DB file is Not Exist", LOG_TYPE.ERROR);
                 WWW www = new WWW(dbFilePath);
                 var downloaded = www.bytesDownloaded;
                 while (!www.isDone);
-                KojeomLogger.DebugLog(string.Format("bytesDownloaded : {0}", www.bytes));
-                //
-                KojeomLogger.DebugLog(string.Format("경로 재설정 --> Android DB file Path : {0}", dbFilePath));
+                KojeomLogger.DebugLog(string.Format("downloaded bytes cnt : {0}", www.bytes.Length), LOG_TYPE.DATABASE);
+                dbFilePath = string.Format("{0}{1}", Application.persistentDataPath, "/userDB.db");
+                KojeomLogger.DebugLog(string.Format("New DB file Path : {0}", dbFilePath), LOG_TYPE.DATABASE);
                 File.WriteAllBytes(dbFilePath, www.bytes);
             }
             dbConnectionPath = string.Format("URI=file:{0}", dbFilePath);
@@ -60,7 +65,7 @@ public class GameDBHelper
         else if (platform == RuntimePlatform.WindowsEditor || platform == RuntimePlatform.WindowsPlayer)
         {
             dbConnectionPath = string.Format("URI=file:{0}{1}", Application.streamingAssetsPath, "/userDB.db");
-            KojeomLogger.DebugLog(string.Format("Windows DB file Path : {0}", dbConnectionPath));
+            KojeomLogger.DebugLog(string.Format("Windows DB file Path : {0}", dbConnectionPath), LOG_TYPE.DATABASE);
         }
     }
 

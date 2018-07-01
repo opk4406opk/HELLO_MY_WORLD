@@ -13,30 +13,31 @@ public enum LOG_TYPE
     NETWORK_CLIENT_INFO = 4,
     SYSTEM = 5,
     EDITOR_TOOL = 6,
-    USER_INPUT = 7
+    USER_INPUT = 7,
+    DATABASE = 8
 }
 public class KojeomLogger {
-    public static string GetStackedLogs()
+    public static string GetGUIDebugLogs()
     {
         StringBuilder totalLog = new StringBuilder();
-        for(int idx = stackedLogs.Count-1; idx > 0; idx--)
+        for(int idx = guiDebugLogs.Count-1; idx > 0; idx--)
         {
-            totalLog.Append(stackedLogs[idx]);
+            totalLog.Append(guiDebugLogs[idx]);
         }
         return totalLog.ToString();
     }
     private static List<string> logFileBuffer = new List<string>();
-    private static List<string> stackedLogs = new List<string>();
+    private static List<string> guiDebugLogs = new List<string>();
 	public static void DebugLog(string log, LOG_TYPE logType = LOG_TYPE.INFO)
 	{
-        string savedLog = string.Format("[Time-stamp]{0}::{1}\n", TimeStamp(), log);
-        stackedLogs.Add(savedLog);
+        string savedLog = string.Format("[Time-stamp]{0}::[{1}]{2}\n", TimeStamp(), logType, log);
         if (logType == LOG_TYPE.ERROR ||
             logType == LOG_TYPE.EDITOR_TOOL ||
             logType == LOG_TYPE.NETWORK_CLIENT_INFO ||
             logType == LOG_TYPE.NETWORK_SERVER_INFO ||
             logType == LOG_TYPE.SYSTEM ||
-            logType == LOG_TYPE.INFO)
+            logType == LOG_TYPE.INFO ||
+            logType == LOG_TYPE.DATABASE)
         {
             logFileBuffer.Add(savedLog);
         }
@@ -72,9 +73,19 @@ public class KojeomLogger {
             case LOG_TYPE.USER_INPUT:
                 consoleLog.AppendFormat("<color=#FF6600><b>[USER_INPUT]</b></color> {0}", log);
                 break;
+            case LOG_TYPE.DATABASE:
+                consoleLog.AppendFormat("<color=#FFCC00><b>[DATABASE]</b></color> {0}", log);
+                break;
             default:
                 break;
         }
+        string guiDebugLog = string.Format("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
+        guiDebugLogs.Add(guiDebugLog);
+        if(guiDebugLogs.Count > 1000)
+        {
+            guiDebugLogs.Clear();
+        }
+        //
         if (Application.platform == RuntimePlatform.WindowsEditor)
 		{
             Debug.Log(consoleLog);
@@ -88,6 +99,11 @@ public class KojeomLogger {
             return DateTime.Now.ToString("[연도]yy년MM월dd일[시간]hh(시)mm(분)s(초)(fff) tt");
         }
         return DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss.fff(tt)");
+    }
+
+    private static string SimpleTimeStamp()
+    {
+        return DateTime.Now.ToString("hh:mm:ss.fff");
     }
 
     public static void FlushToFile()
