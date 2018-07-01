@@ -111,7 +111,7 @@ public class ModifyTerrain : MonoBehaviour
         Action<byte> UpdateUserItem = (byte blockType) =>
         {
             StringBuilder conn = new StringBuilder();
-            conn.AppendFormat(GameDBHelper.GetInstance().GetGameDBPath(), Application.dataPath);
+            conn.AppendFormat(GameDBHelper.GetInstance().GetDBConnectionPath(), Application.dataPath);
 
             IDbConnection dbconn;
             IDbCommand dbcmd;

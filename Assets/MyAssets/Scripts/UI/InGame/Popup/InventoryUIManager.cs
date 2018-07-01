@@ -108,7 +108,7 @@ public class InventoryUIManager : MonoBehaviour {
         Action GetUserItems = () =>
         {
             StringBuilder conn = new StringBuilder();
-            conn.AppendFormat(GameDBHelper.GetInstance().GetGameDBPath(), Application.dataPath);
+            conn.AppendFormat(GameDBHelper.GetInstance().GetDBConnectionPath(), Application.dataPath);
 
             using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn.ToString()))
             {

@@ -61,7 +61,7 @@ public class PopupChData : MonoBehaviour
     {
         Action InsertInfo = () =>
         {
-            string conn = GameDBHelper.GetInstance().GetGameDBPath();
+            string conn = GameDBHelper.GetInstance().GetDBConnectionPath();
             using (IDbConnection dbconn = new SqliteConnection(conn))
             {
                 dbconn.Open(); //Open connection to the database.

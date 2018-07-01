@@ -64,6 +64,11 @@ public class ConstFilePath
     /// 캐릭터 얼굴 리소스 폴더 파일 path.
     /// </summary>
     public readonly static string CHAR_TEXTURE2D_RESOURCES_PATH = "CharacterTexture2D/";
+
+    /// <summary>
+    /// 로그파일이 저장되는 윈도우 탐색기 경로.
+    /// </summary>
+    public readonly static string LOG_FILE_ROOT_WIN_PATH = ".\\GameLog\\";
 }
 
 

@@ -422,10 +422,13 @@ public class GameNetworkManager : NetworkManager {
     /// <param name="log"></param>
     public static void LogPushToLoggerServer(string log)
     {
+        //https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.Post.html
         var serverData = GameServerDataFile.singleton.GetGameServerData();
         string url = string.Format("httP://{0}:{1}", serverData.gamelog_server_ip,
             serverData.gamelog_server_port);
-        using (UnityWebRequest www = UnityWebRequest.Post(url, log))
+        WWWForm dataForm = new WWWForm();
+        dataForm.AddField("log_data", log);
+        using (UnityWebRequest www = UnityWebRequest.Post(url, dataForm))
         {
             // yield return 으로 예외처리를 해야하지만, 로그를 그냥 보내는것이므로 생략한다.
             www.SendWebRequest();

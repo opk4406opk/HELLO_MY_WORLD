@@ -47,7 +47,7 @@ public class PopupPurchaseItem : MonoBehaviour {
         // to do
         Action<int> UpdateUserItem = (int quantity) =>
         {
-            string conn = GameDBHelper.GetInstance().GetGameDBPath();
+            string conn = GameDBHelper.GetInstance().GetDBConnectionPath();
 
             IDbConnection dbconn;
             IDbCommand dbcmd;

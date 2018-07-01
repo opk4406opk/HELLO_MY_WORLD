@@ -100,7 +100,7 @@ public class SaveAndLoadManager : MonoBehaviour {
 
         del_GetMergeWorldSize GetMergeWorldSize = () =>
         {
-            string conn = GameDBHelper.GetInstance().GetGameDBPath();
+            string conn = GameDBHelper.GetInstance().GetDBConnectionPath();
 
             IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
             IDbCommand dbcmd = dbconn.CreateCommand();
@@ -189,7 +189,7 @@ public class SaveAndLoadManager : MonoBehaviour {
         int recordNum = 0;
         del_GetRecordNum GetRecordNum = () =>
         {
-            string conn = GameDBHelper.GetInstance().GetGameDBPath();
+            string conn = GameDBHelper.GetInstance().GetDBConnectionPath();
 
             IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
             IDbCommand dbcmd = dbconn.CreateCommand();
@@ -210,7 +210,7 @@ public class SaveAndLoadManager : MonoBehaviour {
 
         del_UpdateMergeWorldSize UpdateMergeWorldSize = () =>
         {
-            string conn = GameDBHelper.GetInstance().GetGameDBPath();
+            string conn = GameDBHelper.GetInstance().GetDBConnectionPath();
 
             IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
             IDbCommand dbcmd = dbconn.CreateCommand();
@@ -229,7 +229,7 @@ public class SaveAndLoadManager : MonoBehaviour {
 
         del_InSertMergeWorldSize InSertMergeWorldSize = () =>
         {
-            string conn = GameDBHelper.GetInstance().GetGameDBPath();
+            string conn = GameDBHelper.GetInstance().GetDBConnectionPath();
 
             IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn);
             IDbCommand dbcmd = dbconn.CreateCommand();

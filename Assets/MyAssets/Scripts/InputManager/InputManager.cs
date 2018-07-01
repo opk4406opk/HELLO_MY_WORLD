@@ -87,11 +87,11 @@ public class InputManager : MonoBehaviour {
             RaycastHit hitInfo;
             var isCollide = Physics.Raycast(ray, out hitInfo);
             //
-            KojeomLogger.DebugLog(string.Format("isColldie anything : {0}", isCollide));
+            KojeomLogger.DebugLog(string.Format("isColldie anything : {0}", isCollide), LOG_TYPE.USER_INPUT);
             if (isCollide)
             {
                 var isBeltCollide = hitInfo.collider.CompareTag("UserBeltCollider");
-                KojeomLogger.DebugLog(hitInfo.collider.tag);
+                KojeomLogger.DebugLog(hitInfo.collider.tag, LOG_TYPE.USER_INPUT);
                 if (isBeltCollide) return true;
             }
         }
@@ -187,7 +187,7 @@ public class InputManager : MonoBehaviour {
             curInputData.keyCode = KeyCode.None;
         }
         KojeomLogger.DebugLog(string.Format("input_data :: state : {0}, keyCode : {1}",
-            curInputData.state, curInputData.keyCode));
+            curInputData.state, curInputData.keyCode), LOG_TYPE.USER_INPUT);
     }
 
     private void GetMouseInput()
