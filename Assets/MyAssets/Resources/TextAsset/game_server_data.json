@@ -1,4 +1,6 @@
 {
   "login_server_ip": "35.196.31.206",
-  "login_server_port": "8000"
+  "login_server_port": "8000",
+  "gamelog_server_ip": "35.196.31.206",
+  "gamelog_server_port": "8080"
 }

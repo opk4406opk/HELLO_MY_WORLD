@@ -11,6 +11,14 @@ public class MainMenuManager : MonoBehaviour {
 
     [Range(1, 300)]
     public int maximumWaitSec = 8;
+    [SerializeField]
+    private UIButton btn_singleGameStart;
+    [SerializeField]
+    private UIButton btn_multiGameStart;
+    [SerializeField]
+    private UIButton btn_settings;
+    [SerializeField]
+    private UIButton btn_exit;
 
     private void Start()
     {
@@ -71,9 +79,18 @@ public class MainMenuManager : MonoBehaviour {
     /// </summary>
     private void GameStartProcess()
     {
+        EnableButtons(false);
         GameNetworkManager.PostHttpRequest += PostLoginRequest;
         GameNetworkManager.ConnectLoginServer();
         if (isSuccessProcessRun == false) StartCoroutine(LoginProcess());
+    }
+
+    private void EnableButtons(bool enable)
+    {
+        btn_exit.isEnabled = enable;
+        btn_settings.isEnabled = enable;
+        btn_multiGameStart.isEnabled = enable;
+        btn_singleGameStart.isEnabled = enable;
     }
 
 	private void PostLoginRequest(bool isSuccess)

@@ -47,8 +47,7 @@ public class PopupPurchaseItem : MonoBehaviour {
         // to do
         Action<int> UpdateUserItem = (int quantity) =>
         {
-            string conn = "URI=file:" + Application.dataPath +
-              "/StreamingAssets/GameUserDB/userDB.db";
+            string conn = GameDBHelper.GetInstance().GetDBConnectionPath();
 
             IDbConnection dbconn;
             IDbCommand dbcmd;

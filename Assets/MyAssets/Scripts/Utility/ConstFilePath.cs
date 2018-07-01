@@ -17,6 +17,7 @@ public class ConstFilePath
     //캐릭터 렌더링 텍스처 베이스 파일이 있는 상대경로 directory.
     public readonly static string CH_RT_BASE_FILE_WITH_EXT = "Assets/MyAssets/Resources/Texture(RT)/userCharacters/CharRTBase.renderTexture";
     public readonly static string CH_RT_BASE_FILE_DIR = "Assets/MyAssets/Resources/Texture(RT)/userCharacters/{0}.renderTexture";
+    public readonly static string CH_RT_FILES_PATH = "Texture(RT)/userCharacters/";
 
     // ..\ 현재 폴더의 상위폴더
     // .\ 현재 폴더.
@@ -28,7 +29,7 @@ public class ConstFilePath
     /// <summary>
     /// Resource.Load 사용시에 쓰이는 캐릭터 RT 리소스 상대경로.
     /// </summary>
-    public readonly static string SELECT_CHARS_RT_PATH = "Texture(RT)/userCharacters/{0}";
+    public readonly static string SELECT_CHARS_RT_RESOURCES_PATH = "Texture(RT)/userCharacters/{0}";
 
     /// <summary>
     /// 캐릭터 프리팹이 위치한 path.
@@ -54,6 +55,20 @@ public class ConstFilePath
     /// 네트워크 게임에서 사용될 플레이어 프리팹 path.
     /// </summary>
     public readonly static string GAME_NET_PLAYER_PREFAB = "GamePrefabs/Network/GamePlayer";
+
+    /// <summary>
+    /// 캐릭터 얼굴 Texture2D 파일 path.
+    /// </summary>
+    public readonly static string CHAR_TEXTURE2D_PATH = "Assets/MyAssets/Resources/CharacterTexture2D/";
+    /// <summary>
+    /// 캐릭터 얼굴 리소스 폴더 파일 path.
+    /// </summary>
+    public readonly static string CHAR_TEXTURE2D_RESOURCES_PATH = "CharacterTexture2D/";
+
+    /// <summary>
+    /// 로그파일이 저장되는 윈도우 탐색기 경로.
+    /// </summary>
+    public readonly static string LOG_FILE_ROOT_WIN_PATH = ".\\GameLog\\";
 }
 
 

@@ -237,7 +237,7 @@ public class GameNetworkManager : NetworkManager {
         msgData.connectionID = conn.connectionId;
         msgData.address = conn.address;
         msgData.playerName = "PLAYER";
-        int charType = GameDBHelper.GetSelectCharType();
+        int charType = GameDBHelper.GetInstance().GetSelectCharType();
         msgData.selectChType = charType;
 
         KojeomLogger.DebugLog("서버로 접속을 했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
@@ -413,6 +413,26 @@ public class GameNetworkManager : NetworkManager {
         gamePlayer.Init(msg.selectChType, msg.playerName, PlayerManager.myPlayerInitPosition);
         // 네트워크 서버에 플레이어 등록.
         NetworkServer.AddPlayerForConnection(conn, instance, playerControllerId);
+    }
+    /// <summary>
+    /// 로컬 Node.js 게임 로그 서버로 로그를 전달합니다.(http-post)
+    /// ip : 127.0.0.1
+    /// port : 8080
+    /// </summary>
+    /// <param name="log"></param>
+    public static void LogPushToLoggerServer(string log)
+    {
+        //https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.Post.html
+        var serverData = GameServerDataFile.singleton.GetGameServerData();
+        string url = string.Format("httP://{0}:{1}", serverData.gamelog_server_ip,
+            serverData.gamelog_server_port);
+        WWWForm dataForm = new WWWForm();
+        dataForm.AddField("log_data", log);
+        using (UnityWebRequest www = UnityWebRequest.Post(url, dataForm))
+        {
+            // yield return 으로 예외처리를 해야하지만, 로그를 그냥 보내는것이므로 생략한다.
+            www.SendWebRequest();
+        }
     }
 }
 

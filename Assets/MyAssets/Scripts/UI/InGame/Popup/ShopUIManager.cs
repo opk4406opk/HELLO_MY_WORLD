@@ -172,7 +172,7 @@ public class ShopUIManager : MonoBehaviour {
         Action GetUserItems = () =>
         {
             StringBuilder conn = new StringBuilder();
-            conn.AppendFormat("URI=file:{0}/StreamingAssets/GameUserDB/userDB.db", Application.dataPath);
+            conn.AppendFormat(GameDBHelper.GetInstance().GetDBConnectionPath(), Application.dataPath);
 
             using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn.ToString()))
             {

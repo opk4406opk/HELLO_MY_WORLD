@@ -37,7 +37,7 @@ public class PlayerMoveState : IState
     private void Move()
     {
         curPressedKey = InputManager.singleton.GetInputData().keyCode;
-        KojeomLogger.DebugLog(string.Format("curPressedKey : {0}", curPressedKey));
+        KojeomLogger.DebugLog(string.Format("curPressedKey : {0}", curPressedKey), LOG_TYPE.USER_INPUT);
         Vector3 dir, newPos = Vector3.zero;
         Vector3 originPos = gamePlayer.transform.position;
         if (curPressedKey == KeyCode.W)
@@ -60,7 +60,7 @@ public class PlayerMoveState : IState
         {
             return;
         }
-        KojeomLogger.DebugLog("player moving..");
+        KojeomLogger.DebugLog("player moving..", LOG_TYPE.USER_INPUT);
         newPos = gamePlayer.transform.position + (dir * moveSpeed * Time.deltaTime);
         gamePlayer.transform.position = newPos;
 
@@ -69,7 +69,7 @@ public class PlayerMoveState : IState
         if (collideInfo.isCollide)
         {
             KojeomLogger.DebugLog(string.Format("player가 이동하는 위치에 Block (pos : {0})이 존재합니다. 이동하지 않습니다.", 
-                collideInfo.hitBlockCenter));
+                collideInfo.hitBlockCenter), LOG_TYPE.USER_INPUT);
             gamePlayer.transform.position = originPos;
         }
     }

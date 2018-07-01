@@ -96,7 +96,7 @@ public class CraftItemUIManager : MonoBehaviour {
     private int GetUserMaterialAmount(string itemID)
     {
         StringBuilder conn = new StringBuilder();
-        conn.AppendFormat("URI=file:{0}/StreamingAssets/GameUserDB/userDB.db", Application.dataPath);
+        conn.AppendFormat(GameDBHelper.GetInstance().GetDBConnectionPath(), Application.dataPath);
 
         int amount;
         using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn.ToString()))
@@ -124,7 +124,7 @@ public class CraftItemUIManager : MonoBehaviour {
     private void SetCraftItemToUser(string itemID, string itemName, int itemAmount, int itemType)
     {
         StringBuilder conn = new StringBuilder();
-        conn.AppendFormat("URI=file:{0}/StreamingAssets/GameUserDB/userDB.db", Application.dataPath);
+        conn.AppendFormat(GameDBHelper.GetInstance().GetDBConnectionPath(), Application.dataPath);
 
         StringBuilder sqlQuery = new StringBuilder();
         sqlQuery.AppendFormat("INSERT INTO USER_ITEM (name, type, amount, id) VALUES ('{0}',{1},{2},'{3}')",
@@ -164,8 +164,7 @@ public class CraftItemUIManager : MonoBehaviour {
 
     private void SetUserMaterialAmount(string itemID, int itemAmount)
     {
-        string conn = "URI=file:" + Application.dataPath +
-               "/StreamingAssets/GameUserDB/userDB.db";
+        string conn = GameDBHelper.GetInstance().GetDBConnectionPath();
 
         using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
         {
@@ -182,8 +181,7 @@ public class CraftItemUIManager : MonoBehaviour {
 
     private void DeleteUserMaterial(string itemID)
     {
-        string conn = "URI=file:" + Application.dataPath +
-               "/StreamingAssets/GameUserDB/userDB.db";
+        string conn = GameDBHelper.GetInstance().GetDBConnectionPath();
 
         using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
         {
@@ -215,8 +213,7 @@ public class CraftItemUIManager : MonoBehaviour {
 
     private bool ChkMaterialAmount(string itemID, int needAmount)
     {
-        string conn = "URI=file:" + Application.dataPath +
-               "/StreamingAssets/GameUserDB/userDB.db";
+        string conn = GameDBHelper.GetInstance().GetDBConnectionPath();
 
         string sqlQuery = string.Format("SELECT amount FROM USER_ITEM WHERE id = '{0}'", itemID);
         using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))

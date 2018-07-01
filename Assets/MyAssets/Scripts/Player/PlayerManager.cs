@@ -46,7 +46,7 @@ public class PlayerManager : MonoBehaviour {
         Action GetUserInfo = () =>
         {
             StringBuilder conn = new StringBuilder();
-            conn.AppendFormat("URI=file:{0}/StreamingAssets/GameUserDB/userDB.db", Application.dataPath);
+            conn.AppendFormat(GameDBHelper.GetInstance().GetDBConnectionPath(), Application.dataPath);
             IDbConnection dbconn;
             IDbCommand dbcmd;
             using (dbconn = (IDbConnection)new SqliteConnection(conn.ToString()))

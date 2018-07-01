@@ -55,6 +55,7 @@ public class CharacterData : MonoBehaviour {
 
     private void SetTexture(string _textureName)
     {
-		faceTexture = Resources.Load(string.Format(ConstFilePath.SELECT_CHARS_RT_PATH, _textureName)) as Texture;
+        string filePath = string.Format("{0}texture2D_{1}", ConstFilePath.CHAR_TEXTURE2D_RESOURCES_PATH, _textureName);
+		faceTexture = Resources.Load(filePath) as Texture;
 	}
 }
