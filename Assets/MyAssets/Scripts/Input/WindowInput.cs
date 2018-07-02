@@ -1,104 +1,39 @@
-﻿using UnityEngine;
+﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
+using UnityEngine;
 
-public struct InputData
+public class WindowInput : AInput
 {
-    public INPUT_STATE state;
-    public KeyCode keyCode;
-}
-
-public enum INPUT_STATE
-{
-    NONE = 0,
-    CREATE = 1,
-    DELETE = 2,
-    ATTACK = 3,
-    INVEN_OPEN = 4,
-    MENU_OPEN = 5,
-    CRAFT_ITEM_OPEN = 6,
-    TALK_NPC_KEYBORAD = 7,
-    TALK_NPC_MOUSE = 8,
-    CHARACTER_MOVE = 9,
-    CHARACTER_JUMP = 10,
-    CHATTING_TOGGLE = 11
-}
-/// <summary>
-/// 게임내 입력관리를 하는 클래스.
-/// </summary>
-public class InputManager : MonoBehaviour {
-
-    [SerializeField]
-    private ModifyTerrain modifyTerrian;
-    [SerializeField]
-    private ActorCollideManager actorCollideManager;
-
     private Vector3 clickPos;
     private Ray ray;
 
-    private InputData curInputData;
-    private Queue<InputData> overlappedInputs;
-
-    private static InputManager _singleton = null;
-    public static InputManager singleton
-    {
-        get
-        {
-            if (_singleton == null) KojeomLogger.DebugLog("InputManager 초기화 되지 않았습니다", LOG_TYPE.ERROR);
-            return _singleton;
-        }
-    }
-
-    public void Init()
-    {
-        _singleton = this;
-        curInputData.state = INPUT_STATE.NONE;
-        curInputData.keyCode = KeyCode.None;
-        overlappedInputs = new Queue<InputData>();
-        modifyTerrian.Init();
-    }
-
-    void Update ()
-    {
-       if(IsBeltItemClicked() == false)
-       {
-            CheckSingleInputState();
-            CheckOverlapInputState();
-            MouseInputProcess();
-            KeyBoardInputProcess();
-        }
-    }
-
-    public InputData GetInputData()
+    public override InputData GetInputData()
     {
         return curInputData;
     }
-    public Queue<InputData> GetOverlappedInputData()
+
+    public override Queue<InputData> GetOverlappedInputData()
     {
         return overlappedInputs;
     }
 
-    private bool IsBeltItemClicked()
+    public override void Init(ModifyTerrain modifyTerrain)
     {
-        if (Input.GetMouseButtonDown(0) && InGameUISupervisor.singleton != null)
-        {
-            var ingameUICamera = InGameUISupervisor.singleton.GetIngameUICamera();
-            var ray = ingameUICamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hitInfo;
-            var isCollide = Physics.Raycast(ray, out hitInfo);
-            //
-            KojeomLogger.DebugLog(string.Format("isColldie anything : {0}", isCollide), LOG_TYPE.USER_INPUT);
-            if (isCollide)
-            {
-                var isBeltCollide = hitInfo.collider.CompareTag("UserBeltCollider");
-                KojeomLogger.DebugLog(hitInfo.collider.tag, LOG_TYPE.USER_INPUT);
-                if (isBeltCollide) return true;
-            }
-        }
-        return false;
+        this.modifyTerrain = modifyTerrain;
+        curInputData.state = INPUT_STATE.NONE;
+        curInputData.keyCode = KeyCode.None;
+        overlappedInputs = new Queue<InputData>();
     }
 
-    private void CheckOverlapInputState()
+    public override void UpdateProcess()
+    {
+        CheckSingleInputState();
+        CheckOverlapInputState();
+        MouseInputProcess();
+        KeyBoardInputProcess();
+    }
+
+    protected override void CheckOverlapInputState()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -109,12 +44,13 @@ public class InputManager : MonoBehaviour {
         }
     }
 
-    private void CheckSingleInputState()
+    protected override void CheckSingleInputState()
     {
         if (Input.GetMouseButtonDown(0))
         {
             GetMouseInput();
-            if (actorCollideManager.IsNpcCollide(ray))
+            var actorCollideMgr = ActorCollideManager.singleton;
+            if (actorCollideMgr != null && actorCollideMgr.IsNpcCollide(ray))
             {
                 curInputData.state = INPUT_STATE.TALK_NPC_MOUSE;
                 curInputData.keyCode = KeyCode.Mouse0;
@@ -176,11 +112,6 @@ public class InputManager : MonoBehaviour {
             curInputData.state = INPUT_STATE.CHATTING_TOGGLE;
             curInputData.keyCode = KeyCode.BackQuote;
         }
-        //else if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    curInputData.state = INPUT_STATE.CHARACTER_JUMP;
-        //    curInputData.keyCode = KeyCode.Space;
-        //}
         else
         {
             curInputData.state = INPUT_STATE.NONE;
@@ -203,14 +134,14 @@ public class InputManager : MonoBehaviour {
             case INPUT_STATE.CREATE:
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
-                if(UIPopupSupervisor.isAllpopupClose == true)
-                    modifyTerrian.AddBlockCursor(ray, clickPos, BeltItemSelector.singleton.curSelectBlockType);
+                if (UIPopupSupervisor.isAllpopupClose == true)
+                    modifyTerrain.AddBlockCursor(ray, clickPos, BeltItemSelector.singleton.curSelectBlockType);
                 break;
             case INPUT_STATE.DELETE:
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
                 if (UIPopupSupervisor.isAllpopupClose == true)
-                    modifyTerrian.ReplaceBlockCursor(ray, clickPos, (byte)TileType.NONE);
+                    modifyTerrain.ReplaceBlockCursor(ray, clickPos, (byte)TileType.NONE);
                 break;
             case INPUT_STATE.TALK_NPC_MOUSE:
                 curInputData.state = INPUT_STATE.NONE;
@@ -258,5 +189,4 @@ public class InputManager : MonoBehaviour {
                 break;
         }
     }
-
 }
