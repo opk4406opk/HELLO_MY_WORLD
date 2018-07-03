@@ -90,10 +90,12 @@ public class GamePlayerController : MonoBehaviour {
     {
         float camRotAverageY = 0f;
         float camRotAverageX = 0f;
-
-        camRotationY += Input.GetAxis("Mouse Y") * camSensitivityY;
-        camRotationX += Input.GetAxis("Mouse X") * camSensitivityX;
-
+        if (Application.platform == RuntimePlatform.WindowsEditor ||
+            Application.platform == RuntimePlatform.WindowsPlayer)
+        {
+            camRotationY += Input.GetAxis("Mouse Y") * camSensitivityY;
+            camRotationX += Input.GetAxis("Mouse X") * camSensitivityX;
+        }
         camRotArrayY.Add(camRotationY);
         camRotArrayX.Add(camRotationX);
 

@@ -21,6 +21,10 @@ public class InGameUISupervisor : MonoBehaviour {
     private UIInput uiInput_chatting;
     [SerializeField]
     private UILabel lbl_chattingLog;
+    [SerializeField]
+    private GameObject obj_mobileUI;
+    [SerializeField]
+    private VirtualJoystickManager virtualJoystickManager;
 
     public CHATTING_BOARD_STATE chattingBoardState { get; set; }
     private StringBuilder chatlog;
@@ -39,6 +43,12 @@ public class InGameUISupervisor : MonoBehaviour {
         _singleton = this;
         chatlog = new StringBuilder();
         chattingBoardState = CHATTING_BOARD_STATE.CLOSE;
+        if (Application.platform == RuntimePlatform.WindowsEditor ||
+            Application.platform == RuntimePlatform.WindowsPlayer)
+        {
+            obj_mobileUI.SetActive(false);
+        }
+        virtualJoystickManager.Init();
         KojeomLogger.DebugLog("InGameUISupervisor 초기화.");
     }
 
@@ -94,5 +104,67 @@ public class InGameUISupervisor : MonoBehaviour {
         KojeomLogger.DebugLog("CloseChattingLog");
         uiInput_chatting.value = "";
         obj_chattingLog.SetActive(false);
+    }
+    
+    public void OnClickJump()
+    {
+        KojeomLogger.DebugLog("Clicked Jump Button");
+        var inputMgr = InputManager.singleton;
+        if(inputMgr != null)
+        {
+            var device = inputMgr.GetCurInputDevice();
+            ((MobileInput)device).OnTouchJump();
+        }
+    }
+    public void OnClickCreateBlock()
+    {
+        KojeomLogger.DebugLog("Clicked Create Block");
+        var inputMgr = InputManager.singleton;
+        if (inputMgr != null)
+        {
+            var device = inputMgr.GetCurInputDevice();
+            ((MobileInput)device).OnTouchCreateBlock();
+        }
+    }
+    public void OnClickDeleteBlock()
+    {
+        KojeomLogger.DebugLog("Clicked Delete Block");
+        var inputMgr = InputManager.singleton;
+        if (inputMgr != null)
+        {
+            var device = inputMgr.GetCurInputDevice();
+            ((MobileInput)device).OnTouchDeleteBlock();
+        }
+    }
+
+    public void OnClickInventory()
+    {
+        KojeomLogger.DebugLog("Clicked OnClickInventory");
+        var inputMgr = InputManager.singleton;
+        if (inputMgr != null)
+        {
+            var device = inputMgr.GetCurInputDevice();
+            ((MobileInput)device).OnTouchInventory();
+        }
+    }
+    public void OnClickCraftItem()
+    {
+        KojeomLogger.DebugLog("Clicked CraftItem");
+        var inputMgr = InputManager.singleton;
+        if (inputMgr != null)
+        {
+            var device = inputMgr.GetCurInputDevice();
+            ((MobileInput)device).OnTouchCraftItem();
+        }
+    }
+    public void OnClickMenu()
+    {
+        KojeomLogger.DebugLog("Clicked MainMenu");
+        var inputMgr = InputManager.singleton;
+        if (inputMgr != null)
+        {
+            var device = inputMgr.GetCurInputDevice();
+            ((MobileInput)device).OnTouchMenu();
+        }
     }
 }

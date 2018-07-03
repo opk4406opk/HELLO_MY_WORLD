@@ -98,8 +98,14 @@ public class GameManager : MonoBehaviour
         {
             InitInGameSceneStart();
         }
+        InitSettings();
         InitDataFiles();
         StartCoroutine(WaitingLogin());
+    }
+
+    private void InitSettings()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     /// <summary>

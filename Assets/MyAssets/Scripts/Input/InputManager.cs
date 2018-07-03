@@ -31,8 +31,9 @@ public class InputManager : MonoBehaviour {
     [SerializeField]
     private ModifyTerrain modifyTerrain;
 
-    private AInput curInputType;
+    private AInput curInputDevice;
     private WindowInput windowInput;
+    private MobileInput mobileInput;
 
     private static InputManager _singleton = null;
     public static InputManager singleton
@@ -50,15 +51,17 @@ public class InputManager : MonoBehaviour {
         modifyTerrain.Init();
         windowInput = new WindowInput();
         windowInput.Init(modifyTerrain);
+        mobileInput = new MobileInput();
+        mobileInput.Init(modifyTerrain);
 
         var curPlatform = Application.platform;
         if(curPlatform == RuntimePlatform.WindowsEditor || curPlatform == RuntimePlatform.WindowsPlayer)
         {
-            curInputType = windowInput;
+            curInputDevice = windowInput;
         }
         else if(curPlatform == RuntimePlatform.Android)
         {
-
+            curInputDevice = mobileInput;
         }
     }
 
@@ -66,9 +69,9 @@ public class InputManager : MonoBehaviour {
     {
        if(IsBeltItemClicked() == false)
        {
-            if(curInputType != null)
+            if(curInputDevice != null)
             {
-                curInputType.UpdateProcess();
+                curInputDevice.UpdateProcess();
             }
         }
     }
@@ -95,10 +98,15 @@ public class InputManager : MonoBehaviour {
 
     public InputData GetInputData()
     {
-        return curInputType.GetInputData();
+        return curInputDevice.GetInputData();
     }
     public Queue<InputData> GetOverlappedInputData()
     {
-        return curInputType.GetOverlappedInputData();
+        return curInputDevice.GetOverlappedInputData();
+    }
+
+    public AInput GetCurInputDevice()
+    {
+        return curInputDevice;
     }
 }
