@@ -34,6 +34,7 @@ public class VirtualJoystickManager : MonoBehaviour {
 
     private void Update()
     {
+        if (UIPopupSupervisor.isAllpopupClose == false) return;
         if(Input.touchCount > 0)
         {
             var touches = Input.touches;
