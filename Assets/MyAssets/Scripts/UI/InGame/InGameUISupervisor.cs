@@ -48,7 +48,11 @@ public class InGameUISupervisor : MonoBehaviour {
         {
             obj_mobileUI.SetActive(false);
         }
-        virtualJoystickManager.Init();
+        else if(Application.platform == RuntimePlatform.Android)
+        {
+            virtualJoystickManager.Init();
+        }
+        
         KojeomLogger.DebugLog("InGameUISupervisor 초기화.");
     }
 
