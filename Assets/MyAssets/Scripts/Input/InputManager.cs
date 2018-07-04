@@ -6,6 +6,7 @@ public struct InputData
 {
     public INPUT_STATE state;
     public KeyCode keyCode;
+    public MOBILE_INPUT_TYPE mobileInputType;
 }
 
 public enum INPUT_STATE

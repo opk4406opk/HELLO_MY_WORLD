@@ -8,7 +8,7 @@ public class PlayerMoveState : IState
     private GamePlayer gamePlayer;
     private QuerySDMecanimController aniController;
     private BoxCollider boxCollider;
-    private KeyCode curPressedKey;
+    private InputData curPressedInput;
 
     public PlayerMoveState(GamePlayer player)
     {
@@ -26,7 +26,8 @@ public class PlayerMoveState : IState
 
     public void ReleaseState()
     {
-        curPressedKey = KeyCode.None;
+        curPressedInput.keyCode = KeyCode.None;
+        curPressedInput.mobileInputType = MOBILE_INPUT_TYPE.NONE;
     }
 
     public void UpdateState()
@@ -34,29 +35,56 @@ public class PlayerMoveState : IState
         Move();
     }
 
-    private void Move()
+    private Vector3 MobileMove()
     {
-        curPressedKey = InputManager.singleton.GetInputData().keyCode;
-        KojeomLogger.DebugLog(string.Format("curPressedKey : {0}", curPressedKey), LOG_TYPE.USER_INPUT);
-        Vector3 dir, newPos = Vector3.zero;
-        Vector3 originPos = gamePlayer.transform.position;
-        if (curPressedKey == KeyCode.W)
+        var virtualJoystick = VirtualJoystickManager.singleton;
+        if(virtualJoystick != null)
         {
-            dir = gamePlayer.transform.forward;
+            return virtualJoystick.GetMoveDirection();
         }
-        else if (curPressedKey == KeyCode.S)
+        return Vector3.zero;
+    }
+    private Vector3 WindowMove()
+    {
+        if (curPressedInput.keyCode == KeyCode.W)
         {
-            dir = -gamePlayer.transform.forward;
+            return gamePlayer.transform.forward;
         }
-        else if (curPressedKey == KeyCode.D)
+        else if (curPressedInput.keyCode == KeyCode.S)
         {
-            dir = gamePlayer.transform.right;
+            return -gamePlayer.transform.forward;
         }
-        else if (curPressedKey == KeyCode.A)
+        else if (curPressedInput.keyCode == KeyCode.D)
         {
-            dir = -gamePlayer.transform.right;
+            return gamePlayer.transform.right;
+        }
+        else if (curPressedInput.keyCode == KeyCode.A)
+        {
+            return -gamePlayer.transform.right;
         }
         else
+        {
+            return Vector3.zero;
+        }
+    }
+
+    private void Move()
+    {
+        curPressedInput = InputManager.singleton.GetInputData();
+        KojeomLogger.DebugLog(string.Format("curPressedKey : {0}", curPressedInput.keyCode), LOG_TYPE.USER_INPUT);
+        Vector3 dir = Vector3.zero, newPos = Vector3.zero;
+        Vector3 originPos = gamePlayer.transform.position;
+
+        if(Application.platform == RuntimePlatform.WindowsEditor ||
+            Application.platform == RuntimePlatform.WindowsPlayer)
+        {
+            dir = WindowMove();
+        }
+        else if(Application.platform == RuntimePlatform.Android)
+        {
+            dir = MobileMove();
+        }
+        else if(dir == Vector3.zero)
         {
             return;
         }

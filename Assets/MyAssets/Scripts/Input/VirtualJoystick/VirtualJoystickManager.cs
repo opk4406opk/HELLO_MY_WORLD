@@ -16,6 +16,7 @@ public class VirtualJoystickManager : MonoBehaviour {
     [SerializeField]
     private BoxCollider lookStickCollider;
 
+    private Vector3 moveDirection;
     private float stickMoveSpeed = 2.5f;
 
     private static VirtualJoystickManager _singleton = null;
@@ -40,22 +41,39 @@ public class VirtualJoystickManager : MonoBehaviour {
             var touches = Input.touches;
             foreach(var touch in touches)
             {
-                var ingameUISupervisor = InGameUISupervisor.singleton;
-                if(ingameUISupervisor != null)
-                {
-                    var uiCam = ingameUISupervisor.GetIngameUICamera();
-                    Vector3 worldPoint = uiCam.ScreenToWorldPoint(touch.position);
-                    if(moveStickCollider.bounds.Contains(worldPoint) == true)
-                    {
-                        MoveStickTouchProcess(touch, worldPoint);
-                    }
-                    else if(lookStickCollider.bounds.Contains(worldPoint) == true)
-                    {
-                        LookStickTouchProcess(touch, worldPoint);
-                    }
-                }
+                TouchProcess(touch);
             }
         }
+    }
+
+    private void TouchProcess(Touch touch)
+    {
+        var ingameUISupervisor = InGameUISupervisor.singleton;
+        if (ingameUISupervisor != null)
+        {
+            var uiCam = ingameUISupervisor.GetIngameUICamera();
+            var inputMgr = InputManager.singleton;
+            Vector3 worldPoint = uiCam.ScreenToWorldPoint(touch.position);
+            if (moveStickCollider.bounds.Contains(worldPoint) == true)
+            {
+                if (inputMgr != null)
+                {
+                    var mobileInput = (MobileInput)inputMgr.GetCurInputDevice();
+                    mobileInput.OnTouchMoveStick();
+                }
+                MoveStickTouchProcess(touch, worldPoint);
+            }
+            else if (lookStickCollider.bounds.Contains(worldPoint) == true)
+            {
+                LookStickTouchProcess(touch, worldPoint);
+            }
+        }
+    }
+
+    public Vector3 GetMoveDirection()
+    {
+        Vector3 dir = moveDirection.normalized;
+        return new Vector3(dir.x, 0.0f, dir.y);
     }
 
     private void MoveStickTouchProcess(Touch touch, Vector3 touchPos)
@@ -65,18 +83,23 @@ public class VirtualJoystickManager : MonoBehaviour {
         {
             case TouchPhase.Began:
                 moveStickFront.transform.position = baseMoveStickPostion.position;
+                moveDirection = Vector3.zero;
                 break;
             case TouchPhase.Moved:
                 moveStickFront.transform.position = Vector3.Lerp(origin, touchPos, Time.deltaTime * stickMoveSpeed);
+                moveDirection = moveStickFront.transform.position - baseMoveStickPostion.position;
                 break;
             case TouchPhase.Ended:
                 moveStickFront.transform.position = baseMoveStickPostion.position;
+                moveDirection = Vector3.zero;
                 break;
             case TouchPhase.Canceled:
                 moveStickFront.transform.position = baseMoveStickPostion.position;
+                moveDirection = Vector3.zero;
                 break;
             case TouchPhase.Stationary:
                 moveStickFront.transform.position = Vector3.Lerp(origin, touchPos, Time.deltaTime * stickMoveSpeed);
+                moveDirection = moveStickFront.transform.position - baseMoveStickPostion.position;
                 break;
         }
     }
