@@ -20,10 +20,14 @@ public class MainMenuManager : MonoBehaviour {
     [SerializeField]
     private UIButton btn_exit;
 
+    public bool isSoundOn = false;
+
     private void Start()
     {
-        // 사운드는 일단 주석처리.
-        //GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_mainMenu);
+        if(isSoundOn == true)
+        {
+            GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_mainMenu);
+        }
         PrefabStorage.GetInstance();
         CreateNetWorkManager();
     }

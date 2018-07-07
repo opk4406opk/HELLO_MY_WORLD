@@ -96,6 +96,16 @@ public class GamePlayerController : MonoBehaviour {
             camRotationY += Input.GetAxis("Mouse Y") * camSensitivityY;
             camRotationX += Input.GetAxis("Mouse X") * camSensitivityX;
         }
+        else if(Application.platform == RuntimePlatform.Android ||
+            Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            var virtualJoystick = VirtualJoystickManager.singleton;
+            if(virtualJoystick != null)
+            {
+                camRotationY += virtualJoystick.GetLookDirection().y * camSensitivityY;
+                camRotationX += virtualJoystick.GetLookDirection().x * camSensitivityX;
+            }
+        }
         camRotArrayY.Add(camRotationY);
         camRotArrayX.Add(camRotationX);
 

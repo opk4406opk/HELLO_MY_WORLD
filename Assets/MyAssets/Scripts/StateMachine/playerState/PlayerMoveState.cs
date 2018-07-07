@@ -80,7 +80,8 @@ public class PlayerMoveState : IState
         {
             dir = WindowMove();
         }
-        else if(Application.platform == RuntimePlatform.Android)
+        else if(Application.platform == RuntimePlatform.Android ||
+            Application.platform == RuntimePlatform.IPhonePlayer)
         {
             dir = MobileMove();
         }
