@@ -37,12 +37,15 @@ public class PlayerMoveState : IState
 
     private Vector3 MobileMove()
     {
+        Vector3 dir = Vector3.zero;
         var virtualJoystick = VirtualJoystickManager.singleton;
         if(virtualJoystick != null)
         {
-            return virtualJoystick.GetMoveDirection();
+            dir = virtualJoystick.GetMoveDirection();
         }
-        return Vector3.zero;
+        KojeomLogger.DebugLog(string.Format("move stick x axis : {0}", virtualJoystick.GetMoveAxisX()));
+        KojeomLogger.DebugLog(string.Format("move stick y axis : {0}", virtualJoystick.GetMoveAxisY()));
+        return dir;
     }
     private Vector3 WindowMove()
     {

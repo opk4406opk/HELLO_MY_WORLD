@@ -1,9 +1,7 @@
 fileFormatVersion: 2
 guid: f8b7d7a754655024e935c99c02f2e65b
-timeCreated: 1482994358
-licenseType: Store
 ModelImporter:
-  serializedVersion: 19
+  serializedVersion: 23
   fileIDToRecycleName:
     100000: ahoge
     100002: body
@@ -71,16 +69,36 @@ ModelImporter:
     13700006: hair
     13700008: hat1
     13700010: leg
+    2186277476908879412: ImportLogs
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_Body_Fukushima
+    second: {fileID: 2100000, guid: 31ee95f842644084fab46ca82d19213c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_Face_Defo_Fukushima
+    second: {fileID: 2100000, guid: b8f54ff8d6699274a9210bbf732ce8d5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_Hat_Fukushima
+    second: {fileID: 2100000, guid: 8a09e24f58c93184793a1d1cd529388d, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
       might lower retargeting quality:\nNote: Activate translation DOF on avatar to
@@ -88,12 +106,15 @@ ModelImporter:
       be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+    extraUserProperties: []
     clipAnimations: []
     isReadable: 1
   meshes:
@@ -101,25 +122,34 @@ ModelImporter:
     globalScale: 0.1
     meshCompression: 0
     addColliders: 0
+    importVisibility: 0
     importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
+    previousCalculatedGlobalScale: 0.1
+    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
+    normalCalculationMode: 0
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
+    serializedVersion: 2
     human:
     - boneName: hip
       humanName: Hips
@@ -251,135 +281,135 @@ ModelImporter:
         modified: 0
     skeleton:
     - name: SD_QUERY_20(Clone)
+      parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: SD_QUERY_20_Fukushima
+      parentName: 
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: body
+      parentName: 
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: earphone
+      parentName: 
       position: {x: -0.24449448, y: 0.43512985, z: -0.07457362}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: face
+      parentName: 
       position: {x: -0, y: 0.5867262, z: -0.03592738}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: hair
+      parentName: 
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: hat1
+      parentName: 
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: leg
+      parentName: 
       position: {x: -0, y: 0.43661267, z: -0.02502571}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: SD_QUERY_20_Fukushima_Reference
+      parentName: 
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -0.0033562426, y: 0, z: -0, w: 0.9999944}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: hip
+      parentName: 
       position: {x: -0.0013731568, y: 0.26698345, z: 0.0007671896}
       rotation: {x: 0, y: -0, z: -0.7071068, w: 0.7071068}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: L_leg
+      parentName: 
       position: {x: 0.02052365, y: -0.034235697, z: 0}
       rotation: {x: -0.023418231, y: 0.99972576, z: -6.26495e-17, w: -5.9781594e-17}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: L_leg2
+      parentName: 
       position: {x: -0.11951131, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0.005355906, w: 0.9999857}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: L_foot
+      parentName: 
       position: {x: -0.10328155, y: -7.8270725e-16, z: -3.469447e-19}
       rotation: {x: -0.018063506, y: 0.99983686, z: -6.232842e-17, w: -6.011628e-17}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: spine
+      parentName: 
       position: {x: -0.039854735, y: 8.673617e-18, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: upper
+      parentName: 
       position: {x: -0.08312559, y: 1.8561541e-17, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: R_arm
+      parentName: 
       position: {x: 0.00088235893, y: 0.04704919, z: 0}
       rotation: {x: -0.70382565, y: 0.71037275, z: -8.659468e-17, w: -4.0089345e-19}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: R_arm2
+      parentName: 
       position: {x: -0.07146713, y: 4.440892e-17, z: 0}
       rotation: {x: 0, y: -0, z: -0.0046294807, w: 0.9999893}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: R_hand
+      parentName: 
       position: {x: -0.10521098, y: 8.881784e-16, z: 0}
       rotation: {x: -0.7071068, y: 0.7071068, z: -8.659561e-17, w: -8.7157646e-33}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: L_arm
+      parentName: 
       position: {x: 0.00022065465, y: -0.044927713, z: 0}
       rotation: {x: 0, y: 0, z: 0.71344763, w: 0.70070857}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: L_arm2
+      parentName: 
       position: {x: -0.07346111, y: 4.440892e-17, z: 0}
       rotation: {x: 0, y: -0, z: -0.021582322, w: 0.99976707}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: L_hand
+      parentName: 
       position: {x: -0.10524428, y: -8.881784e-17, z: 0}
       rotation: {x: 0, y: -0, z: -0.69815856, w: 0.7159432}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: head
+      parentName: 
       position: {x: -0.03529991, y: 7.979728e-18, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: ahoge
+      parentName: 
       position: {x: -0.39626995, y: 8.84709e-17, z: 0.024365198}
       rotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: R_leg
+      parentName: 
       position: {x: 0.018658334, y: 0.034159224, z: 0}
       rotation: {x: 0, y: 0, z: 0.9998357, w: 0.018125813}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: R_leg2
+      parentName: 
       position: {x: -0.1200809, y: 2.0261571e-16, z: 0}
       rotation: {x: 0, y: -0, z: -0.011424324, w: 0.99993473}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: R_foot
+      parentName: 
       position: {x: -0.105263256, y: 3.3861802e-16, z: 0}
       rotation: {x: 0, y: 0, z: 0.9995634, w: -0.029547067}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
@@ -388,7 +418,10 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 3
   humanoidOversampling: 1

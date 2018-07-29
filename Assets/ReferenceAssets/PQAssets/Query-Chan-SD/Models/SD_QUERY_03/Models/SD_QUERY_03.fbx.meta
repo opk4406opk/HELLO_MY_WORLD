@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 05ec22e4c0ee78b4cb878bf80c50cdd3
 ModelImporter:
-  serializedVersion: 16
+  serializedVersion: 23
   fileIDToRecycleName:
     100000: ahoge
     100002: hat_osaka
@@ -83,32 +83,64 @@ ModelImporter:
     13700008: PQ_hair1
     13700010: PQ_hair_top
     13700012: PQ_leg
+    2186277476908879412: ImportLogs
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_Body_Osaka
+    second: {fileID: 2100000, guid: b0b5e79f44f71e445be1cc341dbbb8e3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_Face_Defo
+    second: {fileID: 2100000, guid: d6c49e7a4a6f4de4e997d74f525b6ee9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_Hat_Osaka
+    second: {fileID: 2100000, guid: 04164d1514d471d48bf5d586f7b6230d, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
+    resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar to
+      improve retargeting quality.\n\t'spine' has translation animation that will
+      be discarded.\n"
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 3
-    animationRotationError: .5
-    animationPositionError: .5
-    animationScaleError: .5
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+    extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
       name: 0200_Def
       takeName: Take 001
       firstFrame: 0
-      lastFrame: .100000001
+      lastFrame: 0.1
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -179,16 +211,18 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: 0201_Stand
       takeName: Take 001
       firstFrame: 1
-      lastFrame: 1.10000002
+      lastFrame: 1.1
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -259,6 +293,7 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: 0202_Walk
       takeName: Take 001
@@ -269,6 +304,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
@@ -339,6 +375,7 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: 0204_Idle
       takeName: Take 001
@@ -349,6 +386,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
@@ -419,6 +457,7 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: 0205_Tukkomi
       takeName: Take 001
@@ -429,6 +468,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -499,6 +539,7 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: 0206_Boke
       takeName: Take 001
@@ -509,6 +550,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 1
@@ -579,6 +621,7 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: 0207_Clap
       takeName: Take 001
@@ -589,6 +632,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
@@ -659,16 +703,18 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: 0250_Pose_Goal
       takeName: Take 001
       firstFrame: 500
-      lastFrame: 500.100006
+      lastFrame: 500.1
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -739,16 +785,18 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: 0251_Pose_Tehepero
       takeName: Take 001
       firstFrame: 501
-      lastFrame: 501.100037
+      lastFrame: 501.10004
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -819,16 +867,18 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: 0252_Pose_Exit
       takeName: Take 001
       firstFrame: 502
-      lastFrame: 502.100037
+      lastFrame: 502.10004
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -899,6 +949,7 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: 0203_Run
       takeName: Take 001
@@ -909,6 +960,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
@@ -979,30 +1031,41 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: .100000001
+    globalScale: 0.1
     meshCompression: 0
     addColliders: 0
+    importVisibility: 0
     importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
+    keepQuads: 0
     weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
+    useFileScale: 0
+    previousCalculatedGlobalScale: 0.1
+    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
-    splitTangentsAcrossUV: 1
     normalImportMode: 0
-    tangentImportMode: 1
+    tangentImportMode: 4
+    normalCalculationMode: 0
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
+    serializedVersion: 2
     human:
     - boneName: hip
       humanName: Hips
@@ -1142,149 +1205,156 @@ ModelImporter:
         modified: 0
     skeleton:
     - name: SD_QUERY_03(Clone)
+      parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: SD_QUERY_03
-      position: {x: -0, y: -.00333691016, z: -.0359273814}
+      parentName: 
+      position: {x: -0, y: -0.0033369102, z: -0.03592738}
       rotation: {x: 0, y: -0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: hat_osaka
-      position: {x: -0, y: .161721542, z: .0375074185}
-      rotation: {x: .0532320254, y: -0, z: -0, w: .998582184}
-      scale: {x: .897484303, y: .897484303, z: .897484303}
-      transformModified: 1
+      parentName: 
+      position: {x: -0, y: 0.16172154, z: 0.03750742}
+      rotation: {x: 0.053232025, y: -0, z: -0, w: 0.9985822}
+      scale: {x: 0.8974843, y: 0.8974843, z: 0.8974843}
     - name: PQ_body
-      position: {x: -0, y: .00333691016, z: .0359273814}
+      parentName: 
+      position: {x: -0, y: 0.0033369102, z: 0.03592738}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: PQ_earphone
-      position: {x: -0, y: .00333691016, z: .0359273814}
+      parentName: 
+      position: {x: -0, y: 0.0033369102, z: 0.03592738}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: PQ_face
-      position: {x: -0, y: .00333691016, z: .0359273814}
+      parentName: 
+      position: {x: -0, y: 0.0033369102, z: 0.03592738}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: PQ_hair1
-      position: {x: -0, y: .00333691016, z: .0359273814}
+      parentName: 
+      position: {x: -0, y: 0.0033369102, z: 0.03592738}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: PQ_hair_top
-      position: {x: -0, y: .00333691016, z: .0359273814}
+      parentName: 
+      position: {x: -0, y: 0.0033369102, z: 0.03592738}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: PQ_leg
-      position: {x: -0, y: .00333691016, z: .0359273814}
+      parentName: 
+      position: {x: -0, y: 0.0033369102, z: 0.03592738}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: SD_QUERY_03_Reference
+      parentName: 
       position: {x: 0, y: 0, z: 0}
-      rotation: {x: -.00335624279, y: 0, z: -0, w: .999994397}
+      rotation: {x: -0.0033562428, y: 0, z: -0, w: 0.9999944}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: hip
-      position: {x: -.00137315679, y: .266983449, z: .000767189602}
-      rotation: {x: 0, y: -0, z: -.707106829, w: .707106829}
+      parentName: 
+      position: {x: -0.0013731568, y: 0.26698345, z: 0.0007671896}
+      rotation: {x: 0, y: -0, z: -0.7071068, w: 0.7071068}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: spine
-      position: {x: -.0398547351, y: 8.67361738e-18, z: 0}
+      parentName: 
+      position: {x: -0.039854735, y: 8.673617e-18, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: upper
-      position: {x: -.0831255913, y: 1.85615409e-17, z: 0}
+      parentName: 
+      position: {x: -0.08312559, y: 1.8561541e-17, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: head
-      position: {x: -.0352999084, y: 7.97972782e-18, z: 0}
+      parentName: 
+      position: {x: -0.03529991, y: 7.979728e-18, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: ahoge
-      position: {x: -.396269947, y: 8.84708973e-17, z: .0243651979}
-      rotation: {x: 0, y: 0, z: .707106829, w: .707106829}
+      parentName: 
+      position: {x: -0.39626995, y: 8.84709e-17, z: 0.024365198}
+      rotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: L_arm
-      position: {x: .000220654649, y: -.0449277125, z: 0}
-      rotation: {x: 0, y: 0, z: .71344763, w: .700708568}
+      parentName: 
+      position: {x: 0.00022065465, y: -0.044927713, z: 0}
+      rotation: {x: 0, y: 0, z: 0.71344763, w: 0.70070857}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: L_arm2
-      position: {x: -.0734611079, y: 0, z: 0}
-      rotation: {x: 0, y: -0, z: -.0215823222, w: .999767065}
+      parentName: 
+      position: {x: -0.07346111, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0.021582322, w: 0.99976707}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: L_hand
-      position: {x: -.105244279, y: -8.88178433e-17, z: 0}
-      rotation: {x: 0, y: -0, z: -.698158562, w: .715943217}
+      parentName: 
+      position: {x: -0.10524428, y: -8.881784e-17, z: 0}
+      rotation: {x: 0, y: -0, z: -0.69815856, w: 0.7159432}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: R_arm
-      position: {x: .000882358931, y: .0470491908, z: 0}
-      rotation: {x: -.703825653, y: .710372746, z: -8.65946796e-17, w: -4.00893446e-19}
+      parentName: 
+      position: {x: 0.00088235893, y: 0.04704919, z: 0}
+      rotation: {x: -0.70382565, y: 0.71037275, z: -8.659468e-17, w: -4.0089345e-19}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: R_arm2
-      position: {x: -.0714671314, y: 0, z: 0}
-      rotation: {x: 0, y: -0, z: -.00462948065, w: .999989271}
+      parentName: 
+      position: {x: -0.07146713, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0.0046294807, w: 0.9999893}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: R_hand
-      position: {x: -.105210982, y: 8.8817842e-16, z: 0}
-      rotation: {x: .707106829, y: -.707106829, z: 8.65956127e-17, w: 0}
+      parentName: 
+      position: {x: -0.10521098, y: 8.881784e-16, z: 0}
+      rotation: {x: 0.7071068, y: -0.7071068, z: 8.659561e-17, w: 0}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: R_leg
-      position: {x: .0186583344, y: .0341592245, z: 0}
-      rotation: {x: 0, y: 0, z: .99983573, w: .0181258135}
+      parentName: 
+      position: {x: 0.018658334, y: 0.034159224, z: 0}
+      rotation: {x: 0, y: 0, z: 0.9998357, w: 0.018125813}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: R_leg2
-      position: {x: -.120080903, y: 2.02615707e-16, z: 0}
-      rotation: {x: 0, y: -0, z: -.0114243235, w: .999934733}
+      parentName: 
+      position: {x: -0.1200809, y: 2.0261571e-16, z: 0}
+      rotation: {x: 0, y: -0, z: -0.011424324, w: 0.99993473}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: R_foot
-      position: {x: -.105263256, y: 3.38618017e-16, z: 0}
-      rotation: {x: 0, y: 0, z: .999563396, w: -.0295470674}
+      parentName: 
+      position: {x: -0.105263256, y: 3.3861802e-16, z: 0}
+      rotation: {x: 0, y: 0, z: 0.9995634, w: -0.029547067}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: L_leg
-      position: {x: .0205236506, y: -.0342356972, z: 0}
-      rotation: {x: -.0234182309, y: .999725759, z: -6.26495015e-17, w: -5.97815936e-17}
+      parentName: 
+      position: {x: 0.02052365, y: -0.034235697, z: 0}
+      rotation: {x: -0.023418231, y: 0.99972576, z: -6.26495e-17, w: -5.9781594e-17}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: L_leg2
-      position: {x: -.119511306, y: 0, z: 0}
-      rotation: {x: 0, y: 0, z: .00535590621, w: .999985695}
+      parentName: 
+      position: {x: -0.11951131, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0.005355906, w: 0.9999857}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
     - name: L_foot
-      position: {x: -.10328155, y: -7.82707254e-16, z: -3.469447e-19}
-      rotation: {x: -.0180635061, y: .999836862, z: -6.23284231e-17, w: -6.01162775e-17}
+      parentName: 
+      position: {x: -0.10328155, y: -7.8270725e-16, z: -3.469447e-19}
+      rotation: {x: -0.018063506, y: 0.99983686, z: -6.232842e-17, w: -6.011628e-17}
       scale: {x: 1, y: 1, z: 1}
-      transformModified: 1
-    armTwist: .5
-    foreArmTwist: .5
-    upperLegTwist: .5
-    legTwist: .5
-    armStretch: .0500000007
-    legStretch: .0500000007
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 3
+  humanoidOversampling: 1
   additionalBone: 0
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 
