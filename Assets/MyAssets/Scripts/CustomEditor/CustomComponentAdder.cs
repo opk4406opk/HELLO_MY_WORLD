@@ -15,6 +15,7 @@ public class CustomComponentAdder : EditorWindow
         EditorGUILayout.BeginToggleGroup("Func", true);
         if (GUILayout.Button("Add GameCharacter to CharPrefabs")) AddGameCharComponentToCharPrefabs();
         if (GUILayout.Button("Add BoxCollider to CharPrefabs")) AddBoxColliderToCharPerfabs();
+        if (GUILayout.Button("Add CharacterController to CharPrefabs")) AddCharControllerToCharPrefabs();
         EditorGUILayout.EndToggleGroup();
     }
 
@@ -54,6 +55,24 @@ public class CustomComponentAdder : EditorWindow
             }
         }
         KojeomLogger.DebugLog("GameCharacter 컴포넌트 할당 작업 완료.");
+    }
+
+    private void AddCharControllerToCharPrefabs()
+    {
+        KojeomLogger.DebugLog("CharacterController 컴포넌트 할당 작업 시작.");
+        GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
+        foreach (var element in charPrefabs)
+        {
+            if (element.GetComponent<CharacterController>() == null)
+            {
+                var charController = element.AddComponent<CharacterController>();
+            }
+            else
+            {
+                KojeomLogger.DebugLog("이미 CharacterController 컴포넌트가 붙어있습니다.");
+            }
+        }
+        KojeomLogger.DebugLog("CharacterController 컴포넌트 할당 작업 완료.");
     }
 }
 #endif

@@ -35,19 +35,20 @@ public class PlayerMoveState : IState
         Move();
     }
 
-    private Vector3 MobileMove()
+    private Vector3 CalcMobileMoveDir()
     {
         Vector3 dir = Vector3.zero;
         var virtualJoystick = VirtualJoystickManager.singleton;
         if(virtualJoystick != null)
         {
-            dir = virtualJoystick.GetMoveDirection();
+            // 여기서 TransformDirection 하는 이유??
+            dir = gamePlayer.transform.TransformDirection(virtualJoystick.GetMoveDirection());
         }
         KojeomLogger.DebugLog(string.Format("move stick x axis : {0}", virtualJoystick.GetMoveAxisX()));
         KojeomLogger.DebugLog(string.Format("move stick y axis : {0}", virtualJoystick.GetMoveAxisY()));
         return dir;
     }
-    private Vector3 WindowMove()
+    private Vector3 CalcWindowMoveDir()
     {
         if (curPressedInput.keyCode == KeyCode.W)
         {
@@ -81,17 +82,18 @@ public class PlayerMoveState : IState
         if(Application.platform == RuntimePlatform.WindowsEditor ||
             Application.platform == RuntimePlatform.WindowsPlayer)
         {
-            dir = WindowMove();
+            dir = CalcWindowMoveDir();
         }
         else if(Application.platform == RuntimePlatform.Android ||
             Application.platform == RuntimePlatform.IPhonePlayer)
         {
-            dir = MobileMove();
+            dir = CalcMobileMoveDir();
         }
         else if(dir == Vector3.zero)
         {
             return;
         }
+
         KojeomLogger.DebugLog("player moving..", LOG_TYPE.USER_INPUT);
         newPos = gamePlayer.transform.position + (dir * moveSpeed * Time.deltaTime);
         gamePlayer.transform.position = newPos;
@@ -100,7 +102,7 @@ public class PlayerMoveState : IState
         var collideInfo = containWorld.customOctree.Collide(gamePlayer.charInstance.GetCustomAABB());
         if (collideInfo.isCollide)
         {
-            KojeomLogger.DebugLog(string.Format("player가 이동하는 위치에 Block (pos : {0})이 존재합니다. 이동하지 않습니다.", 
+            KojeomLogger.DebugLog(string.Format("player가 이동하는 위치에 Block (pos : {0})이 존재합니다. 이동하지 않습니다.",
                 collideInfo.hitBlockCenter), LOG_TYPE.USER_INPUT);
             gamePlayer.transform.position = originPos;
         }
