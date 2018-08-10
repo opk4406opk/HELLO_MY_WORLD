@@ -122,7 +122,7 @@ public class KojeomLogger {
             Directory.CreateDirectory(ConstFilePath.LOG_FILE_ROOT_WIN_PATH);
             logFilePath = string.Format("{0}[GAME-LOG]{1}.txt", ConstFilePath.LOG_FILE_ROOT_WIN_PATH, TimeStamp(true));
         }
-        else if(curPlatform == RuntimePlatform.Android)
+        else if(curPlatform == RuntimePlatform.Android || curPlatform == RuntimePlatform.IPhonePlayer)
         {
             //
         }

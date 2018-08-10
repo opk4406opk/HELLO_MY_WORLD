@@ -1,12 +1,12 @@
 ﻿#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
-public class CustomComponentAdder : EditorWindow
+public class CustomComponentSupervisor : EditorWindow
 {
     [MenuItem("CustomEditor/CustomComponentAdder")]
     static void Init()
     {
-        CustomComponentAdder window = (CustomComponentAdder)EditorWindow.GetWindow(typeof(CustomComponentAdder));
+        CustomComponentSupervisor window = (CustomComponentSupervisor)EditorWindow.GetWindow(typeof(CustomComponentSupervisor));
         window.Show();
     }
 

@@ -1,10 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.SceneManagement;
 using Mono.Data.Sqlite;
-using System.Data;
 using System;
-
 /// <summary>
 /// 캐릭터 선택창에서 팝업되는 세부정보를 관리하는 클래스.
 /// </summary>
@@ -62,10 +58,10 @@ public class PopupChData : MonoBehaviour
         Action InsertInfo = () =>
         {
             string conn = GameDBHelper.GetInstance().GetDBConnectionPath();
-            using (IDbConnection dbconn = new SqliteConnection(conn))
+            using (var dbconn = new SqliteConnection(conn))
             {
                 dbconn.Open(); //Open connection to the database.
-                using (IDbCommand dbcmd = dbconn.CreateCommand())
+                using (var dbcmd = dbconn.CreateCommand())
                 {
                     // 사용자가 선택한 캐릭터 히스토리 테이블에 저장.
                     SQL_SelectCharInfoToHistory(dbcmd);
@@ -86,7 +82,7 @@ public class PopupChData : MonoBehaviour
         }
     }
 
-    private void SQL_SelectCharInfoToHistory(IDbCommand dbcmd)
+    private void SQL_SelectCharInfoToHistory(SqliteCommand dbcmd)
     {
         try
         {
@@ -101,14 +97,14 @@ public class PopupChData : MonoBehaviour
         }
     }
 
-    private void SQL_SelectCharToSelectedData(IDbCommand dbcmd)
+    private void SQL_SelectCharToSelectedData(SqliteCommand dbcmd)
     {
         try
         {
             string sqlQuery = "SELECT * FROM USER_SELECT_CHARACTER";
             dbcmd.CommandText = sqlQuery;
             dbcmd.ExecuteNonQuery();
-            IDataReader reader = dbcmd.ExecuteReader();
+            var reader = dbcmd.ExecuteReader();
             // SELECT 질의 후 데이터가 1개라도 있다면 UPDATE로 모든 데이터를 갱신한다.
             // read()는 row가 1개이상이면 true, 아니면 false.
             if (reader.Read())

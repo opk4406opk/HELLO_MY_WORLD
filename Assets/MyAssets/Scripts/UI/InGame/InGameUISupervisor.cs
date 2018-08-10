@@ -48,7 +48,8 @@ public class InGameUISupervisor : MonoBehaviour {
         {
             obj_mobileUI.SetActive(false);
         }
-        else if(Application.platform == RuntimePlatform.Android)
+        else if(Application.platform == RuntimePlatform.Android || 
+            Application.platform == RuntimePlatform.IPhonePlayer)
         {
             virtualJoystickManager.Init();
         }

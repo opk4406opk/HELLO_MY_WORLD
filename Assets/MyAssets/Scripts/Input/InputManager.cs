@@ -56,11 +56,13 @@ public class InputManager : MonoBehaviour {
         mobileInput.Init(modifyTerrain);
 
         var curPlatform = Application.platform;
-        if(curPlatform == RuntimePlatform.WindowsEditor || curPlatform == RuntimePlatform.WindowsPlayer)
+        if(curPlatform == RuntimePlatform.WindowsEditor ||
+            curPlatform == RuntimePlatform.WindowsPlayer)
         {
             curInputDevice = windowInput;
         }
-        else if(curPlatform == RuntimePlatform.Android)
+        else if(curPlatform == RuntimePlatform.Android ||
+            curPlatform == RuntimePlatform.IPhonePlayer)
         {
             curInputDevice = mobileInput;
         }

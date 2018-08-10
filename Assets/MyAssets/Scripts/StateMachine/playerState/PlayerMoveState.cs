@@ -44,8 +44,6 @@ public class PlayerMoveState : IState
             // 여기서 TransformDirection 하는 이유??
             dir = gamePlayer.transform.TransformDirection(virtualJoystick.GetMoveDirection());
         }
-        KojeomLogger.DebugLog(string.Format("move stick x axis : {0}", virtualJoystick.GetMoveAxisX()));
-        KojeomLogger.DebugLog(string.Format("move stick y axis : {0}", virtualJoystick.GetMoveAxisY()));
         return dir;
     }
     private Vector3 CalcWindowMoveDir()
@@ -74,8 +72,11 @@ public class PlayerMoveState : IState
 
     private void Move()
     {
-        curPressedInput = InputManager.singleton.GetInputData();
-        KojeomLogger.DebugLog(string.Format("curPressedKey : {0}", curPressedInput.keyCode), LOG_TYPE.USER_INPUT);
+        if(InputManager.singleton != null)
+        {
+            curPressedInput = InputManager.singleton.GetInputData();
+            KojeomLogger.DebugLog(string.Format("curPressedKey : {0}", curPressedInput.keyCode), LOG_TYPE.USER_INPUT);
+        }
         Vector3 dir = Vector3.zero, newPos = Vector3.zero;
         Vector3 originPos = gamePlayer.transform.position;
 
