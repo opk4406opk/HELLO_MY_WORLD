@@ -94,7 +94,7 @@ public class GamePlayer : NetworkBehaviour
         var myUser = GameNetworkManager.GetInstance().FindUserInList(networkIdentity.connectionToServer.connectionId);
         if(GameNetworkManager.GetInstance().isHost == false)
         {
-            Init(myUser.selectCharType, myUser.userName, PlayerManager.myPlayerInitPosition);
+            Init(myUser.selectCharType, myUser.userName, PlayerManager.GetGamePlayerInitPos());
         }
         myUser.gamePlayer = this;
     }

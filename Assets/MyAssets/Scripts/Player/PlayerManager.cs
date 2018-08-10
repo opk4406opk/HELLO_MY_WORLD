@@ -13,7 +13,6 @@ public class PlayerManager : MonoBehaviour {
     //
     public GamePlayer myGamePlayer;
     //
-    public static Vector3 myPlayerInitPosition = new Vector3(10.0f, 32.0f, 0.0f);
     private GamePlayerController myPlayerController;
     //
     public static PlayerManager instance;
@@ -24,6 +23,12 @@ public class PlayerManager : MonoBehaviour {
         gamePlayerPrefab = GameNetworkManager.singleton.playerPrefab;
         CreateProcess();
         instance = this;
+    }
+
+    public static Vector3 GetGamePlayerInitPos()
+    {
+        return new Vector3(UnityEngine.Random.Range(3.0f, 25.0f),
+            48.0f, UnityEngine.Random.Range(3.0f, 25.0f));
     }
     /// <summary>
     /// 플레이어 컨트롤러를 시작합니다.
@@ -95,7 +100,7 @@ public class PlayerManager : MonoBehaviour {
         
         //
         GamePlayer gamePlayer = inst.GetComponent<GamePlayer>();
-        gamePlayer.Init(chType, playerName, myPlayerInitPosition);
+        gamePlayer.Init(chType, playerName, GetGamePlayerInitPos());
 
         return gamePlayer;
     }

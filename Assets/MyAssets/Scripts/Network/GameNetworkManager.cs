@@ -410,7 +410,7 @@ public class GameNetworkManager : NetworkManager {
         instance.name = msg.playerName;
         // gamePlayer info init.
         GamePlayer gamePlayer = instance.GetComponent<GamePlayer>();
-        gamePlayer.Init(msg.selectChType, msg.playerName, PlayerManager.myPlayerInitPosition);
+        gamePlayer.Init(msg.selectChType, msg.playerName, PlayerManager.GetGamePlayerInitPos());
         // 네트워크 서버에 플레이어 등록.
         NetworkServer.AddPlayerForConnection(conn, instance, playerControllerId);
     }
