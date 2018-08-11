@@ -38,6 +38,7 @@ public class GamePlayer : NetworkBehaviour
         _charInstance.transform.localPosition = new Vector3(0, 0, 0);
         //
         playerController = gameObject.GetComponent<GamePlayerController>();
+
         KojeomLogger.DebugLog("게임플레이어 초기화 완료. ", LOG_TYPE.INFO);
     }
     public GamePlayerController GetController()
@@ -60,6 +61,11 @@ public class GamePlayer : NetworkBehaviour
         return _isMyPlayer;
     }
 
+    private void SetObjectLayer(int layer)
+    {
+        _charInstance.gameObject.layer = layer;
+    }
+
     private GameCharacter MakeGameChararacter(GameObject _prefab)
     {
         GameObject characterObject = Instantiate(_prefab, new Vector3(0, 0, 0),
@@ -69,7 +75,7 @@ public class GamePlayer : NetworkBehaviour
         gameChar.Init();
         return gameChar;
     }
-
+    // 컨트롤 가능한 오브젝트면 권한을 가진다.
     public override void OnStartAuthority()
     {
         networkIdentity = gameObject.GetComponent<NetworkIdentity>();
@@ -78,7 +84,7 @@ public class GamePlayer : NetworkBehaviour
             networkIdentity.connectionToServer.connectionId),
             LOG_TYPE.NETWORK_CLIENT_INFO);
     }
-
+    // 컨트롤이 불가능한 오브젝트.
     public override void OnStartClient()
     {
         KojeomLogger.DebugLog("this gameplayer is just client..", LOG_TYPE.NETWORK_CLIENT_INFO);
@@ -95,6 +101,8 @@ public class GamePlayer : NetworkBehaviour
         if(GameNetworkManager.GetInstance().isHost == false)
         {
             Init(myUser.selectCharType, myUser.userName, PlayerManager.GetGamePlayerInitPos());
+            // Host가 아닌 플레이어 오브젝트들은 OtherPlayerCharacter( = 11) 레이어를 할당한다.
+            SetObjectLayer(11);
         }
         myUser.gamePlayer = this;
     }

@@ -4,12 +4,14 @@ using System.Collections.Generic;
 
 // ref # 1 : http://wiki.unity3d.com/index.php/SmoothMouseLook
 
-public enum GAMEPLAYER_STATE
+public enum GAMEPLAYER_CHAR_STATE
 {
-    move = 0,
-    idle = 1,
-    jump = 2,
-    moving_jump = 3
+    MOVE = 0,
+    IDLE = 1,
+    JUMP = 2,
+    MOVING_JUMP = 3,
+    NONE,
+    COUNT = NONE
 }
 public class GamePlayerController : MonoBehaviour {
 
@@ -43,7 +45,7 @@ public class GamePlayerController : MonoBehaviour {
     private PlayerStateController moveStateController;
     private PlayerStateController jumpStateController;
     private PlayerStateController poseStateController;
-    private GAMEPLAYER_STATE curPlayerState;
+    private GAMEPLAYER_CHAR_STATE curPlayerState;
 
     public void Init(Camera mainCam, GamePlayer player)
     {
@@ -62,7 +64,7 @@ public class GamePlayerController : MonoBehaviour {
         moveStateController = new PlayerStateController();
         jumpStateController = new PlayerStateController();
         poseStateController = new PlayerStateController();
-        curPlayerState = GAMEPLAYER_STATE.idle;
+        curPlayerState = GAMEPLAYER_CHAR_STATE.IDLE;
     }
 
     public void StartControllProcess()
@@ -74,9 +76,14 @@ public class GamePlayerController : MonoBehaviour {
         StopCoroutine(controllProcess);
     }
 
-    public void SetPlayerState(GAMEPLAYER_STATE state)
+    public void SetPlayerState(GAMEPLAYER_CHAR_STATE state)
     {
         curPlayerState = state;
+    }
+
+    public GAMEPLAYER_CHAR_STATE GetPlayerState()
+    {
+        return curPlayerState;
     }
 
     private void CamFollowPlayer()
@@ -156,43 +163,43 @@ public class GamePlayerController : MonoBehaviour {
                     var inputData = InputManager.singleton.GetInputData();
                     if (inputData.state == INPUT_STATE.CHARACTER_MOVE)
                     {
-                        curPlayerState = GAMEPLAYER_STATE.move;
+                        curPlayerState = GAMEPLAYER_CHAR_STATE.MOVE;
                     }
                     else if (inputData.state == INPUT_STATE.NONE)
                     {
-                        curPlayerState = GAMEPLAYER_STATE.idle;
+                        curPlayerState = GAMEPLAYER_CHAR_STATE.IDLE;
                     }
 
                     var overlappedInputs = InputManager.singleton.GetOverlappedInputData();
                     if (overlappedInputs.Count > 0)
                     {
                         var input = overlappedInputs.Dequeue();
-                        if (input.state == INPUT_STATE.CHARACTER_JUMP && curPlayerState == GAMEPLAYER_STATE.move)
+                        if (input.state == INPUT_STATE.CHARACTER_JUMP && curPlayerState == GAMEPLAYER_CHAR_STATE.MOVE)
                         {
-                            curPlayerState = GAMEPLAYER_STATE.moving_jump;
+                            curPlayerState = GAMEPLAYER_CHAR_STATE.MOVING_JUMP;
                         }
-                        else if (input.state == INPUT_STATE.CHARACTER_JUMP && curPlayerState != GAMEPLAYER_STATE.move)
+                        else if (input.state == INPUT_STATE.CHARACTER_JUMP && curPlayerState != GAMEPLAYER_CHAR_STATE.MOVE)
                         {
-                            curPlayerState = GAMEPLAYER_STATE.jump;
+                            curPlayerState = GAMEPLAYER_CHAR_STATE.JUMP;
                         }
                     }
                     KojeomLogger.DebugLog(string.Format("current PlayerState : {0}", curPlayerState), LOG_TYPE.USER_INPUT);
 
                     switch (curPlayerState)
                     {
-                        case GAMEPLAYER_STATE.move:
+                        case GAMEPLAYER_CHAR_STATE.MOVE:
                             moveStateController.SetState(moveState);
                             moveStateController.UpdateState();
                             break;
-                        case GAMEPLAYER_STATE.jump:
+                        case GAMEPLAYER_CHAR_STATE.JUMP:
                             jumpStateController.SetState(jumpState);
                             jumpStateController.UpdateState();
                             break;
-                        case GAMEPLAYER_STATE.idle:
+                        case GAMEPLAYER_CHAR_STATE.IDLE:
                             poseStateController.SetState(idleState);
                             poseStateController.UpdateState();
                             break;
-                        case GAMEPLAYER_STATE.moving_jump:
+                        case GAMEPLAYER_CHAR_STATE.MOVING_JUMP:
                             jumpStateController.SetState(jumpState);
                             jumpStateController.UpdateState();
                             moveStateController.SetState(moveState);
