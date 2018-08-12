@@ -40,6 +40,10 @@ public class WorldManager : MonoBehaviour
     public void Init()
     {
         CreateGameWorld();
+        if (GameManager.instance != null && GameManager.instance.isSubWorldDataSave == true)
+        {
+            SaveSubWorldFile();
+        }
         instance = this;
     }
     /// <summary>
@@ -109,10 +113,6 @@ public class WorldManager : MonoBehaviour
             _worldList.Add(subWorld);
             // 
             subWorldFileNameCache.Add(idx, subWorld.worldName);
-            if(GameManager.instance != null && GameManager.instance.isSubWorldDataSave == true)
-            {
-                SaveSubWorldFile();
-            }
         }
     }
     /// <summary>

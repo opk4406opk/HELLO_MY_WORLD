@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
 
     public bool isSoundOn = false;
     public bool isSubWorldDataSave = false;
+    public bool isLockCursor = false;
 
     [SerializeField]
     private SubWorldDataFile subWorldDataFile;
@@ -105,7 +106,10 @@ public class GameManager : MonoBehaviour
 
     private void InitSettings()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        if(isLockCursor == true)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
 
     /// <summary>
@@ -121,7 +125,9 @@ public class GameManager : MonoBehaviour
         GameNetworkManager.GetInstance().onlineScene = "InGame";
         var netClient = GameNetworkManager.GetInstance().StartHost();
         GameNetworkManager.GetInstance().isHost = true;
-        GameNetworkManager.GetInstance().Init();
+        GameNetworkManager.GetInstance().LateInit();
+        // InGame씬에서 바로 시작하는 경우에는 해당 flag를 true로 설정.
+        GameNetworkStateFlags.isReceivedRandomSeedFormServer = true;
     }
 
     /// <summary>
@@ -190,13 +196,14 @@ public class GameManager : MonoBehaviour
         KojeomLogger.DebugLog("네트워크 접속이 완료될 때 까지 대기합니다.", LOG_TYPE.SYSTEM);
         while (true)
         {
-            if(GameNetworkManager.GetInstance().GetMyGamePlayer() != null)
+            if(GameNetworkManager.GetInstance().GetMyGamePlayer() != null &&
+                GameNetworkStateFlags.isReceivedRandomSeedFormServer == true)
             {
                 break;
             }
             yield return null;
         }
-        KojeomLogger.DebugLog("네트워크 접속 -> 플레이어 생성까지 완료되었습니다. 매니저들을 초기화합니다.", LOG_TYPE.SYSTEM);
+        KojeomLogger.DebugLog("네트워크 접속 -> 플레이어 생성까지 완료되었습니다. Manager Class 초기화 시작합니다.", LOG_TYPE.SYSTEM);
         InitManagers();
     }
 }

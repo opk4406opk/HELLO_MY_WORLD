@@ -43,14 +43,14 @@ public class WorldGenAlgorithms {
                 }
             }
         }
-        SimpleGenCircleCave(refWorldBlockData);
+        SimpleGenSphereCave(refWorldBlockData);
     }
 
     /// <summary>
-    /// flood fill 알고리즘을 이용한 원 모양의 동굴 생성.
+    /// flood fill 알고리즘을 이용한 Sphere 모양의 동굴 생성.
     /// </summary>
     /// <param name="refWorldBlockData"></param>
-    private static void SimpleGenCircleCave(Block[,,] refWorldBlockData)
+    private static void SimpleGenSphereCave(Block[,,] refWorldBlockData)
     {
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
         int startX = Utility.RandomInteger(3, gameConfig.sub_world_x_size - 16);

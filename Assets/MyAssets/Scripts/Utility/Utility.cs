@@ -17,9 +17,13 @@ public class Utility : MonoBehaviour {
         return v;
     }
 
+    public static void SetRandomSeed(int seed)
+    {
+        Random.InitState(seed);
+    }
+
     public static float RandomFloat(float min, float max)
     {
-        Random.InitState((int)System.DateTime.Now.Ticks);
         return Random.Range(min, max);
     }
 
@@ -31,7 +35,6 @@ public class Utility : MonoBehaviour {
     /// <returns></returns>
     public static int RandomInteger(int min, int max)
     {
-        Random.InitState((int)System.DateTime.Now.Ticks);
         return Random.Range(min, max);
     }
 }

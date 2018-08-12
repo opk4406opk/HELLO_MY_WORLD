@@ -149,8 +149,8 @@ public class PopupChData : MonoBehaviour
     private void CallBackSingleGameProcess()
     {
         var netClient = GameNetworkManager.GetInstance().StartHost();
+        GameNetworkManager.GetInstance().LateInit();
         GameNetworkManager.GetInstance().isHost = true;
-        GameNetworkManager.GetInstance().Init();
     }
 
     private void PopupExitProcess()
