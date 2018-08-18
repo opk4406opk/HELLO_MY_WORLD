@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class KojeomUtility : MonoBehaviour {
+public class KojeomUtility
+{
     public static Stack<PathNode> ReversePathStack(Stack<PathNode> src)
     {
         Stack<PathNode> v = new Stack<PathNode>();

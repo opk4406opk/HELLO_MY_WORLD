@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class PlayerStateController {
+﻿public class PlayerStateController {
 
     private IState curState;
     public void SetState(IState state)
