@@ -27,8 +27,8 @@ public class PlayerManager : MonoBehaviour {
 
     public static Vector3 GetGamePlayerInitPos()
     {
-        return new Vector3(UnityEngine.Random.Range(3.0f, 25.0f),
-            48.0f, UnityEngine.Random.Range(3.0f, 25.0f));
+        //임시로 정해진 값.
+        return new Vector3(0.0f, 48.0f, 0.0f);
     }
     /// <summary>
     /// 플레이어 컨트롤러를 시작합니다.

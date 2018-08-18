@@ -198,11 +198,12 @@ public class GameNetworkManager : NetworkManager {
     public static void InitGameRandomSeed(int seed)
     {
         gameRandomSeed = seed;
-        Utility.SetRandomSeed(gameRandomSeed);
+        KojeomUtility.SetRandomSeed(seed);
         KojeomLogger.DebugLog(string.Format("GameRandomSeed Init. seed value : {0}", seed), LOG_TYPE.NETWORK_MANAGER_INFO);
     }
-    private static int gameRandomSeed;
-    public static int GetGameRandomSeed()
+   
+    private static int gameRandomSeed = 0;
+    public static int GetGameCurrentRandomSeed()
     {
         return gameRandomSeed;
     }
@@ -213,7 +214,6 @@ public class GameNetworkManager : NetworkManager {
         if (instance == null)
         {
             instance = GameObject.FindWithTag("NetworkManager").GetComponent<GameNetworkManager>();
-            InitGameRandomSeed((int)DateTime.Now.Ticks);
         }
         return instance;
     }
@@ -414,7 +414,7 @@ public class GameNetworkManager : NetworkManager {
     {
         var msg = netMsg.ReadMessage<NetMessageGameRandSeed>();
         NetMessageGameRandSeed responseNetMsg = new NetMessageGameRandSeed();
-        responseNetMsg.randomSeed = GetGameRandomSeed();
+        responseNetMsg.randomSeed = GetGameCurrentRandomSeed();
         NetworkServer.SendToClient(msg.connectionID, (short)GAME_NETWORK_PROTOCOL.res_gameRandomSeed, responseNetMsg);
         KojeomLogger.DebugLog(string.Format("GameRandomSeed val :{0} 을 클라이언트(connID : {1})에게 전송했습니다.", 
             responseNetMsg.randomSeed, msg.connectionID),

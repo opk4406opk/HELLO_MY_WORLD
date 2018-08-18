@@ -39,12 +39,14 @@ public class WorldManager : MonoBehaviour
 
     public void Init()
     {
+        KojeomLogger.DebugLog("GameWorld 생성을 시작합니다.");
         CreateGameWorld();
         if (GameManager.instance != null && GameManager.instance.isSubWorldDataSave == true)
         {
             SaveSubWorldFile();
         }
         instance = this;
+        KojeomLogger.DebugLog("GameWorld 생성을 종료합니다.");
     }
     /// <summary>
     /// C# sereialization 기능을 이용한

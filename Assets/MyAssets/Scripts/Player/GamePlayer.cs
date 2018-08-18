@@ -63,6 +63,9 @@ public class GamePlayer : NetworkBehaviour
 
     private void SetObjectLayer(int layer)
     {
+        // 상위 
+        gameObject.layer = layer;
+        //하위
         _charInstance.gameObject.layer = layer;
     }
 

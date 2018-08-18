@@ -30,9 +30,9 @@ public class WorldGenAlgorithms {
         {
             for (int z = 0; z < gameConfig.sub_world_z_size; z++)
             {
-                int stone = PerlinNoise(x, 20, z, 3, Utility.RandomInteger(1, 3), 2);
+                int stone = PerlinNoise(x, 20, z, 3, KojeomUtility.RandomInteger(1, 3), 2);
                 stone += param.baseOffset;
-                int grass = PerlinNoise(x, 21, z, 1, Utility.RandomInteger(1, 2), 1) + 1;
+                int grass = PerlinNoise(x, 21, z, 1, KojeomUtility.RandomInteger(1, 2), 1) + 1;
 
                 for (int y = 0; y < gameConfig.sub_world_y_size; y++)
                 {
@@ -53,14 +53,14 @@ public class WorldGenAlgorithms {
     private static void SimpleGenSphereCave(Block[,,] refWorldBlockData)
     {
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-        int startX = Utility.RandomInteger(3, gameConfig.sub_world_x_size - 16);
-        int maxX = Utility.RandomInteger(startX, gameConfig.sub_world_x_size);
+        int startX = KojeomUtility.RandomInteger(3, gameConfig.sub_world_x_size - 16);
+        int maxX = KojeomUtility.RandomInteger(startX, gameConfig.sub_world_x_size);
         //
-        int startZ = Utility.RandomInteger(3, gameConfig.sub_world_z_size - 16);
-        int maxZ = Utility.RandomInteger(startX, gameConfig.sub_world_z_size);
+        int startZ = KojeomUtility.RandomInteger(3, gameConfig.sub_world_z_size - 16);
+        int maxZ = KojeomUtility.RandomInteger(startX, gameConfig.sub_world_z_size);
         //
-        int maxY = Utility.RandomInteger(10, gameConfig.sub_world_y_size - 10);
-        int startY = Utility.RandomInteger(5, maxY - 1);
+        int maxY = KojeomUtility.RandomInteger(10, gameConfig.sub_world_y_size - 10);
+        int startY = KojeomUtility.RandomInteger(5, maxY - 1);
         for (int x = startX; x < maxX; x++)
         {
             for (int z = startZ; z < maxZ; z++)

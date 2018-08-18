@@ -29,6 +29,7 @@ public class MultiPlayLobbyManager : MonoBehaviour {
         GameNetworkManager.GetInstance().LateInit();
         //
         GameNetworkManager.GetInstance().isHost = true;
+        GameNetworkManager.InitGameRandomSeed((int)System.DateTime.Now.Ticks);
     }
 
     public void OnClickUpdateServerList()

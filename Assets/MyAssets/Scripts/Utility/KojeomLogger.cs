@@ -21,14 +21,14 @@ public class KojeomLogger {
     public static string GetGUIDebugLogs()
     {
         StringBuilder totalLog = new StringBuilder();
-        for(int idx = guiDebugLogs.Count-1; idx > 0; idx--)
+        for(int idx = guiDebugLogBuffer.Count-1; idx > 0; idx--)
         {
-            totalLog.Append(guiDebugLogs[idx]);
+            totalLog.Append(guiDebugLogBuffer[idx]);
         }
         return totalLog.ToString();
     }
     private static List<string> logFileBuffer = new List<string>();
-    private static List<string> guiDebugLogs = new List<string>();
+    private static List<string> guiDebugLogBuffer = new List<string>();
 	public static void DebugLog(string log, LOG_TYPE logType = LOG_TYPE.INFO)
 	{
         string savedLog = string.Format("[Time-stamp]{0}::[{1}]{2}\n", TimeStamp(), logType, log);
@@ -49,25 +49,32 @@ public class KojeomLogger {
         }
         //
         StringBuilder consoleLog = new StringBuilder();
+        StringBuilder guiDebugLog = new StringBuilder();
         switch (logType)
         {
             case LOG_TYPE.NORMAL:
                 consoleLog.AppendFormat("<color=blue><b>[NORMAL]</b></color> {0}", log);
+                guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
             case LOG_TYPE.ERROR:
                 consoleLog.AppendFormat("<color=red><b>[ERROR]</b></color> {0}", log);
+                guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
             case LOG_TYPE.INFO:
                 consoleLog.AppendFormat("<color=green><b>[INFO]</b></color> {0}", log);
+                guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
             case LOG_TYPE.NETWORK_SERVER_INFO:
                 consoleLog.AppendFormat("<color=#99CCFF><b>[NETWORK_SERVER_INFO]</b></color> {0}", log);
+                guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
             case LOG_TYPE.NETWORK_CLIENT_INFO:
                 consoleLog.AppendFormat("<color=#6633FF><b>[NETWORK_CLIENT_INFO]</b></color> {0}", log);
+                guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
             case LOG_TYPE.SYSTEM:
                 consoleLog.AppendFormat("<color=white><b>[SYSTEM]</b></color> {0}", log);
+                guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
             case LOG_TYPE.EDITOR_TOOL:
                 consoleLog.AppendFormat("<color=#9900FF><b>[EDITOR_TOOL]</b></color> {0}", log);
@@ -77,18 +84,24 @@ public class KojeomLogger {
                 break;
             case LOG_TYPE.DATABASE:
                 consoleLog.AppendFormat("<color=#FFCC00><b>[DATABASE]</b></color> {0}", log);
+                guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
             case LOG_TYPE.NETWORK_MANAGER_INFO:
                 consoleLog.AppendFormat("<color=#6699CC><b>[NETWORK_MANAGER_INFO]</b></color> {0}", log);
+                guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
             default:
                 break;
         }
-        string guiDebugLog = string.Format("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
-        guiDebugLogs.Add(guiDebugLog);
-        if(guiDebugLogs.Count > 1000)
+        
+        if(guiDebugLog.ToString().Equals("") == false)
         {
-            guiDebugLogs.Clear();
+            guiDebugLogBuffer.Add(guiDebugLog.ToString());
+        }
+
+        if (guiDebugLogBuffer.Count > 1000)
+        {
+            guiDebugLogBuffer.Clear();
         }
         //
         if (Application.platform == RuntimePlatform.WindowsEditor)

@@ -103,7 +103,7 @@ public class World : MonoBehaviour
         if (GameStatus.isLoadGame == false)
         {
             MakeWorldParam param;
-            param.baseOffset = Utility.RandomInteger(2, 29);
+            param.baseOffset = KojeomUtility.RandomInteger(2, 29);
             SetDefaultWorldData(param);
             //
             _loadProcessRoutine = LoadProcess();

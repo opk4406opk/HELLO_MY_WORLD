@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System;
 
 /// <summary>
 /// 첫 게임메인화면을 관리하는 클래스.
