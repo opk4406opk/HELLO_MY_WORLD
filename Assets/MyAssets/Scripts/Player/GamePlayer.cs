@@ -20,6 +20,7 @@ public class GamePlayer : NetworkBehaviour
     {
         get { return _charInstance; }
     }
+    [SerializeField]
     private NetworkIdentity networkIdentity;
 
     public void Init(int charType, string charName, Vector3 initPos)
@@ -38,7 +39,7 @@ public class GamePlayer : NetworkBehaviour
         _charInstance.transform.localPosition = new Vector3(0, 0, 0);
         //
         playerController = gameObject.GetComponent<GamePlayerController>();
-
+        //
         KojeomLogger.DebugLog("게임플레이어 초기화 완료. ", LOG_TYPE.INFO);
     }
     public GamePlayerController GetController()
@@ -81,32 +82,31 @@ public class GamePlayer : NetworkBehaviour
     // 컨트롤 가능한 오브젝트면 권한을 가진다.
     public override void OnStartAuthority()
     {
-        networkIdentity = gameObject.GetComponent<NetworkIdentity>();
-        _isMyPlayer = true;
-        KojeomLogger.DebugLog(string.Format("[connectionID : {0}] this gameplayer client with Authority",
-            networkIdentity.connectionToServer.connectionId),
-            LOG_TYPE.NETWORK_CLIENT_INFO);
+       
     }
-    // 컨트롤이 불가능한 오브젝트.
+
+    /// <summary>
+    /// 게임내에 존재하는 오브젝트들은 이 메소드가 호출되어진다.
+    /// ( 컨트롤 권한이 있든 없든간에 )
+    ///  Called on every NetworkBehaviour when it is activated on a client. 
+    /// </summary>
     public override void OnStartClient()
     {
-        KojeomLogger.DebugLog("this gameplayer is just client..", LOG_TYPE.NETWORK_CLIENT_INFO);
+        
     }
 
     public override void OnStartLocalPlayer()
     {
-        networkIdentity = gameObject.GetComponent<NetworkIdentity>();
-        KojeomLogger.DebugLog(string.Format("[connectionID : {0}] this gameplayer LocalPlayer",
-            networkIdentity.connectionToServer.connectionId),
-           LOG_TYPE.NETWORK_CLIENT_INFO);
-        // 로컬 플레이어로서 초기화되면, 유저리스트에서 본인을 찾아 게임플레이어 객체를 할당해준다.
-        var myUser = GameNetworkManager.GetInstance().FindUserInList(networkIdentity.connectionToServer.connectionId);
-        if(GameNetworkManager.GetInstance().isHost == false)
+       
+    }
+    // test method.
+    private void SettingGamePlayerToNetUser()
+    {
+        var user = GameNetworkManager.GetInstance().FindUserInList(networkIdentity.connectionToServer.connectionId);
+        if (GameNetworkManager.GetInstance().isHost == false)
         {
-            Init(myUser.selectCharType, myUser.userName, PlayerManager.GetGamePlayerInitPos());
-            // Host가 아닌 플레이어 오브젝트들은 OtherPlayerCharacter( = 11) 레이어를 할당한다.
-            SetObjectLayer(11);
+            Init(user.selectCharType, user.userName, PlayerManager.GetGamePlayerInitPos());
         }
-        myUser.gamePlayer = this;
+        user.gamePlayer = this;
     }
 }

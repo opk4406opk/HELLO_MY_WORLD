@@ -285,50 +285,50 @@ public class GameNetworkManager : NetworkManager {
     // 이 메소드 코드 흐름을 보기좋게 정리할 필요가 있다.
     public override void OnClientConnect(NetworkConnection conn)
     {
+        KojeomLogger.DebugLog("서버로 접속을 했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
         //서버한테 Game에서 사용하게 될 RandomSeed를 요청한다.
         ReqGameRandomSeed();
         // 게임유저 데이터 메세지 생성.
         NetMessageGameNetPlayerData msgData = new NetMessageGameNetPlayerData();
         msgData.connectionID = conn.connectionId;
         msgData.address = conn.address;
-        msgData.playerName = string.Format("[OnClientConnect] player_connID_{0}", conn.connectionId);
-        int charType = GameDBHelper.GetInstance().GetSelectCharType();
-        msgData.selectChType = charType;
+        msgData.playerName = string.Format("[GameClient]_player_connID::{0}", conn.connectionId);
+        msgData.selectChType = GameDBHelper.GetInstance().GetSelectCharType();
 
-        KojeomLogger.DebugLog("서버로 접속을 했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
-        KojeomLogger.DebugLog(string.Format("ClientScene localPlayers count : {0}",
-            ClientScene.localPlayers.Count),
-            LOG_TYPE.NETWORK_CLIENT_INFO);
         // 게임 유저에 대한 데이터를 서버로 전송한다.
-        bool isSendSuccess = conn.Send((short)GAME_NETWORK_PROTOCOL.push_clientInfo, msgData);
-        if (isSendSuccess) KojeomLogger.DebugLog("Send client info to server success ", LOG_TYPE.NETWORK_CLIENT_INFO);
-        else KojeomLogger.DebugLog("Send client info to server failed ", LOG_TYPE.ERROR);
-        // 전송 후, 게임 유저에 대한 정보를 유저목록에 등록한다.
-        if (isHost == false)
-        {
-            GameNetUser netUser = new GameNetUser(string.Format("[OnClientConnect] player_connID_{0}", conn.connectionId), conn.connectionId, charType);
-            KojeomLogger.DebugLog(string.Format("유저리스트에 클라이언트 유저를 등록합니다. user_connID : {0}, name : {1}, chType : {2}",
-                netUser.connectionID, netUser.userName, netUser.selectCharType),
-                LOG_TYPE.NETWORK_CLIENT_INFO);
-            _netUserList.Add(conn.connectionId, netUser);
-        }
+        //bool isSendSuccess = conn.Send((short)GAME_NETWORK_PROTOCOL.push_clientInfo, msgData);
+        //if (isSendSuccess) KojeomLogger.DebugLog("Send client info to server success ", LOG_TYPE.NETWORK_CLIENT_INFO);
+        //else KojeomLogger.DebugLog("Send client info to server failed ", LOG_TYPE.ERROR);
+        // 전송 후, 게임 유저(myself)에 대한 정보를 유저목록에 등록한다.
+        //if (isHost == false)
+        //{
+        //    //GameManager->PlayerManager가 초기화되기 이전에, NetworkManager가 먼저 진행되므로
+        //    // 우선, 자신의 캐릭터 접속 정보에 대한것을 NetUserList에 저장한다.
+        //    // 저장할 때, 실제 자신의 캐릭터플레이어는 아직 생성되지 않았으므로..제외하는데.. 코드가 뭔가 꼬였있네..ㅅㅂ..
+        //    GameNetUser netUser = new GameNetUser(string.Format("[OnClientConnect] player_connID_{0}", conn.connectionId),
+        //        conn.connectionId, charType);
+        //    KojeomLogger.DebugLog(string.Format("유저리스트에 클라이언트 유저를 등록합니다. user_connID : {0}, name : {1}, chType : {2}",
+        //        netUser.connectionID, netUser.userName, netUser.selectCharType), LOG_TYPE.NETWORK_CLIENT_INFO);
+        //    _netUserList.Add(conn.connectionId, netUser);
+        //}
+
         // NetworkManager 프리팹에서 autoCreatePlayer 옵션을 true로 하는 경우,
         // 해당 로컬 컨넥션에 대해 자동으로 ClientScene.AddPlayer(0)을 호출한다.
         //base.OnClientConnect(conn);
         //ClientScene.Ready(conn);
-        bool isSuccesAddPlayer = ClientScene.AddPlayer(conn, 0, msgData);
+        bool isSuccesAddPlayer = ClientScene.AddPlayer(conn, (short)conn.connectionId, msgData);
         if (isSuccesAddPlayer == true) KojeomLogger.DebugLog("ClientScene.AddPlayer is Success.", LOG_TYPE.NETWORK_CLIENT_INFO);
         else KojeomLogger.DebugLog("ClientScene.AddPlayer is Failed.", LOG_TYPE.NETWORK_CLIENT_INFO);
-        //
     }
+    /// <summary>
+    /// 클라이언트로부터 받은 접속정보를 로그에 남기기 위한 콜백함수.
+    /// </summary>
+    /// <param name="netMsg"></param>
     private void OnRecvFromClient_ConnectInfo(NetworkMessage netMsg)
     {
         var netPlayerData = netMsg.ReadMessage<NetMessageGameNetPlayerData>();
         KojeomLogger.DebugLog(string.Format("conneted clinet info [ connection_id : {0}, addr : {1}, selectChType : {2} ]",
             netPlayerData.connectionID, netPlayerData.address, netPlayerData.selectChType), LOG_TYPE.NETWORK_SERVER_INFO);
-        //
-        GameNetUser netUser = new GameNetUser(netPlayerData.playerName, netPlayerData.connectionID, netPlayerData.selectChType);
-        _netUserList.Add(netPlayerData.connectionID, netUser);
     }
 
     private void OnRecvFromClient_CharState(NetworkMessage netMsg)
@@ -518,7 +518,7 @@ public class GameNetworkManager : NetworkManager {
     }
 
     /// <summary>
-    /// 서버로 접속한 유저를 게임월드상에 실재하는 플레이어 오브젝트로 instancing 한다.
+    /// 서버로 접속한 유저를 게임월드상에 실제하는 플레이어 오브젝트로 instancing 한다.
     /// 생성된 플레이어는 유저리스트에 등록.
     /// (서버에서만 호출되는 콜백 함수.)
     /// </summary>
@@ -528,7 +528,7 @@ public class GameNetworkManager : NetworkManager {
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId, NetworkReader extraMessageReader)
     {
         var msg = extraMessageReader.ReadMessage<NetMessageGameNetPlayerData>();
-        KojeomLogger.DebugLog(string.Format("[method::OnServerAddPlayer] netConn : {0}, playerControllerId : {1}",
+        KojeomLogger.DebugLog(string.Format("[OnServerAddPlayer] netConn : {0}, playerControllerId : {1}",
            conn, playerControllerId), LOG_TYPE.NETWORK_SERVER_INFO);
         // instancing..
         GameObject instance = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
@@ -537,7 +537,20 @@ public class GameNetworkManager : NetworkManager {
         GamePlayer gamePlayer = instance.GetComponent<GamePlayer>();
         gamePlayer.Init(msg.selectChType, msg.playerName, PlayerManager.GetGamePlayerInitPos());
         // 네트워크 서버에 플레이어 등록.
-        NetworkServer.AddPlayerForConnection(conn, instance, playerControllerId);
+        var addPlayerSuccess = NetworkServer.AddPlayerForConnection(conn, instance, playerControllerId);
+        if (addPlayerSuccess) KojeomLogger.DebugLog(string.Format("Successed add Player to Server (connID : {0}", conn.connectionId),LOG_TYPE.NETWORK_SERVER_INFO);
+        else KojeomLogger.DebugLog(string.Format("Failed add Player to Server (connID : {0}", conn.connectionId), LOG_TYPE.NETWORK_SERVER_INFO);
+        // 서버에 접속한 유저의 캐릭터를 생성 후, 이를 유저리스트에 등록한다. 
+        GameNetUser gameNetUser = new GameNetUser(msg.playerName, msg.connectionID, msg.selectChType, gamePlayer);
+        if(_netUserList.ContainsKey(conn.connectionId) == false)
+        {
+            _netUserList.Add(conn.connectionId, gameNetUser);
+        }
+        else
+        {
+            KojeomLogger.DebugLog(string.Format("[OnServerAddPlayer] connection Info : {0} 는 이미 NetUserList에 있습니다. 새로 등록하지 않습니다.",
+          conn), LOG_TYPE.NETWORK_SERVER_INFO);
+        }
     }
     /// <summary>
     /// 로컬 Node.js 게임 로그 서버로 로그를 전달합니다.(http-post)
