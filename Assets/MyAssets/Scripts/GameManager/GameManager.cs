@@ -198,9 +198,9 @@ public class GameManager : MonoBehaviour
         KojeomLogger.DebugLog("네트워크 접속이 완료될 때 까지 대기합니다.", LOG_TYPE.SYSTEM);
         while (true)
         {
-            if(GameNetworkManager.GetInstance().GetMyGamePlayer() != null &&
-                GameNetworkStateFlags.isReceivedRandomSeedFormServer == true &&
-                GameNetworkStateFlags.isReceiveGameUserList == true)
+            if(GameNetworkStateFlags.isReceivedRandomSeedFormServer == true &&
+                GameNetworkStateFlags.isReceiveGameUserList == true &&
+                GameNetworkStateFlags.isCreatedMyGamePlayer == true)
             {
                 break;
             }

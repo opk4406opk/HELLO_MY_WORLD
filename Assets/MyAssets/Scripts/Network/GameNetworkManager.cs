@@ -535,7 +535,7 @@ public class GameNetworkManager : NetworkManager {
         instance.name = msg.playerName;
         // gamePlayer info init.
         GamePlayer gamePlayer = instance.GetComponent<GamePlayer>();
-        gamePlayer.Init(msg.selectChType, msg.playerName, PlayerManager.GetGamePlayerInitPos());
+        gamePlayer.PreInit();
         // 네트워크 서버에 플레이어 등록.
         var addPlayerSuccess = NetworkServer.AddPlayerForConnection(conn, instance, playerControllerId);
         if (addPlayerSuccess) KojeomLogger.DebugLog(string.Format("Successed add Player to Server (connID : {0}", conn.connectionId),LOG_TYPE.NETWORK_SERVER_INFO);

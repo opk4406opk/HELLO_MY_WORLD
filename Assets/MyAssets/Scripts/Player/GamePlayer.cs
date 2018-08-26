@@ -21,12 +21,18 @@ public class GamePlayer : NetworkBehaviour
         get { return _charInstance; }
     }
 
-    public void Init(int charType, string charName, Vector3 initPos)
+    /// <summary>
+    /// 게임플레이어는 게임 시작 이전에 미리 생성되므로, DontDestroyOnLoad를 명시적으로 호출해야한다.
+    /// </summary>
+    public void PreInit()
+    {
+        DontDestroyOnLoad(this);
+    }
+
+    private void PostInit(int charType, string charName, Vector3 initPos)
     {
         // init position.
         gameObject.transform.position = initPos;
-        //test code.   
-        DontDestroyOnLoad(this);
         //
         KojeomLogger.DebugLog("게임플레이어 초기화 시작. ", LOG_TYPE.INFO);
         _characterName = charName;
@@ -39,6 +45,13 @@ public class GamePlayer : NetworkBehaviour
         playerController = gameObject.GetComponent<GamePlayerController>();
         //
         KojeomLogger.DebugLog("게임플레이어 초기화 완료. ", LOG_TYPE.INFO);
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    private void SingleGameInit()
+    {
+
     }
     public GamePlayerController GetController()
     {
@@ -72,7 +85,6 @@ public class GamePlayer : NetworkBehaviour
     {
         _isMyPlayer = true;
         StartCoroutine(LateRegisterMyPlayerToUserList());
-        GameNetworkStateFlags.isCreatedMyGamePlayer = true;
     }
 
     /// <summary>
@@ -89,17 +101,7 @@ public class GamePlayer : NetworkBehaviour
     {
        
     }
-    //// test method.
-    //private void SettingGamePlayerToNetUser()
-    //{
-    //    var user = GameNetworkManager.GetInstance().FindUserInList(networkIdentity.connectionToServer.connectionId);
-    //    if (GameNetworkManager.GetInstance().isHost == false)
-    //    {
-    //        Init(user.selectCharType, user.userName, PlayerManager.GetGamePlayerInitPos());
-    //    }
-    //    user.gamePlayer = this;
-    //}
-
+    
     private IEnumerator LateRegisterMyPlayerToUserList()
     {
         KojeomLogger.DebugLog(string.Format("LateRegisterMyPlayerToUserList Start."), LOG_TYPE.NETWORK_CLIENT_INFO);
@@ -110,14 +112,13 @@ public class GamePlayer : NetworkBehaviour
             {
                 var myUser = GameNetworkManager.GetInstance().FindUserInList(GameNetworkManager.GetInstance().
                     client.connection.connectionId);
-                if(myUser.gamePlayer != null)
-                {
-                    myUser.gamePlayer = this;
-                }
+                PostInit(myUser.selectCharType, myUser.userName, PlayerManager.GetGamePlayerInitPos());
+                myUser.gamePlayer = this;
                 break;
             }
             yield return new WaitForSeconds(1.0f);
         }
         KojeomLogger.DebugLog(string.Format("LateRegisterMyPlayerToUserList Finish."), LOG_TYPE.NETWORK_CLIENT_INFO);
+        GameNetworkStateFlags.isCreatedMyGamePlayer = true;
     }
 }

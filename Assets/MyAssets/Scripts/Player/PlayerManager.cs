@@ -48,18 +48,4 @@ public class PlayerManager : MonoBehaviour {
         myPlayerController.StopControllProcess();
     }
 
-    [Obsolete("this is legacy method. Don't used it.")]
-    private GamePlayer CreateSingleGamePlayer(int chType, string playerName)
-    {
-        // playerManager로 패런팅.
-        GameObject inst = Instantiate(gamePlayerPrefab, new Vector3(0,0,0), Quaternion.identity);
-        inst.name = playerName;
-        var netIdentity = gameObject.GetComponent<NetworkIdentity>();
-        
-        //
-        GamePlayer gamePlayer = inst.GetComponent<GamePlayer>();
-        gamePlayer.Init(chType, playerName, GetGamePlayerInitPos());
-
-        return gamePlayer;
-    }
 }
