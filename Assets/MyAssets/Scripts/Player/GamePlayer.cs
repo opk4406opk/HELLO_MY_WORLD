@@ -142,8 +142,9 @@ public class GamePlayer : NetworkBehaviour
                 (GameNetworkManager.GetInstance().netUserList.Count > 0))
             {
                 var netConnectionID = -999;
-                if (GameNetworkManager.GetInstance().isHost == true) netConnectionID = networkIdentity.connectionToClient.connectionId;
-                else netConnectionID = networkIdentity.connectionToServer.connectionId;
+                if (networkIdentity.connectionToClient != null) netConnectionID = networkIdentity.connectionToClient.connectionId;
+                else if(networkIdentity.connectionToServer != null) netConnectionID = networkIdentity.connectionToServer.connectionId;
+
                 KojeomLogger.DebugLog(string.Format("[※LateRegisterGamePlayer Done.※] connID : {0}", netConnectionID),
                    LOG_TYPE.NETWORK_CLIENT_INFO);
                 var user = GameNetworkManager.GetInstance().FindUserInList(netConnectionID);
