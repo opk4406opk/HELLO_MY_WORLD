@@ -120,7 +120,20 @@ public class GameNetworkStateFlags
     /// <summary>
     /// 서버에 접속 후 나의 GamePlayer가 정상적으로 생성되었는지?
     /// </summary>
-    public static bool isCreatedMyGamePlayer = false;
+    public static bool isCreatedMyGamePlayer
+    {
+        get
+        {
+            if(GameNetworkManager.GetInstance() != null)
+            {
+                return GameNetworkManager.GetInstance().IsMyGamePlayerInUserList();
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
 }
 
 /// <summary>
@@ -397,7 +410,7 @@ public class GameNetworkManager : NetworkManager {
         {
             KojeomLogger.DebugLog(string.Format("[user_info] connID : {0}, name : {1}, charType : {2}",
                 userList[idx].connectionID, userList[idx].userName,
-                userList[idx].selectCharType));
+                userList[idx].selectCharType), LOG_TYPE.NETWORK_CLIENT_INFO);
             // 서버로부터 받은 유저리스트를 클라이언트 유저리스트에 저장한다.
             GameNetUser netUser = new GameNetUser(userList[idx].userName, userList[idx].connectionID, userList[idx].selectCharType);
             if(_netUserList.ContainsKey(userList[idx].connectionID) == false)
@@ -414,9 +427,14 @@ public class GameNetworkManager : NetworkManager {
         if (gameCharState.ownerConnID != client.connection.connectionId)
         {
             var user = FindUserInList(gameCharState.ownerConnID);
-            if (user.gamePlayer != null)
+            if (user.gamePlayer != null && user.gamePlayer.GetController() != null)
             {
                 user.gamePlayer.GetController().SetPlayerState(gameCharState.ownerCharState);
+            }
+            else
+            {
+                KojeomLogger.DebugLog(string.Format("[OnRecvFromServer_GameCharState] gamePlayer : {0}, controller : {1}",
+                    user.gamePlayer, user.gamePlayer.GetController()), LOG_TYPE.ERROR);
             }
         }
         else
@@ -507,6 +525,18 @@ public class GameNetworkManager : NetworkManager {
         _netUserList.TryGetValue(connectionID, out user);
         return user;
     }
+    public List<GameNetUser> FindAllUserExceptMine()
+    {
+        List<GameNetUser> userList = new List<GameNetUser>();
+        foreach(var user in _netUserList)
+        {
+            if(user.Value.gamePlayer.isMyPlayer == false)
+            {
+                userList.Add(user.Value);
+            }
+        }
+        return userList;
+    }
     public GamePlayer GetMyGamePlayer()
     {
         var user = FindUserInList(client.connection.connectionId);
@@ -515,6 +545,17 @@ public class GameNetworkManager : NetworkManager {
             if(user.gamePlayer.isMyPlayer) return user.gamePlayer;
         }
         return null;
+    }
+
+    public bool IsMyGamePlayerInUserList()
+    {
+        var user = FindUserInList(client.connection.connectionId);
+        if ((user != null) && (user.gamePlayer != null))
+        {
+            if (user.gamePlayer.isMyPlayer &&
+                user.gamePlayer.isInitProcessFinish == true) return true;
+        }
+        return false;
     }
 
     /// <summary>
@@ -528,14 +569,13 @@ public class GameNetworkManager : NetworkManager {
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId, NetworkReader extraMessageReader)
     {
         var msg = extraMessageReader.ReadMessage<NetMessageGameNetPlayerData>();
-        KojeomLogger.DebugLog(string.Format("[OnServerAddPlayer] netConn : {0}, playerControllerId : {1}",
-           conn, playerControllerId), LOG_TYPE.NETWORK_SERVER_INFO);
+        KojeomLogger.DebugLog(string.Format("[OnServerAddPlayer] netConn : {0}, playerControllerId : {1}, playerName : {2}",
+           conn, playerControllerId, msg.playerName), LOG_TYPE.NETWORK_SERVER_INFO);
         // instancing..
         GameObject instance = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         instance.name = msg.playerName;
         // gamePlayer info init.
         GamePlayer gamePlayer = instance.GetComponent<GamePlayer>();
-        gamePlayer.PreInit();
         // 네트워크 서버에 플레이어 등록.
         var addPlayerSuccess = NetworkServer.AddPlayerForConnection(conn, instance, playerControllerId);
         if (addPlayerSuccess) KojeomLogger.DebugLog(string.Format("Successed add Player to Server (connID : {0}", conn.connectionId),LOG_TYPE.NETWORK_SERVER_INFO);

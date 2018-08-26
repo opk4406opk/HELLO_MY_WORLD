@@ -3,6 +3,18 @@ using UnityEngine;
 
 public class KojeomUtility
 {
+    //https://docs.microsoft.com/ko-kr/dotnet/csharp/programming-guide/generics/generic-methods
+    /// <summary>
+    /// T타입의 모든 자식 컴포넌트들을 리턴합니다.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="parent"></param>
+    /// <returns></returns>
+    public static T[] GetChilds<T>(GameObject parent)
+    {
+        return parent.transform.GetComponentsInChildren<T>();
+    }
+
     public static Stack<PathNode> ReversePathStack(Stack<PathNode> src)
     {
         Stack<PathNode> v = new Stack<PathNode>();
