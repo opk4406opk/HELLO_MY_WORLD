@@ -194,15 +194,13 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator WaitingLogin()
     {
-        if (GameNetworkManager.GetInstance().isHost == false)
-        {
-            GameNetworkManager.GetInstance().ReqInGameUserList();
-        }
+        GameNetworkManager.GetInstance().ReqInGameUserList();
         KojeomLogger.DebugLog("네트워크 접속이 완료될 때 까지 대기합니다.", LOG_TYPE.SYSTEM);
         while (true)
         {
             if(GameNetworkManager.GetInstance().GetMyGamePlayer() != null &&
-                GameNetworkStateFlags.isReceivedRandomSeedFormServer == true)
+                GameNetworkStateFlags.isReceivedRandomSeedFormServer == true &&
+                GameNetworkStateFlags.isReceiveGameUserList == true)
             {
                 break;
             }
