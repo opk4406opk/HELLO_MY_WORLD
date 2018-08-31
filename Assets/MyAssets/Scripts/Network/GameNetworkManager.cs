@@ -320,6 +320,10 @@ public class GameNetworkManager : NetworkManager {
         // 해당 로컬 컨넥션에 대해 자동으로 ClientScene.AddPlayer(0)을 호출한다.
         //base.OnClientConnect(conn);
         //ClientScene.Ready(conn);
+        if(ClientScene.ready == false)
+        {
+            ClientScene.Ready(conn);
+        }
         bool isSuccesAddPlayer = ClientScene.AddPlayer(conn, (short)conn.connectionId, msgData);
         if (isSuccesAddPlayer == true) KojeomLogger.DebugLog("ClientScene.AddPlayer is Success.", LOG_TYPE.NETWORK_CLIENT_INFO);
         else KojeomLogger.DebugLog("ClientScene.AddPlayer is Failed.", LOG_TYPE.NETWORK_CLIENT_INFO);
@@ -592,6 +596,27 @@ public class GameNetworkManager : NetworkManager {
           conn), LOG_TYPE.NETWORK_SERVER_INFO);
         }
     }
+   
+    public override void OnServerDisconnect(NetworkConnection conn)
+    {
+        base.OnServerDisconnect(conn);
+    }
+
+    public override void OnServerReady(NetworkConnection conn)
+    {
+        base.OnServerReady(conn);
+    }
+
+    public override void OnServerRemovePlayer(NetworkConnection conn, PlayerController player)
+    {
+        base.OnServerRemovePlayer(conn, player);
+    }
+
+    public override void OnServerError(NetworkConnection conn, int errorCode)
+    {
+        base.OnServerError(conn, errorCode);
+    }
+
     /// <summary>
     /// 로컬 Node.js 게임 로그 서버로 로그를 전달합니다.(http-post)
     /// ip : 127.0.0.1
@@ -611,6 +636,26 @@ public class GameNetworkManager : NetworkManager {
             // yield return 으로 예외처리를 해야하지만, 로그를 그냥 보내는것이므로 생략한다.
             www.SendWebRequest();
         }
+    }
+
+    public override void OnClientDisconnect(NetworkConnection conn)
+    {
+        base.OnClientDisconnect(conn);
+    }
+
+    public override void OnClientError(NetworkConnection conn, int errorCode)
+    {
+        base.OnClientError(conn, errorCode);
+    }
+
+    public override void OnClientNotReady(NetworkConnection conn)
+    {
+        base.OnClientNotReady(conn);
+    }
+
+    public override void OnClientSceneChanged(NetworkConnection conn)
+    {
+        base.OnClientSceneChanged(conn);
     }
 }
 

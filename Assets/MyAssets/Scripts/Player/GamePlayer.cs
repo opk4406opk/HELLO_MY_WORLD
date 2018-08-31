@@ -104,6 +104,7 @@ public class GamePlayer : NetworkBehaviour
     /// </summary>
     public override void OnStartAuthority()
     {
+        base.OnStartAuthority();
         KojeomLogger.DebugLog(string.Format("[OnStartAuthority] connID : {0}",
             GameNetworkManager.GetInstance().client.connection.connectionId), LOG_TYPE.NETWORK_CLIENT_INFO);
         _isMyPlayer = true;
@@ -116,6 +117,7 @@ public class GamePlayer : NetworkBehaviour
     /// </summary>
     public override void OnStartClient()
     {
+        base.OnStartClient();
         PreInit();
         KojeomLogger.DebugLog(string.Format("[OnStartClient] connID : {0}",
            GameNetworkManager.GetInstance().client.connection.connectionId), LOG_TYPE.NETWORK_CLIENT_INFO);
@@ -129,7 +131,7 @@ public class GamePlayer : NetworkBehaviour
     /// </summary>
     public override void OnStartLocalPlayer()
     {
-       
+        base.OnStartLocalPlayer();
     }
     
     private IEnumerator LateRegisterGamePlayerToUserList()
