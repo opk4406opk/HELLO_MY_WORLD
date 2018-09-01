@@ -15,7 +15,7 @@ public class PlayerJumpState : IState
         jumpSpeed = 2.5f;
         jumpScale = 1.8f;
         t = 0.0f;
-        aniController = gamePlayer.charInstance.GetAniController();
+        aniController = gamePlayer.charInstance.GetQueryMecanimController();
     }
     public void InitState()
     {

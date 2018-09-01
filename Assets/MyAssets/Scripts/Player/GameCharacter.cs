@@ -4,17 +4,31 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class GameCharacter : MonoBehaviour {
-    private QuerySDMecanimController aniController;
+    [SerializeField]
+    private Animator characterAnimator;
+    [SerializeField]
+    private QuerySDMecanimController queryMecanimController;
+    [SerializeField]
     private BoxCollider boxCollider;
     public void Init()
     {
-        aniController = gameObject.GetComponent<QuerySDMecanimController>();
+        queryMecanimController = gameObject.GetComponent<QuerySDMecanimController>();
         boxCollider = gameObject.GetComponent<BoxCollider>();
+        characterAnimator = gameObject.GetComponentInChildren<Animator>();
+
+        if (queryMecanimController == null) KojeomLogger.DebugLog(string.Format("queryMecanimController nullptr!"), LOG_TYPE.ERROR);
+        if (boxCollider == null) KojeomLogger.DebugLog(string.Format("boxCollider nullptr!"), LOG_TYPE.ERROR);
+        if (characterAnimator == null) KojeomLogger.DebugLog(string.Format("characterAnimator nullptr!"), LOG_TYPE.ERROR);
     }
 
-    public QuerySDMecanimController GetAniController()
+    public Animator GetAnimator()
     {
-        return aniController;
+        return characterAnimator;
+    }
+
+    public QuerySDMecanimController GetQueryMecanimController()
+    {
+        return queryMecanimController;
     }
 
     public BoxCollider GetBoxCollider()

@@ -13,7 +13,7 @@ public class PlayerMoveState : IState
     {
         gamePlayer = player;
         //
-        aniController = gamePlayer.charInstance.GetAniController();
+        aniController = gamePlayer.charInstance.GetQueryMecanimController();
         boxCollider = gamePlayer.charInstance.GetBoxCollider();
         //
         moveSpeed = 3.5f;

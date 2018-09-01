@@ -12,7 +12,7 @@ public class KojeomUtility
     /// <returns></returns>
     public static T[] GetChilds<T>(GameObject parent)
     {
-        return parent.transform.GetComponentsInChildren<T>();
+        return parent.GetComponentsInChildren<T>();
     }
 
     public static Stack<PathNode> ReversePathStack(Stack<PathNode> src)

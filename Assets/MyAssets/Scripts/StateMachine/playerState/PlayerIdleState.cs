@@ -10,7 +10,7 @@ public class PlayerIdleState : IState
     public PlayerIdleState(GamePlayer player)
     {
         gamePlayer = player;
-        aniController = gamePlayer.charInstance.GetAniController();
+        aniController = gamePlayer.charInstance.GetQueryMecanimController();
     }
     public void InitState()
     {

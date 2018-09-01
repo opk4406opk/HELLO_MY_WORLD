@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 public class CustomComponentSupervisor : EditorWindow
 {
-    [MenuItem("CustomEditor/CustomComponentAdder")]
+    [MenuItem("CustomEditor/CustomComponentSupervisor")]
     static void Init()
     {
         CustomComponentSupervisor window = (CustomComponentSupervisor)EditorWindow.GetWindow(typeof(CustomComponentSupervisor));
@@ -23,11 +23,11 @@ public class CustomComponentSupervisor : EditorWindow
     {
         KojeomLogger.DebugLog("GameCharacter 컴포넌트 할당 작업 시작.");
         GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
-        foreach(var element in charPrefabs)
+        foreach(var charPrefab in charPrefabs)
         {
-            if(element.GetComponent<GameCharacter>() == null)
+            if(charPrefab.GetComponent<GameCharacter>() == null)
             {
-                element.AddComponent<GameCharacter>();
+                var gameCharacterComponent = charPrefab.AddComponent<GameCharacter>();
             }
             else
             {

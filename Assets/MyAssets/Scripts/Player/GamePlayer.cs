@@ -29,6 +29,7 @@ public class GamePlayer : NetworkBehaviour
 
     [SerializeField]
     private NetworkIdentity networkIdentity;
+    private NetworkAnimator networkAnimator;
 
     /// <summary>
     /// 게임플레이어는 게임 시작 이전에 미리 생성되므로, DontDestroyOnLoad를 명시적으로 호출해야한다.
@@ -55,6 +56,12 @@ public class GamePlayer : NetworkBehaviour
         _charInstance.transform.localPosition = new Vector3(0, 0, 0);
         //
         playerController = gameObject.GetComponent<GamePlayerController>();
+        networkAnimator = gameObject.AddComponent<NetworkAnimator>();
+        // 네트워크 애니메이터를 붙이고 나서 디폴트로 생기는 Animator 컴포넌트를 disable 한다.
+        gameObject.GetComponent<Animator>().enabled = false;
+        // 캐릭터 인스턴스에 있는 실제 애니메이터 컴포넌트를 새롭게 등록.
+        networkAnimator.animator = _charInstance.GetAnimator();
+        //SetObjectLayer(_isMyPlayer);
         //
         KojeomLogger.DebugLog("게임플레이어 PostInit 완료. ", LOG_TYPE.INFO);
     }
@@ -82,7 +89,7 @@ public class GamePlayer : NetworkBehaviour
         else layer = LayerMask.NameToLayer("OtherPlayerCharacter");
 
         gameObject.layer = layer;
-        var childObjects = KojeomUtility.GetChilds<GameObject>(gameObject);
+        var childObjects = KojeomUtility.GetChilds<GameObject>(_charInstance.gameObject);
         foreach (var child in childObjects)
         {
             child.layer = layer;
@@ -118,6 +125,7 @@ public class GamePlayer : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
+        _isMyPlayer = false;
         PreInit();
         KojeomLogger.DebugLog(string.Format("[OnStartClient] connID : {0}",
            GameNetworkManager.GetInstance().client.connection.connectionId), LOG_TYPE.NETWORK_CLIENT_INFO);
