@@ -146,10 +146,24 @@ public class GamePlayer : NetworkBehaviour
                 var netConnectionID = -999;
                 if (networkIdentity.connectionToClient != null) netConnectionID = networkIdentity.connectionToClient.connectionId;
                 else if(networkIdentity.connectionToServer != null) netConnectionID = networkIdentity.connectionToServer.connectionId;
-
+                else if(networkIdentity.connectionToServer == null && networkIdentity.connectionToClient == null)
+                {
+                    KojeomLogger.DebugLog(string.Format("NetworkIdentity connection null pointer error."), LOG_TYPE.ERROR);
+                }
                 KojeomLogger.DebugLog(string.Format("[※LateRegisterGamePlayer Done.※] connID : {0}", netConnectionID),
                    LOG_TYPE.NETWORK_CLIENT_INFO);
-                var user = GameNetworkManager.GetInstance().FindUserInList(netConnectionID);
+
+                // 서버에서 Connection에 대해 유저를 생성하는 작업이 성공적으로 완료 되기 이전에
+                // 게임플레이어가 먼저 로컬에 생성될 수 있다. 따라서, 유저리스트에서 해당 Connection에 대한 정보를
+                // 가져올 수 있을때까지 계속 기다린다.
+                // -> 접속, 생성에 따른 절차가 일목요연하게 정리되지 않아 일단 임시로 이러한 방법을 사용한다.
+                GameNetUser user = null;
+                while(true)
+                {
+                    user = GameNetworkManager.GetInstance().FindUserInList(netConnectionID);
+                    if (user != null) break;
+                    yield return new WaitForSeconds(0.25f);
+                }
                 PostInit(user.selectCharType, user.userName, PlayerManager.GetGamePlayerInitPos());
                 user.gamePlayer = this;
                 break;
