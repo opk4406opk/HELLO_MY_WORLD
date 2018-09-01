@@ -541,6 +541,12 @@ public class GameNetworkManager : NetworkManager {
         }
         return userList;
     }
+
+    public bool DeleteUserInList(int connectionID)
+    {
+        return _netUserList.Remove(connectionID);
+    }
+
     public GamePlayer GetMyGamePlayer()
     {
         var user = FindUserInList(client.connection.connectionId);
@@ -600,6 +606,16 @@ public class GameNetworkManager : NetworkManager {
     public override void OnServerDisconnect(NetworkConnection conn)
     {
         base.OnServerDisconnect(conn);
+        KojeomLogger.DebugLog(string.Format("connID : {0} 유저가 접속을 종료했습니다.", conn.connectionId), LOG_TYPE.NETWORK_SERVER_INFO);
+        bool deleteSuccess = DeleteUserInList(conn.connectionId);
+        if (deleteSuccess)
+        {
+            KojeomLogger.DebugLog(string.Format("connID : {0} 유저를 게임유저 목록에서 삭제했습니다.", conn.connectionId), LOG_TYPE.NETWORK_SERVER_INFO);
+        }
+        else
+        {
+            KojeomLogger.DebugLog(string.Format("connID : {0} 유저를 게임유저 목록에서 삭제 실패했습니다.", conn.connectionId), LOG_TYPE.NETWORK_SERVER_ERROR);
+        }
     }
 
     public override void OnServerReady(NetworkConnection conn)

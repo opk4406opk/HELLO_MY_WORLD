@@ -15,7 +15,9 @@ public enum LOG_TYPE
     EDITOR_TOOL = 6,
     USER_INPUT = 7,
     DATABASE = 8,
-    NETWORK_MANAGER_INFO = 9
+    NETWORK_MANAGER_INFO = 9,
+    NETWORK_SERVER_ERROR = 10,
+    NETWORK_SERVER_WARNNING = 11
 }
 public class KojeomLogger {
     public static string GetGUIDebugLogs()
@@ -36,6 +38,8 @@ public class KojeomLogger {
             logType == LOG_TYPE.EDITOR_TOOL ||
             logType == LOG_TYPE.NETWORK_CLIENT_INFO ||
             logType == LOG_TYPE.NETWORK_SERVER_INFO ||
+            logType == LOG_TYPE.NETWORK_SERVER_ERROR ||
+            logType == LOG_TYPE.NETWORK_SERVER_WARNNING ||
             logType == LOG_TYPE.SYSTEM ||
             logType == LOG_TYPE.INFO ||
             logType == LOG_TYPE.DATABASE ||
@@ -88,6 +92,14 @@ public class KojeomLogger {
                 break;
             case LOG_TYPE.NETWORK_MANAGER_INFO:
                 consoleLog.AppendFormat("<color=#6699CC><b>[NETWORK_MANAGER_INFO]</b></color> {0}", log);
+                guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
+                break;
+            case LOG_TYPE.NETWORK_SERVER_ERROR:
+                consoleLog.AppendFormat("<color=red><b>[NETWORK_SERVER_ERROR]</b></color> {0}", log);
+                guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
+                break;
+            case LOG_TYPE.NETWORK_SERVER_WARNNING:
+                consoleLog.AppendFormat("<color=yellow><b>[NETWORK_SERVER_WARNNING]</b></color> {0}", log);
                 guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
             default:
