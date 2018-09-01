@@ -76,11 +76,6 @@ public class GamePlayerController : MonoBehaviour {
         StopCoroutine(controllProcess);
     }
 
-    public void SetPlayerState(GAMEPLAYER_CHAR_STATE state)
-    {
-        curPlayerState = state;
-    }
-
     public GAMEPLAYER_CHAR_STATE GetPlayerState()
     {
         return curPlayerState;

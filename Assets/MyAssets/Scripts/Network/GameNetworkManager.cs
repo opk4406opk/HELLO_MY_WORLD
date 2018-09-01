@@ -430,20 +430,8 @@ public class GameNetworkManager : NetworkManager {
         var gameCharState = netMsg.ReadMessage<NetMessageGameCharState>();
         if (gameCharState.ownerConnID != client.connection.connectionId)
         {
-            var user = FindUserInList(gameCharState.ownerConnID);
-            if (user.gamePlayer != null && user.gamePlayer.GetController() != null)
-            {
-                user.gamePlayer.GetController().SetPlayerState(gameCharState.ownerCharState);
-            }
-            else
-            {
-                KojeomLogger.DebugLog(string.Format("[OnRecvFromServer_GameCharState] gamePlayer : {0}, controller : {1}",
-                    user.gamePlayer, user.gamePlayer.GetController()), LOG_TYPE.ERROR);
-            }
-        }
-        else
-        {
-            KojeomLogger.DebugLog("gameCharState.ownerConnID == client.connection.connectionId (OnRecvFromServer_GameCharState)",
+            KojeomLogger.DebugLog(string.Format("서버로부터 ConnID : {0} 유저의 GamePlayer State(:{1})를 수신했습니다.",
+                gameCharState.ownerConnID, gameCharState.ownerCharState),
                 LOG_TYPE.NETWORK_CLIENT_INFO);
         }
     }
