@@ -308,7 +308,12 @@ public class GameNetworkManager : NetworkManager {
     {
         KojeomLogger.DebugLog("서버로 접속을 했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
         //서버한테 Game에서 사용하게 될 RandomSeed를 요청한다.
-        ReqGameRandomSeed();
+        //Host(Client & Server)인 경우에는 따로 요청을 할 필요가 없다.
+        if(isHost == false)
+        {
+            ReqGameRandomSeed();
+        }
+       
         // 게임유저 데이터 메세지 생성.
         NetMessageGameNetPlayerData msgData = new NetMessageGameNetPlayerData();
         msgData.connectionID = conn.connectionId;

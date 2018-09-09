@@ -29,7 +29,9 @@ public class MultiPlayLobbyManager : MonoBehaviour {
         GameNetworkManager.GetInstance().LateInit();
         //
         GameNetworkManager.GetInstance().isHost = true;
-        GameNetworkManager.InitGameRandomSeed((int)System.DateTime.Now.Ticks);
+        GameNetworkManager.InitGameRandomSeed(System.DateTime.Now.Second);
+        // Host로 시작하는 경우에는 랜덤시드를 서버에서 받은걸로 간주. ( Server, Client 역활을 같이 수행하므로)
+        GameNetworkStateFlags.isReceivedRandomSeedFormServer = true;
     }
 
     public void OnClickUpdateServerList()
