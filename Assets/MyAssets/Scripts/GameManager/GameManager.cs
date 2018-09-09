@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
         GameNetworkManager.GetInstance().LateInit();
         // InGame씬에서 바로 시작하는 경우에는 해당 flag를 true로 설정.
         GameNetworkStateFlags.isReceivedRandomSeedFormServer = true;
-        GameNetworkManager.InitGameRandomSeed((int)System.DateTime.Now.Ticks);
+        GameNetworkManager.InitGameRandomSeed(System.DateTime.Now.Second);
     }
 
     /// <summary>
@@ -207,11 +207,6 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
         KojeomLogger.DebugLog("네트워크 접속 -> 플레이어 생성까지 완료되었습니다. Manager Class 초기화 시작합니다.", LOG_TYPE.SYSTEM);
-        KojeomLogger.DebugLog(string.Format("received game seed : {0}", GameNetworkManager.GetGameCurrentRandomSeed()), LOG_TYPE.ERROR);
-        KojeomLogger.DebugLog(string.Format("[0]test rand val : {0}", Random.Range(1, 3)), LOG_TYPE.ERROR);
-        KojeomLogger.DebugLog(string.Format("[1]test rand val : {0}", Random.Range(4, 11)), LOG_TYPE.ERROR);
-        KojeomLogger.DebugLog(string.Format("[2]test rand val : {0}", Random.Range(12, 16)), LOG_TYPE.ERROR);
-        KojeomLogger.DebugLog(string.Format("[3]test rand val : {0}", Random.Range(17, 22)), LOG_TYPE.ERROR);
         InitManagers();
     }
 }
