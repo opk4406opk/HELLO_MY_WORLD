@@ -28,11 +28,6 @@ public class KojeomUtility
         return v;
     }
 
-    public static void SetRandomSeed(int seed)
-    {
-        Random.InitState(seed);
-    }
-
     /// <summary>
     /// 
     /// </summary>
@@ -46,8 +41,8 @@ public class KojeomUtility
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="min"></param>
-    /// <param name="max"></param>
+    /// <param name="min">inclusive</param>
+    /// <param name="max">inclusive</param>
     /// <returns></returns>
     public static float RandomFloat(float min, float max)
     {

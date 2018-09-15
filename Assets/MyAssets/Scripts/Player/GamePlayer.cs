@@ -113,7 +113,7 @@ public class GamePlayer : NetworkBehaviour
     {
         base.OnStartAuthority();
         KojeomLogger.DebugLog(string.Format("[OnStartAuthority] connID : {0}",
-            GameNetworkManager.GetInstance().client.connection.connectionId), LOG_TYPE.NETWORK_CLIENT_INFO);
+            GameNetworkManager.GetNetworkManagerInstance().client.connection.connectionId), LOG_TYPE.NETWORK_CLIENT_INFO);
         _isMyPlayer = true;
     }
 
@@ -127,8 +127,6 @@ public class GamePlayer : NetworkBehaviour
         base.OnStartClient();
         _isMyPlayer = false;
         PreInit();
-        KojeomLogger.DebugLog(string.Format("[OnStartClient] connID : {0}",
-           GameNetworkManager.GetInstance().client.connection.connectionId), LOG_TYPE.NETWORK_CLIENT_INFO);
         StartCoroutine(LateRegisterGamePlayerToUserList());
     }
 
@@ -147,9 +145,8 @@ public class GamePlayer : NetworkBehaviour
         KojeomLogger.DebugLog(string.Format("[Start]LateRegisterGamePlayerToUserList Start."), LOG_TYPE.NETWORK_CLIENT_INFO);
         while (true)
         {
-            KojeomLogger.DebugLog(string.Format("Waiting for NetUserList..."), LOG_TYPE.NETWORK_CLIENT_INFO);
-            if ((GameNetworkManager.GetInstance() != null) &&
-                (GameNetworkManager.GetInstance().netUserList.Count > 0))
+            if ((GameNetworkManager.GetNetworkManagerInstance() != null) &&
+                (GameNetworkManager.GetNetworkManagerInstance().netUserList.Count > 0))
             {
                 var netConnectionID = -999;
                 if (networkIdentity.connectionToClient != null) netConnectionID = networkIdentity.connectionToClient.connectionId;
@@ -168,7 +165,7 @@ public class GamePlayer : NetworkBehaviour
                 GameNetUser user = null;
                 while(true)
                 {
-                    user = GameNetworkManager.GetInstance().FindUserInList(netConnectionID);
+                    user = GameNetworkManager.GetNetworkManagerInstance().FindUserInList(netConnectionID);
                     if (user != null) break;
                     yield return new WaitForSeconds(0.25f);
                 }

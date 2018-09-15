@@ -117,17 +117,19 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void InitInGameSceneStart()
     {
+        KojeomLogger.DebugLog("InGameScene Start.", LOG_TYPE.INFO);
         //
         GameObject netMgr = Resources.Load<GameObject>(ConstFilePath.GAME_NET_MGR_PREFAB);
         Instantiate(netMgr, new Vector3(0, 0, 0), Quaternion.identity);
         //
         KojeomLogger.DebugLog("StartHost", LOG_TYPE.INFO);
-        GameNetworkManager.GetInstance().onlineScene = "InGame";
-        var netClient = GameNetworkManager.GetInstance().StartHost();
-        GameNetworkManager.GetInstance().isHost = true;
-        GameNetworkManager.GetInstance().LateInit();
+        GameNetworkManager.GetNetworkManagerInstance().onlineScene = "InGame";
+        var netClient = GameNetworkManager.GetNetworkManagerInstance().StartHost();
+        GameNetworkManager.GetNetworkManagerInstance().isHost = true;
+        GameNetworkManager.GetNetworkManagerInstance().LateInit();
         // InGame씬에서 바로 시작하는 경우에는 해당 flag를 true로 설정.
         GameNetworkStateFlags.isReceivedRandomSeedFormServer = true;
+        GameNetworkStateFlags.isReceiveGameUserList = true;
         GameNetworkManager.InitGameRandomSeed(System.DateTime.Now.Second);
     }
 
@@ -194,7 +196,10 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator WaitingLogin()
     {
-        GameNetworkManager.GetInstance().ReqInGameUserList();
+        if(GameStatus.isInGameSceneStart == false)
+        {
+            GameNetworkManager.GetNetworkManagerInstance().ReqInGameUserList();
+        }
         KojeomLogger.DebugLog("네트워크 접속이 완료될 때 까지 대기합니다.", LOG_TYPE.SYSTEM);
         while (true)
         {
@@ -204,6 +209,7 @@ public class GameManager : MonoBehaviour
             {
                 break;
             }
+          
             yield return null;
         }
         KojeomLogger.DebugLog("네트워크 접속 -> 플레이어 생성까지 완료되었습니다. Manager Class 초기화 시작합니다.", LOG_TYPE.SYSTEM);

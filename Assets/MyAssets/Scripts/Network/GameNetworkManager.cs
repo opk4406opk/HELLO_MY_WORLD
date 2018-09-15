@@ -124,9 +124,9 @@ public class GameNetworkStateFlags
     {
         get
         {
-            if(GameNetworkManager.GetInstance() != null)
+            if(GameNetworkManager.GetNetworkManagerInstance() != null)
             {
-                return GameNetworkManager.GetInstance().IsMyGamePlayerInUserList();
+                return GameNetworkManager.GetNetworkManagerInstance().IsMyGamePlayerInUserList();
             }
             else
             {
@@ -200,6 +200,7 @@ public class GameNetworkManager : NetworkManager {
     //
 
     public bool isHost = false;
+    public NetworkConnection clientNetworkConnection;    
 
     [SerializeField]
     private GameNetworkSpawner networkSpanwer;
@@ -219,7 +220,7 @@ public class GameNetworkManager : NetworkManager {
     public static void InitGameRandomSeed(int seed)
     {
         gameRandomSeed = seed;
-        KojeomUtility.SetRandomSeed(seed);
+        UnityEngine.Random.InitState(seed);
         KojeomLogger.DebugLog(string.Format("GameRandomSeed Init. seed value : {0}", seed), LOG_TYPE.NETWORK_MANAGER_INFO);
     }
    
@@ -230,7 +231,7 @@ public class GameNetworkManager : NetworkManager {
     }
 
     private static GameNetworkManager instance;
-    public static GameNetworkManager GetInstance()
+    public static GameNetworkManager GetNetworkManagerInstance()
     {
         if (instance == null)
         {
@@ -306,6 +307,7 @@ public class GameNetworkManager : NetworkManager {
     // 이 메소드 코드 흐름을 보기좋게 정리할 필요가 있다.
     public override void OnClientConnect(NetworkConnection conn)
     {
+        clientNetworkConnection = conn;
         KojeomLogger.DebugLog("서버로 접속을 했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
         //서버한테 Game에서 사용하게 될 RandomSeed를 요청한다.
         //Host(Client & Server)인 경우에는 따로 요청을 할 필요가 없다.
@@ -316,9 +318,9 @@ public class GameNetworkManager : NetworkManager {
        
         // 게임유저 데이터 메세지 생성.
         NetMessageGameNetPlayerData msgData = new NetMessageGameNetPlayerData();
-        msgData.connectionID = conn.connectionId;
+        msgData.connectionID = clientNetworkConnection.connectionId;
         msgData.address = conn.address;
-        msgData.playerName = string.Format("[GameClient]_player_connID::{0}", conn.connectionId);
+        msgData.playerName = string.Format("[GameClient]_player_connID::{0}", clientNetworkConnection);
         msgData.selectChType = GameDBHelper.GetInstance().GetSelectCharType();
 
         // NetworkManager 프리팹에서 autoCreatePlayer 옵션을 true로 하는 경우,
@@ -329,7 +331,7 @@ public class GameNetworkManager : NetworkManager {
         {
             ClientScene.Ready(conn);
         }
-        bool isSuccesAddPlayer = ClientScene.AddPlayer(conn, (short)conn.connectionId, msgData);
+        bool isSuccesAddPlayer = ClientScene.AddPlayer(conn, (short)clientNetworkConnection.connectionId, msgData);
         if (isSuccesAddPlayer == true) KojeomLogger.DebugLog("ClientScene.AddPlayer is Success.", LOG_TYPE.NETWORK_CLIENT_INFO);
         else KojeomLogger.DebugLog("ClientScene.AddPlayer is Failed.", LOG_TYPE.NETWORK_CLIENT_INFO);
     }
@@ -464,6 +466,8 @@ public class GameNetworkManager : NetworkManager {
     #endregion
     private void ResNetUserList(int clientConnID, NetMessageGameUserList resUserList)
     {
+        KojeomLogger.DebugLog(string.Format("clientConnID : {0} 에게 GameUser List를 전달했습니다.", clientConnID),
+          LOG_TYPE.NETWORK_SERVER_INFO);
         NetworkServer.SendToClient(clientConnID, (short)GAME_NETWORK_PROTOCOL.res_inGameUserList,
             resUserList);
     }
@@ -471,18 +475,22 @@ public class GameNetworkManager : NetworkManager {
     public void ReqInGameUserList()
     {
         NetMessageNetClientInfo reqClientInfo = new NetMessageNetClientInfo();
-        reqClientInfo.connectionID = client.connection.connectionId;
-        bool isSuccess = client.connection.Send((short)GAME_NETWORK_PROTOCOL.req_inGameUserList, reqClientInfo);
-
-        if (isSuccess == true) KojeomLogger.DebugLog("게임유저리스트 요청을 서버로 전달했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
+        reqClientInfo.connectionID = clientNetworkConnection.connectionId;
+        bool isSuccess = clientNetworkConnection.Send((short)GAME_NETWORK_PROTOCOL.req_inGameUserList, reqClientInfo);
+        if (isSuccess == true)
+        {
+            KojeomLogger.DebugLog(string.Format("클라이언트(id :{0})가 게임유저리스트 요청을 서버로 전달했습니다.",
+            client.connection.connectionId),
+            LOG_TYPE.NETWORK_CLIENT_INFO);
+        } 
         else KojeomLogger.DebugLog("게임유저리스트 요청이 실패했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
     }
 
     public void ReqGameRandomSeed()
     {
         NetMessageGameRandSeed reqRandSeed = new NetMessageGameRandSeed();
-        reqRandSeed.connectionID = client.connection.connectionId;
-        bool isSuccess = client.connection.Send((short)GAME_NETWORK_PROTOCOL.req_gameRandomSeed, reqRandSeed);
+        reqRandSeed.connectionID = clientNetworkConnection.connectionId;
+        bool isSuccess = clientNetworkConnection.Send((short)GAME_NETWORK_PROTOCOL.req_gameRandomSeed, reqRandSeed);
         if (isSuccess == true) KojeomLogger.DebugLog("게임랜덤시드 요청을 서버로 전달했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
         else KojeomLogger.DebugLog("게임랜덤시드 요청이 실패했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
     }
@@ -504,8 +512,8 @@ public class GameNetworkManager : NetworkManager {
         if(PlayerManager.instance != null)
         {
             pushStateMsg.ownerCharState = PlayerManager.instance.myGamePlayer.GetController().GetPlayerState();
-            pushStateMsg.ownerConnID = client.connection.connectionId;
-            isSuccess = client.connection.Send((short)GAME_NETWORK_PROTOCOL.push_charStateToServer, pushStateMsg);
+            pushStateMsg.ownerConnID = clientNetworkConnection.connectionId;
+            isSuccess = clientNetworkConnection.Send((short)GAME_NETWORK_PROTOCOL.push_charStateToServer, pushStateMsg);
 
             if (isSuccess == false) KojeomLogger.DebugLog("현재 게임캐릭터 스테이트 정보를 서버에 전달 실패했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
             else KojeomLogger.DebugLog("현재 게임캐릭터 스테이트 정보를 서버에 전달 성공했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
