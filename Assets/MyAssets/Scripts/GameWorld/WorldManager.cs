@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -16,6 +18,11 @@ public class WorldDataFile
     public int idx;
     public Block[,,] blockData;
 }
+
+// 비동기 처리에 대한 참고 문서.
+// http://www.stevevermeulen.com/index.php/2017/09/using-async-await-in-unity3d-2017/
+// https://tech.peoplefund.co.kr/2017/08/02/non-blocking-asynchronous-concurrency.html
+// https://blog.stephencleary.com/2012/02/async-and-await.html
 
 public class WorldManager : MonoBehaviour
 {
@@ -40,7 +47,7 @@ public class WorldManager : MonoBehaviour
     public void Init()
     {
         KojeomLogger.DebugLog("GameWorld 생성을 시작합니다.");
-        CreateGameWorld();
+        CreateDefaultSizeGameWorld();
         if (GameManager.instance != null && GameManager.instance.isSubWorldDataSave == true)
         {
             SaveSubWorldFile();
@@ -79,7 +86,7 @@ public class WorldManager : MonoBehaviour
     /// </summary>
     /// <param name="subWorldIdx"></param>
     /// <returns></returns>
-    private WorldDataFile LoadSubWorldFile(int subWorldIdx)
+    private async Task<WorldDataFile> LoadSubWorldFile(int subWorldIdx)
     {
         string fileName;
         subWorldFileNameCache.TryGetValue(subWorldIdx, out fileName);
@@ -88,11 +95,15 @@ public class WorldManager : MonoBehaviour
         BinaryFormatter bf = new BinaryFormatter();
         FileStream fileStream = File.Open(filePath, FileMode.OpenOrCreate);
         // deserializing.
-        var deserializedData = bf.Deserialize(fileStream);
-        return deserializedData as WorldDataFile;
+        return await Task.FromResult(bf.Deserialize(fileStream) as WorldDataFile);
     }
 
-    private void CreateGameWorld()
+    public async void LoadSubWorldFileAsync(int subWorldIdx)
+    {
+         await LoadSubWorldFile(subWorldIdx);
+    }
+
+    private void CreateDefaultSizeGameWorld()
     {
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
         maxSubWorld = SubWorldDataFile.instance.maxSubWorld;

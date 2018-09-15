@@ -35,10 +35,10 @@ public class SubWorldDataFile : MonoBehaviour
         if (instance == null) instance = this;
     }
 
-    public int GetPosValue(int idx, string str)
+    public int GetPosValue(int idx, string axis)
     {
         string value;
-        jsonDataSheet[idx].TryGetValue(str, out value);
+        jsonDataSheet[idx].TryGetValue(axis, out value);
         return int.Parse(value);
     }
     public string GetWorldName(int idx, string str)
