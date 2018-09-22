@@ -24,6 +24,20 @@ public class WorldDataFile
 // https://tech.peoplefund.co.kr/2017/08/02/non-blocking-asynchronous-concurrency.html
 // https://blog.stephencleary.com/2012/02/async-and-await.html
 
+public struct SubWorldOffset
+{
+    SubWorldOffset(int x, int z) { X = x; Z = z; }
+    public int X;
+    public int Z;
+}
+public class WorldState
+{
+    public World subWorldInstance;
+    public SubWorldOffset offset;
+    public bool isActivate = false;
+    public bool isLoaded = false;
+}
+
 public class WorldManager : MonoBehaviour
 {
     [SerializeField]
@@ -35,10 +49,10 @@ public class WorldManager : MonoBehaviour
 
     private Dictionary<int, string> subWorldFileNameCache= new Dictionary<int, string>();
 
-    private List<World> _worldList = new List<World>();
-    public List<World> worldList
+    private List<WorldState> _worldStateList = new List<WorldState>();
+    public List<WorldState> worldStateList
     {
-        get { return _worldList; }
+        get { return _worldStateList; }
     }
     private int maxSubWorld = 0;
 
@@ -63,15 +77,15 @@ public class WorldManager : MonoBehaviour
     {
         Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
         int idx = 0;
-        foreach(var world in _worldList)
+        foreach(var worldState in _worldStateList)
         {
-            string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", world.worldName);
+            string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", worldState.subWorldInstance.worldName);
             // 파일 생성.
             BinaryFormatter bf = new BinaryFormatter();
             FileStream fileStream = File.Open(savePath, FileMode.OpenOrCreate);
 
             WorldDataFile dataFile = new WorldDataFile();
-            dataFile.blockData = world.worldBlockData;
+            dataFile.blockData = worldState.subWorldInstance.worldBlockData;
             dataFile.idx = idx;
             // 시리얼라이징.
             bf.Serialize(fileStream, dataFile);
@@ -118,16 +132,34 @@ public class WorldManager : MonoBehaviour
             World subWorld = newSubWorld.GetComponent<World>();
             subWorld.chunkPrefab = chunkPrefab;
             subWorld.playerTrans = PlayerManager.instance.myGamePlayer.transform;
-            subWorld.Init(subWorldPosX, subWorldPosZ);
             subWorld.worldName = subWorldName;
             subWorld.idx = idx;
             newSubWorld.transform.parent = worldGroupTrans;
             //add world.
-            _worldList.Add(subWorld);
+            WorldState worldState = new WorldState();
+            worldState.subWorldInstance = subWorld;
+            SubWorldOffset subOffset;
+            subOffset.X = subWorldPosX;
+            subOffset.Z = subWorldPosZ;
+            worldState.offset = subOffset;
+            worldState.isActivate = false;
+            worldState.isLoaded = false;
+            _worldStateList.Add(worldState);
             // 
             subWorldFileNameCache.Add(idx, subWorld.worldName);
         }
     }
+
+    private void ActivateSubWorld(int subWorldIdx)
+    {
+
+    }
+
+    private void DeActivateSubWorld(int subWorldIdx)
+    {
+
+    }
+
     /// <summary>
     /// 주어진 위치값으로 어느 subWorld에 포함되어있는지 확인 후 해당 World를 리턴.
     /// </summary>
@@ -139,6 +171,15 @@ public class WorldManager : MonoBehaviour
         int x = (int)pos.x / gameConfig.sub_world_x_size;
         int z = ((int)pos.z / gameConfig.sub_world_z_size) * SubWorldDataFile.instance.rowOffset;
 
-        return _worldList[x+z];
+        return _worldStateList[x+z].subWorldInstance;
+    }
+
+    IEnumerator DynamicWorldLoader()
+    {
+        while(true)
+        {
+            // to do
+            yield return null;
+        }
     }
 }

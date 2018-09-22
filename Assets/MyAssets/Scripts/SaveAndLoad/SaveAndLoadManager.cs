@@ -33,7 +33,7 @@ public class SaveAndLoadManager : MonoBehaviour {
     public void Init()
     {
         filePath = Application.dataPath + "/GameSavefile.dat";
-        gameWorldList = WorldManager.instance.worldList;
+        gameWorldList = WorldManager.instance.worldStateList;
         lzfCompress = new LZFCompress();
         CalcWorldDataSize();
     }
