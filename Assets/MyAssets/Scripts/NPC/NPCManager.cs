@@ -39,7 +39,7 @@ public class NPCManager : MonoBehaviour {
             GameObject npc = Instantiate(prefab_roamingMerchantNPC, data.spawnPos, Quaternion.identity);
             var roamingMerchant = npc.GetComponent<RoamingMerchant>();
             roamingMerchant.Init(data.spawnPos,
-                WorldManager.instance.worldStateList[data.spawnWorld],
+                WorldManager.instance.worldStateList[data.spawnWorld].subWorldInstance,
                 ACTOR_TYPE.NPC);
             roamingMerchant.sellingItemIDs = data.sellingItemsID;
             roamingMerchant.textMeshController.Init(gameConfig.ingame_font_size);

@@ -14,7 +14,7 @@ using System;
 /// </summary>
 public class SaveAndLoadManager : MonoBehaviour {
 
-    private List<World> gameWorldList;
+    private List<WorldState> gameWorldStateList;
     private byte[] mergeWorldData;
     private int mergeWorldSize = 0;
     private int mergeIdx = 0;
@@ -33,7 +33,7 @@ public class SaveAndLoadManager : MonoBehaviour {
     public void Init()
     {
         filePath = Application.dataPath + "/GameSavefile.dat";
-        gameWorldList = WorldManager.instance.worldStateList;
+        gameWorldStateList = WorldManager.instance.worldStateList;
         lzfCompress = new LZFCompress();
         CalcWorldDataSize();
     }
@@ -50,7 +50,7 @@ public class SaveAndLoadManager : MonoBehaviour {
         FileStream fileStream = File.Open(filePath, FileMode.OpenOrCreate);
         if (fileStream == null) return false;
 
-        for (int idx = 0; idx < gameWorldList.Count; ++idx)
+        for (int idx = 0; idx < gameWorldStateList.Count; ++idx)
             SubWorldToTotalWorld(idx);
         // 마지막 원소에 데이터의 끝을 알리는 구분자를 넣는다.
         mergeWorldData[mergeWorldSize - 1] = DELIMETER_END;
@@ -79,11 +79,11 @@ public class SaveAndLoadManager : MonoBehaviour {
                 for (int z = 0; z < gameConfig.sub_world_z_size; ++z)
                 {
                     mergeIdx = (x * gameConfig.sub_world_y_size * gameConfig.sub_world_z_size) + (y * gameConfig.sub_world_z_size) + z;
-                    mergeWorldData[mergeIdx + mergeIdxOffset] = gameWorldList[subWorldIdx].worldBlockData[x, y, z].type;
+                    mergeWorldData[mergeIdx + mergeIdxOffset] = gameWorldStateList[subWorldIdx].subWorldInstance.worldBlockData[x, y, z].type;
                 }
         
         // 데이터 입력이 끝나면, 구분자를 삽입한다.
-        if(subWorldIdx != (gameWorldList.Count-1)) 
+        if(subWorldIdx != (gameWorldStateList.Count-1)) 
             mergeWorldData[mergeIdx + mergeIdxOffset + 1] = DELIMETER_AND;
         // Delimeter 포함하여 +2를 해줘야한다.
         mergeIdxOffset += (mergeIdx+2);
@@ -140,9 +140,9 @@ public class SaveAndLoadManager : MonoBehaviour {
             idx++;
         }
 
-        foreach (World world in gameWorldList)
+        foreach (WorldState worldState in gameWorldStateList)
         {
-            StartCoroutine(world.loadProcessRoutine);
+            StartCoroutine(worldState.subWorldInstance.loadProcessRoutine);
         }
 
         fileStream.Close();
@@ -157,10 +157,10 @@ public class SaveAndLoadManager : MonoBehaviour {
                 for (int z = 0; z < gameConfig.sub_world_z_size; ++z)
                 {
                     mergeIdx = (x * gameConfig.sub_world_y_size * gameConfig.sub_world_z_size) + (y * gameConfig.sub_world_z_size) + z;
-                    gameWorldList[subWorldIdx].worldBlockData[x, y, z].type = mergeWorldData[mergeIdx + mergeIdxOffset];
+                    gameWorldStateList[subWorldIdx].subWorldInstance.worldBlockData[x, y, z].type = mergeWorldData[mergeIdx + mergeIdxOffset];
                 }
 
-        if((subWorldIdx != (gameWorldList.Count-1)) &&
+        if((subWorldIdx != (gameWorldStateList.Count-1)) &&
            (mergeWorldData[mergeIdx + mergeIdxOffset + 1] == DELIMETER_AND))
         {
             mergeIdx += 2;
@@ -184,7 +184,7 @@ public class SaveAndLoadManager : MonoBehaviour {
     {
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
         int subWorldSize = gameConfig.sub_world_x_size * gameConfig.sub_world_y_size * gameConfig.sub_world_z_size;
-        mergeWorldSize = (subWorldSize * gameWorldList.Count) + gameWorldList.Count;
+        mergeWorldSize = (subWorldSize * gameWorldStateList.Count) + gameWorldStateList.Count;
 
         int recordNum = 0;
         del_GetRecordNum GetRecordNum = () =>
