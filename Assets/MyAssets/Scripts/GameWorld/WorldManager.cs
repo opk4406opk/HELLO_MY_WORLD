@@ -67,6 +67,8 @@ public class WorldManager : MonoBehaviour
             SaveSubWorldFile();
         }
         instance = this;
+
+        StartCoroutine(DynamicSubWorldLoader());
         KojeomLogger.DebugLog("GameWorld 생성을 종료합니다.");
     }
     /// <summary>
@@ -150,16 +152,6 @@ public class WorldManager : MonoBehaviour
         }
     }
 
-    private void ActivateSubWorld(int subWorldIdx)
-    {
-
-    }
-
-    private void DeActivateSubWorld(int subWorldIdx)
-    {
-
-    }
-
     /// <summary>
     /// 주어진 위치값으로 어느 subWorld에 포함되어있는지 확인 후 해당 World를 리턴.
     /// </summary>
@@ -167,19 +159,40 @@ public class WorldManager : MonoBehaviour
     /// <returns></returns>
     public World ContainedWorld(Vector3 pos)
     {
-        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-        int x = (int)pos.x / gameConfig.sub_world_x_size;
-        int z = ((int)pos.z / gameConfig.sub_world_z_size) * SubWorldDataFile.instance.rowOffset;
-
-        return _worldStateList[x+z].subWorldInstance;
+        return _worldStateList[CalcSubWorldIndex(pos)].subWorldInstance;
     }
 
-    IEnumerator DynamicWorldLoader()
+    IEnumerator DynamicSubWorldLoader()
     {
-        while(true)
+        KojeomLogger.DebugLog("DynamicSubWorldLoader Co-Routine Start.");
+        while (true)
         {
             // to do
+            if(PlayerManager.instance != null)
+            {
+                Transform playerTrans = PlayerManager.instance.myGamePlayer.charInstance.transform;
+                int subWorldIdx = CalcSubWorldIndex(playerTrans.position);
+                if(_worldStateList[subWorldIdx].isLoaded == false)
+                {
+                    var offset = _worldStateList[subWorldIdx].offset;
+                    _worldStateList[subWorldIdx].isLoaded = true;
+                    _worldStateList[subWorldIdx].subWorldInstance.Init(offset.X, offset.Z);
+                }
+            }
             yield return null;
         }
+    }
+
+    /// <summary>
+    /// 오브젝트 위치를 통해 어느 SubWorld에 위치했는지 확인 후 해당 World Index를 리턴.
+    /// </summary>
+    /// <param name="objectPos">오브젝트 위치</param>
+    /// <returns></returns>
+    public int CalcSubWorldIndex(Vector3 objectPos)
+    {
+        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
+        int x = (int)objectPos.x / gameConfig.sub_world_x_size;
+        int z = ((int)objectPos.z / gameConfig.sub_world_z_size) * SubWorldDataFile.instance.rowOffset;
+        return x + z;
     }
 }
