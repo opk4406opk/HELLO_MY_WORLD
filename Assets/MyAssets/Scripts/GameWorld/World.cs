@@ -153,6 +153,11 @@ public class World : MonoBehaviour
     {
         for (int y = 0; y < _chunkGroup.GetLength(1); y++)
         {
+            if (_chunkGroup[x, y, z].gameObject.activeSelf == true)
+            {
+                _chunkGroup[x, y, z].gameObject.SetActive(true);
+                continue;
+            }
             // 유니티엔진에서 제공되는 게임 오브젝트들의 중점(=월드좌표에서의 위치)은
             // 실제 게임 오브젝트의 정중앙이 된다. 
             // 따라서, 유니티엔진에 맞춰서 오브젝트의 중점을 정중앙으로 블록들을 생성하려면(= 1개의 블록은 6개의 면을 생성한다),
@@ -181,8 +186,9 @@ public class World : MonoBehaviour
     {
 		for (int y=0; y< _chunkGroup.GetLength(1); y++)
         {
-			Object.Destroy(chunkGroup [x, y, z].gameObject);
-		}
+            //Object.Destroy(chunkGroup [x, y, z].gameObject);
+            _chunkGroup[x, y, z].gameObject.SetActive(false);
+        }
 	}
 
     private void InitWorldData()
