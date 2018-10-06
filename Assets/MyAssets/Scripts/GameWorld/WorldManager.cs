@@ -34,7 +34,6 @@ public class WorldState
 {
     public World subWorldInstance;
     public SubWorldOffset offset;
-    public bool isActivate = false;
     public bool isInGameLoaded = false;
 }
 
@@ -119,6 +118,12 @@ public class WorldManager : MonoBehaviour
          await LoadSubWorldFile(subWorldIdx);
     }
 
+    private void ReleaseSubWorldInstance(int idx)
+    {
+        _worldStateList[idx].subWorldInstance = null;
+        _worldStateList[idx].isInGameLoaded = false;
+    }
+
     private void CreateDefaultSizeGameWorld()
     {
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
@@ -144,7 +149,6 @@ public class WorldManager : MonoBehaviour
             subOffset.X = subWorldPosX;
             subOffset.Z = subWorldPosZ;
             worldState.offset = subOffset;
-            worldState.isActivate = false;
             worldState.isInGameLoaded = false;
             _worldStateList.Add(worldState);
             // 
@@ -173,7 +177,10 @@ public class WorldManager : MonoBehaviour
                 Transform playerTrans = PlayerManager.instance.myGamePlayer.charInstance.transform;
                 int subWorldIdx = CalcSubWorldIndex(playerTrans.position);
                 var offset = _worldStateList[subWorldIdx].offset;
-                if (_worldStateList[subWorldIdx].isInGameLoaded == false)
+                // 플레이어가 위치한 서브월드의 offset 위치를 기준삼아
+                // 8방향(대각선, 좌우상하)의 subWorld를 활성화 시킨다. 그외에 것들은 전부 release 해야함.
+                if ((_worldStateList[subWorldIdx].subWorldInstance != null) &&
+                    (_worldStateList[subWorldIdx].isInGameLoaded == false))
                 {
                     _worldStateList[subWorldIdx].isInGameLoaded = true;
                     _worldStateList[subWorldIdx].subWorldInstance.Init(offset.X, offset.Z);
