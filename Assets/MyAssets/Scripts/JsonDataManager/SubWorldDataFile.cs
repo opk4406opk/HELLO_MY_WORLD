@@ -2,6 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public struct SubWorldData
+{
+    public string worldName;
+    public int x;
+    public int z;
+    public int idx;
+}
 /// <summary>
 /// World 생성에 쓰이는 DataFile.
 /// </summary>

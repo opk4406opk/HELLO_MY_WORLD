@@ -35,7 +35,7 @@ public class WorldState
     public World subWorldInstance;
     public SubWorldOffset offset;
     public bool isActivate = false;
-    public bool isLoaded = false;
+    public bool isInGameLoaded = false;
 }
 
 public class WorldManager : MonoBehaviour
@@ -145,7 +145,7 @@ public class WorldManager : MonoBehaviour
             subOffset.Z = subWorldPosZ;
             worldState.offset = subOffset;
             worldState.isActivate = false;
-            worldState.isLoaded = false;
+            worldState.isInGameLoaded = false;
             _worldStateList.Add(worldState);
             // 
             subWorldFileNameCache.Add(idx, subWorld.worldName);
@@ -172,10 +172,10 @@ public class WorldManager : MonoBehaviour
             {
                 Transform playerTrans = PlayerManager.instance.myGamePlayer.charInstance.transform;
                 int subWorldIdx = CalcSubWorldIndex(playerTrans.position);
-                if(_worldStateList[subWorldIdx].isLoaded == false)
+                var offset = _worldStateList[subWorldIdx].offset;
+                if (_worldStateList[subWorldIdx].isInGameLoaded == false)
                 {
-                    var offset = _worldStateList[subWorldIdx].offset;
-                    _worldStateList[subWorldIdx].isLoaded = true;
+                    _worldStateList[subWorldIdx].isInGameLoaded = true;
                     _worldStateList[subWorldIdx].subWorldInstance.Init(offset.X, offset.Z);
                 }
             }
