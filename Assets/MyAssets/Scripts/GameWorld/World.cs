@@ -153,7 +153,8 @@ public class World : MonoBehaviour
     {
         for (int y = 0; y < _chunkGroup.GetLength(1); y++)
         {
-            if (_chunkGroup[x, y, z].gameObject.activeSelf == true)
+            if ((_chunkGroup[x, y, z] != null) && 
+                (_chunkGroup[x, y, z].gameObject.activeSelf == true))
             {
                 _chunkGroup[x, y, z].gameObject.SetActive(true);
                 continue;
