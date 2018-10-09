@@ -26,9 +26,9 @@ public class WorldDataFile
 
 public struct SubWorldOffset
 {
-    SubWorldOffset(int x, int z) { X = x; Z = z; }
-    public int X;
-    public int Z;
+    SubWorldOffset(int x, int z) { this.x = x; this.z = z; }
+    public int x;
+    public int z;
 }
 public class WorldState
 {
@@ -48,19 +48,18 @@ public class WorldManager : MonoBehaviour
 
     private Dictionary<int, string> subWorldFileNameCache= new Dictionary<int, string>();
 
-    private List<WorldState> _worldStateList = new List<WorldState>();
-    public List<WorldState> worldStateList
+    private List<WorldState> _wholeWorldStateList = new List<WorldState>();
+    public List<WorldState> wholeWorldStateList
     {
-        get { return _worldStateList; }
+        get { return _wholeWorldStateList; }
     }
-    private int maxSubWorld = 0;
 
     public static WorldManager instance;
 
     public void Init()
     {
         KojeomLogger.DebugLog("GameWorld 생성을 시작합니다.");
-        CreateDefaultSizeGameWorld();
+        CreateWholeWorld();
         if (GameManager.instance != null && GameManager.instance.isSubWorldDataSave == true)
         {
             SaveSubWorldFile();
@@ -78,7 +77,7 @@ public class WorldManager : MonoBehaviour
     {
         Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
         int idx = 0;
-        foreach(var worldState in _worldStateList)
+        foreach(var worldState in _wholeWorldStateList)
         {
             string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", worldState.subWorldInstance.worldName);
             // 파일 생성.
@@ -120,39 +119,34 @@ public class WorldManager : MonoBehaviour
 
     private void ReleaseSubWorldInstance(int idx)
     {
-        _worldStateList[idx].subWorldInstance = null;
-        _worldStateList[idx].isInGameLoaded = false;
+        _wholeWorldStateList[idx].subWorldInstance = null;
+        _wholeWorldStateList[idx].isInGameLoaded = false;
     }
 
-    private void CreateDefaultSizeGameWorld()
+    private void CreateWholeWorld()
     {
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-        maxSubWorld = SubWorldDataFile.instance.maxSubWorld;
-        for (int idx = 0; idx < maxSubWorld; ++idx)
+        foreach(var subWorldData in SubWorldDataFile.instance.subWorldDataList)
         {
-            int subWorldPosX = SubWorldDataFile.instance.GetPosValue(idx, "X") * gameConfig.sub_world_x_size;
-            int subWorldPosZ = SubWorldDataFile.instance.GetPosValue(idx, "Z") * gameConfig.sub_world_z_size;
-            string subWorldName = SubWorldDataFile.instance.GetWorldName(idx, "WORLD_NAME");
-
             GameObject newSubWorld = Instantiate(worldPrefab, new Vector3(0, 0, 0),
-                new Quaternion(0, 0, 0, 0)) as GameObject;
+               new Quaternion(0, 0, 0, 0)) as GameObject;
             World subWorld = newSubWorld.GetComponent<World>();
             subWorld.chunkPrefab = chunkPrefab;
             subWorld.playerTrans = PlayerManager.instance.myGamePlayer.transform;
-            subWorld.worldName = subWorldName;
-            subWorld.idx = idx;
+            subWorld.worldName = subWorldData.worldName;
+            subWorld.idx = subWorldData.worldIdx;
             newSubWorld.transform.parent = worldGroupTrans;
             //add world.
             WorldState worldState = new WorldState();
             worldState.subWorldInstance = subWorld;
             SubWorldOffset subOffset;
-            subOffset.X = subWorldPosX;
-            subOffset.Z = subWorldPosZ;
+            subOffset.x = subWorldData.x * gameConfig.sub_world_x_size;
+            subOffset.z = subWorldData.z * gameConfig.sub_world_z_size;
             worldState.offset = subOffset;
             worldState.isInGameLoaded = false;
-            _worldStateList.Add(worldState);
+            _wholeWorldStateList.Add(worldState);
             // 
-            subWorldFileNameCache.Add(idx, subWorld.worldName);
+            subWorldFileNameCache.Add(subWorldData.worldIdx, subWorld.worldName);
         }
     }
 
@@ -163,7 +157,7 @@ public class WorldManager : MonoBehaviour
     /// <returns></returns>
     public World ContainedWorld(Vector3 pos)
     {
-        return _worldStateList[CalcSubWorldIndex(pos)].subWorldInstance;
+        return _wholeWorldStateList[CalcSubWorldIndex(pos)].subWorldInstance;
     }
 
     IEnumerator DynamicSubWorldLoader()
@@ -176,14 +170,14 @@ public class WorldManager : MonoBehaviour
             {
                 Transform playerTrans = PlayerManager.instance.myGamePlayer.charInstance.transform;
                 int subWorldIdx = CalcSubWorldIndex(playerTrans.position);
-                var offset = _worldStateList[subWorldIdx].offset;
+                var offset = _wholeWorldStateList[subWorldIdx].offset;
                 // 플레이어가 위치한 서브월드의 offset 위치를 기준삼아
                 // 8방향(대각선, 좌우상하)의 subWorld를 활성화 시킨다. 그외에 것들은 전부 release 해야함.
-                if ((_worldStateList[subWorldIdx].subWorldInstance != null) &&
-                    (_worldStateList[subWorldIdx].isInGameLoaded == false))
+                if ((_wholeWorldStateList[subWorldIdx].subWorldInstance != null) &&
+                    (_wholeWorldStateList[subWorldIdx].isInGameLoaded == false))
                 {
-                    _worldStateList[subWorldIdx].isInGameLoaded = true;
-                    _worldStateList[subWorldIdx].subWorldInstance.Init(offset.X, offset.Z);
+                    _wholeWorldStateList[subWorldIdx].isInGameLoaded = true;
+                    _wholeWorldStateList[subWorldIdx].subWorldInstance.Init(offset.x, offset.z);
                 }
             }
             yield return null;

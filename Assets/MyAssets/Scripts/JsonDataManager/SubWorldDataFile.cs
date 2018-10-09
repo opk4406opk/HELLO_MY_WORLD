@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 public struct SubWorldData
 {
+    public int worldIdx;
     public string worldName;
     public int x;
     public int z;
-    public int idx;
 }
 /// <summary>
 /// World 생성에 쓰이는 DataFile.
@@ -17,11 +17,10 @@ public class SubWorldDataFile : MonoBehaviour
     private JSONObject subWorldJsonObj;
     private TextAsset jsonFile;
     private List<Dictionary<string, string>> jsonDataSheet;
-
-    private int _maxSubWorld = 0;
-    public int maxSubWorld
+    private List<SubWorldData> _subWorldDataList = new List<SubWorldData>();
+    public List<SubWorldData> subWorldDataList
     {
-        get { return _maxSubWorld; }
+        get { return _subWorldDataList; }
     }
 
     private int _rowOffset;
@@ -29,6 +28,7 @@ public class SubWorldDataFile : MonoBehaviour
     {
         get { return _rowOffset; }
     }
+
 
     public static SubWorldDataFile instance = null;
 
@@ -42,19 +42,6 @@ public class SubWorldDataFile : MonoBehaviour
         if (instance == null) instance = this;
     }
 
-    public int GetPosValue(int idx, string axis)
-    {
-        string value;
-        jsonDataSheet[idx].TryGetValue(axis, out value);
-        return int.Parse(value);
-    }
-    public string GetWorldName(int idx, string str)
-    {
-        string value;
-        jsonDataSheet[idx].TryGetValue(str, out value);
-        return value;
-    }
-
     private void AccessData(JSONObject jsonObj)
     {
         switch (jsonObj.type)
@@ -63,8 +50,6 @@ public class SubWorldDataFile : MonoBehaviour
                 //to do
                 break;
             case JSONObject.Type.ARRAY:
-                // ROW_OFFSET 정보를 뺀 나머지 오브젝트들의 갯수.
-                _maxSubWorld = jsonObj.Count - 1;
                 // row offset 값 가져오기.
                 string offset;
                 jsonObj.list[0].ToDictionary().TryGetValue("ROW_OFFSET", out offset);
@@ -72,7 +57,20 @@ public class SubWorldDataFile : MonoBehaviour
                 // 서브월드 정보 오브젝트들을 각각의 딕셔너리로 변환.
                 for (int idx = 1; idx < jsonObj.Count; ++idx)
                 {
-                    jsonDataSheet.Add(jsonObj.list[idx].ToDictionary());
+                    var extractedData = jsonObj.list[idx].ToDictionary();
+
+                    SubWorldData subWorldData;
+                    string getValue;
+                    extractedData.TryGetValue("WORLD_IDX", out getValue);
+                    subWorldData.worldIdx = int.Parse(getValue);
+                    extractedData.TryGetValue("WORLD_NAME", out getValue);
+                    subWorldData.worldName = getValue;
+                    extractedData.TryGetValue("X", out getValue);
+                    subWorldData.x = int.Parse(getValue);
+                    extractedData.TryGetValue("Z", out getValue);
+                    subWorldData.z = int.Parse(getValue);
+
+                    _subWorldDataList.Add(subWorldData);
                 }
                 break;
             default:
