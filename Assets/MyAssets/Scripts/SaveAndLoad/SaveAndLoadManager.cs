@@ -14,7 +14,7 @@ using System;
 /// </summary>
 public class SaveAndLoadManager : MonoBehaviour {
 
-    private List<WorldState> gameWorldStateList;
+    private Dictionary<int, WorldState> gameWorldStateList;
     private byte[] mergeWorldData;
     private int mergeWorldSize = 0;
     private int mergeIdx = 0;
@@ -33,7 +33,7 @@ public class SaveAndLoadManager : MonoBehaviour {
     public void Init()
     {
         filePath = Application.dataPath + "/GameSavefile.dat";
-        gameWorldStateList = WorldManager.instance.wholeWorldStateList;
+        gameWorldStateList = WorldManager.instance.wholeWorldStates;
         lzfCompress = new LZFCompress();
         CalcWorldDataSize();
     }
@@ -140,9 +140,9 @@ public class SaveAndLoadManager : MonoBehaviour {
             idx++;
         }
 
-        foreach (WorldState worldState in gameWorldStateList)
+        foreach (var element in gameWorldStateList)
         {
-            StartCoroutine(worldState.subWorldInstance.loadProcessRoutine);
+            StartCoroutine(element.Value.subWorldInstance.loadProcessRoutine);
         }
 
         fileStream.Close();

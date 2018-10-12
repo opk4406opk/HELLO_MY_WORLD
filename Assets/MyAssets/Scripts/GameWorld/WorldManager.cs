@@ -48,10 +48,10 @@ public class WorldManager : MonoBehaviour
 
     private Dictionary<int, string> subWorldFileNameCache= new Dictionary<int, string>();
 
-    private List<WorldState> _wholeWorldStateList = new List<WorldState>();
-    public List<WorldState> wholeWorldStateList
+    private Dictionary<int, WorldState> _wholeWorldStates = new Dictionary<int, WorldState>();
+    public Dictionary<int, WorldState> wholeWorldStates
     {
-        get { return _wholeWorldStateList; }
+        get { return _wholeWorldStates; }
     }
 
     public static WorldManager instance;
@@ -77,15 +77,15 @@ public class WorldManager : MonoBehaviour
     {
         Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
         int idx = 0;
-        foreach(var worldState in _wholeWorldStateList)
+        foreach(var element in _wholeWorldStates)
         {
-            string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", worldState.subWorldInstance.worldName);
+            string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", element.Value.subWorldInstance.worldName);
             // 파일 생성.
             BinaryFormatter bf = new BinaryFormatter();
             FileStream fileStream = File.Open(savePath, FileMode.OpenOrCreate);
 
             WorldDataFile dataFile = new WorldDataFile();
-            dataFile.blockData = worldState.subWorldInstance.worldBlockData;
+            dataFile.blockData = element.Value.subWorldInstance.worldBlockData;
             dataFile.idx = idx;
             // 시리얼라이징.
             bf.Serialize(fileStream, dataFile);
@@ -119,8 +119,8 @@ public class WorldManager : MonoBehaviour
 
     private void ReleaseSubWorldInstance(int idx)
     {
-        _wholeWorldStateList[idx].subWorldInstance = null;
-        _wholeWorldStateList[idx].isInGameLoaded = false;
+        _wholeWorldStates[idx].subWorldInstance = null;
+        _wholeWorldStates[idx].isInGameLoaded = false;
     }
 
     private void CreateWholeWorld()
@@ -144,7 +144,7 @@ public class WorldManager : MonoBehaviour
             subOffset.z = subWorldData.z * gameConfig.sub_world_z_size;
             worldState.offset = subOffset;
             worldState.isInGameLoaded = false;
-            _wholeWorldStateList.Add(worldState);
+            _wholeWorldStates.Add(subWorldData.worldIdx, worldState);
             // 
             subWorldFileNameCache.Add(subWorldData.worldIdx, subWorld.worldName);
         }
@@ -157,7 +157,7 @@ public class WorldManager : MonoBehaviour
     /// <returns></returns>
     public World ContainedWorld(Vector3 pos)
     {
-        return _wholeWorldStateList[CalcSubWorldIndex(pos)].subWorldInstance;
+        return _wholeWorldStates[CalcSubWorldIndex(pos)].subWorldInstance;
     }
 
     IEnumerator DynamicSubWorldLoader()
@@ -170,14 +170,14 @@ public class WorldManager : MonoBehaviour
             {
                 Transform playerTrans = PlayerManager.instance.myGamePlayer.charInstance.transform;
                 int subWorldIdx = CalcSubWorldIndex(playerTrans.position);
-                var offset = _wholeWorldStateList[subWorldIdx].offset;
+                var offset = _wholeWorldStates[subWorldIdx].offset;
                 // 플레이어가 위치한 서브월드의 offset 위치를 기준삼아
                 // 8방향(대각선, 좌우상하)의 subWorld를 활성화 시킨다. 그외에 것들은 전부 release 해야함.
-                if ((_wholeWorldStateList[subWorldIdx].subWorldInstance != null) &&
-                    (_wholeWorldStateList[subWorldIdx].isInGameLoaded == false))
+                if ((_wholeWorldStates[subWorldIdx].subWorldInstance != null) &&
+                    (_wholeWorldStates[subWorldIdx].isInGameLoaded == false))
                 {
-                    _wholeWorldStateList[subWorldIdx].isInGameLoaded = true;
-                    _wholeWorldStateList[subWorldIdx].subWorldInstance.Init(offset.x, offset.z);
+                    _wholeWorldStates[subWorldIdx].isInGameLoaded = true;
+                    _wholeWorldStates[subWorldIdx].subWorldInstance.Init(offset.x, offset.z);
                 }
             }
             yield return null;

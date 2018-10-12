@@ -49,12 +49,12 @@ public class ModifyTerrain : MonoBehaviour
     }
     private void SelectWorld(Vector3 clickWorldPos)
     {
-        foreach (WorldState worldState in WorldManager.instance.wholeWorldStateList)
+        foreach (var element in WorldManager.instance.wholeWorldStates)
         {
-            if (CustomAABB.IsInterSectPoint(worldState.subWorldInstance.customOctree.rootMinBound,
-                worldState.subWorldInstance.customOctree.rootMaxBound, clickWorldPos))
+            if (CustomAABB.IsInterSectPoint(element.Value.subWorldInstance.customOctree.rootMinBound,
+                element.Value.subWorldInstance.customOctree.rootMaxBound, clickWorldPos))
             {
-                world = worldState.subWorldInstance;
+                world = element.Value.subWorldInstance;
                 break;
             }
         }
