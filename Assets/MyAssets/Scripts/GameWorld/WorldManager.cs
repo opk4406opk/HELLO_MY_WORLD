@@ -46,13 +46,8 @@ public class WorldManager : MonoBehaviour
     [SerializeField]
     private Transform worldGroupTrans;
 
-    private Dictionary<int, string> subWorldFileNameCache= new Dictionary<int, string>();
-
-    private Dictionary<int, WorldState> _wholeWorldStates = new Dictionary<int, WorldState>();
-    public Dictionary<int, WorldState> wholeWorldStates
-    {
-        get { return _wholeWorldStates; }
-    }
+    public Dictionary<SubWorldOffset, int> worldOffsetToIndex { get; } = new Dictionary<SubWorldOffset, int>();
+    public Dictionary<int, WorldState> wholeWorldStates { get; } = new Dictionary<int, WorldState>();
 
     public static WorldManager instance;
 
@@ -77,7 +72,7 @@ public class WorldManager : MonoBehaviour
     {
         Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
         int idx = 0;
-        foreach(var element in _wholeWorldStates)
+        foreach(var element in wholeWorldStates)
         {
             string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", element.Value.subWorldInstance.worldName);
             // 파일 생성.
@@ -102,8 +97,9 @@ public class WorldManager : MonoBehaviour
     /// <returns></returns>
     private async Task<WorldDataFile> LoadSubWorldFile(int subWorldIdx)
     {
-        string fileName;
-        subWorldFileNameCache.TryGetValue(subWorldIdx, out fileName);
+        WorldState worldState;
+        wholeWorldStates.TryGetValue(subWorldIdx, out worldState);
+        string fileName = worldState.subWorldInstance.worldName;
         string filePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", fileName);
         // 파일 열기.
         BinaryFormatter bf = new BinaryFormatter();
@@ -117,10 +113,10 @@ public class WorldManager : MonoBehaviour
          await LoadSubWorldFile(subWorldIdx);
     }
 
-    private void ReleaseSubWorldInstance(int idx)
+    private void ReleaseSubWorldInstance(int worldIdx)
     {
-        _wholeWorldStates[idx].subWorldInstance = null;
-        _wholeWorldStates[idx].isInGameLoaded = false;
+        wholeWorldStates[worldIdx].subWorldInstance = null;
+        wholeWorldStates[worldIdx].isInGameLoaded = false;
     }
 
     private void CreateWholeWorld()
@@ -144,9 +140,10 @@ public class WorldManager : MonoBehaviour
             subOffset.z = subWorldData.z * gameConfig.sub_world_z_size;
             worldState.offset = subOffset;
             worldState.isInGameLoaded = false;
-            _wholeWorldStates.Add(subWorldData.worldIdx, worldState);
-            // 
-            subWorldFileNameCache.Add(subWorldData.worldIdx, subWorld.worldName);
+            wholeWorldStates.Add(subWorldData.worldIdx, worldState);
+
+            // offset to index 
+            worldOffsetToIndex.Add(subOffset, subWorldData.worldIdx);
         }
     }
 
@@ -157,7 +154,7 @@ public class WorldManager : MonoBehaviour
     /// <returns></returns>
     public World ContainedWorld(Vector3 pos)
     {
-        return _wholeWorldStates[CalcSubWorldIndex(pos)].subWorldInstance;
+        return wholeWorldStates[CalcSubWorldIndex(pos)].subWorldInstance;
     }
 
     IEnumerator DynamicSubWorldLoader()
@@ -170,14 +167,14 @@ public class WorldManager : MonoBehaviour
             {
                 Transform playerTrans = PlayerManager.instance.myGamePlayer.charInstance.transform;
                 int subWorldIdx = CalcSubWorldIndex(playerTrans.position);
-                var offset = _wholeWorldStates[subWorldIdx].offset;
+                var offset = wholeWorldStates[subWorldIdx].offset;
                 // 플레이어가 위치한 서브월드의 offset 위치를 기준삼아
                 // 8방향(대각선, 좌우상하)의 subWorld를 활성화 시킨다. 그외에 것들은 전부 release 해야함.
-                if ((_wholeWorldStates[subWorldIdx].subWorldInstance != null) &&
-                    (_wholeWorldStates[subWorldIdx].isInGameLoaded == false))
+                if ((wholeWorldStates[subWorldIdx].subWorldInstance != null) &&
+                    (wholeWorldStates[subWorldIdx].isInGameLoaded == false))
                 {
-                    _wholeWorldStates[subWorldIdx].isInGameLoaded = true;
-                    _wholeWorldStates[subWorldIdx].subWorldInstance.Init(offset.x, offset.z);
+                    wholeWorldStates[subWorldIdx].isInGameLoaded = true;
+                    wholeWorldStates[subWorldIdx].subWorldInstance.Init(offset.x, offset.z);
                 }
             }
             yield return null;

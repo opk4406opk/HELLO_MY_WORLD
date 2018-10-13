@@ -15,17 +15,8 @@ public class GamePlayer : NetworkBehaviour
     private int _characterType;
     [SerializeField]
     private string _characterName;
-    private GameCharacter _charInstance;
-    public GameCharacter charInstance
-    {
-        get { return _charInstance; }
-    }
-
-    private bool _isInitProcessFinish = false;
-    public bool isInitProcessFinish
-    {
-        get { return _isInitProcessFinish; }
-    }
+    public GameCharacter charInstance { get; private set; }
+    public bool isInitProcessFinish { get; private set; } = false;
 
     [SerializeField]
     private NetworkIdentity networkIdentity;
@@ -50,17 +41,17 @@ public class GamePlayer : NetworkBehaviour
         KojeomLogger.DebugLog("게임플레이어 PostInit 시작", LOG_TYPE.INFO);
         _characterName = charName;
         _characterType = charType;
-        _charInstance = MakeGameChararacter(PrefabStorage.GetInstance().GetCharacterPrefab(charType));
+        charInstance = MakeGameChararacter(PrefabStorage.GetInstance().GetCharacterPrefab(charType));
         // 캐릭터 인스턴스는 게임플레이어 하위종속으로 설정.
-        _charInstance.transform.parent = gameObject.transform;
-        _charInstance.transform.localPosition = new Vector3(0, 0, 0);
+        charInstance.transform.parent = gameObject.transform;
+        charInstance.transform.localPosition = new Vector3(0, 0, 0);
         //
         playerController = gameObject.GetComponent<GamePlayerController>();
         networkAnimator = gameObject.AddComponent<NetworkAnimator>();
         // 네트워크 애니메이터를 붙이고 나서 디폴트로 생기는 Animator 컴포넌트를 disable 한다.
         gameObject.GetComponent<Animator>().enabled = false;
         // 캐릭터 인스턴스에 있는 실제 애니메이터 컴포넌트를 새롭게 등록.
-        networkAnimator.animator = _charInstance.GetAnimator();
+        networkAnimator.animator = charInstance.GetAnimator();
         //SetObjectLayer(_isMyPlayer);
         //
         KojeomLogger.DebugLog("게임플레이어 PostInit 완료. ", LOG_TYPE.INFO);
@@ -89,7 +80,7 @@ public class GamePlayer : NetworkBehaviour
         else layer = LayerMask.NameToLayer("OtherPlayerCharacter");
 
         gameObject.layer = layer;
-        var childObjects = KojeomUtility.GetChilds<GameObject>(_charInstance.gameObject);
+        var childObjects = KojeomUtility.GetChilds<GameObject>(charInstance.gameObject);
         foreach (var child in childObjects)
         {
             child.layer = layer;
@@ -175,7 +166,7 @@ public class GamePlayer : NetworkBehaviour
             }
             yield return new WaitForSeconds(1.0f);
         }
-        _isInitProcessFinish = true;
+        isInitProcessFinish = true;
         KojeomLogger.DebugLog(string.Format("[Finish]LateRegisterGamePlayerToUserList Finish."), LOG_TYPE.NETWORK_CLIENT_INFO);
     }
 }

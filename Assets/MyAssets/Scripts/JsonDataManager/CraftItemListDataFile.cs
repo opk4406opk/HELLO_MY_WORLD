@@ -7,25 +7,9 @@ using System.Collections.Generic;
 /// </summary>
 public class CraftItem
 {
-    private string _craftItemID;
-    public string craftItemID
-    {
-        get { return _craftItemID; }
-        set { _craftItemID = value; }
-    }
-
-    private string _craftItemName;
-    public string craftItemName
-    {
-        get { return _craftItemName; }
-        set { _craftItemName = value; }
-    }
-    private List<CraftRawMaterial> _rawMaterials = new List<CraftRawMaterial>();
-    public List<CraftRawMaterial> rawMaterials
-    {
-        get { return _rawMaterials; }
-        set { _rawMaterials = value; }
-    }
+    public string craftItemID { get; set; }
+    public string craftItemName { get; set; }
+    public List<CraftRawMaterial> rawMaterials { get; set; } = new List<CraftRawMaterial>();
 }
 
 /// <summary>
@@ -45,12 +29,7 @@ public class CraftItemListDataFile : MonoBehaviour
 {
     private JSONObject craftItemListJsonObj;
     private TextAsset jsonFile;
-   
-    private Dictionary<string, CraftItem> _craftItems = new Dictionary<string, CraftItem>();
-    public Dictionary<string, CraftItem> craftItems
-    {
-        get { return _craftItems; }
-    }
+    public Dictionary<string, CraftItem> craftItems { get; private set; } = new Dictionary<string, CraftItem>();
 
     public static CraftItemListDataFile instance = null;
 
@@ -90,7 +69,7 @@ public class CraftItemListDataFile : MonoBehaviour
                         rawMats.Add(rawMat);
                     }
                     craftItem.rawMaterials = rawMats;
-                    _craftItems.Add(craftItem.craftItemName, craftItem);
+                    craftItems.Add(craftItem.craftItemName, craftItem);
                 }
                 break;
             default:

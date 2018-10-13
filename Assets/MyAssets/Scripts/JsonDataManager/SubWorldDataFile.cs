@@ -17,17 +17,8 @@ public class SubWorldDataFile : MonoBehaviour
     private JSONObject subWorldJsonObj;
     private TextAsset jsonFile;
     private List<Dictionary<string, string>> jsonDataSheet;
-    private List<SubWorldData> _subWorldDataList = new List<SubWorldData>();
-    public List<SubWorldData> subWorldDataList
-    {
-        get { return _subWorldDataList; }
-    }
-
-    private int _rowOffset;
-    public int rowOffset
-    {
-        get { return _rowOffset; }
-    }
+    public List<SubWorldData> subWorldDataList { get; } = new List<SubWorldData>();
+    public int rowOffset { get; private set; }
 
 
     public static SubWorldDataFile instance = null;
@@ -53,7 +44,7 @@ public class SubWorldDataFile : MonoBehaviour
                 // row offset 값 가져오기.
                 string offset;
                 jsonObj.list[0].ToDictionary().TryGetValue("ROW_OFFSET", out offset);
-                _rowOffset = int.Parse(offset);
+                rowOffset = int.Parse(offset);
                 // 서브월드 정보 오브젝트들을 각각의 딕셔너리로 변환.
                 for (int idx = 1; idx < jsonObj.Count; ++idx)
                 {
@@ -70,7 +61,7 @@ public class SubWorldDataFile : MonoBehaviour
                     extractedData.TryGetValue("Z", out getValue);
                     subWorldData.z = int.Parse(getValue);
 
-                    _subWorldDataList.Add(subWorldData);
+                    subWorldDataList.Add(subWorldData);
                 }
                 break;
             default:

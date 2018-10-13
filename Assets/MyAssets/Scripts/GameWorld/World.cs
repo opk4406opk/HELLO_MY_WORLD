@@ -44,59 +44,34 @@ public class World : MonoBehaviour
     /// 월드 idx 넘버.
     /// </summary>
     public int idx;
+    public Block[,,] worldBlockData { get; private set; }
 
-    ///<summary>
-    /// 월드의 모든 블록을 저장하는 배열.
-    ///</summary>
-    private Block[,,] _worldBlockData;
-    public Block[,,] worldBlockData
-    {
-        get { return _worldBlockData; }
-    }
-    
     private int worldX = 0;
     private int worldY = 0;
     private int worldZ = 0;
     private int chunkSize = 0;
-    private int _worldOffsetX = 0;
-    public int worldOffsetX
-    {
-        get { return _worldOffsetX; }
-    }
-    private int _worldOffsetZ = 0;
-    public int worldOffsetZ
-    {
-        get { return _worldOffsetZ; }
-    }
+    public int worldOffsetX { get; private set; } = 0;
+    public int worldOffsetZ { get; private set; } = 0;
 
-    private IEnumerator _loadProcessRoutine;
-    public IEnumerator loadProcessRoutine
-    {
-        get { return _loadProcessRoutine; }
-    }
-    
+    public IEnumerator loadProcessRoutine { get; private set; }
     private readonly float INTERVAL_LOAD_TIME = 1.0f;
     private int chunkNumber = 0;
 
-    private CustomOctree _customOctree = new CustomOctree();
-    public CustomOctree customOctree
-    {
-        get { return _customOctree; }
-    }
+    public CustomOctree customOctree { get; } = new CustomOctree();
 
     public void Init(int offsetX, int offsetZ)
 	{
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
         //
-        _customOctree.Init(new Vector3(offsetX, 0, offsetZ), 
+        customOctree.Init(new Vector3(offsetX, 0, offsetZ), 
             new Vector3(gameConfig.sub_world_x_size + offsetX , gameConfig.sub_world_y_size,
             gameConfig.sub_world_z_size + offsetZ));
         worldX = gameConfig.sub_world_x_size;
         worldY = gameConfig.sub_world_y_size;
         worldZ = gameConfig.sub_world_z_size;
         chunkSize = gameConfig.chunk_size;
-        _worldOffsetX = offsetX;
-        _worldOffsetZ = offsetZ;
+        worldOffsetX = offsetX;
+        worldOffsetZ = offsetZ;
 
         InitWorldData();
         InitChunkGroup();
@@ -106,12 +81,12 @@ public class World : MonoBehaviour
             param.baseOffset = KojeomUtility.RandomInteger(2, 29);
             SetDefaultWorldData(param);
             //
-            _loadProcessRoutine = LoadProcess();
-            StartCoroutine(_loadProcessRoutine);
+            loadProcessRoutine = LoadProcess();
+            StartCoroutine(loadProcessRoutine);
         }
         else
         {
-            _loadProcessRoutine = LoadProcess();
+            loadProcessRoutine = LoadProcess();
         }
     }
 
@@ -176,9 +151,9 @@ public class World : MonoBehaviour
             _chunkGroup[x, y, z].worldDataIdxX = x * chunkSize;
             _chunkGroup[x, y, z].worldDataIdxY = y * chunkSize;
             _chunkGroup[x, y, z].worldDataIdxZ = z * chunkSize;
-            _chunkGroup[x, y, z].worldCoordX = worldCoordX + _worldOffsetX;
+            _chunkGroup[x, y, z].worldCoordX = worldCoordX + worldOffsetX;
             _chunkGroup[x, y, z].worldCoordY = worldCoordY;
-            _chunkGroup[x, y, z].worldCoordZ = worldCoordZ + _worldOffsetZ;
+            _chunkGroup[x, y, z].worldCoordZ = worldCoordZ + worldOffsetZ;
             _chunkGroup[x, y, z].Init();
         }
 	}
@@ -194,15 +169,15 @@ public class World : MonoBehaviour
 
     private void InitWorldData()
     {
-        _worldBlockData = new Block[worldX, worldY, worldZ];
+        worldBlockData = new Block[worldX, worldY, worldZ];
         for (int x = 0; x < worldX; x++)
         {
             for (int y = 0; y < worldY; y++)
             {
                 for (int z = 0; z < worldZ; z++)
                 {
-                    _worldBlockData[x, y, z] = new Block();
-                    _worldBlockData[x, y, z].isRendered = false;
+                    worldBlockData[x, y, z] = new Block();
+                    worldBlockData[x, y, z].isRendered = false;
                 }
             }
         }
@@ -210,7 +185,7 @@ public class World : MonoBehaviour
   
     private void SetDefaultWorldData(MakeWorldParam param)
     {
-        WorldGenAlgorithms.DefaultGenWorld(_worldBlockData, param);
+        WorldGenAlgorithms.DefaultGenWorld(worldBlockData, param);
     }
 
     private void InitChunkGroup()
