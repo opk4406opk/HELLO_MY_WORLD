@@ -170,7 +170,9 @@ public class WorldManager : MonoBehaviour
                 int playerPositionedSubWorldIdx = CalcSubWorldIndex(playerTrans.position);
                 var offset = wholeWorldStates[playerPositionedSubWorldIdx].normalizedOffset;
                 // 플레이어가 위치한 서브월드의 offset 위치를 기준삼아
-                // 8방향(대각선, 좌우상하)의 subWorld를 활성화 시킨다. 그외에 것들은 전부 release 해야함.
+                // 8방향(대각선, 좌우상하)의 subWorld를 활성화 시킨다. 
+                // 플레이어 주변을 넘어서는 그 바깥의 영역들은 외부 파일로 저장시키는걸 비동기로..
+                // 
                 for(int x = offset.x - 1; x <= offset.x + 1; x++)
                 {
                     for(int z = offset.z - 1; z <= offset.z + 1; z++)
