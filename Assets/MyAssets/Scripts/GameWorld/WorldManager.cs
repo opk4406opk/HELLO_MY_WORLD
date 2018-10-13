@@ -24,16 +24,16 @@ public class WorldDataFile
 // https://tech.peoplefund.co.kr/2017/08/02/non-blocking-asynchronous-concurrency.html
 // https://blog.stephencleary.com/2012/02/async-and-await.html
 
-public struct SubWorldOffset
+public struct SubWorldNormalizedOffset
 {
-    SubWorldOffset(int x, int z) { this.x = x; this.z = z; }
+    SubWorldNormalizedOffset(int x, int z) { this.x = x; this.z = z; }
     public int x;
     public int z;
 }
 public class WorldState
 {
     public World subWorldInstance;
-    public SubWorldOffset offset;
+    public SubWorldNormalizedOffset normalizedOffset;
     public bool isInGameLoaded = false;
 }
 
@@ -46,7 +46,7 @@ public class WorldManager : MonoBehaviour
     [SerializeField]
     private Transform worldGroupTrans;
 
-    public Dictionary<SubWorldOffset, int> worldOffsetToIndex { get; } = new Dictionary<SubWorldOffset, int>();
+    public Dictionary<SubWorldNormalizedOffset, int> worldOffsetToIndex { get; } = new Dictionary<SubWorldNormalizedOffset, int>();
     public Dictionary<int, WorldState> wholeWorldStates { get; } = new Dictionary<int, WorldState>();
 
     public static WorldManager instance;
@@ -135,15 +135,15 @@ public class WorldManager : MonoBehaviour
             //add world.
             WorldState worldState = new WorldState();
             worldState.subWorldInstance = subWorld;
-            SubWorldOffset subOffset;
-            subOffset.x = subWorldData.x * gameConfig.sub_world_x_size;
-            subOffset.z = subWorldData.z * gameConfig.sub_world_z_size;
-            worldState.offset = subOffset;
+            SubWorldNormalizedOffset normalizedSubOffset;
+            normalizedSubOffset.x = subWorldData.x;
+            normalizedSubOffset.z = subWorldData.z;
+            worldState.normalizedOffset = normalizedSubOffset;
             worldState.isInGameLoaded = false;
             wholeWorldStates.Add(subWorldData.worldIdx, worldState);
 
             // offset to index 
-            worldOffsetToIndex.Add(subOffset, subWorldData.worldIdx);
+            worldOffsetToIndex.Add(normalizedSubOffset, subWorldData.worldIdx);
         }
     }
 
@@ -160,26 +160,43 @@ public class WorldManager : MonoBehaviour
     IEnumerator DynamicSubWorldLoader()
     {
         KojeomLogger.DebugLog("DynamicSubWorldLoader Co-Routine Start.");
+        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
         while (true)
         {
             // to do
             if(PlayerManager.instance != null)
             {
                 Transform playerTrans = PlayerManager.instance.myGamePlayer.charInstance.transform;
-                int subWorldIdx = CalcSubWorldIndex(playerTrans.position);
-                var offset = wholeWorldStates[subWorldIdx].offset;
+                int playerPositionedSubWorldIdx = CalcSubWorldIndex(playerTrans.position);
+                var offset = wholeWorldStates[playerPositionedSubWorldIdx].normalizedOffset;
                 // 플레이어가 위치한 서브월드의 offset 위치를 기준삼아
                 // 8방향(대각선, 좌우상하)의 subWorld를 활성화 시킨다. 그외에 것들은 전부 release 해야함.
-                if ((wholeWorldStates[subWorldIdx].subWorldInstance != null) &&
-                    (wholeWorldStates[subWorldIdx].isInGameLoaded == false))
+                for(int x = offset.x - 1; x <= offset.x + 1; x++)
                 {
-                    wholeWorldStates[subWorldIdx].isInGameLoaded = true;
-                    wholeWorldStates[subWorldIdx].subWorldInstance.Init(offset.x, offset.z);
+                    for(int z = offset.z - 1; z <= offset.z + 1; z++)
+                    {
+                        int worldIdx = 0;
+                        SubWorldNormalizedOffset subWorldOffset;
+                        subWorldOffset.x = x;
+                        subWorldOffset.z = z;
+                        if (worldOffsetToIndex.TryGetValue(subWorldOffset, out worldIdx) == true)
+                        {
+                            if ((wholeWorldStates[worldIdx].subWorldInstance != null) &&
+                                (wholeWorldStates[worldIdx].isInGameLoaded == false))
+                            {
+                                wholeWorldStates[worldIdx].isInGameLoaded = true;
+                                wholeWorldStates[worldIdx].subWorldInstance.Init(x * gameConfig.sub_world_x_size,
+                                    z * gameConfig.sub_world_z_size);
+                            }
+                        }
+                    }
                 }
+                
             }
             yield return null;
         }
     }
+
 
     /// <summary>
     /// 오브젝트 위치를 통해 어느 SubWorld에 위치했는지 확인 후 해당 World Index를 리턴.

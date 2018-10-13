@@ -109,18 +109,19 @@ public class World : MonoBehaviour
         for (int x = 0; x < _chunkGroup.GetLength(0); x++)
             for (int z = 0; z < _chunkGroup.GetLength(2); z++)
             {
-                float dist = Vector2.Distance(new Vector2(x * chunkSize,
-                        z * chunkSize),
-                        new Vector2(_playerTrans.position.x, _playerTrans.position.z));
+                //float dist = Vector2.Distance(new Vector2(x * chunkSize,
+                //        z * chunkSize),
+                //        new Vector2(_playerTrans.position.x, _playerTrans.position.z));
 
-                if (dist < DIST_TO_LOAD)
-                {
-                    if (_chunkGroup[x, 0, z] == null) GenColumn(x, z);
-                }
-                else if (dist > DIST_TO_UNLOAD)
-                {
-                    if (_chunkGroup[x, 0, z] != null) UnloadColumn(x, z);
-                }
+                //if (dist < DIST_TO_LOAD)
+                //{
+                //    if (_chunkGroup[x, 0, z] == null) GenColumn(x, z);
+                //}
+                //else if (dist > DIST_TO_UNLOAD)
+                //{
+                //    if (_chunkGroup[x, 0, z] != null) UnloadColumn(x, z);
+                //}
+                if (_chunkGroup[x, 0, z] == null) GenColumn(x, z);
             }
     }
 
