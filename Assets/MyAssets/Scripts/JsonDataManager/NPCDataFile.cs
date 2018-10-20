@@ -30,17 +30,8 @@ public class NPCDataFile : MonoBehaviour {
     
     private JSONObject jsonObject;
     private TextAsset jsonFile;
-
-    private List<RoamingMerchantData> _roamingMerchantDatas = new List<RoamingMerchantData>();
-    public List<RoamingMerchantData> roamingMerchantDatas
-    {
-        get { return _roamingMerchantDatas; }
-    }
-    private List<ShopMerchantData> _shopMerchantDatas = new List<ShopMerchantData>();
-    public List<ShopMerchantData> shopMerchantDatas
-    {
-        get { return _shopMerchantDatas; }
-    }
+    public List<RoamingMerchantData> roamingMerchantDatas { get; } = new List<RoamingMerchantData>();
+    public List<ShopMerchantData> shopMerchantDatas { get; } = new List<ShopMerchantData>();
 
     public static NPCDataFile instance = null;
 
@@ -107,7 +98,7 @@ public class NPCDataFile : MonoBehaviour {
                         data.ToDictionary().TryGetValue("selling_items_id", out value);
                         npcData.sellingItemsID = GetItemsID(value);
 
-                        _roamingMerchantDatas.Add(npcData);
+                        roamingMerchantDatas.Add(npcData);
                     }
                     else if (type.Equals(NPC_TYPE.TYPE_SHOP_MERCHANT))
                     {
@@ -132,7 +123,7 @@ public class NPCDataFile : MonoBehaviour {
                         data.ToDictionary().TryGetValue("selling_items_id", out value);
                         npcData.sellingItemsID = GetItemsID(value);
 
-                        _shopMerchantDatas.Add(npcData);
+                        shopMerchantDatas.Add(npcData);
                     }
                 }
                // to do

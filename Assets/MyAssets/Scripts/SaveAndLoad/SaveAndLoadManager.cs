@@ -142,9 +142,8 @@ public class SaveAndLoadManager : MonoBehaviour {
 
         foreach (var element in gameWorldStateList)
         {
-            StartCoroutine(element.Value.subWorldInstance.loadProcessRoutine);
+            element.Value.subWorldInstance.LoadProcess();
         }
-
         fileStream.Close();
         return true;
     }

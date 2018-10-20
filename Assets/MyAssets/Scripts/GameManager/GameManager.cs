@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
     public bool isLockCursor = false;
 
     [SerializeField]
+    private WorldConfigFile worldConfigDataFile;
+    [SerializeField]
     private SubWorldDataFile subWorldDataFile;
     [SerializeField]
     private TileDataFile tileDataFile;
@@ -141,6 +143,7 @@ public class GameManager : MonoBehaviour
         KojeomLogger.DebugLog("게임 데이터 파일 초기화 시작.");
         //GameDataFiles Init
         // 제작아이템 데이타파일은 아이템데이타 파일을 읽어들인 후에 읽어야함.
+        worldConfigDataFile.Init();
         gameConfigDataFile.Init();
         itemDataFile.Init();
         tileDataFile.Init();

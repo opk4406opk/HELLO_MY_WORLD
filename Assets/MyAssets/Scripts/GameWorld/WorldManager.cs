@@ -34,7 +34,15 @@ public class WorldState
 {
     public World subWorldInstance;
     public SubWorldNormalizedOffset normalizedOffset;
-    public bool isInGameLoaded = false;
+    public WorldStatusInfo statusInfo = WorldStatusInfo.None;
+}
+
+public enum WorldStatusInfo
+{
+    None = 0,
+    InGameLoaded = 1,
+    NeedInGameLoad = 2,
+    Released = 3
 }
 
 public class WorldManager : MonoBehaviour
@@ -108,15 +116,15 @@ public class WorldManager : MonoBehaviour
         return await Task.FromResult(bf.Deserialize(fileStream) as WorldDataFile);
     }
 
-    public async void LoadSubWorldFileAsync(int subWorldIdx)
+    public async void LoadSubWorldFileAsync(int worldIdx)
     {
-         await LoadSubWorldFile(subWorldIdx);
+         await LoadSubWorldFile(worldIdx);
     }
 
     private void ReleaseSubWorldInstance(int worldIdx)
     {
         wholeWorldStates[worldIdx].subWorldInstance = null;
-        wholeWorldStates[worldIdx].isInGameLoaded = false;
+        wholeWorldStates[worldIdx].statusInfo = WorldStatusInfo.Released;
     }
 
     private void CreateWholeWorld()
@@ -139,13 +147,14 @@ public class WorldManager : MonoBehaviour
             normalizedSubOffset.x = subWorldData.x;
             normalizedSubOffset.z = subWorldData.z;
             worldState.normalizedOffset = normalizedSubOffset;
-            worldState.isInGameLoaded = false;
+            worldState.statusInfo = WorldStatusInfo.NeedInGameLoad;
             wholeWorldStates.Add(subWorldData.worldIdx, worldState);
 
             // offset to index 
             worldOffsetToIndex.Add(normalizedSubOffset, subWorldData.worldIdx);
         }
     }
+
 
     /// <summary>
     /// 주어진 위치값으로 어느 subWorld에 포함되어있는지 확인 후 해당 World를 리턴.
@@ -183,12 +192,16 @@ public class WorldManager : MonoBehaviour
                         subWorldOffset.z = z;
                         if (worldOffsetToIndex.TryGetValue(subWorldOffset, out worldIdx) == true)
                         {
-                            if ((wholeWorldStates[worldIdx].subWorldInstance != null) &&
-                                (wholeWorldStates[worldIdx].isInGameLoaded == false))
+                            switch(wholeWorldStates[worldIdx].statusInfo)
                             {
-                                wholeWorldStates[worldIdx].isInGameLoaded = true;
-                                wholeWorldStates[worldIdx].subWorldInstance.Init(x * gameConfig.sub_world_x_size,
-                                    z * gameConfig.sub_world_z_size);
+                                case WorldStatusInfo.None:
+                                    // nothing to do.
+                                    break;
+                                case WorldStatusInfo.NeedInGameLoad:
+                                    wholeWorldStates[worldIdx].statusInfo = WorldStatusInfo.InGameLoaded;
+                                    wholeWorldStates[worldIdx].subWorldInstance.Init(x * gameConfig.sub_world_x_size,
+                                        z * gameConfig.sub_world_z_size);
+                                    break;
                             }
                         }
                     }

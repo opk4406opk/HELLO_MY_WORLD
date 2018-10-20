@@ -11,7 +11,8 @@ public class ConstFilePath
     public readonly static string TXT_CRAFT_ITEM_LIST_DATAS = "TextAsset/ItemDatas/craftItemListDatas";
     public readonly static string TXT_ITEM_DATAS = "TextAsset/ItemDatas/itemDatas";
     public readonly static string TXT_TYPE_TO_ITEM_DATAS = "TextAsset/ItemDatas/typeToItemID";
-    public readonly static string TXT_SUB_WORLD_DEFAULT_DATAS = "TextAsset/SubWorldDefaultData/subworld_default";
+    public readonly static string TXT_SUB_WORLD_DEFAULT_DATAS = "TextAsset/GameWorld/subworld_default";
+    public readonly static string TXT_WORLD_CONFIG_DATA = "TextAsset/GameWorld/WorldConfigData";
     public readonly static string TXT_TILE_DATAS = "TextAsset/TileDatas/tileDatas";
 
     //캐릭터 렌더링 텍스처 베이스 파일이 있는 상대경로 directory.

@@ -52,11 +52,7 @@ public class World : MonoBehaviour
     private int chunkSize = 0;
     public int worldOffsetX { get; private set; } = 0;
     public int worldOffsetZ { get; private set; } = 0;
-
-    public IEnumerator loadProcessRoutine { get; private set; }
-    private readonly float INTERVAL_LOAD_TIME = 1.0f;
     private int chunkNumber = 0;
-
     public CustomOctree customOctree { get; } = new CustomOctree();
 
     public void Init(int offsetX, int offsetZ)
@@ -81,12 +77,11 @@ public class World : MonoBehaviour
             param.baseOffset = KojeomUtility.RandomInteger(2, 29);
             SetDefaultWorldData(param);
             //
-            loadProcessRoutine = LoadProcess();
-            StartCoroutine(loadProcessRoutine);
+            LoadProcess();
         }
         else
         {
-            loadProcessRoutine = LoadProcess();
+            LoadProcess();
         }
     }
 
@@ -95,16 +90,12 @@ public class World : MonoBehaviour
     //   // _customOctree.DrawFullTree();
     //}
 
-    private IEnumerator LoadProcess()
+    public void LoadProcess()
     {
-        while(true)
-        {
-            LoadChunks();
-            yield return new WaitForSeconds(INTERVAL_LOAD_TIME);
-        }
+        StartCoroutine(LoadChunks());
     }
     
-    private void LoadChunks()
+    private IEnumerator LoadChunks()
     {
         for (int x = 0; x < _chunkGroup.GetLength(0); x++)
             for (int z = 0; z < _chunkGroup.GetLength(2); z++)
@@ -121,43 +112,42 @@ public class World : MonoBehaviour
                 //{
                 //    if (_chunkGroup[x, 0, z] != null) UnloadColumn(x, z);
                 //}
-                if (_chunkGroup[x, 0, z] == null) GenColumn(x, z);
+                if (_chunkGroup[x, 0, z] == null)
+                {
+                    for (int y = 0; y < _chunkGroup.GetLength(1); y++)
+                    {
+                        if ((_chunkGroup[x, y, z] != null) &&
+                            (_chunkGroup[x, y, z].gameObject.activeSelf == true))
+                        {
+                            _chunkGroup[x, y, z].gameObject.SetActive(true);
+                            continue;
+                        }
+                        // 유니티엔진에서 제공되는 게임 오브젝트들의 중점(=월드좌표에서의 위치)은
+                        // 실제 게임 오브젝트의 정중앙이 된다. 
+                        // 따라서, 유니티엔진에 맞춰서 오브젝트의 중점을 정중앙으로 블록들을 생성하려면(= 1개의 블록은 6개의 면을 생성한다),
+                        // 아래와 같은 0.5f(offset)값을 추가한다. ( worldCoordX,Y,Z 값은 개별 블록을 생성할 때 사용된다. )
+                        // p.s. 이 프로젝트에서 1개의 block의 기준점(block을 생성할 때 쓰이는)은 최상단면의 좌측하단의 포인트가 된다.(디폴트)
+                        float worldCoordX = x * chunkSize - 0.5f;
+                        float worldCoordY = y * chunkSize + 0.5f;
+                        float worldCoordZ = z * chunkSize - 0.5f;
+                        GameObject newChunk = Instantiate(_chunkPrefab, new Vector3(0, 0, 0),
+                                                            new Quaternion(0, 0, 0, 0)) as GameObject;
+                        newChunk.transform.parent = gameObject.transform;
+                        newChunk.transform.name = "Chunk_" + chunkNumber++;
+                        _chunkGroup[x, y, z] = newChunk.GetComponent("Chunk") as Chunk;
+                        _chunkGroup[x, y, z].world = this;
+                        _chunkGroup[x, y, z].worldDataIdxX = x * chunkSize;
+                        _chunkGroup[x, y, z].worldDataIdxY = y * chunkSize;
+                        _chunkGroup[x, y, z].worldDataIdxZ = z * chunkSize;
+                        _chunkGroup[x, y, z].worldCoordX = worldCoordX + worldOffsetX;
+                        _chunkGroup[x, y, z].worldCoordY = worldCoordY;
+                        _chunkGroup[x, y, z].worldCoordZ = worldCoordZ + worldOffsetZ;
+                        _chunkGroup[x, y, z].Init();
+                        yield return new WaitForSeconds(WorldConfigFile.instance.GetConfig().chunkLoadIntervalSeconds);
+                    }
+                }
             }
     }
-
-    private void GenColumn(int x, int z)
-    {
-        for (int y = 0; y < _chunkGroup.GetLength(1); y++)
-        {
-            if ((_chunkGroup[x, y, z] != null) && 
-                (_chunkGroup[x, y, z].gameObject.activeSelf == true))
-            {
-                _chunkGroup[x, y, z].gameObject.SetActive(true);
-                continue;
-            }
-            // 유니티엔진에서 제공되는 게임 오브젝트들의 중점(=월드좌표에서의 위치)은
-            // 실제 게임 오브젝트의 정중앙이 된다. 
-            // 따라서, 유니티엔진에 맞춰서 오브젝트의 중점을 정중앙으로 블록들을 생성하려면(= 1개의 블록은 6개의 면을 생성한다),
-            // 아래와 같은 0.5f(offset)값을 추가한다. ( worldCoordX,Y,Z 값은 개별 블록을 생성할 때 사용된다. )
-            // p.s. 이 프로젝트에서 1개의 block의 기준점(block을 생성할 때 쓰이는)은 최상단면의 좌측하단의 포인트가 된다.(디폴트)
-            float worldCoordX = x * chunkSize - 0.5f;
-            float worldCoordY = y * chunkSize + 0.5f;
-            float worldCoordZ = z * chunkSize - 0.5f;
-            GameObject newChunk = Instantiate(_chunkPrefab, new Vector3(0, 0, 0),
-                                                new Quaternion(0, 0, 0, 0)) as GameObject;
-            newChunk.transform.parent = gameObject.transform;
-            newChunk.transform.name = "Chunk_" + chunkNumber++;
-            _chunkGroup[x, y, z] = newChunk.GetComponent("Chunk") as Chunk;
-            _chunkGroup[x, y, z].world = this;
-            _chunkGroup[x, y, z].worldDataIdxX = x * chunkSize;
-            _chunkGroup[x, y, z].worldDataIdxY = y * chunkSize;
-            _chunkGroup[x, y, z].worldDataIdxZ = z * chunkSize;
-            _chunkGroup[x, y, z].worldCoordX = worldCoordX + worldOffsetX;
-            _chunkGroup[x, y, z].worldCoordY = worldCoordY;
-            _chunkGroup[x, y, z].worldCoordZ = worldCoordZ + worldOffsetZ;
-            _chunkGroup[x, y, z].Init();
-        }
-	}
 
     private void UnloadColumn(int x, int z)
     {
