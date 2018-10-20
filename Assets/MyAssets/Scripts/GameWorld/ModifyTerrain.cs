@@ -23,8 +23,8 @@ public class ModifyTerrain : MonoBehaviour
     private int chunkSize = 0;
     public void Init()
     {
-        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-        chunkSize = gameConfig.chunk_size;
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        chunkSize = gameWorldConfig.chunk_size;
     }
 
     public void ReplaceBlockCursor(Ray ray, Vector3 clickWorldPos, byte blockType)
@@ -89,10 +89,10 @@ public class ModifyTerrain : MonoBehaviour
 
     private void SetBlockForAdd(int x, int y, int z, byte block)
     {
-        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-        if((x < gameConfig.sub_world_x_size) &&
-           (y < gameConfig.sub_world_y_size) &&
-           (z < gameConfig.sub_world_z_size) &&
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        if ((x < gameWorldConfig.sub_world_x_size) &&
+           (y < gameWorldConfig.sub_world_y_size) &&
+           (z < gameWorldConfig.sub_world_z_size) &&
            (x >= 0) && (y >= 0) && (z >= 0)) 
         {
             world.worldBlockData[x, y, z].type = block;
@@ -163,10 +163,10 @@ public class ModifyTerrain : MonoBehaviour
             }
         };
 
-        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-        if ((x < gameConfig.sub_world_x_size) &&
-           (y < gameConfig.sub_world_y_size) &&
-           (z < gameConfig.sub_world_z_size) &&
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        if ((x < gameWorldConfig.sub_world_x_size) &&
+           (y < gameWorldConfig.sub_world_y_size) &&
+           (z < gameWorldConfig.sub_world_z_size) &&
            (x >= 0) && (y >= 0) && (z >= 0))
         {
             UpdateUserItem(world.worldBlockData[x, y, z].type);
@@ -185,7 +185,7 @@ public class ModifyTerrain : MonoBehaviour
 
     private void UpdateChunkAt(int x, int y, int z, byte block)
     {
-        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         // world data 인덱스를 chunkGroup 인덱스로 변환한다. 
         int updateX, updateY, updateZ;
         updateX = Mathf.FloorToInt(x / chunkSize);
@@ -199,7 +199,7 @@ public class ModifyTerrain : MonoBehaviour
             world.chunkGroup[updateX - 1, updateY, updateZ].update = true;
         }
 
-        if (x - (chunkSize * updateX) == gameConfig.chunk_size && updateX != world.chunkGroup.GetLength(0) - 1)
+        if (x - (chunkSize * updateX) == gameWorldConfig.chunk_size && updateX != world.chunkGroup.GetLength(0) - 1)
         {
             world.chunkGroup[updateX + 1, updateY, updateZ].update = true;
         }
@@ -209,7 +209,7 @@ public class ModifyTerrain : MonoBehaviour
             world.chunkGroup[updateX, updateY - 1, updateZ].update = true;
         }
 
-        if (y - (chunkSize * updateY) == gameConfig.chunk_size && updateY != world.chunkGroup.GetLength(1) - 1)
+        if (y - (chunkSize * updateY) == gameWorldConfig.chunk_size && updateY != world.chunkGroup.GetLength(1) - 1)
         {
             world.chunkGroup[updateX, updateY + 1, updateZ].update = true;
         }
@@ -219,7 +219,7 @@ public class ModifyTerrain : MonoBehaviour
             world.chunkGroup[updateX, updateY, updateZ - 1].update = true;
         }
 
-        if (z - (chunkSize * updateZ) == gameConfig.chunk_size && updateZ != world.chunkGroup.GetLength(2) - 1)
+        if (z - (chunkSize * updateZ) == gameWorldConfig.chunk_size && updateZ != world.chunkGroup.GetLength(2) - 1)
         {
             world.chunkGroup[updateX, updateY, updateZ + 1].update = true;
         }

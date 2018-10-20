@@ -1,8 +1,3 @@
 {
-  "sub_world_x_size": "32",
-  "sub_world_y_size": "32",
-  "sub_world_z_size": "32",
-  "chunk_size": "8",
-  "ingame_font_size": "10",
-  "one_tile_unit": "0.0625"
+  "ingame_font_size": "10"
 }

@@ -57,15 +57,15 @@ public class World : MonoBehaviour
 
     public void Init(int offsetX, int offsetZ)
 	{
-        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         //
         customOctree.Init(new Vector3(offsetX, 0, offsetZ), 
-            new Vector3(gameConfig.sub_world_x_size + offsetX , gameConfig.sub_world_y_size,
-            gameConfig.sub_world_z_size + offsetZ));
-        worldX = gameConfig.sub_world_x_size;
-        worldY = gameConfig.sub_world_y_size;
-        worldZ = gameConfig.sub_world_z_size;
-        chunkSize = gameConfig.chunk_size;
+            new Vector3(gameWorldConfig.sub_world_x_size + offsetX , gameWorldConfig.sub_world_y_size,
+            gameWorldConfig.sub_world_z_size + offsetZ));
+        worldX = gameWorldConfig.sub_world_x_size;
+        worldY = gameWorldConfig.sub_world_y_size;
+        worldZ = gameWorldConfig.sub_world_z_size;
+        chunkSize = gameWorldConfig.chunk_size;
         worldOffsetX = offsetX;
         worldOffsetZ = offsetZ;
 

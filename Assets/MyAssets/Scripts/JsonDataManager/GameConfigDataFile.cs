@@ -4,12 +4,7 @@ using UnityEngine;
 
 public struct GameConfigData
 {
-    public int sub_world_x_size;
-    public int sub_world_y_size;
-    public int sub_world_z_size;
-    public int chunk_size;
     public int ingame_font_size;
-    public float one_tile_unit;
 }
 
 public class GameConfigDataFile : MonoBehaviour {
@@ -51,23 +46,8 @@ public class GameConfigDataFile : MonoBehaviour {
             case JSONObject.Type.OBJECT:
                 var data = jsonObj.ToDictionary();
                 string extractedData;
-                data.TryGetValue("sub_world_x_size", out extractedData);
-                gameConfigData.sub_world_x_size = int.Parse(extractedData);
-                //
-                data.TryGetValue("sub_world_y_size", out extractedData);
-                gameConfigData.sub_world_y_size = int.Parse(extractedData);
-                //
-                data.TryGetValue("sub_world_z_size", out extractedData);
-                gameConfigData.sub_world_z_size = int.Parse(extractedData);
-                //
-                data.TryGetValue("one_tile_unit", out extractedData);
-                gameConfigData.one_tile_unit = float.Parse(extractedData);
-                //
                 data.TryGetValue("ingame_font_size", out extractedData);
                 gameConfigData.ingame_font_size = int.Parse(extractedData);
-                //
-                data.TryGetValue("chunk_size", out extractedData);
-                gameConfigData.chunk_size = int.Parse(extractedData);
                 break;
             case JSONObject.Type.ARRAY:
                 break;

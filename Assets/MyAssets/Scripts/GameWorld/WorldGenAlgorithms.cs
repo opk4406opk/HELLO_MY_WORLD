@@ -15,26 +15,26 @@ public class WorldGenAlgorithms {
         }
         public bool IsInBoundary()
         {
-            var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-            if (x >= gameConfig.sub_world_x_size || x < 0) return false;
-            if (y >= gameConfig.sub_world_y_size || y < 0) return false;
-            if (z >= gameConfig.sub_world_z_size || z < 0) return false;
+            var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+            if (x >= gameWorldConfig.sub_world_x_size || x < 0) return false;
+            if (y >= gameWorldConfig.sub_world_y_size || y < 0) return false;
+            if (z >= gameWorldConfig.sub_world_z_size || z < 0) return false;
             return true;
         }
     }
     public static void DefaultGenWorld(Block[,,] refWorldBlockData, MakeWorldParam param)
     {
-        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         // perlin 알고리즘을 이용해 지형을 생성한다.
-        for (int x = 0; x < gameConfig.sub_world_x_size; x++)
+        for (int x = 0; x < gameWorldConfig.sub_world_x_size; x++)
         {
-            for (int z = 0; z < gameConfig.sub_world_z_size; z++)
+            for (int z = 0; z < gameWorldConfig.sub_world_z_size; z++)
             {
                 int stone = PerlinNoise(x, 20, z, 3, KojeomUtility.RandomInteger(1, 3), 2);
                 stone += param.baseOffset;
                 int grass = PerlinNoise(x, 21, z, 1, KojeomUtility.RandomInteger(1, 2), 1) + 1;
 
-                for (int y = 0; y < gameConfig.sub_world_y_size; y++)
+                for (int y = 0; y < gameWorldConfig.sub_world_y_size; y++)
                 {
                     if (y <= stone) refWorldBlockData[x, y, z].type = (byte)TileDataFile.instance.
                             GetTileInfo(TileType.STONE_BIG).type;
@@ -52,14 +52,14 @@ public class WorldGenAlgorithms {
     /// <param name="refWorldBlockData"></param>
     private static void SimpleGenSphereCave(Block[,,] refWorldBlockData)
     {
-        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-        int startX = KojeomUtility.RandomInteger(3, gameConfig.sub_world_x_size - 16);
-        int maxX = KojeomUtility.RandomInteger(startX, gameConfig.sub_world_x_size);
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        int startX = KojeomUtility.RandomInteger(3, gameWorldConfig.sub_world_x_size - 16);
+        int maxX = KojeomUtility.RandomInteger(startX, gameWorldConfig.sub_world_x_size);
         //
-        int startZ = KojeomUtility.RandomInteger(3, gameConfig.sub_world_z_size - 16);
-        int maxZ = KojeomUtility.RandomInteger(startX, gameConfig.sub_world_z_size);
+        int startZ = KojeomUtility.RandomInteger(3, gameWorldConfig.sub_world_z_size - 16);
+        int maxZ = KojeomUtility.RandomInteger(startX, gameWorldConfig.sub_world_z_size);
         //
-        int maxY = KojeomUtility.RandomInteger(10, gameConfig.sub_world_y_size - 10);
+        int maxY = KojeomUtility.RandomInteger(10, gameWorldConfig.sub_world_y_size - 10);
         int startY = KojeomUtility.RandomInteger(5, maxY - 1);
         for (int x = startX; x < maxX; x++)
         {

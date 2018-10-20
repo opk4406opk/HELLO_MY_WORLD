@@ -79,9 +79,9 @@ public class Chunk : MonoBehaviour
 
     public void Init()
     {
-        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-        chunkSize = gameConfig.chunk_size;
-        tUnit = gameConfig.one_tile_unit;
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        chunkSize = gameWorldConfig.chunk_size;
+        tUnit = gameWorldConfig.one_tile_unit;
         mesh = GetComponent<MeshFilter>().mesh;
         GenerateMesh();
     }
@@ -153,12 +153,12 @@ public class Chunk : MonoBehaviour
     
     private TileType GetBlockType(int x, int y, int z)
     {
-        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-        if (x >= gameConfig.sub_world_x_size ||
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        if (x >= gameWorldConfig.sub_world_x_size ||
                x < 0 ||
-               y >= gameConfig.sub_world_y_size ||
+               y >= gameWorldConfig.sub_world_y_size ||
                y < 0 ||
-               z >= gameConfig.sub_world_z_size ||
+               z >= gameWorldConfig.sub_world_z_size ||
                z < 0)
         {
             return TileType.NONE;

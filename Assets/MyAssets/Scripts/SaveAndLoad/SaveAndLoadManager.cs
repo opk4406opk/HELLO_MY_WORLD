@@ -73,12 +73,12 @@ public class SaveAndLoadManager : MonoBehaviour {
   
     private void SubWorldToTotalWorld(int subWorldIdx)
     {
-        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-        for (int x = 0; x < gameConfig.sub_world_x_size; ++x)
-            for (int y = 0; y < gameConfig.sub_world_y_size; ++y)
-                for (int z = 0; z < gameConfig.sub_world_z_size; ++z)
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        for (int x = 0; x < gameWorldConfig.sub_world_x_size; ++x)
+            for (int y = 0; y < gameWorldConfig.sub_world_y_size; ++y)
+                for (int z = 0; z < gameWorldConfig.sub_world_z_size; ++z)
                 {
-                    mergeIdx = (x * gameConfig.sub_world_y_size * gameConfig.sub_world_z_size) + (y * gameConfig.sub_world_z_size) + z;
+                    mergeIdx = (x * gameWorldConfig.sub_world_y_size * gameWorldConfig.sub_world_z_size) + (y * gameWorldConfig.sub_world_z_size) + z;
                     mergeWorldData[mergeIdx + mergeIdxOffset] = gameWorldStateList[subWorldIdx].subWorldInstance.worldBlockData[x, y, z].type;
                 }
         
@@ -150,12 +150,12 @@ public class SaveAndLoadManager : MonoBehaviour {
 
     private void TotalWorldToSubWorld(int subWorldIdx)
     {
-        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-        for (int x = 0; x < gameConfig.sub_world_x_size; ++x)
-            for (int y = 0; y < gameConfig.sub_world_y_size; ++y)
-                for (int z = 0; z < gameConfig.sub_world_z_size; ++z)
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        for (int x = 0; x < gameWorldConfig.sub_world_x_size; ++x)
+            for (int y = 0; y < gameWorldConfig.sub_world_y_size; ++y)
+                for (int z = 0; z < gameWorldConfig.sub_world_z_size; ++z)
                 {
-                    mergeIdx = (x * gameConfig.sub_world_y_size * gameConfig.sub_world_z_size) + (y * gameConfig.sub_world_z_size) + z;
+                    mergeIdx = (x * gameWorldConfig.sub_world_y_size * gameWorldConfig.sub_world_z_size) + (y * gameWorldConfig.sub_world_z_size) + z;
                     gameWorldStateList[subWorldIdx].subWorldInstance.worldBlockData[x, y, z].type = mergeWorldData[mergeIdx + mergeIdxOffset];
                 }
 
@@ -181,8 +181,8 @@ public class SaveAndLoadManager : MonoBehaviour {
     private delegate void del_InSertMergeWorldSize();
     private void CalcWorldDataSize()
     {
-        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-        int subWorldSize = gameConfig.sub_world_x_size * gameConfig.sub_world_y_size * gameConfig.sub_world_z_size;
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        int subWorldSize = gameWorldConfig.sub_world_x_size * gameWorldConfig.sub_world_y_size * gameWorldConfig.sub_world_z_size;
         mergeWorldSize = (subWorldSize * gameWorldStateList.Count) + gameWorldStateList.Count;
 
         int recordNum = 0;

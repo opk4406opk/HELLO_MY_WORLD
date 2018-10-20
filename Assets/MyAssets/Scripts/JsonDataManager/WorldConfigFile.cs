@@ -4,6 +4,11 @@ using UnityEngine;
 
 public struct WorldConfig
 {
+    public float one_tile_unit;
+    public int sub_world_x_size;
+    public int sub_world_y_size;
+    public int sub_world_z_size;
+    public int chunk_size;
     public float chunkLoadIntervalSeconds;
 }
 
@@ -31,12 +36,27 @@ public class WorldConfigFile : MonoBehaviour {
         {
             case JSONObject.Type.OBJECT:
                 //to do
-                break;
-            case JSONObject.Type.ARRAY:
                 var data = jsonObject.ToDictionary();
                 string extractedValue;
                 data.TryGetValue("chunkLoadIntervalSeconds", out extractedValue);
                 config.chunkLoadIntervalSeconds = float.Parse(extractedValue);
+                //
+                data.TryGetValue("sub_world_x_size", out extractedValue);
+                config.sub_world_x_size = int.Parse(extractedValue);
+                //
+                data.TryGetValue("sub_world_y_size", out extractedValue);
+                config.sub_world_y_size = int.Parse(extractedValue);
+                //
+                data.TryGetValue("sub_world_z_size", out extractedValue);
+                config.sub_world_z_size = int.Parse(extractedValue);
+                //
+                data.TryGetValue("one_tile_unit", out extractedValue);
+                config.one_tile_unit = float.Parse(extractedValue);
+                //
+                data.TryGetValue("chunk_size", out extractedValue);
+                config.chunk_size = int.Parse(extractedValue);
+                break;
+            case JSONObject.Type.ARRAY:
                 break;
             default:
                 Debug.Log("Json Level Data Sheet Access ERROR");

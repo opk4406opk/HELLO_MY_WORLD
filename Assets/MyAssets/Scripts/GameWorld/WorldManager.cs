@@ -169,7 +169,7 @@ public class WorldManager : MonoBehaviour
     IEnumerator DynamicSubWorldLoader()
     {
         KojeomLogger.DebugLog("DynamicSubWorldLoader Co-Routine Start.");
-        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         while (true)
         {
             // to do
@@ -199,8 +199,8 @@ public class WorldManager : MonoBehaviour
                                     break;
                                 case WorldStatusInfo.NeedInGameLoad:
                                     wholeWorldStates[worldIdx].statusInfo = WorldStatusInfo.InGameLoaded;
-                                    wholeWorldStates[worldIdx].subWorldInstance.Init(x * gameConfig.sub_world_x_size,
-                                        z * gameConfig.sub_world_z_size);
+                                    wholeWorldStates[worldIdx].subWorldInstance.Init(x * gameWorldConfig.sub_world_x_size,
+                                        z * gameWorldConfig.sub_world_z_size);
                                     break;
                             }
                         }
@@ -220,9 +220,9 @@ public class WorldManager : MonoBehaviour
     /// <returns></returns>
     public int CalcSubWorldIndex(Vector3 objectPos)
     {
-        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-        int x = (int)objectPos.x / gameConfig.sub_world_x_size;
-        int z = ((int)objectPos.z / gameConfig.sub_world_z_size) * SubWorldDataFile.instance.rowOffset;
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        int x = (int)objectPos.x / gameWorldConfig.sub_world_x_size;
+        int z = ((int)objectPos.z / gameWorldConfig.sub_world_z_size) * SubWorldDataFile.instance.rowOffset;
         return x + z;
     }
 }
