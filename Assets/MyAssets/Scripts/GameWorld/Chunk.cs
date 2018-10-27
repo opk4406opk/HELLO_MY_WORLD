@@ -22,7 +22,7 @@ public class Chunk : MonoBehaviour
     /// size per tile.
     ///  ex) 256 x 256(pixel) tileSheet 기준. 1tile(16pixel) 이 차지하는 텍스처 좌표값.  16/256
     /// </summary>
-    private float tUnit;
+    private float tileUnit;
     private Vector2 texturePos;
     private Mesh mesh;
     private int faceCount;
@@ -81,7 +81,7 @@ public class Chunk : MonoBehaviour
     {
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         chunkSize = gameWorldConfig.chunk_size;
-        tUnit = gameWorldConfig.one_tile_unit;
+        tileUnit = gameWorldConfig.one_tile_unit;
         mesh = GetComponent<MeshFilter>().mesh;
         GenerateMesh();
     }
@@ -180,7 +180,7 @@ public class Chunk : MonoBehaviour
         CreateFace(texturePos);
     }
 
-    private  void CubeNorthFace(float x, float y, float z, TileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
+    private void CubeNorthFace(float x, float y, float z, TileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
     {
 
         newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
@@ -269,10 +269,10 @@ public class Chunk : MonoBehaviour
         newTriangles.Add(faceCount * 4 + 2); //3
         newTriangles.Add(faceCount * 4 + 3); //4
 
-        newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y));
-        newUV.Add(new Vector2(tUnit * texturePos.x + tUnit, tUnit * texturePos.y + tUnit));
-        newUV.Add(new Vector2(tUnit * texturePos.x, tUnit * texturePos.y + tUnit));
-        newUV.Add(new Vector2(tUnit * texturePos.x, tUnit * texturePos.y));
+        newUV.Add(new Vector2(tileUnit * texturePos.x + tileUnit, tileUnit * texturePos.y));
+        newUV.Add(new Vector2(tileUnit * texturePos.x + tileUnit, tileUnit * texturePos.y + tileUnit));
+        newUV.Add(new Vector2(tileUnit * texturePos.x, tileUnit * texturePos.y + tileUnit));
+        newUV.Add(new Vector2(tileUnit * texturePos.x, tileUnit * texturePos.y));
 
         faceCount++; // Add this line
     }
