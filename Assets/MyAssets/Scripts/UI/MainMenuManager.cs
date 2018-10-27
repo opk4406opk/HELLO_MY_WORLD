@@ -85,8 +85,8 @@ public class MainMenuManager : MonoBehaviour {
     private void GameStartProcess()
     {
         EnableButtons(false);
-        GameNetworkManager.PostHttpRequest += PostLoginRequest;
-        GameNetworkManager.ConnectLoginServer();
+        P2PNetworkManager.PostHttpRequest += PostLoginRequest;
+        P2PNetworkManager.ConnectLoginServer();
         if (isSuccessProcessRun == false) StartCoroutine(LoginProcess());
     }
 

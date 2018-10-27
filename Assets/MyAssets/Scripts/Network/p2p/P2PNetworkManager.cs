@@ -21,7 +21,7 @@ public struct HTTP_REQUEST_METHOD
 ///  2. req : 클라이언트에서 서버로 특정 데이터를 요청.
 ///  3. res : 서버에서 클라이언트로 특정 데이터를 전달.
 /// </summary>
-public enum GAME_NETWORK_PROTOCOL
+public enum P2P_NETWORK_PROTOCOL
 {
     push_clientInfo = 1000,
     res_inGameUserList = 1001,
@@ -124,9 +124,9 @@ public class GameNetworkStateFlags
     {
         get
         {
-            if(GameNetworkManager.GetNetworkManagerInstance() != null)
+            if(P2PNetworkManager.GetNetworkManagerInstance() != null)
             {
-                return GameNetworkManager.GetNetworkManagerInstance().IsMyGamePlayerInUserList();
+                return P2PNetworkManager.GetNetworkManagerInstance().IsMyGamePlayerInUserList();
             }
             else
             {
@@ -139,7 +139,7 @@ public class GameNetworkStateFlags
 /// <summary>
 /// 현재 unity3d 엔진에서 stable .NET 3.5 버전에 맞춘 테스트 네트워크매니저 class.
 /// </summary>
-public class GameNetworkManager : NetworkManager {
+public class P2PNetworkManager : NetworkManager {
     // TEST_loginServer_func
     // -> 구글 vm에 올려놓은 centOS http서버에 로그인 패킷을 날려보는 테스트 메소드.
     #region TEST_loginServer_func
@@ -203,8 +203,8 @@ public class GameNetworkManager : NetworkManager {
     public NetworkConnection clientNetworkConnection;    
 
     [SerializeField]
-    private GameNetworkSpawner networkSpanwer;
-    public GameNetworkSpawner GetNetworkSpawner()
+    private P2PNetworkSpawner networkSpanwer;
+    public P2PNetworkSpawner GetNetworkSpawner()
     {
         return networkSpanwer;
     }
@@ -230,12 +230,12 @@ public class GameNetworkManager : NetworkManager {
         return gameRandomSeed;
     }
 
-    private static GameNetworkManager instance;
-    public static GameNetworkManager GetNetworkManagerInstance()
+    private static P2PNetworkManager instance;
+    public static P2PNetworkManager GetNetworkManagerInstance()
     {
         if (instance == null)
         {
-            instance = GameObject.FindWithTag("NetworkManager").GetComponent<GameNetworkManager>();
+            instance = GameObject.FindWithTag("NetworkManager").GetComponent<P2PNetworkManager>();
         }
         return instance;
     }
@@ -256,28 +256,28 @@ public class GameNetworkManager : NetworkManager {
     {
         //server setting
         // 프로토콜에 대한 메소드를 등록한다.
-        NetworkServer.RegisterHandler((short)GAME_NETWORK_PROTOCOL.push_clientInfo,
+        NetworkServer.RegisterHandler((short)P2P_NETWORK_PROTOCOL.push_clientInfo,
             OnRecvFromClient_ConnectInfo);
-        NetworkServer.RegisterHandler((short)GAME_NETWORK_PROTOCOL.req_inGameUserList,
+        NetworkServer.RegisterHandler((short)P2P_NETWORK_PROTOCOL.req_inGameUserList,
             OnRecvFromClient_ReqGameUserList);
-        NetworkServer.RegisterHandler((short)GAME_NETWORK_PROTOCOL.push_ChatMsgToServer,
+        NetworkServer.RegisterHandler((short)P2P_NETWORK_PROTOCOL.push_ChatMsgToServer,
             OnRecvFromClient_PushGameChatMsg);
-        NetworkServer.RegisterHandler((short)GAME_NETWORK_PROTOCOL.push_charStateToServer,
+        NetworkServer.RegisterHandler((short)P2P_NETWORK_PROTOCOL.push_charStateToServer,
             OnRecvFromClient_CharState);
-        NetworkServer.RegisterHandler((short)GAME_NETWORK_PROTOCOL.req_gameRandomSeed,
+        NetworkServer.RegisterHandler((short)P2P_NETWORK_PROTOCOL.req_gameRandomSeed,
             OnRecvFromClient_ReqGameRandSeed);
         
     }
     private void ClientSettings()
     {
         //client setting
-        client.RegisterHandler((short)GAME_NETWORK_PROTOCOL.res_inGameUserList,
+        client.RegisterHandler((short)P2P_NETWORK_PROTOCOL.res_inGameUserList,
             OnRecvFromServer_GameUserList);
-        client.RegisterHandler((short)GAME_NETWORK_PROTOCOL.res_ChatMsgToAllUser,
+        client.RegisterHandler((short)P2P_NETWORK_PROTOCOL.res_ChatMsgToAllUser,
             OnRecvFromServer_gameChatMsg);
-        client.RegisterHandler((short)GAME_NETWORK_PROTOCOL.res_charStateToAllUser,
+        client.RegisterHandler((short)P2P_NETWORK_PROTOCOL.res_charStateToAllUser,
             OnRecvFromServer_GameCharState);
-        client.RegisterHandler((short)GAME_NETWORK_PROTOCOL.res_gameRandomSeed,
+        client.RegisterHandler((short)P2P_NETWORK_PROTOCOL.res_gameRandomSeed,
             OnRecvFromServer_gameRandomSeed);
     }
     
@@ -345,7 +345,7 @@ public class GameNetworkManager : NetworkManager {
             if(charStateMsg.ownerConnID != user.Value.connectionID)
             {
                 NetworkServer.SendToClient(user.Value.connectionID,
-                    (short)GAME_NETWORK_PROTOCOL.res_charStateToAllUser, charStateMsg);
+                    (short)P2P_NETWORK_PROTOCOL.res_charStateToAllUser, charStateMsg);
                 KojeomLogger.DebugLog(string.Format("client[id:{0}] 에게 client[id:{1}]의state정보를 모든 클라이언트에 전송 했습니다.",
                     user.Value.connectionID, charStateMsg.ownerConnID), LOG_TYPE.NETWORK_SERVER_INFO);
             }
@@ -393,7 +393,7 @@ public class GameNetworkManager : NetworkManager {
         var msg = netMsg.ReadMessage<NetMessageGameRandSeed>();
         NetMessageGameRandSeed responseNetMsg = new NetMessageGameRandSeed();
         responseNetMsg.randomSeed = GetGameCurrentRandomSeed();
-        NetworkServer.SendToClient(msg.connectionID, (short)GAME_NETWORK_PROTOCOL.res_gameRandomSeed, responseNetMsg);
+        NetworkServer.SendToClient(msg.connectionID, (short)P2P_NETWORK_PROTOCOL.res_gameRandomSeed, responseNetMsg);
         KojeomLogger.DebugLog(string.Format("GameRandomSeed val :{0} 을 클라이언트(connID : {1})에게 전송했습니다.", 
             responseNetMsg.randomSeed, msg.connectionID),
             LOG_TYPE.NETWORK_SERVER_INFO);
@@ -404,7 +404,7 @@ public class GameNetworkManager : NetworkManager {
         var msg = netMsg.ReadMessage<NetMessageGameChat>();
         NetMessageGameChat responseChatMsg = new NetMessageGameChat();
         responseChatMsg.gameChatMessage = msg.gameChatMessage;
-        bool isSuccess = NetworkServer.SendToAll((short)GAME_NETWORK_PROTOCOL.res_ChatMsgToAllUser, responseChatMsg);
+        bool isSuccess = NetworkServer.SendToAll((short)P2P_NETWORK_PROTOCOL.res_ChatMsgToAllUser, responseChatMsg);
 
         if (isSuccess == true) KojeomLogger.DebugLog("게임채팅 메세지를 모든 클라이언트에 전송 했습니다.", LOG_TYPE.NETWORK_SERVER_INFO);
         else KojeomLogger.DebugLog("게임채팅 메세지를 모든 클라이언트에 전송 실패했습니다.", LOG_TYPE.NETWORK_SERVER_INFO);
@@ -468,7 +468,7 @@ public class GameNetworkManager : NetworkManager {
     {
         KojeomLogger.DebugLog(string.Format("clientConnID : {0} 에게 GameUser List를 전달했습니다.", clientConnID),
           LOG_TYPE.NETWORK_SERVER_INFO);
-        NetworkServer.SendToClient(clientConnID, (short)GAME_NETWORK_PROTOCOL.res_inGameUserList,
+        NetworkServer.SendToClient(clientConnID, (short)P2P_NETWORK_PROTOCOL.res_inGameUserList,
             resUserList);
     }
     #region [Client] Request, Push 
@@ -476,7 +476,7 @@ public class GameNetworkManager : NetworkManager {
     {
         NetMessageNetClientInfo reqClientInfo = new NetMessageNetClientInfo();
         reqClientInfo.connectionID = clientNetworkConnection.connectionId;
-        bool isSuccess = clientNetworkConnection.Send((short)GAME_NETWORK_PROTOCOL.req_inGameUserList, reqClientInfo);
+        bool isSuccess = clientNetworkConnection.Send((short)P2P_NETWORK_PROTOCOL.req_inGameUserList, reqClientInfo);
         if (isSuccess == true)
         {
             KojeomLogger.DebugLog(string.Format("클라이언트(id :{0})가 게임유저리스트 요청을 서버로 전달했습니다.",
@@ -490,7 +490,7 @@ public class GameNetworkManager : NetworkManager {
     {
         NetMessageGameRandSeed reqRandSeed = new NetMessageGameRandSeed();
         reqRandSeed.connectionID = clientNetworkConnection.connectionId;
-        bool isSuccess = clientNetworkConnection.Send((short)GAME_NETWORK_PROTOCOL.req_gameRandomSeed, reqRandSeed);
+        bool isSuccess = clientNetworkConnection.Send((short)P2P_NETWORK_PROTOCOL.req_gameRandomSeed, reqRandSeed);
         if (isSuccess == true) KojeomLogger.DebugLog("게임랜덤시드 요청을 서버로 전달했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
         else KojeomLogger.DebugLog("게임랜덤시드 요청이 실패했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
     }
@@ -499,7 +499,7 @@ public class GameNetworkManager : NetworkManager {
     {
         NetMessageGameChat pushChatMsg = new NetMessageGameChat();
         pushChatMsg.gameChatMessage = chatMessage;
-        bool isSuccess = client.connection.Send((short)GAME_NETWORK_PROTOCOL.push_ChatMsgToServer, pushChatMsg);
+        bool isSuccess = client.connection.Send((short)P2P_NETWORK_PROTOCOL.push_ChatMsgToServer, pushChatMsg);
 
         if (isSuccess == true) KojeomLogger.DebugLog("게임채팅 메세지 데이터를 서버로 전달했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
         else KojeomLogger.DebugLog("게임채팅 메세지 데이터 전달에 실패했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
@@ -513,7 +513,7 @@ public class GameNetworkManager : NetworkManager {
         {
             pushStateMsg.ownerCharState = PlayerManager.instance.myGamePlayer.GetController().GetPlayerState();
             pushStateMsg.ownerConnID = clientNetworkConnection.connectionId;
-            isSuccess = clientNetworkConnection.Send((short)GAME_NETWORK_PROTOCOL.push_charStateToServer, pushStateMsg);
+            isSuccess = clientNetworkConnection.Send((short)P2P_NETWORK_PROTOCOL.push_charStateToServer, pushStateMsg);
 
             if (isSuccess == false) KojeomLogger.DebugLog("현재 게임캐릭터 스테이트 정보를 서버에 전달 실패했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
             else KojeomLogger.DebugLog("현재 게임캐릭터 스테이트 정보를 서버에 전달 성공했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class GameNetworkSpawner : NetworkBehaviour {
+public class P2PNetworkSpawner : NetworkBehaviour {
     [Command]
     public void CmdSpawnFromServer(GameObject spawnObj)
     {

@@ -105,7 +105,7 @@ public class PlayerMoveState : IState
             return;
         }
         //
-        GameNetworkManager.GetNetworkManagerInstance().PushCharStateMessage(GAMEPLAYER_CHAR_STATE.MOVE);
+        P2PNetworkManager.GetNetworkManagerInstance().PushCharStateMessage(GAMEPLAYER_CHAR_STATE.MOVE);
         //
         KojeomLogger.DebugLog("player moving..", LOG_TYPE.USER_INPUT);
         newPos = gamePlayer.transform.position + (dir * moveSpeed * Time.deltaTime);

@@ -104,7 +104,7 @@ public class GamePlayer : NetworkBehaviour
     {
         base.OnStartAuthority();
         KojeomLogger.DebugLog(string.Format("[OnStartAuthority] connID : {0}",
-            GameNetworkManager.GetNetworkManagerInstance().client.connection.connectionId), LOG_TYPE.NETWORK_CLIENT_INFO);
+            P2PNetworkManager.GetNetworkManagerInstance().client.connection.connectionId), LOG_TYPE.NETWORK_CLIENT_INFO);
         _isMyPlayer = true;
     }
 
@@ -136,8 +136,8 @@ public class GamePlayer : NetworkBehaviour
         KojeomLogger.DebugLog(string.Format("[Start]LateRegisterGamePlayerToUserList Start."), LOG_TYPE.NETWORK_CLIENT_INFO);
         while (true)
         {
-            if ((GameNetworkManager.GetNetworkManagerInstance() != null) &&
-                (GameNetworkManager.GetNetworkManagerInstance().netUserList.Count > 0))
+            if ((P2PNetworkManager.GetNetworkManagerInstance() != null) &&
+                (P2PNetworkManager.GetNetworkManagerInstance().netUserList.Count > 0))
             {
                 var netConnectionID = -999;
                 if (networkIdentity.connectionToClient != null) netConnectionID = networkIdentity.connectionToClient.connectionId;
@@ -156,7 +156,7 @@ public class GamePlayer : NetworkBehaviour
                 GameNetUser user = null;
                 while(true)
                 {
-                    user = GameNetworkManager.GetNetworkManagerInstance().FindUserInList(netConnectionID);
+                    user = P2PNetworkManager.GetNetworkManagerInstance().FindUserInList(netConnectionID);
                     if (user != null) break;
                     yield return new WaitForSeconds(0.25f);
                 }

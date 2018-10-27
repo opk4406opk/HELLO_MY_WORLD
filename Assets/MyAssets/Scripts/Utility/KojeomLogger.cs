@@ -119,7 +119,7 @@ public class KojeomLogger {
         if (Application.platform == RuntimePlatform.WindowsEditor)
 		{
             Debug.Log(consoleLog);
-            GameNetworkManager.LogPushToLoggerServer(savedLog);
+            P2PNetworkManager.LogPushToLoggerServer(savedLog);
         }
     }
     private static string TimeStamp(bool isUseFileName = false)
