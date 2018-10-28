@@ -22,7 +22,7 @@ public class WorldGenAlgorithms {
             return true;
         }
     }
-    public static void DefaultGenWorld(Block[,,] refWorldBlockData, MakeWorldParam param)
+    public static void DefaultGenWorld(Block[,,] worldBlockData, MakeWorldParam param)
     {
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         // perlin 알고리즘을 이용해 지형을 생성한다.
@@ -36,21 +36,25 @@ public class WorldGenAlgorithms {
 
                 for (int y = 0; y < gameWorldConfig.sub_world_y_size; y++)
                 {
-                    if (y <= stone) refWorldBlockData[x, y, z].type = (byte)TileDataFile.instance.
-                            GetTileInfo(TileType.STONE_BIG).type;
-                    else if (y <= grass + stone) refWorldBlockData[x, y, z].type = (byte)TileDataFile.instance.
-                            GetTileInfo(TileType.GRASS).type;
+                    if (y <= stone)
+                    {
+                        worldBlockData[x, y, z].type = (byte)TileDataFile.instance.GetTileInfo(TileType.STONE_BIG).type;
+                    }
+                    else if (y <= grass + stone)
+                    {
+                        worldBlockData[x, y, z].type = (byte)TileDataFile.instance.GetTileInfo(TileType.GRASS).type;
+                    }
                 }
             }
         }
-        SimpleGenSphereCave(refWorldBlockData);
+        GenerateSphereCave(worldBlockData);
     }
 
     /// <summary>
     /// flood fill 알고리즘을 이용한 Sphere 모양의 동굴 생성.
     /// </summary>
-    /// <param name="refWorldBlockData"></param>
-    private static void SimpleGenSphereCave(Block[,,] refWorldBlockData)
+    /// <param name="worldBlockData"></param>
+    private static void GenerateSphereCave(Block[,,] worldBlockData)
     {
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         int startX = KojeomUtility.RandomInteger(3, gameWorldConfig.sub_world_x_size - 16);
@@ -70,14 +74,23 @@ public class WorldGenAlgorithms {
                     int cave = PerlinNoise(x, y * 3, z, 2, 18, 1);
                     if (cave > y)
                     {
-                        refWorldBlockData[x, y, z].type = (byte)TileDataFile.instance.
-                            GetTileInfo(TileType.NONE).type;
-                        FloodFill(new FloodFillNode(x, y, z), TileType.SAND, TileType.NONE,
-                                    refWorldBlockData, 4);
+                        worldBlockData[x, y, z].type = (byte)TileDataFile.instance.
+                            GetTileInfo(TileType.EMPTY).type;
+                        FloodFill(new FloodFillNode(x, y, z), TileType.SAND, TileType.EMPTY,
+                                    worldBlockData, 4);
                     }
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="worldBlockData"></param>
+    private static void GenerateTree(Block[,,] worldBlockData, Vector3 rootPosition)
+    {
+        
     }
 
     private static void FloodFill(FloodFillNode node, TileType targetType,

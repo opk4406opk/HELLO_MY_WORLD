@@ -7,7 +7,7 @@ using System.Collections.Generic;
 /// </summary>
 public enum TileType
 {
-    NONE = 0,
+    EMPTY = 0,
     GRASS = 1,
     STONE_BIG = 2,
     STONE_SMALL = 3,

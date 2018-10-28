@@ -99,7 +99,7 @@ public class Chunk : MonoBehaviour
                     blockIdxY = relativeY + _worldDataIdxY;
                     blockIdxZ = relativeZ + _worldDataIdxZ;
                     //This code will run for every block in the chunk
-                    if (GetBlockType(blockIdxX, blockIdxY, blockIdxZ) != TileType.NONE)
+                    if (GetBlockType(blockIdxX, blockIdxY, blockIdxZ) != TileType.EMPTY)
                     {
                         //if (Block(x, y + 1, z) == 0) CubeTop(x, y, z, Block(x, y, z));
                         //if (Block(x, y - 1, z) == 0) CubeBot(x, y, z, Block(x, y, z));
@@ -161,7 +161,7 @@ public class Chunk : MonoBehaviour
                z >= gameWorldConfig.sub_world_z_size ||
                z < 0)
         {
-            return TileType.NONE;
+            return TileType.EMPTY;
         }
         return (TileType)_world.worldBlockData[x, y, z].type;
     }
