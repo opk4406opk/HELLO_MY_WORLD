@@ -6,19 +6,19 @@ using System.Collections;
 /// </summary>
 public class BeltItemBlockData : ABeltItem
 {
-    private TileType blockTileType;
+    private BlockTileType blockTileType;
     public override void Init(string spriteName)
     {
         uiButton = gameObject.GetComponent<UIButton>();
         uiSprite.spriteName = spriteName;
     }
 
-    public void SetBlockTileType(TileType blockTileType)
+    public void SetBlockTileType(BlockTileType blockTileType)
     {
         this.blockTileType = blockTileType;
     }
 
-    public TileType GetBlockTileType()
+    public BlockTileType GetBlockTileType()
     {
         return blockTileType;
     }

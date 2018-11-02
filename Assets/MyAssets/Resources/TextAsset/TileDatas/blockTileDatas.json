@@ -48,5 +48,10 @@
     "posX": "0",
     "posY": "11",
     "type_name": "STONE_SILVER"
+  },
+  "10": {
+    "posX": "4",
+    "posY": "12",
+    "type_name": "TREE_LEAF"
   }
 }

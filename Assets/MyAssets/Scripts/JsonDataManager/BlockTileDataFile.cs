@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 블록 tile의 type 클래스.
 /// </summary>
-public enum TileType
+public enum BlockTileType
 {
     EMPTY = 0,
     GRASS = 1,
@@ -17,48 +17,49 @@ public enum TileType
     STONE_GOLD = 7,
     STONE_IRON = 8,
     STONE_SILVER = 9,
-    TILE_TOTAL_COUNT = 10
+    NORMAL_TREE_LEAF = 10,
+    TILE_TOTAL_COUNT
 }
 /// <summary>
 /// Tile 데이터를 주고받기 위한 내부 통신용 구조체.
 /// </summary>
-public struct TileInfo
+public struct BlockTileInfo
 {
     public string name;
     public int posX;
     public int posY;
-    public TileType type;
+    public BlockTileType type;
 }
 
 /// <summary>
 /// 블록 수정 또는 삭제, 월드 생성시에 쓰이는 TileDataFile.
 /// </summary>
-public class TileDataFile : MonoBehaviour {
+public class BlockTileDataFile : MonoBehaviour {
 
     private JSONObject tileDataJsonObj;
     private TextAsset jsonFile;
-    private Dictionary<TileType, TileInfo> tileDatas;
+    private Dictionary<BlockTileType, BlockTileInfo> tileDatas;
 
-    public static TileDataFile instance = null;
+    public static BlockTileDataFile instance = null;
     public void Init ()
     {
         //
         instance = this;
         //
-        tileDatas = new Dictionary<TileType, TileInfo>();
-        jsonFile = Resources.Load(ConstFilePath.TXT_TILE_DATAS) as TextAsset;
+        tileDatas = new Dictionary<BlockTileType, BlockTileInfo>();
+        jsonFile = Resources.Load(ConstFilePath.TXT_BLOCK_TILE_DATAS) as TextAsset;
         tileDataJsonObj = new JSONObject(jsonFile.text);
         AccessData(tileDataJsonObj);
     }
 
-    public TileInfo GetTileInfo(TileType type)
+    public BlockTileInfo GetBlockTileInfo(BlockTileType type)
     {
-        TileInfo tileInfo;
+        BlockTileInfo tileInfo;
         tileDatas.TryGetValue(type, out tileInfo);
         return tileInfo;
     }
 
-    public int GetTileInfoCount()
+    public int GetBlockTileInfoCount()
     {
         return tileDatas.Count;
     }
@@ -71,8 +72,8 @@ public class TileDataFile : MonoBehaviour {
                 var datas = jsonObj.list;
                 for(int idx = 0; idx < datas.Count; idx++)
                 {
-                    TileInfo tileInfo;
-                    tileInfo.type = (TileType)idx;
+                    BlockTileInfo tileInfo;
+                    tileInfo.type = (BlockTileType)idx;
                     var data = datas[idx].ToDictionary();
                     string extractedInfo;
                     data.TryGetValue("type_name", out extractedInfo);
@@ -82,7 +83,7 @@ public class TileDataFile : MonoBehaviour {
                     data.TryGetValue("posY", out extractedInfo);
                     tileInfo.posY = int.Parse(extractedInfo);
                     //
-                    tileDatas.Add((TileType)idx, tileInfo);
+                    tileDatas.Add((BlockTileType)idx, tileInfo);
                 }
                 break;
             default:

@@ -157,7 +157,7 @@ public class WindowInput : AInput
                 curInputData.keyCode = KeyCode.None;
                 curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
                 if (UIPopupSupervisor.isAllpopupClose == true)
-                    modifyTerrain.ReplaceBlockCursor(ray, clickPos, (byte)TileType.EMPTY);
+                    modifyTerrain.ReplaceBlockCursor(ray, clickPos, (byte)BlockTileType.EMPTY);
                 break;
             case INPUT_STATE.TALK_NPC_MOUSE:
                 curInputData.state = INPUT_STATE.NONE;

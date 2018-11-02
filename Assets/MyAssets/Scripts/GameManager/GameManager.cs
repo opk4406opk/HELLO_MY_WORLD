@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private SubWorldDataFile subWorldDataFile;
     [SerializeField]
-    private TileDataFile tileDataFile;
+    private BlockTileDataFile tileDataFile;
     [SerializeField]
     private ItemDataFile itemDataFile;
     [SerializeField]

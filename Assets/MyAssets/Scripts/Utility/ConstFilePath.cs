@@ -13,7 +13,7 @@ public class ConstFilePath
     public readonly static string TXT_TYPE_TO_ITEM_DATAS = "TextAsset/ItemDatas/typeToItemID";
     public readonly static string TXT_SUB_WORLD_DEFAULT_DATAS = "TextAsset/GameWorld/subworld_default";
     public readonly static string TXT_WORLD_CONFIG_DATA = "TextAsset/GameWorld/WorldConfigData";
-    public readonly static string TXT_TILE_DATAS = "TextAsset/TileDatas/tileDatas";
+    public readonly static string TXT_BLOCK_TILE_DATAS = "TextAsset/TileDatas/blockTileDatas";
 
     //캐릭터 렌더링 텍스처 베이스 파일이 있는 상대경로 directory.
     public readonly static string CH_RT_BASE_FILE_WITH_EXT = "Assets/MyAssets/Resources/Texture(RT)/userCharacters/CharRTBase.renderTexture";

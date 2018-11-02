@@ -222,7 +222,7 @@ public class GamePlayerController : MonoBehaviour {
                 gamePlayer.transform.position.y - 0.1f,
                 gamePlayer.transform.position.z);
         }
-        else if(collidedBlock.type != (byte)TileType.EMPTY)
+        else if(collidedBlock.type != (byte)BlockTileType.EMPTY)
         {
             KojeomCoroutineHelper.singleton.ReleaseRoutine("Jump");
         }
