@@ -2,52 +2,33 @@
 using System.Collections;
 
 public struct CustomAABB {
-
-    private Vector3 _minExtent;
-    public Vector3 minExtent
-    {
-        get { return _minExtent; }
-    }
-    private Vector3 _maxExtent;
-    public Vector3 maxExtent
-    {
-        get { return _maxExtent; }
-    }
+    public Vector3 minExtent;
+    public Vector3 maxExtent;
     // in world space coordinate
-    private Vector3 _centerPos;
-    public Vector3 centerPos
-    {
-        get { return _centerPos; }
-    }
-
-    private bool _isEnable;
-    public bool isEnable
-    {
-        set { _isEnable = value; }
-        get { return _isEnable; }
-    }
+    public Vector3 centerPos { get; private set; }
+    public bool isEnable { set; get; }
 
     public void MakeAABB(Vector3[] points)
     {
-        _minExtent = points[0];
-        _maxExtent = points[0];
+        minExtent = points[0];
+        maxExtent = points[0];
         for(int idx = 1; idx < points.Length; idx++)
         {
-            if (points[idx].x < _minExtent.x) _minExtent.x = points[idx].x;
-            else if (points[idx].x > _maxExtent.x) _maxExtent.x = points[idx].x;
-            if (points[idx].y < _minExtent.y) _minExtent.y = points[idx].y;
-            else if (points[idx].y > _maxExtent.y) _maxExtent.y = points[idx].y;
-            if (points[idx].z < _minExtent.z) _minExtent.z = points[idx].z;
-            else if (points[idx].z > _maxExtent.z) _maxExtent.z = points[idx].z;
+            if (points[idx].x < minExtent.x) minExtent.x = points[idx].x;
+            else if (points[idx].x > maxExtent.x) maxExtent.x = points[idx].x;
+            if (points[idx].y < minExtent.y) minExtent.y = points[idx].y;
+            else if (points[idx].y > maxExtent.y) maxExtent.y = points[idx].y;
+            if (points[idx].z < minExtent.z) minExtent.z = points[idx].z;
+            else if (points[idx].z > maxExtent.z) maxExtent.z = points[idx].z;
         }
 
-        _centerPos = (_maxExtent + _minExtent) / 2;
+        centerPos = (maxExtent + minExtent) / 2;
     }
     public void MakeAABB(Vector3 minExtent, Vector3 maxExtent)
     {
-        _minExtent = minExtent;
-        _maxExtent = maxExtent;
-        _centerPos = (_maxExtent + _minExtent) / 2;
+        this.minExtent = minExtent;
+        this.maxExtent = maxExtent;
+        centerPos = (this.maxExtent + this.minExtent) / 2;
     }
 
     /// <summary>
@@ -56,16 +37,16 @@ public struct CustomAABB {
     /// <param name="boxColl"></param>
     public void MakeAABB(BoxCollider boxColl)
     {
-        _minExtent = boxColl.bounds.min;
-        _maxExtent = boxColl.bounds.max;
-        _centerPos = (_maxExtent + _minExtent) / 2;
+        minExtent = boxColl.bounds.min;
+        maxExtent = boxColl.bounds.max;
+        centerPos = (maxExtent + minExtent) / 2;
     }
 
     public bool IsInterSectPoint(Vector3 point)
     {
-        if ((point.x > _minExtent.x && point.x < _maxExtent.x ) &&
-           (point.y > _minExtent.y && point.y < _maxExtent.y) &&
-           (point.z > _minExtent.z && point.z < _maxExtent.z))
+        if ((point.x > minExtent.x && point.x < maxExtent.x ) &&
+           (point.y > minExtent.y && point.y < maxExtent.y) &&
+           (point.z > minExtent.z && point.z < maxExtent.z))
         {
             return true;
         }
@@ -85,9 +66,9 @@ public struct CustomAABB {
 
     public bool IsInterSectAABB(CustomAABB other)
     {
-        if ((_minExtent.x <= other.maxExtent.x && _maxExtent.x >= other.minExtent.x) &&
-         (_minExtent.y <= other.maxExtent.y && _maxExtent.y >= other.minExtent.y) &&
-         (_minExtent.z <= other.maxExtent.z && _maxExtent.z >= other.minExtent.z))
+        if ((minExtent.x <= other.maxExtent.x && maxExtent.x >= other.minExtent.x) &&
+         (minExtent.y <= other.maxExtent.y && maxExtent.y >= other.minExtent.y) &&
+         (minExtent.z <= other.maxExtent.z && maxExtent.z >= other.minExtent.z))
         {
             return true;
         }

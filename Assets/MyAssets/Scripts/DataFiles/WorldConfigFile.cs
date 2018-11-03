@@ -10,6 +10,20 @@ public struct WorldConfig
     public int sub_world_z_size;
     public int chunk_size;
     public float chunkLoadIntervalSeconds;
+    public WorldEnviromentsConfig enviromentsConfig;
+}
+
+/// <summary>
+/// 나무, 산, 바다,강 등 여러 자연적인 형태에 대한 Config 정보.
+/// </summary>
+public struct WorldEnviromentsConfig
+{
+    //tree
+    public int minTreeBodyLength;
+    public int maxTreeBodyLength;
+    public int minTreeBranchDepth;
+    public int maxTreeBranchDepth;
+    //
 }
 
 public class WorldConfigFile : MonoBehaviour {
