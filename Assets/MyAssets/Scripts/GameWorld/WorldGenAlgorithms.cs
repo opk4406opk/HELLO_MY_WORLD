@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WorldGenAlgorithms {
-    
+
+    private static List<Vector3> treeSpawnCandidates = new List<Vector3>();
+
     private static bool CheckBoundary(int x, int y, int z)
     {
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
@@ -27,7 +29,6 @@ public class WorldGenAlgorithms {
             return CheckBoundary(x, y, z);
         }
     }
-    static bool isOne = false;
     public static void DefaultGenWorld(Block[,,] worldBlockData, MakeWorldParam param)
     {
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
@@ -50,26 +51,28 @@ public class WorldGenAlgorithms {
                     {
                         worldBlockData[x, y, z].type = (byte)BlockTileDataFile.instance.GetBlockTileInfo(BlockTileType.GRASS).type;
                     }
-                    else if(y > grass + stone && y < gameWorldConfig.sub_world_y_size - 5)
+                    else if (y > grass + stone && worldBlockData[x, y - 1, z].type != (byte)BlockTileType.EMPTY)
                     {
-                        if(isOne == false && x > gameWorldConfig.sub_world_x_size / 2 && z > gameWorldConfig.sub_world_z_size / 2)
-                        {
-                            GenerateDefaultTree(worldBlockData, new Vector3(x, y, z));
-                            isOne = true;
-                        }
-                        
+                        treeSpawnCandidates.Add(new Vector3(x, y, z));
                     }
                 }
             }
         }
-        GenerateSphereCave(worldBlockData);
+        // caves
+        GenerateSphereCaves(worldBlockData);
+        // normal trees.
+        int treeSpawnCount = KojeomUtility.RandomInteger(3, 7);
+        for (int spawnCnt = 0; spawnCnt < treeSpawnCount; spawnCnt++)
+        {
+            GenerateDefaultTree(worldBlockData, treeSpawnCandidates[KojeomUtility.RandomInteger(0, treeSpawnCandidates.Count)]);
+        }
     }
 
     /// <summary>
     /// flood fill 알고리즘을 이용한 Sphere 모양의 동굴 생성.
     /// </summary>
     /// <param name="worldBlockData"></param>
-    private static void GenerateSphereCave(Block[,,] worldBlockData)
+    private static void GenerateSphereCaves(Block[,,] worldBlockData)
     {
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         int startX = KojeomUtility.RandomInteger(3, gameWorldConfig.sub_world_x_size - 16);
