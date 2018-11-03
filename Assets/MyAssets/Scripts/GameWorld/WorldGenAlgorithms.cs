@@ -155,6 +155,14 @@ public class WorldGenAlgorithms {
         {
             MakeBranch(worldBlockData, new Vector3(branchPos.x - 1, branchPos.y + 1, branchPos.z), depth - 1, leafType);
         }
+        if (CheckBoundary((int)branchPos.x, (int)branchPos.y + 1, (int)branchPos.z + 1) == true)
+        {
+            MakeBranch(worldBlockData, new Vector3(branchPos.x, branchPos.y + 1, branchPos.z + 1), depth - 1, leafType);
+        }
+        if (CheckBoundary((int)branchPos.x, (int)branchPos.y + 1, (int)branchPos.z - 1) == true)
+        {
+            MakeBranch(worldBlockData, new Vector3(branchPos.x, branchPos.y + 1, branchPos.z - 1), depth - 1, leafType);
+        }
     }
 
     private static void FloodFill(FloodFillNode node, BlockTileType targetType,
