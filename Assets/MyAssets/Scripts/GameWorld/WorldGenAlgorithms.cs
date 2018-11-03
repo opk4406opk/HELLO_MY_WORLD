@@ -107,7 +107,7 @@ public class WorldGenAlgorithms {
     {
         int branchDepth = KojeomUtility.RandomInteger(3, 7);
         int treeBodyLength = KojeomUtility.RandomInteger(4, 6);
-        for(int idx = 1; idx <= treeBodyLength; idx++)
+        for(int idx = 0; idx < treeBodyLength; idx++)
         {
             if (CheckBoundary((int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z) == true)
             {
@@ -123,31 +123,21 @@ public class WorldGenAlgorithms {
     {
         if (depth == 0) return;
 
-        // make four leafs.
-        if(CheckBoundary((int)branchPos.x - 1, (int)branchPos.y, (int)branchPos.z) == true)
+        // make leafs.
+        for(int x = -1; x < 2; x++)
         {
-            worldBlockData[(int)branchPos.x - 1, (int)branchPos.y, (int)branchPos.z].type = (byte)leafType;
+            for(int y = -1; y < 2; y++)
+            {
+                for(int z = -1; z < 2; z++)
+                {
+                    if (CheckBoundary((int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z) == true)
+                    {
+                        worldBlockData[(int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z].type = (byte)leafType;
+                    }
+                }
+            }
         }
-        if (CheckBoundary((int)branchPos.x + 1, (int)branchPos.y, (int)branchPos.z) == true)
-        {
-            worldBlockData[(int)branchPos.x + 1, (int)branchPos.y, (int)branchPos.z].type = (byte)leafType;
-        }
-        if (CheckBoundary((int)branchPos.x, (int)branchPos.y + 1, (int)branchPos.z) == true)
-        {
-            worldBlockData[(int)branchPos.x, (int)branchPos.y + 1, (int)branchPos.z].type = (byte)leafType;
-        }
-        if (CheckBoundary((int)branchPos.x, (int)branchPos.y - 1, (int)branchPos.z) == true)
-        {
-            worldBlockData[(int)branchPos.x, (int)branchPos.y - 1, (int)branchPos.z].type = (byte)leafType;
-        }
-        if (CheckBoundary((int)branchPos.x, (int)branchPos.y, (int)branchPos.z + 1) == true)
-        {
-            worldBlockData[(int)branchPos.x, (int)branchPos.y, (int)branchPos.z + 1].type = (byte)leafType;
-        }
-        if (CheckBoundary((int)branchPos.x, (int)branchPos.y, (int)branchPos.z - 1) == true)
-        {
-            worldBlockData[(int)branchPos.x, (int)branchPos.y, (int)branchPos.z - 1].type = (byte)leafType;
-        }
+       
         // make more branches.
         MakeBranch(worldBlockData, branchPos, depth - 1, leafType);
         if(CheckBoundary((int)branchPos.x, (int)branchPos.y + 1 , (int)branchPos.z) == true)
