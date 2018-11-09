@@ -51,7 +51,7 @@ public class WorldGenAlgorithms {
                     {
                         worldBlockData[x, y, z].type = (byte)BlockTileDataFile.instance.GetBlockTileInfo(BlockTileType.GRASS).type;
                     }
-                    else if (y > grass + stone && worldBlockData[x, y - 1, z].type != (byte)BlockTileType.EMPTY)
+                    else if (y >= grass + stone && worldBlockData[x, y - 1, z].type != (byte)BlockTileType.EMPTY)
                     {
                         treeSpawnCandidates.Add(new Vector3(x, y, z));
                     }
