@@ -60,7 +60,7 @@ public class WorldGenAlgorithms {
         }
         // caves
         GenerateSphereCaves(worldBlockData);
-        // normal trees.
+        // various trees.
         int treeSpawnCount = KojeomUtility.RandomInteger(3, 7);
         for (int spawnCnt = 0; spawnCnt < treeSpawnCount; spawnCnt++)
         {
@@ -117,12 +117,12 @@ public class WorldGenAlgorithms {
                 worldBlockData[(int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z].type = (byte)BlockTileType.WOOD;
             }
         }
-        MakeBranch(worldBlockData, 
+        MakeDefaultBranch(worldBlockData, 
             new Vector3(rootPosition.x, rootPosition.y + treeBodyLength, rootPosition.z),
             branchDepth, BlockTileType.NORMAL_TREE_LEAF);
     }
 
-    private static void MakeBranch(Block[,,] worldBlockData, Vector3 branchPos, int depth, BlockTileType leafType)
+    private static void MakeDefaultBranch(Block[,,] worldBlockData, Vector3 branchPos, int depth, BlockTileType leafType)
     {
         if (depth == 0) return;
 
@@ -142,26 +142,42 @@ public class WorldGenAlgorithms {
         }
        
         // make more branches.
-        MakeBranch(worldBlockData, branchPos, depth - 1, leafType);
-        if(CheckBoundary((int)branchPos.x, (int)branchPos.y + 1 , (int)branchPos.z) == true)
+        MakeDefaultBranch(worldBlockData, branchPos, depth - 1, leafType);
+        if(CheckBoundary((int)branchPos.x, (int)branchPos.y + 1 , (int)branchPos.z) == true) MakeDefaultBranch(worldBlockData, new Vector3(branchPos.x, branchPos.y + 1, branchPos.z), depth - 1, leafType);
+        if (CheckBoundary((int)branchPos.x + 1, (int)branchPos.y + 1, (int)branchPos.z) == true) MakeDefaultBranch(worldBlockData, new Vector3(branchPos.x + 1, branchPos.y + 1, branchPos.z), depth - 1, leafType);
+        if (CheckBoundary((int)branchPos.x - 1, (int)branchPos.y + 1, (int)branchPos.z) == true) MakeDefaultBranch(worldBlockData, new Vector3(branchPos.x - 1, branchPos.y + 1, branchPos.z), depth - 1, leafType);
+        if (CheckBoundary((int)branchPos.x, (int)branchPos.y + 1, (int)branchPos.z + 1) == true) MakeDefaultBranch(worldBlockData, new Vector3(branchPos.x, branchPos.y + 1, branchPos.z + 1), depth - 1, leafType);
+        if (CheckBoundary((int)branchPos.x, (int)branchPos.y + 1, (int)branchPos.z - 1) == true) MakeDefaultBranch(worldBlockData, new Vector3(branchPos.x, branchPos.y + 1, branchPos.z - 1), depth - 1, leafType);
+    }
+
+    private static void GenerateSqaureTree(Block[,,] worldBlockData, Vector3 rootPosition)
+    {
+        int treeBodyLength = KojeomUtility.RandomInteger(4, 6);
+        for (int idx = 0; idx < treeBodyLength; idx++)
         {
-            MakeBranch(worldBlockData, new Vector3(branchPos.x, branchPos.y + 1, branchPos.z), depth - 1, leafType);
+            if (CheckBoundary((int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z) == true)
+            {
+                worldBlockData[(int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z].type = (byte)BlockTileType.WOOD;
+            }
         }
-        if (CheckBoundary((int)branchPos.x + 1, (int)branchPos.y + 1, (int)branchPos.z) == true)
+        MakeSqaureBranch(worldBlockData, new Vector3(rootPosition.x, rootPosition.y + treeBodyLength, rootPosition.z), 2, BlockTileType.NORMAL_TREE_LEAF);
+    }
+
+    private static void MakeSqaureBranch(Block[,,] worldBlockData, Vector3 branchPos, int sqaureFactor, BlockTileType leafType)
+    {
+        // make leafs.
+        for (int x = -1; x < sqaureFactor; x++)
         {
-            MakeBranch(worldBlockData, new Vector3(branchPos.x + 1, branchPos.y + 1, branchPos.z), depth - 1, leafType);
-        }
-        if (CheckBoundary((int)branchPos.x - 1, (int)branchPos.y + 1, (int)branchPos.z) == true)
-        {
-            MakeBranch(worldBlockData, new Vector3(branchPos.x - 1, branchPos.y + 1, branchPos.z), depth - 1, leafType);
-        }
-        if (CheckBoundary((int)branchPos.x, (int)branchPos.y + 1, (int)branchPos.z + 1) == true)
-        {
-            MakeBranch(worldBlockData, new Vector3(branchPos.x, branchPos.y + 1, branchPos.z + 1), depth - 1, leafType);
-        }
-        if (CheckBoundary((int)branchPos.x, (int)branchPos.y + 1, (int)branchPos.z - 1) == true)
-        {
-            MakeBranch(worldBlockData, new Vector3(branchPos.x, branchPos.y + 1, branchPos.z - 1), depth - 1, leafType);
+            for (int y = -1; y < sqaureFactor; y++)
+            {
+                for (int z = -1; z < sqaureFactor; z++)
+                {
+                    if (CheckBoundary((int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z) == true)
+                    {
+                        worldBlockData[(int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z].type = (byte)leafType;
+                    }
+                }
+            }
         }
     }
 
