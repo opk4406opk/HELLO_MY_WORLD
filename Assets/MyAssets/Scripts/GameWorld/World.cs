@@ -23,12 +23,7 @@ public class World : MonoBehaviour
     {
         set { _chunkPrefab = value; }
     }
-    // 1개의 월드에는 N개의 Chunk가 있으며 각 Chunk는 M개의 Block을 가지고 있다.
-    private Chunk[,,] _chunkGroup;
-    public Chunk[,,] chunkGroup
-    {
-        get { return _chunkGroup; }
-    }
+    public Chunk[,,] chunkGroup { get; private set; }
 
     private string _worldName;
     public string worldName
@@ -97,8 +92,8 @@ public class World : MonoBehaviour
     
     private IEnumerator LoadChunks()
     {
-        for (int x = 0; x < _chunkGroup.GetLength(0); x++)
-            for (int z = 0; z < _chunkGroup.GetLength(2); z++)
+        for (int x = 0; x < chunkGroup.GetLength(0); x++)
+            for (int z = 0; z < chunkGroup.GetLength(2); z++)
             {
                 //float dist = Vector2.Distance(new Vector2(x * chunkSize,
                 //        z * chunkSize),
@@ -112,14 +107,14 @@ public class World : MonoBehaviour
                 //{
                 //    if (_chunkGroup[x, 0, z] != null) UnloadColumn(x, z);
                 //}
-                if (_chunkGroup[x, 0, z] == null)
+                if (chunkGroup[x, 0, z] == null)
                 {
-                    for (int y = 0; y < _chunkGroup.GetLength(1); y++)
+                    for (int y = 0; y < chunkGroup.GetLength(1); y++)
                     {
-                        if ((_chunkGroup[x, y, z] != null) &&
-                            (_chunkGroup[x, y, z].gameObject.activeSelf == true))
+                        if ((chunkGroup[x, y, z] != null) &&
+                            (chunkGroup[x, y, z].gameObject.activeSelf == true))
                         {
-                            _chunkGroup[x, y, z].gameObject.SetActive(true);
+                            chunkGroup[x, y, z].gameObject.SetActive(true);
                             continue;
                         }
                         // 유니티엔진에서 제공되는 게임 오브젝트들의 중점(=월드좌표에서의 위치)은
@@ -134,15 +129,15 @@ public class World : MonoBehaviour
                                                             new Quaternion(0, 0, 0, 0)) as GameObject;
                         newChunk.transform.parent = gameObject.transform;
                         newChunk.transform.name = "Chunk_" + chunkNumber++;
-                        _chunkGroup[x, y, z] = newChunk.GetComponent("Chunk") as Chunk;
-                        _chunkGroup[x, y, z].world = this;
-                        _chunkGroup[x, y, z].worldDataIdxX = x * chunkSize;
-                        _chunkGroup[x, y, z].worldDataIdxY = y * chunkSize;
-                        _chunkGroup[x, y, z].worldDataIdxZ = z * chunkSize;
-                        _chunkGroup[x, y, z].worldCoordX = worldCoordX + worldOffsetX;
-                        _chunkGroup[x, y, z].worldCoordY = worldCoordY;
-                        _chunkGroup[x, y, z].worldCoordZ = worldCoordZ + worldOffsetZ;
-                        _chunkGroup[x, y, z].Init();
+                        chunkGroup[x, y, z] = newChunk.GetComponent("Chunk") as Chunk;
+                        chunkGroup[x, y, z].world = this;
+                        chunkGroup[x, y, z].worldDataIdxX = x * chunkSize;
+                        chunkGroup[x, y, z].worldDataIdxY = y * chunkSize;
+                        chunkGroup[x, y, z].worldDataIdxZ = z * chunkSize;
+                        chunkGroup[x, y, z].worldCoordX = worldCoordX + worldOffsetX;
+                        chunkGroup[x, y, z].worldCoordY = worldCoordY;
+                        chunkGroup[x, y, z].worldCoordZ = worldCoordZ + worldOffsetZ;
+                        chunkGroup[x, y, z].Init();
                         yield return new WaitForSeconds(WorldConfigFile.instance.GetConfig().chunkLoadIntervalSeconds);
                     }
                 }
@@ -151,10 +146,10 @@ public class World : MonoBehaviour
 
     private void UnloadColumn(int x, int z)
     {
-		for (int y=0; y< _chunkGroup.GetLength(1); y++)
+		for (int y=0; y< chunkGroup.GetLength(1); y++)
         {
             //Object.Destroy(chunkGroup [x, y, z].gameObject);
-            _chunkGroup[x, y, z].gameObject.SetActive(false);
+            chunkGroup[x, y, z].gameObject.SetActive(false);
         }
 	}
 
@@ -181,7 +176,7 @@ public class World : MonoBehaviour
 
     private void InitChunkGroup()
     {
-        _chunkGroup = new Chunk[Mathf.FloorToInt(worldX / chunkSize), Mathf.FloorToInt(worldY / chunkSize), Mathf.FloorToInt(worldZ / chunkSize)];
+        chunkGroup = new Chunk[Mathf.FloorToInt(worldX / chunkSize), Mathf.FloorToInt(worldY / chunkSize), Mathf.FloorToInt(worldZ / chunkSize)];
     }
 
     private int PerlinNoise (int x, int y, int z, float scale, float height, float power)
