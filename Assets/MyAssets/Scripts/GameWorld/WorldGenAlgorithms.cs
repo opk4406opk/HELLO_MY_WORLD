@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TreeType
+{
+    NORMAL = 0,
+    SQAURE = 1,
+    COUNT
+}
+
 public class WorldGenAlgorithms {
 
     private static List<Vector3> treeSpawnCandidates = new List<Vector3>();
@@ -64,7 +71,16 @@ public class WorldGenAlgorithms {
         int treeSpawnCount = KojeomUtility.RandomInteger(3, 7);
         for (int spawnCnt = 0; spawnCnt < treeSpawnCount; spawnCnt++)
         {
-            GenerateDefaultTree(worldBlockData, treeSpawnCandidates[KojeomUtility.RandomInteger(0, treeSpawnCandidates.Count)]);
+            TreeType randTreeType = (TreeType)KojeomUtility.RandomInteger(0, (int)TreeType.COUNT);
+            switch(randTreeType)
+            {
+                case TreeType.NORMAL:
+                    GenerateDefaultTree(worldBlockData, treeSpawnCandidates[KojeomUtility.RandomInteger(0, treeSpawnCandidates.Count)]);
+                    break;
+                case TreeType.SQAURE:
+                    GenerateSqaureTree(worldBlockData, treeSpawnCandidates[KojeomUtility.RandomInteger(0, treeSpawnCandidates.Count)]);
+                    break;
+            }
         }
     }
 
@@ -160,7 +176,7 @@ public class WorldGenAlgorithms {
                 worldBlockData[(int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z].type = (byte)BlockTileType.WOOD;
             }
         }
-        MakeSqaureBranch(worldBlockData, new Vector3(rootPosition.x, rootPosition.y + treeBodyLength, rootPosition.z), 2, BlockTileType.NORMAL_TREE_LEAF);
+        MakeSqaureBranch(worldBlockData, new Vector3(rootPosition.x, rootPosition.y + treeBodyLength, rootPosition.z), 2, BlockTileType.SQAURE_TREE_LEAF);
     }
 
     private static void MakeSqaureBranch(Block[,,] worldBlockData, Vector3 branchPos, int sqaureFactor, BlockTileType leafType)

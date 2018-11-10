@@ -52,6 +52,11 @@
   "10": {
     "posX": "4",
     "posY": "12",
-    "type_name": "TREE_LEAF"
+    "type_name": "NORMAL_TREE_LEAF"
+  },
+  "11": {
+    "posX": "4",
+    "posY": "7",
+    "type_name": "SQAURE_TREE_LEAF"
   }
 }
