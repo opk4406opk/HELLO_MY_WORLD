@@ -40,7 +40,7 @@ public class PlayerMoveState : IState
         var virtualJoystick = VirtualJoystickManager.singleton;
         if(virtualJoystick != null)
         {
-            // 여기서 TransformDirection 하는 이유??
+            // 스크린좌표에서 얻은 2차원 방향값을 3차원 좌표계로 변환.
             dir = gamePlayer.transform.TransformDirection(virtualJoystick.GetMoveDirection());
         }
         return dir;

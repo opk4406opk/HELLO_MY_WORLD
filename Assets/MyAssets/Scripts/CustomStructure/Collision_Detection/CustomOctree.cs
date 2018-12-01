@@ -49,6 +49,7 @@ public struct CollideInfo
         return containWorld.worldBlockData[(int)hitBlockCenter.x, (int)hitBlockCenter.y, (int)hitBlockCenter.z];
     }
 }
+
 public class CustomOctree
 {
     private COTNode root;
