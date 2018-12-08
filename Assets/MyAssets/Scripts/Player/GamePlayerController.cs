@@ -138,7 +138,11 @@ public class GamePlayerController : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        // camera follow player
+        if(gamePlayer == null)
+        {
+            return;
+        }
+        //
         Vector3 playerPos = gamePlayer.transform.position;
         playerPos.y += 2.0f;
         playerCamera.transform.position = playerPos;

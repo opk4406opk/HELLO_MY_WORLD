@@ -17,7 +17,7 @@ public class ModifyTerrain : MonoBehaviour
     [SerializeField]
     private ItemDataFile itemDataFile;
     [SerializeField]
-    private GameManager gameMgr;
+    private GameManager gameManager;
 
     private World world;
     private int chunkSize = 0;
