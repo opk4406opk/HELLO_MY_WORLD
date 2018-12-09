@@ -192,36 +192,36 @@ public class ModifyTerrain : MonoBehaviour
         updateY = Mathf.FloorToInt(y / chunkSize);
         updateZ = Mathf.FloorToInt(z / chunkSize);
 
-        world.chunkGroup[updateX, updateY, updateZ].update = true;
+        world.blcokChunkGroup[updateX, updateY, updateZ].update = true;
 
         if (x - (chunkSize * updateX) == 0 && updateX != 0)
         {
-            world.chunkGroup[updateX - 1, updateY, updateZ].update = true;
+            world.blcokChunkGroup[updateX - 1, updateY, updateZ].update = true;
         }
 
-        if (x - (chunkSize * updateX) == gameWorldConfig.chunk_size && updateX != world.chunkGroup.GetLength(0) - 1)
+        if (x - (chunkSize * updateX) == gameWorldConfig.chunk_size && updateX != world.blcokChunkGroup.GetLength(0) - 1)
         {
-            world.chunkGroup[updateX + 1, updateY, updateZ].update = true;
+            world.blcokChunkGroup[updateX + 1, updateY, updateZ].update = true;
         }
 
         if (y - (chunkSize * updateY) == 0 && updateY != 0)
         {
-            world.chunkGroup[updateX, updateY - 1, updateZ].update = true;
+            world.blcokChunkGroup[updateX, updateY - 1, updateZ].update = true;
         }
 
-        if (y - (chunkSize * updateY) == gameWorldConfig.chunk_size && updateY != world.chunkGroup.GetLength(1) - 1)
+        if (y - (chunkSize * updateY) == gameWorldConfig.chunk_size && updateY != world.blcokChunkGroup.GetLength(1) - 1)
         {
-            world.chunkGroup[updateX, updateY + 1, updateZ].update = true;
+            world.blcokChunkGroup[updateX, updateY + 1, updateZ].update = true;
         }
 
         if (z - (chunkSize * updateZ) == 0 && updateZ != 0)
         {
-            world.chunkGroup[updateX, updateY, updateZ - 1].update = true;
+            world.blcokChunkGroup[updateX, updateY, updateZ - 1].update = true;
         }
 
-        if (z - (chunkSize * updateZ) == gameWorldConfig.chunk_size && updateZ != world.chunkGroup.GetLength(2) - 1)
+        if (z - (chunkSize * updateZ) == gameWorldConfig.chunk_size && updateZ != world.blcokChunkGroup.GetLength(2) - 1)
         {
-            world.chunkGroup[updateX, updateY, updateZ + 1].update = true;
+            world.blcokChunkGroup[updateX, updateY, updateZ + 1].update = true;
         }
 
     }
