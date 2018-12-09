@@ -23,7 +23,7 @@ public class World : MonoBehaviour
     {
         set { _chunkPrefab = value; }
     }
-    public BlockChunk[,,] blcokChunkGroup { get; private set; }
+    public CommonChunk[,,] commonChunkGroup { get; private set; }
 
     private string _worldName;
     public string worldName
@@ -92,8 +92,8 @@ public class World : MonoBehaviour
     
     private IEnumerator LoadChunks()
     {
-        for (int x = 0; x < blcokChunkGroup.GetLength(0); x++)
-            for (int z = 0; z < blcokChunkGroup.GetLength(2); z++)
+        for (int x = 0; x < commonChunkGroup.GetLength(0); x++)
+            for (int z = 0; z < commonChunkGroup.GetLength(2); z++)
             {
                 //float dist = Vector2.Distance(new Vector2(x * chunkSize,
                 //        z * chunkSize),
@@ -107,14 +107,14 @@ public class World : MonoBehaviour
                 //{
                 //    if (_chunkGroup[x, 0, z] != null) UnloadColumn(x, z);
                 //}
-                if (blcokChunkGroup[x, 0, z] == null)
+                if (commonChunkGroup[x, 0, z] == null)
                 {
-                    for (int y = 0; y < blcokChunkGroup.GetLength(1); y++)
+                    for (int y = 0; y < commonChunkGroup.GetLength(1); y++)
                     {
-                        if ((blcokChunkGroup[x, y, z] != null) &&
-                            (blcokChunkGroup[x, y, z].gameObject.activeSelf == true))
+                        if ((commonChunkGroup[x, y, z] != null) &&
+                            (commonChunkGroup[x, y, z].gameObject.activeSelf == true))
                         {
-                            blcokChunkGroup[x, y, z].gameObject.SetActive(true);
+                            commonChunkGroup[x, y, z].gameObject.SetActive(true);
                             continue;
                         }
                         // 유니티엔진에서 제공되는 게임 오브젝트들의 중점(=월드좌표에서의 위치)은
@@ -129,15 +129,15 @@ public class World : MonoBehaviour
                                                             new Quaternion(0, 0, 0, 0)) as GameObject;
                         newChunk.transform.parent = gameObject.transform;
                         newChunk.transform.name = "Chunk_" + chunkNumber++;
-                        blcokChunkGroup[x, y, z] = newChunk.GetComponent("BlockChunk") as BlockChunk;
-                        blcokChunkGroup[x, y, z].world = this;
-                        blcokChunkGroup[x, y, z].worldDataIdxX = x * chunkSize;
-                        blcokChunkGroup[x, y, z].worldDataIdxY = y * chunkSize;
-                        blcokChunkGroup[x, y, z].worldDataIdxZ = z * chunkSize;
-                        blcokChunkGroup[x, y, z].worldCoordX = worldCoordX + worldOffsetX;
-                        blcokChunkGroup[x, y, z].worldCoordY = worldCoordY;
-                        blcokChunkGroup[x, y, z].worldCoordZ = worldCoordZ + worldOffsetZ;
-                        blcokChunkGroup[x, y, z].Init();
+                        commonChunkGroup[x, y, z] = newChunk.GetComponent("CommonChunk") as CommonChunk;
+                        commonChunkGroup[x, y, z].world = this;
+                        commonChunkGroup[x, y, z].worldDataIdxX = x * chunkSize;
+                        commonChunkGroup[x, y, z].worldDataIdxY = y * chunkSize;
+                        commonChunkGroup[x, y, z].worldDataIdxZ = z * chunkSize;
+                        commonChunkGroup[x, y, z].worldCoordX = worldCoordX + worldOffsetX;
+                        commonChunkGroup[x, y, z].worldCoordY = worldCoordY;
+                        commonChunkGroup[x, y, z].worldCoordZ = worldCoordZ + worldOffsetZ;
+                        commonChunkGroup[x, y, z].Init();
                         yield return new WaitForSeconds(WorldConfigFile.instance.GetConfig().chunkLoadIntervalSeconds);
                     }
                 }
@@ -146,10 +146,10 @@ public class World : MonoBehaviour
 
     private void UnloadColumn(int x, int z)
     {
-		for (int y=0; y< blcokChunkGroup.GetLength(1); y++)
+		for (int y=0; y< commonChunkGroup.GetLength(1); y++)
         {
             //Object.Destroy(chunkGroup [x, y, z].gameObject);
-            blcokChunkGroup[x, y, z].gameObject.SetActive(false);
+            commonChunkGroup[x, y, z].gameObject.SetActive(false);
         }
 	}
 
@@ -176,7 +176,7 @@ public class World : MonoBehaviour
 
     private void InitChunkGroup()
     {
-        blcokChunkGroup = new BlockChunk[Mathf.FloorToInt(worldX / chunkSize), Mathf.FloorToInt(worldY / chunkSize), Mathf.FloorToInt(worldZ / chunkSize)];
+        commonChunkGroup = new CommonChunk[Mathf.FloorToInt(worldX / chunkSize), Mathf.FloorToInt(worldY / chunkSize), Mathf.FloorToInt(worldZ / chunkSize)];
     }
 
     private int PerlinNoise (int x, int y, int z, float scale, float height, float power)

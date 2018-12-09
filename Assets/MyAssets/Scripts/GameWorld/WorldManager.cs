@@ -50,7 +50,7 @@ public class WorldManager : MonoBehaviour
     [SerializeField]
     private GameObject worldPrefab;
     [SerializeField]
-    private GameObject chunkPrefab;
+    private GameObject commonChunkPrefab;
     [SerializeField]
     private Transform worldGroupTrans;
 
@@ -135,7 +135,7 @@ public class WorldManager : MonoBehaviour
             GameObject newSubWorld = Instantiate(worldPrefab, new Vector3(0, 0, 0),
                new Quaternion(0, 0, 0, 0)) as GameObject;
             World subWorld = newSubWorld.GetComponent<World>();
-            subWorld.chunkPrefab = chunkPrefab;
+            subWorld.chunkPrefab = commonChunkPrefab;
             subWorld.playerTrans = PlayerManager.instance.myGamePlayer.transform;
             subWorld.worldName = subWorldData.worldName;
             subWorld.idx = subWorldData.worldIdx;

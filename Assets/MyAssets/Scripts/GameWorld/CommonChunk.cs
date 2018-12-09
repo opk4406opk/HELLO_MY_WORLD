@@ -6,7 +6,7 @@ using System.Collections.Generic;
 /// 게임내 블록 덩어리를 의미하는 Chunk 클래스.
 /// -> 1개의 Chunk는 N개의 면으로 구성되어 하나의 메쉬로 생성된다.
 /// </summary>
-public class BlockChunk : AChunk
+public class CommonChunk : AChunk
 {
     protected override void LateUpdate()
     {
