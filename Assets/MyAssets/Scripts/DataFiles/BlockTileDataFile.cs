@@ -19,6 +19,7 @@ public enum BlockTileType
     STONE_SILVER = 9,
     NORMAL_TREE_LEAF = 10,
     SQAURE_TREE_LEAF = 11,
+    WATER = 12,
     TILE_TOTAL_COUNT
 }
 /// <summary>

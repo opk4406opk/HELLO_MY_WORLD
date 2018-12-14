@@ -1,12 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-/// <summary>
-/// 게임내 블록 덩어리를 의미하는 Chunk 클래스.
-/// -> 1개의 Chunk는 N개의 면으로 구성되어 하나의 메쉬로 생성된다.
-/// </summary>
-public class CommonChunk : AChunk
+public class WaterChunk : AChunk
 {
     protected override void LateUpdate()
     {
@@ -16,7 +12,6 @@ public class CommonChunk : AChunk
             _update = false;
         }
     }
-
     public override void Init()
     {
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
@@ -39,7 +34,7 @@ public class CommonChunk : AChunk
                     blockIdxY = relativeY + _worldDataIdxY;
                     blockIdxZ = relativeZ + _worldDataIdxZ;
                     //This code will run for every block in the chunk
-                    if (GetBlockType(blockIdxX, blockIdxY, blockIdxZ) != BlockTileType.EMPTY)
+                    if (GetBlockType(blockIdxX, blockIdxY, blockIdxZ) == BlockTileType.WATER)
                     {
                         //if (Block(x, y + 1, z) == 0) CubeTop(x, y, z, Block(x, y, z));
                         //if (Block(x, y - 1, z) == 0) CubeBot(x, y, z, Block(x, y, z));
@@ -65,7 +60,7 @@ public class CommonChunk : AChunk
                         Vector3[] points = new Vector3[8];
                         points[0] = new Vector3(cubeX, cubeY, cubeZ);
                         points[1] = new Vector3(cubeX + 1, cubeY, cubeZ);
-                        points[2] = new Vector3(cubeX + 1, cubeY, cubeZ + 1 );
+                        points[2] = new Vector3(cubeX + 1, cubeY, cubeZ + 1);
                         points[3] = new Vector3(cubeX, cubeY, cubeZ + 1);
                         points[4] = new Vector3(cubeX, cubeY - 1, cubeZ);
                         points[5] = new Vector3(cubeX + 1, cubeY - 1, cubeZ);
@@ -89,4 +84,6 @@ public class CommonChunk : AChunk
         }
         UpdateMesh();
     }
+
 }
+

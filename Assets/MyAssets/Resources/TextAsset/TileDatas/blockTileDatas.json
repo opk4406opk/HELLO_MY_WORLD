@@ -58,5 +58,10 @@
     "posX": "4",
     "posY": "7",
     "type_name": "SQAURE_TREE_LEAF"
+  },
+  "12": {
+    "posX": "15",
+    "posY": "0",
+    "type_name": "WATER"
   }
 }
