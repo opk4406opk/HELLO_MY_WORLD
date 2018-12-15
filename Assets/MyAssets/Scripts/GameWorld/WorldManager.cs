@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -47,10 +45,6 @@ public enum WorldStatusInfo
 
 public class WorldManager : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject worldPrefab;
-    [SerializeField]
-    private GameObject commonChunkPrefab;
     [SerializeField]
     private Transform worldGroupTrans;
 
@@ -132,11 +126,9 @@ public class WorldManager : MonoBehaviour
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
         foreach(var subWorldData in SubWorldDataFile.instance.subWorldDataList)
         {
-            GameObject newSubWorld = Instantiate(worldPrefab, new Vector3(0, 0, 0),
+            GameObject newSubWorld = Instantiate(PrefabStorage.instance.subWorldPrefab, new Vector3(0, 0, 0),
                new Quaternion(0, 0, 0, 0)) as GameObject;
             World subWorld = newSubWorld.GetComponent<World>();
-            subWorld.chunkPrefab = commonChunkPrefab;
-            subWorld.playerTrans = PlayerManager.instance.myGamePlayer.transform;
             subWorld.worldName = subWorldData.worldName;
             subWorld.idx = subWorldData.worldIdx;
             newSubWorld.transform.parent = worldGroupTrans;

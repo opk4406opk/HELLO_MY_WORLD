@@ -70,6 +70,20 @@ public class ConstFilePath
     /// 로그파일이 저장되는 윈도우 탐색기 경로.
     /// </summary>
     public readonly static string LOG_FILE_ROOT_WIN_PATH = ".\\GameLog\\";
+
+    /// <summary>
+    /// 공용 청크 프리팹 경로.
+    /// </summary>
+    public readonly static string COMMON_CHUNK_PREFAB = "GamePrefabs/CommonChunk";
+    /// <summary>
+    /// 워터 청크 프리팹 경로.
+    /// </summary>
+    public readonly static string WATER_CHUNK_PREFAB = "GamePrefabs/WaterChunk";
+
+    /// <summary>
+    /// 서브월드 프리팹 경로.
+    /// </summary>
+    public readonly static string SUB_WORLD_PREFAB = "GamePrefabs/SubWorld";
 }
 
 

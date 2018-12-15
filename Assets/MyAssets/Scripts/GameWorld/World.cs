@@ -13,17 +13,7 @@ public class World : MonoBehaviour
     private readonly float DIST_TO_LOAD = 48.0f;
     private readonly float DIST_TO_UNLOAD = 96.0f;
 
-    private Transform _playerTrans;
-    public Transform playerTrans
-    {
-        set { _playerTrans = value; }
-    }
-    private GameObject _chunkPrefab;
-    public GameObject chunkPrefab
-    {
-        set { _chunkPrefab = value; }
-    }
-    public CommonChunk[,,] commonChunkGroup { get; private set; }
+    public AChunk[,,] chunkGroup { get; private set; }
 
     private string _worldName;
     public string worldName
@@ -64,8 +54,22 @@ public class World : MonoBehaviour
         worldOffsetX = offsetX;
         worldOffsetZ = offsetZ;
 
-        InitWorldData();
-        InitChunkGroup();
+        // init world data.
+        worldBlockData = new Block[worldX, worldY, worldZ];
+        for (int x = 0; x < worldX; x++)
+        {
+            for (int y = 0; y < worldY; y++)
+            {
+                for (int z = 0; z < worldZ; z++)
+                {
+                    worldBlockData[x, y, z] = new Block();
+                    worldBlockData[x, y, z].isRendered = false;
+                }
+            }
+        }
+        // init chunk group.
+        chunkGroup = new AChunk[Mathf.FloorToInt(worldX / chunkSize), Mathf.FloorToInt(worldY / chunkSize), Mathf.FloorToInt(worldZ / chunkSize)];
+
         if (GameStatus.isLoadGame == false)
         {
             MakeWorldParam param;
@@ -92,29 +96,17 @@ public class World : MonoBehaviour
     
     private IEnumerator LoadChunks()
     {
-        for (int x = 0; x < commonChunkGroup.GetLength(0); x++)
-            for (int z = 0; z < commonChunkGroup.GetLength(2); z++)
+        for (int x = 0; x < chunkGroup.GetLength(0); x++)
+            for (int z = 0; z < chunkGroup.GetLength(2); z++)
             {
-                //float dist = Vector2.Distance(new Vector2(x * chunkSize,
-                //        z * chunkSize),
-                //        new Vector2(_playerTrans.position.x, _playerTrans.position.z));
-
-                //if (dist < DIST_TO_LOAD)
-                //{
-                //    if (_chunkGroup[x, 0, z] == null) GenColumn(x, z);
-                //}
-                //else if (dist > DIST_TO_UNLOAD)
-                //{
-                //    if (_chunkGroup[x, 0, z] != null) UnloadColumn(x, z);
-                //}
-                if (commonChunkGroup[x, 0, z] == null)
+                if (chunkGroup[x, 0, z] == null)
                 {
-                    for (int y = 0; y < commonChunkGroup.GetLength(1); y++)
+                    for (int y = 0; y < chunkGroup.GetLength(1); y++)
                     {
-                        if ((commonChunkGroup[x, y, z] != null) &&
-                            (commonChunkGroup[x, y, z].gameObject.activeSelf == true))
+                        if ((chunkGroup[x, y, z] != null) &&
+                            (chunkGroup[x, y, z].gameObject.activeSelf == true))
                         {
-                            commonChunkGroup[x, y, z].gameObject.SetActive(true);
+                            chunkGroup[x, y, z].gameObject.SetActive(true);
                             continue;
                         }
                         // 유니티엔진에서 제공되는 게임 오브젝트들의 중점(=월드좌표에서의 위치)은
@@ -125,19 +117,19 @@ public class World : MonoBehaviour
                         float worldCoordX = x * chunkSize - 0.5f;
                         float worldCoordY = y * chunkSize + 0.5f;
                         float worldCoordZ = z * chunkSize - 0.5f;
-                        GameObject newChunk = Instantiate(_chunkPrefab, new Vector3(0, 0, 0),
+                        GameObject newChunk = Instantiate(PrefabStorage.instance.commonChunkPrefab, new Vector3(0, 0, 0),
                                                             new Quaternion(0, 0, 0, 0)) as GameObject;
                         newChunk.transform.parent = gameObject.transform;
                         newChunk.transform.name = "Chunk_" + chunkNumber++;
-                        commonChunkGroup[x, y, z] = newChunk.GetComponent("CommonChunk") as CommonChunk;
-                        commonChunkGroup[x, y, z].world = this;
-                        commonChunkGroup[x, y, z].worldDataIdxX = x * chunkSize;
-                        commonChunkGroup[x, y, z].worldDataIdxY = y * chunkSize;
-                        commonChunkGroup[x, y, z].worldDataIdxZ = z * chunkSize;
-                        commonChunkGroup[x, y, z].worldCoordX = worldCoordX + worldOffsetX;
-                        commonChunkGroup[x, y, z].worldCoordY = worldCoordY;
-                        commonChunkGroup[x, y, z].worldCoordZ = worldCoordZ + worldOffsetZ;
-                        commonChunkGroup[x, y, z].Init();
+                        chunkGroup[x, y, z] = newChunk.GetComponent("CommonChunk") as CommonChunk;
+                        chunkGroup[x, y, z].world = this;
+                        chunkGroup[x, y, z].worldDataIdxX = x * chunkSize;
+                        chunkGroup[x, y, z].worldDataIdxY = y * chunkSize;
+                        chunkGroup[x, y, z].worldDataIdxZ = z * chunkSize;
+                        chunkGroup[x, y, z].worldCoordX = worldCoordX + worldOffsetX;
+                        chunkGroup[x, y, z].worldCoordY = worldCoordY;
+                        chunkGroup[x, y, z].worldCoordZ = worldCoordZ + worldOffsetZ;
+                        chunkGroup[x, y, z].Init();
                         yield return new WaitForSeconds(WorldConfigFile.instance.GetConfig().chunkLoadIntervalSeconds);
                     }
                 }
@@ -146,37 +138,16 @@ public class World : MonoBehaviour
 
     private void UnloadColumn(int x, int z)
     {
-		for (int y=0; y< commonChunkGroup.GetLength(1); y++)
+		for (int y=0; y< chunkGroup.GetLength(1); y++)
         {
             //Object.Destroy(chunkGroup [x, y, z].gameObject);
-            commonChunkGroup[x, y, z].gameObject.SetActive(false);
+            chunkGroup[x, y, z].gameObject.SetActive(false);
         }
 	}
 
-    private void InitWorldData()
-    {
-        worldBlockData = new Block[worldX, worldY, worldZ];
-        for (int x = 0; x < worldX; x++)
-        {
-            for (int y = 0; y < worldY; y++)
-            {
-                for (int z = 0; z < worldZ; z++)
-                {
-                    worldBlockData[x, y, z] = new Block();
-                    worldBlockData[x, y, z].isRendered = false;
-                }
-            }
-        }
-    }
-  
     private void SetDefaultWorldData(MakeWorldParam param)
     {
         WorldGenAlgorithms.DefaultGenWorld(worldBlockData, param);
-    }
-
-    private void InitChunkGroup()
-    {
-        commonChunkGroup = new CommonChunk[Mathf.FloorToInt(worldX / chunkSize), Mathf.FloorToInt(worldY / chunkSize), Mathf.FloorToInt(worldZ / chunkSize)];
     }
 
     private int PerlinNoise (int x, int y, int z, float scale, float height, float power)
