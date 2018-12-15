@@ -2,18 +2,16 @@
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
-		_Glossiness ("Smoothness", Range(0,1)) = 0.5
-		_Metallic ("Metallic", Range(0,1)) = 0.0
 		_ScrollSpeed("ScrollSpeed", Range(0, 10)) = 1.5
 	}
 	SubShader {
-		Tags { "Queue"="Transparent" }
+		Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
 		LOD 200
 
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard fullforwardshadows
-
+		//#pragma surface surf Standard fullforwardshadows
+		#pragma surface surf Lambert alpha
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
 
@@ -23,8 +21,6 @@
 			float2 uv_MainTex;
 		};
 		float _ScrollSpeed;
-		half _Glossiness;
-		half _Metallic;
 		fixed4 _Color;
 
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
@@ -34,20 +30,21 @@
 			// put more per-instance properties here
 		UNITY_INSTANCING_BUFFER_END(Props)
 
-		void surf (Input IN, inout SurfaceOutputStandard o) {
+		void surf (Input IN, inout SurfaceOutput o) {
 			// 메인텍스처의 UV 좌표값을 계속 변화시킨다.
 			//IN.uv_MainTex.y += _Time * _ScrollSpeed;
 			if (IN.uv_MainTex.x > 10.0f)
 			{
 				IN.uv_MainTex.x = 0.0f;
 			}
-			IN.uv_MainTex.x += _Time * _ScrollSpeed;
+			else
+			{
+				IN.uv_MainTex.x += _Time * _ScrollSpeed;
+			}
 
 			fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
+
 			o.Albedo = c.rgb;
-			// Metallic and smoothness come from slider variables
-			o.Metallic = _Metallic;
-			o.Smoothness = _Glossiness;
 			o.Alpha = c.a;
 		}
 		ENDCG
