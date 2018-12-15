@@ -19,7 +19,7 @@ public abstract class AChunk : MonoBehaviour {
 
     /// <summary>
     /// size per tile.
-    ///  ex) 256 x 256(pixel) tileSheet 기준. 1tile(16pixel) 이 차지하는 텍스처 좌표값.  16/256
+    ///  ex) 256 x 256(pixel) CommonBlockSheet 기준. 1tile(16pixel) 이 차지하는 텍스처 좌표값.  16/256
     /// </summary>
     protected float tileUnit;
     protected Vector2 texturePos;

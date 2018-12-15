@@ -36,7 +36,11 @@
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			// 메인텍스처의 UV 좌표값을 계속 변화시킨다.
-			IN.uv_MainTex.y += _Time * _ScrollSpeed;
+			//IN.uv_MainTex.y += _Time * _ScrollSpeed;
+			if (IN.uv_MainTex.x > 10.0f)
+			{
+				IN.uv_MainTex.x = 0.0f;
+			}
 			IN.uv_MainTex.x += _Time * _ScrollSpeed;
 
 			fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;

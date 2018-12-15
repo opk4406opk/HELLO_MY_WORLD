@@ -2,7 +2,7 @@
   "sub_world_x_size": "32",
   "sub_world_y_size": "32",
   "sub_world_z_size": "32",
-  "chunk_size": "8", 
+  "chunk_size": "8",
   "chunkLoadIntervalSeconds": "0.2",
   "one_tile_unit": "0.0625"
 }
