@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public class ChunkSlot
+{
+    public AChunk[] chunks = new AChunk[(int)ChunkType.COUNT];
+}
+
 public struct MakeWorldParam
 {
     public int baseOffset;
@@ -10,10 +15,7 @@ public struct MakeWorldParam
 /// </summary>
 public class World : MonoBehaviour
 {
-    private readonly float DIST_TO_LOAD = 48.0f;
-    private readonly float DIST_TO_UNLOAD = 96.0f;
-
-    public AChunk[,,] chunkGroup { get; private set; }
+    public ChunkSlot[,,] chunkSlots { get; private set; }
 
     private string _worldName;
     public string worldName
@@ -58,9 +60,9 @@ public class World : MonoBehaviour
         worldBlockData = new Block[worldX, worldY, worldZ];
         for (int x = 0; x < worldX; x++)
         {
-            for (int y = 0; y < worldY; y++)
+            for (int z = 0; z < worldZ; z++)
             {
-                for (int z = 0; z < worldZ; z++)
+                for (int y = 0; y < worldY; y++)
                 {
                     worldBlockData[x, y, z] = new Block();
                     worldBlockData[x, y, z].isRendered = false;
@@ -68,13 +70,24 @@ public class World : MonoBehaviour
             }
         }
         // init chunk group.
-        chunkGroup = new AChunk[Mathf.FloorToInt(worldX / chunkSize), Mathf.FloorToInt(worldY / chunkSize), Mathf.FloorToInt(worldZ / chunkSize)];
+        chunkSlots = new ChunkSlot[Mathf.FloorToInt(worldX / chunkSize), Mathf.FloorToInt(worldY / chunkSize),
+            Mathf.FloorToInt(worldZ / chunkSize)];
+        for (int x = 0; x < chunkSlots.GetLength(0); x++)
+        {
+            for (int z = 0; z < chunkSlots.GetLength(2); z++)
+            {
+                for (int y = 0; y < chunkSlots.GetLength(1); y++)
+                {
+                    chunkSlots[x, y, z] = new ChunkSlot();
+                }
+            }
+        }
 
         if (GameStatus.isLoadGame == false)
         {
             MakeWorldParam param;
             param.baseOffset = KojeomUtility.RandomInteger(2, 29);
-            SetDefaultWorldData(param);
+            WorldGenAlgorithms.DefaultGenWorld(worldBlockData, param);
             //
             LoadProcess();
         }
@@ -91,22 +104,23 @@ public class World : MonoBehaviour
 
     public void LoadProcess()
     {
+        KojeomLogger.DebugLog(string.Format("World name : {0}, Chunk 로드를 시작합니다.", worldName), LOG_TYPE.INFO);
         StartCoroutine(LoadChunks());
     }
     
     private IEnumerator LoadChunks()
     {
-        for (int x = 0; x < chunkGroup.GetLength(0); x++)
-            for (int z = 0; z < chunkGroup.GetLength(2); z++)
+        for (int x = 0; x < chunkSlots.GetLength(0); x++)
+            for (int z = 0; z < chunkSlots.GetLength(2); z++)
             {
-                if (chunkGroup[x, 0, z] == null)
+                for (int y = 0; y < chunkSlots.GetLength(1); y++)
                 {
-                    for (int y = 0; y < chunkGroup.GetLength(1); y++)
+                    for (int type = 0; type < (int)ChunkType.COUNT; type++)
                     {
-                        if ((chunkGroup[x, y, z] != null) &&
-                            (chunkGroup[x, y, z].gameObject.activeSelf == true))
+                        if ((chunkSlots[x, y, z].chunks[type] != null) &&
+                        (chunkSlots[x, y, z].chunks[type].gameObject.activeSelf == true))
                         {
-                            chunkGroup[x, y, z].gameObject.SetActive(true);
+                            chunkSlots[x, y, z].chunks[type].gameObject.SetActive(true);
                             continue;
                         }
                         // 유니티엔진에서 제공되는 게임 오브젝트들의 중점(=월드좌표에서의 위치)은
@@ -117,38 +131,52 @@ public class World : MonoBehaviour
                         float worldCoordX = x * chunkSize - 0.5f;
                         float worldCoordY = y * chunkSize + 0.5f;
                         float worldCoordZ = z * chunkSize - 0.5f;
-                        GameObject newChunk = Instantiate(PrefabStorage.instance.commonChunkPrefab, new Vector3(0, 0, 0),
-                                                            new Quaternion(0, 0, 0, 0)) as GameObject;
-                        newChunk.transform.parent = gameObject.transform;
-                        newChunk.transform.name = "Chunk_" + chunkNumber++;
-                        chunkGroup[x, y, z] = newChunk.GetComponent("CommonChunk") as CommonChunk;
-                        chunkGroup[x, y, z].world = this;
-                        chunkGroup[x, y, z].worldDataIdxX = x * chunkSize;
-                        chunkGroup[x, y, z].worldDataIdxY = y * chunkSize;
-                        chunkGroup[x, y, z].worldDataIdxZ = z * chunkSize;
-                        chunkGroup[x, y, z].worldCoordX = worldCoordX + worldOffsetX;
-                        chunkGroup[x, y, z].worldCoordY = worldCoordY;
-                        chunkGroup[x, y, z].worldCoordZ = worldCoordZ + worldOffsetZ;
-                        chunkGroup[x, y, z].Init();
+
+                        GameObject newChunk = null;
+                        switch ((ChunkType)type)
+                        {
+                            case ChunkType.COMMON:
+                                newChunk = Instantiate(PrefabStorage.instance.commonChunkPrefab, new Vector3(0, 0, 0),
+                                                           new Quaternion(0, 0, 0, 0)) as GameObject;
+                                newChunk.transform.parent = gameObject.transform;
+                                newChunk.transform.name = string.Format("CommonChunk_{0}", chunkNumber++);
+                                chunkSlots[x, y, z].chunks[type] = newChunk.GetComponent<CommonChunk>();
+                                break;
+                            case ChunkType.WATER:
+                                newChunk = Instantiate(PrefabStorage.instance.waterChunkPrefab, new Vector3(0, 0, 0),
+                                                           new Quaternion(0, 0, 0, 0)) as GameObject;
+                                newChunk.transform.parent = gameObject.transform;
+                                newChunk.transform.name = string.Format("WaterChunk_{0}", chunkNumber++);
+                                chunkSlots[x, y, z].chunks[type] = newChunk.GetComponent<WaterChunk>();
+                                break;
+                        }
+                        chunkSlots[x, y, z].chunks[type].world = this;
+                        chunkSlots[x, y, z].chunks[type].worldDataIdxX = x * chunkSize;
+                        chunkSlots[x, y, z].chunks[type].worldDataIdxY = y * chunkSize;
+                        chunkSlots[x, y, z].chunks[type].worldDataIdxZ = z * chunkSize;
+                        chunkSlots[x, y, z].chunks[type].worldCoordX = worldCoordX + worldOffsetX;
+                        chunkSlots[x, y, z].chunks[type].worldCoordY = worldCoordY;
+                        chunkSlots[x, y, z].chunks[type].worldCoordZ = worldCoordZ + worldOffsetZ;
+                        chunkSlots[x, y, z].chunks[type].Init();
                         yield return new WaitForSeconds(WorldConfigFile.instance.GetConfig().chunkLoadIntervalSeconds);
                     }
+
                 }
             }
     }
 
     private void UnloadColumn(int x, int z)
     {
-		for (int y=0; y< chunkGroup.GetLength(1); y++)
+		for (int y=0; y< chunkSlots.GetLength(1); y++)
         {
-            //Object.Destroy(chunkGroup [x, y, z].gameObject);
-            chunkGroup[x, y, z].gameObject.SetActive(false);
+            
+            for(int type = 0; type < (int)ChunkType.COUNT; type++)
+            {
+                //Object.Destroy(chunkGroup [x, y, z].chunks[type].gameObject);
+                chunkSlots[x, y, z].chunks[type].gameObject.SetActive(false);
+            }
         }
 	}
-
-    private void SetDefaultWorldData(MakeWorldParam param)
-    {
-        WorldGenAlgorithms.DefaultGenWorld(worldBlockData, param);
-    }
 
     private int PerlinNoise (int x, int y, int z, float scale, float height, float power)
 	{

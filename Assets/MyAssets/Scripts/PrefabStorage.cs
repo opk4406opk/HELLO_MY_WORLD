@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class PrefabStorage : MonoBehaviour {
 
-    public GameObject subWorldPrefab { get; private set; }
+    public GameObject worldPrefab { get; private set; }
     public GameObject commonChunkPrefab { get; private set; }
     public GameObject waterChunkPrefab { get; private set; }
     private static GameObject[] characterPrefabs;
@@ -19,7 +19,7 @@ public class PrefabStorage : MonoBehaviour {
         //
         commonChunkPrefab = Resources.Load<GameObject>(ConstFilePath.COMMON_CHUNK_PREFAB);
         waterChunkPrefab = Resources.Load<GameObject>(ConstFilePath.WATER_CHUNK_PREFAB);
-        subWorldPrefab = Resources.Load<GameObject>(ConstFilePath.SUB_WORLD_PREFAB);
+        worldPrefab = Resources.Load<GameObject>(ConstFilePath.SUB_WORLD_PREFAB);
     }
 
     public static PrefabStorage GetInstance()

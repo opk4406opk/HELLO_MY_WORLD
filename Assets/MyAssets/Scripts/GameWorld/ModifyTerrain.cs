@@ -191,39 +191,40 @@ public class ModifyTerrain : MonoBehaviour
         updateX = Mathf.FloorToInt(x / chunkSize);
         updateY = Mathf.FloorToInt(y / chunkSize);
         updateZ = Mathf.FloorToInt(z / chunkSize);
-
-        world.chunkGroup[updateX, updateY, updateZ].update = true;
+        if (world.chunkSlots[updateX, updateY, updateZ].chunks[(int)ChunkType.COMMON] == null)
+        {
+            return;
+        }
+        world.chunkSlots[updateX, updateY, updateZ].chunks[(int)ChunkType.COMMON].update = true;
 
         if (x - (chunkSize * updateX) == 0 && updateX != 0)
         {
-            world.chunkGroup[updateX - 1, updateY, updateZ].update = true;
+            world.chunkSlots[updateX - 1, updateY, updateZ].chunks[(int)ChunkType.COMMON].update = true;
         }
 
-        if (x - (chunkSize * updateX) == gameWorldConfig.chunk_size && updateX != world.chunkGroup.GetLength(0) - 1)
+        if (x - (chunkSize * updateX) == gameWorldConfig.chunk_size && updateX != world.chunkSlots.GetLength(0) - 1)
         {
-            world.chunkGroup[updateX + 1, updateY, updateZ].update = true;
+            world.chunkSlots[updateX + 1, updateY, updateZ].chunks[(int)ChunkType.COMMON].update = true;
         }
 
         if (y - (chunkSize * updateY) == 0 && updateY != 0)
         {
-            world.chunkGroup[updateX, updateY - 1, updateZ].update = true;
+            world.chunkSlots[updateX, updateY - 1, updateZ].chunks[(int)ChunkType.COMMON].update = true;
         }
 
-        if (y - (chunkSize * updateY) == gameWorldConfig.chunk_size && updateY != world.chunkGroup.GetLength(1) - 1)
+        if (y - (chunkSize * updateY) == gameWorldConfig.chunk_size && updateY != world.chunkSlots.GetLength(1) - 1)
         {
-            world.chunkGroup[updateX, updateY + 1, updateZ].update = true;
+            world.chunkSlots[updateX, updateY + 1, updateZ].chunks[(int)ChunkType.COMMON].update = true;
         }
 
         if (z - (chunkSize * updateZ) == 0 && updateZ != 0)
         {
-            world.chunkGroup[updateX, updateY, updateZ - 1].update = true;
+            world.chunkSlots[updateX, updateY, updateZ - 1].chunks[(int)ChunkType.COMMON].update = true;
         }
 
-        if (z - (chunkSize * updateZ) == gameWorldConfig.chunk_size && updateZ != world.chunkGroup.GetLength(2) - 1)
+        if (z - (chunkSize * updateZ) == gameWorldConfig.chunk_size && updateZ != world.chunkSlots.GetLength(2) - 1)
         {
-            world.chunkGroup[updateX, updateY, updateZ + 1].update = true;
+            world.chunkSlots[updateX, updateY, updateZ + 1].chunks[(int)ChunkType.COMMON].update = true;
         }
-
     }
-
 }

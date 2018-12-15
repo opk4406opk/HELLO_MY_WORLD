@@ -7,7 +7,7 @@
 		_ScrollSpeed("ScrollSpeed", Range(0, 10)) = 1.5
 	}
 	SubShader {
-		Tags { "RenderType"="Opaque" }
+		Tags { "Queue"="Transparent" }
 		LOD 200
 
 		CGPROGRAM

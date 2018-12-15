@@ -126,7 +126,7 @@ public class WorldManager : MonoBehaviour
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
         foreach(var subWorldData in SubWorldDataFile.instance.subWorldDataList)
         {
-            GameObject newSubWorld = Instantiate(PrefabStorage.instance.subWorldPrefab, new Vector3(0, 0, 0),
+            GameObject newSubWorld = Instantiate(PrefabStorage.instance.worldPrefab, new Vector3(0, 0, 0),
                new Quaternion(0, 0, 0, 0)) as GameObject;
             World subWorld = newSubWorld.GetComponent<World>();
             subWorld.worldName = subWorldData.worldName;

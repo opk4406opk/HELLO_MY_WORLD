@@ -14,6 +14,7 @@ public class WaterChunk : AChunk
     }
     public override void Init()
     {
+        chunkType = ChunkType.WATER;
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         chunkSize = gameWorldConfig.chunk_size;
         tileUnit = gameWorldConfig.one_tile_unit;
@@ -34,7 +35,8 @@ public class WaterChunk : AChunk
                     blockIdxY = relativeY + _worldDataIdxY;
                     blockIdxZ = relativeZ + _worldDataIdxZ;
                     //This code will run for every block in the chunk
-                    if (GetBlockType(blockIdxX, blockIdxY, blockIdxZ) == BlockTileType.WATER)
+                    var blockType = GetBlockType(blockIdxX, blockIdxY, blockIdxZ);
+                    if (blockType == BlockTileType.WATER)
                     {
                         //if (Block(x, y + 1, z) == 0) CubeTop(x, y, z, Block(x, y, z));
                         //if (Block(x, y - 1, z) == 0) CubeBot(x, y, z, Block(x, y, z));
@@ -48,12 +50,12 @@ public class WaterChunk : AChunk
                         cubeY = relativeY + _worldCoordY;
                         cubeZ = relativeZ + _worldCoordZ;
 
-                        CubeTopFace(cubeX, cubeY, cubeZ, GetBlockType(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
-                        CubeBotFace(cubeX, cubeY, cubeZ, GetBlockType(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
-                        CubeNorthFace(cubeX, cubeY, cubeZ, GetBlockType(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
-                        CubeSouthFace(cubeX, cubeY, cubeZ, GetBlockType(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
-                        CubeEastFace(cubeX, cubeY, cubeZ, GetBlockType(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
-                        CubeWestFace(cubeX, cubeY, cubeZ, GetBlockType(blockIdxX, blockIdxY, blockIdxZ), blockIdxX, blockIdxY, blockIdxZ);
+                        CubeTopFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
+                        CubeBotFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
+                        CubeNorthFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
+                        CubeSouthFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
+                        CubeEastFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
+                        CubeWestFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
 
                         // points 배열은 실제 블록을 생성할 때 쓰이는 8개의 포인트로 실제 월드 좌표값이다.
                         // 따라서, 이를 이용해 블록의 AABB의 Min, Max Extent 값을 정한다.

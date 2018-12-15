@@ -56,6 +56,10 @@ public class WorldGenAlgorithms {
                     {
                         treeSpawnCandidates.Add(new Vector3(x, y, z));
                     }
+                    else if (y == gameWorldConfig.sub_world_y_size - 1)
+                    {
+                        worldBlockData[x, y, z].type = (byte)BlockTileDataFile.instance.GetBlockTileInfo(BlockTileType.WATER).type;
+                    }
                 }
             }
         }

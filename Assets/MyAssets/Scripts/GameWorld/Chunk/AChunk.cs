@@ -2,6 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ChunkType
+{
+    COMMON = 0,
+    WATER = 1,
+    NONE = 2,
+    COUNT = NONE
+}
+
 public abstract class AChunk : MonoBehaviour {
 
 	public World world { set; get; }
@@ -19,6 +27,9 @@ public abstract class AChunk : MonoBehaviour {
     protected int faceCount;
 
     protected int chunkSize = 0;
+
+    protected ChunkType chunkType = ChunkType.NONE;
+    public ChunkType GetChunkType() { return chunkType; }
 
     // 월드 데이터 배열에서 Chunk가 존재하는 인덱스 값( x,y,z).----------
     protected int _worldDataIdxX;
