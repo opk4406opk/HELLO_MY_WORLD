@@ -76,15 +76,15 @@ public class WorldGenAlgorithms {
             switch(randTreeType)
             {
                 case TreeType.NORMAL:
-                    EnvriomentGenAlgorithms.GenerateDefaultTree(worldBlockData, treeSpawnCandidates[KojeomUtility.RandomInteger(0, treeSpawnCandidates.Count)]);
+                    EnviromentGenAlgorithms.GenerateDefaultTree(worldBlockData, treeSpawnCandidates[KojeomUtility.RandomInteger(0, treeSpawnCandidates.Count)]);
                     break;
                 case TreeType.SQAURE:
-                    EnvriomentGenAlgorithms.GenerateSqaureTree(worldBlockData, treeSpawnCandidates[KojeomUtility.RandomInteger(0, treeSpawnCandidates.Count)]);
+                    EnviromentGenAlgorithms.GenerateSqaureTree(worldBlockData, treeSpawnCandidates[KojeomUtility.RandomInteger(0, treeSpawnCandidates.Count)]);
                     break;
             }
         }
         // Water area.
-        EnvriomentGenAlgorithms.MakeWaterArea(highestBlockHeight, worldBlockData);
+        EnviromentGenAlgorithms.MakeWaterArea(highestBlockHeight, worldBlockData);
     }
 
     /// <summary>
