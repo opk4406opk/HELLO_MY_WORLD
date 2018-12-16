@@ -103,17 +103,15 @@ public struct CustomAABB {
         return false;
     }
 
-    // return 0.0 ~ 1.0
-    // https://www.gamedev.net/articles/programming/general-and-gameplay-programming/swept-aabb-collision-detection-and-response-r3084/
     /// <summary>
-    /// 
+    /// https://www.gamedev.net/articles/programming/general-and-gameplay-programming/swept-aabb-collision-detection-and-response-r3084/
     /// </summary>
     /// <param name="a"></param>
     /// <param name="b"></param>
     /// <param name="normalFaceX"></param>
     /// <param name="normalFaceY"></param>
     /// <param name="normalFaceZ"></param>
-    /// <returns></returns>
+    /// <returns> 0.0 ~ 1.0f</returns>
     public static float SweptAABB(CustomAABB a, CustomAABB b, ref float normalFaceX, ref float normalFaceY, ref float normalFaceZ)
     {
         float xInvEntry, yInvEntry, zInvEntry;

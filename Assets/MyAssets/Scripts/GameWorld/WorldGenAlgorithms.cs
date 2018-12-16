@@ -32,6 +32,7 @@ public class WorldGenAlgorithms {
     }
     public static void DefaultGenWorld(Block[,,] worldBlockData, MakeWorldParam param)
     {
+        int highestBlockHeight = 0;
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         // perlin 알고리즘을 이용해 지형을 생성한다.
         for (int x = 0; x < gameWorldConfig.sub_world_x_size; x++)
@@ -51,17 +52,19 @@ public class WorldGenAlgorithms {
                     else if (y <= grass + stone)
                     {
                         worldBlockData[x, y, z].type = (byte)BlockTileDataFile.instance.GetBlockTileInfo(BlockTileType.GRASS).type;
+                        if(y > highestBlockHeight)
+                        {
+                            highestBlockHeight = y;
+                        }
                     }
                     else if (y >= grass + stone && worldBlockData[x, y - 1, z].type != (byte)BlockTileType.EMPTY)
                     {
                         treeSpawnCandidates.Add(new Vector3(x, y, z));
                     }
-                    else if (y == gameWorldConfig.sub_world_y_size - 1)
-                    {
-                        worldBlockData[x, y, z].type = (byte)BlockTileDataFile.instance.GetBlockTileInfo(BlockTileType.WATER).type;
-                    }
+                    
                 }
             }
+            KojeomLogger.DebugLog(string.Format("가장 높은 Block의 높이값은 : {0}", highestBlockHeight));
         }
         // caves
         GenerateSphereCaves(worldBlockData);
@@ -80,6 +83,8 @@ public class WorldGenAlgorithms {
                     break;
             }
         }
+        // Water area.
+        EnvriomentGenAlgorithms.MakeWaterArea(highestBlockHeight, worldBlockData);
     }
 
     /// <summary>
