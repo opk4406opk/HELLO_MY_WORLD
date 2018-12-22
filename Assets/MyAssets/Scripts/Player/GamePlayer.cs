@@ -52,7 +52,7 @@ public class GamePlayer : NetworkBehaviour
         gameObject.GetComponent<Animator>().enabled = false;
         // 캐릭터 인스턴스에 있는 실제 애니메이터 컴포넌트를 새롭게 등록.
         networkAnimator.animator = charInstance.GetAnimator();
-        //SetObjectLayer(_isMyPlayer);
+        SetObjectLayer(_isMyPlayer);
         //
         KojeomLogger.DebugLog("게임플레이어 PostInit 완료. ", LOG_TYPE.INFO);
     }
@@ -85,10 +85,11 @@ public class GamePlayer : NetworkBehaviour
         else layer = LayerMask.NameToLayer("OtherPlayerCharacter");
 
         gameObject.layer = layer;
-        var childObjects = KojeomUtility.GetChilds<GameObject>(charInstance.gameObject);
+        // GameObject가 아닌 트랜스폼으로 자식노드들을 가져와야 정상 동작.
+        var childObjects = KojeomUtility.GetChilds<Transform>(charInstance.gameObject);
         foreach (var child in childObjects)
         {
-            child.layer = layer;
+            child.gameObject.layer = layer;
         }
     }
 
