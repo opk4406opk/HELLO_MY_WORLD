@@ -32,14 +32,22 @@ public class WorldState
 {
     public World subWorldInstance;
     public SubWorldNormalizedOffset normalizedOffset;
-    public WorldStatusInfo statusInfo = WorldStatusInfo.None;
+    public WorldGenerateInfo genInfo = WorldGenerateInfo.None;
+    public WorldRealTimeStatus realTimeStatus = WorldRealTimeStatus.None;
 }
 
-public enum WorldStatusInfo
+public enum WorldGenerateInfo
 {
     None = 0,
-    InGameLoaded = 1,
-    NeedInGameLoad = 2,
+    NotYet = 1,
+    Done = 2
+}
+
+public enum WorldRealTimeStatus
+{
+    None = 0,
+    InGameReLoaded = 1,
+    NeedInGameReLoad = 2,
     Released = 3
 }
 
@@ -47,11 +55,10 @@ public class WorldManager : MonoBehaviour
 {
     [SerializeField]
     private Transform worldGroupTrans;
+    public static WorldManager instance;
 
     public Dictionary<SubWorldNormalizedOffset, int> worldOffsetToIndex { get; } = new Dictionary<SubWorldNormalizedOffset, int>();
     public Dictionary<int, WorldState> wholeWorldStates { get; } = new Dictionary<int, WorldState>();
-
-    public static WorldManager instance;
 
     public void Init()
     {
@@ -118,7 +125,7 @@ public class WorldManager : MonoBehaviour
     private void ReleaseSubWorldInstance(int worldIdx)
     {
         wholeWorldStates[worldIdx].subWorldInstance = null;
-        wholeWorldStates[worldIdx].statusInfo = WorldStatusInfo.Released;
+        wholeWorldStates[worldIdx].realTimeStatus = WorldRealTimeStatus.Released;
     }
 
     private void CreateWholeWorld()
@@ -129,8 +136,9 @@ public class WorldManager : MonoBehaviour
             GameObject newSubWorld = Instantiate(PrefabStorage.instance.worldPrefab, new Vector3(0, 0, 0),
                new Quaternion(0, 0, 0, 0)) as GameObject;
             World subWorld = newSubWorld.GetComponent<World>();
+            subWorld.OnFinishLoadChunks += OnSubWorldFinishLoadChunks;
             subWorld.worldName = subWorldData.worldName;
-            subWorld.idx = subWorldData.worldIdx;
+            subWorld.worldIndex = subWorldData.worldIdx;
             newSubWorld.transform.parent = worldGroupTrans;
             //add world.
             WorldState worldState = new WorldState();
@@ -139,7 +147,8 @@ public class WorldManager : MonoBehaviour
             normalizedSubOffset.x = subWorldData.x;
             normalizedSubOffset.z = subWorldData.z;
             worldState.normalizedOffset = normalizedSubOffset;
-            worldState.statusInfo = WorldStatusInfo.NeedInGameLoad;
+            worldState.genInfo = WorldGenerateInfo.NotYet;
+            worldState.realTimeStatus = WorldRealTimeStatus.NeedInGameReLoad;
             wholeWorldStates.Add(subWorldData.worldIdx, worldState);
 
             // offset to index 
@@ -147,6 +156,13 @@ public class WorldManager : MonoBehaviour
         }
     }
 
+    public void OnSubWorldFinishLoadChunks(int worldIdx)
+    {
+        WorldState worldState;
+        wholeWorldStates.TryGetValue(worldIdx, out worldState);
+        worldState.genInfo = WorldGenerateInfo.Done;
+        //
+    }
 
     /// <summary>
     /// 주어진 위치값으로 어느 subWorld에 포함되어있는지 확인 후 해당 World를 리턴.
@@ -184,13 +200,13 @@ public class WorldManager : MonoBehaviour
                         subWorldOffset.z = z;
                         if (worldOffsetToIndex.TryGetValue(subWorldOffset, out worldIdx) == true)
                         {
-                            switch(wholeWorldStates[worldIdx].statusInfo)
+                            switch(wholeWorldStates[worldIdx].realTimeStatus)
                             {
-                                case WorldStatusInfo.None:
+                                case WorldRealTimeStatus.None:
                                     // nothing to do.
                                     break;
-                                case WorldStatusInfo.NeedInGameLoad:
-                                    wholeWorldStates[worldIdx].statusInfo = WorldStatusInfo.InGameLoaded;
+                                case WorldRealTimeStatus.NeedInGameReLoad:
+                                    wholeWorldStates[worldIdx].realTimeStatus = WorldRealTimeStatus.InGameReLoaded;
                                     wholeWorldStates[worldIdx].subWorldInstance.Init(x * gameWorldConfig.sub_world_x_size,
                                         z * gameWorldConfig.sub_world_z_size);
                                     break;

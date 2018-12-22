@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCManager : MonoBehaviour {
+public class NPCManager : MovableObjectSpawner
+{
     [SerializeField]
     private GameObject prefab_roamingMerchantNPC;
     [SerializeField]
     private GameObject prefab_shopMerchantNPC;
 
-    private List<Actor> _npcs = new List<Actor>();
-    public List<Actor> npcs
-    {
-        get { return _npcs; }
-    }
+    public List<Actor> npcs { get; private set; }
     private Actor lastestClickedActor;
 
     private static NPCManager _singleton = null;
@@ -24,13 +21,13 @@ public class NPCManager : MonoBehaviour {
             return _singleton;
         }
     }
-    public void Init()
+    public override void Init()
     {
         // to do
         _singleton = this;
     }
 
-    public void GenerateNPC()
+    public override void GenerateToWorld()
     {
         // 돌아다니는 상인 NPC 생성.
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
@@ -45,7 +42,7 @@ public class NPCManager : MonoBehaviour {
             roamingMerchant.textMeshController.Init(gameConfig.ingame_font_size);
             roamingMerchant.textMeshController.SetText(data.name);
             roamingMerchant.OnClickedActor += OnClickedActor;
-            _npcs.Add(roamingMerchant);
+            npcs.Add(roamingMerchant);
         }
     }
 

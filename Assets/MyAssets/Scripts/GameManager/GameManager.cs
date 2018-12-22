@@ -183,7 +183,6 @@ public class GameManager : MonoBehaviour
         saveAndLoadManager.Init();
         //
         npcManager.Init();
-        npcManager.GenerateNPC();
         //
         actorCollideManager.Init();
         //

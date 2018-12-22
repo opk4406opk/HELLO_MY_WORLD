@@ -15,6 +15,9 @@ public struct MakeWorldParam
 /// </summary>
 public class World : MonoBehaviour
 {
+    public delegate void del_OnFinishLoadChunks(int worldIdx);
+    public event del_OnFinishLoadChunks OnFinishLoadChunks;
+
     public ChunkSlot[,,] chunkSlots { get; private set; }
 
     private string _worldName;
@@ -28,9 +31,9 @@ public class World : MonoBehaviour
     }
 
     /// <summary>
-    /// 월드 idx 넘버.
+    /// 월드 create idx 넘버.
     /// </summary>
-    public int idx;
+    public int worldIndex;
     public Block[,,] worldBlockData { get; private set; }
 
     private int worldX = 0;
@@ -104,7 +107,7 @@ public class World : MonoBehaviour
 
     public void LoadProcess()
     {
-        KojeomLogger.DebugLog(string.Format("World name : {0}, Chunk 로드를 시작합니다.", worldName), LOG_TYPE.INFO);
+        KojeomLogger.DebugLog(string.Format("World name : {0}, Chunk 로드를 시작합니다.", worldName), LOG_TYPE.DEBUG_TEST);
         StartCoroutine(LoadChunks());
     }
     
@@ -163,13 +166,14 @@ public class World : MonoBehaviour
 
                 }
             }
+        KojeomLogger.DebugLog(string.Format("World name : {0} Chunk 로드를 완료했습니다.", worldName), LOG_TYPE.DEBUG_TEST);
+        OnFinishLoadChunks(worldIndex);
     }
 
     private void UnloadColumn(int x, int z)
     {
 		for (int y=0; y< chunkSlots.GetLength(1); y++)
         {
-            
             for(int type = 0; type < (int)ChunkType.COUNT; type++)
             {
                 //Object.Destroy(chunkGroup [x, y, z].chunks[type].gameObject);
