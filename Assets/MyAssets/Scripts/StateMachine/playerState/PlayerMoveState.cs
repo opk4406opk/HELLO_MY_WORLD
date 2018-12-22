@@ -108,16 +108,19 @@ public class PlayerMoveState : IState
         P2PNetworkManager.GetNetworkManagerInstance().PushCharStateMessage(GAMEPLAYER_CHAR_STATE.MOVE);
         //
         KojeomLogger.DebugLog("player moving..", LOG_TYPE.USER_INPUT);
-        newPos = gamePlayer.transform.position + (dir * moveSpeed * Time.deltaTime);
+        Vector3 speed = dir * moveSpeed * Time.deltaTime;
+        newPos = gamePlayer.transform.position + speed;
         gamePlayer.transform.position = newPos;
 
         World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
-        var collideInfo = containWorld.customOctree.Collide(gamePlayer.charInstance.GetCustomAABB());
+        //var collideInfo = containWorld.customOctree.Collide(gamePlayer.charInstance.GetCustomAABB());
+        CustomAABB playerAABB = gamePlayer.charInstance.GetCustomAABB();
+        playerAABB.SettingSpeed(speed);
+        var collideInfo = containWorld.customOctree.CollideWithSweptAABB(playerAABB);
         if (collideInfo.isCollide)
         {
-            KojeomLogger.DebugLog(string.Format("player가 이동하는 위치에 Block (pos : {0})이 존재합니다. 이동하지 않습니다.",
-                collideInfo.hitBlockCenter), LOG_TYPE.USER_INPUT);
-            gamePlayer.transform.position = originPos;
+            KojeomLogger.DebugLog(string.Format("Player move test -> slide pos : {0}", collideInfo.slidePos, LOG_TYPE.DEBUG_TEST));
+            gamePlayer.AddPosition(collideInfo.slidePos);
         }
     }
 }

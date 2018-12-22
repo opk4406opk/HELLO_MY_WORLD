@@ -66,6 +66,11 @@ public class GamePlayerController : MonoBehaviour {
         curPlayerState = GAMEPLAYER_CHAR_STATE.IDLE;
     }
 
+    public void SetPosition(Vector3 newPos)
+    {
+        gamePlayer.transform.position = newPos;
+    }
+
     public void StartControllProcess()
     {
         isControllProcessOn = true;

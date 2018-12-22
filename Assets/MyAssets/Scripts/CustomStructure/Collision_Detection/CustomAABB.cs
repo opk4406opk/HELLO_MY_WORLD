@@ -15,6 +15,33 @@ public struct CustomAABB {
     public Vector3 centerPos { get; private set; }
     public bool isEnable { set; get; }
 
+
+    public void SettingSpeed(Vector3 speed)
+    {
+        vx = speed.x;
+        vy = speed.y;
+        vz = speed.z;
+    }
+
+    public void Repositioning(Vector3 vec)
+    {
+        minExtent += vec;
+        maxExtent += vec;
+        centerPos = (maxExtent + minExtent) / 2;
+    }
+
+    public void MakeAABB(CustomAABB other)
+    {
+        minExtent = other.minExtent;
+        maxExtent = other.maxExtent;
+        vx = other.vx;
+        vy = other.vy;
+        vz = other.vz;
+        width = other.width;
+        height = other.height;
+        depth = other.depth;
+    }
+
     public void MakeAABB(Vector3[] points, float velocityX = 0.0f, float velocityY = 0.0f, float velocityZ = 0.0f)
     {
         vx = velocityX;
@@ -106,86 +133,86 @@ public struct CustomAABB {
     /// <summary>
     /// https://www.gamedev.net/articles/programming/general-and-gameplay-programming/swept-aabb-collision-detection-and-response-r3084/
     /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
+    /// <param name="move"></param>
+    /// <param name="fix"></param>
     /// <param name="normalFaceX"></param>
     /// <param name="normalFaceY"></param>
     /// <param name="normalFaceZ"></param>
     /// <returns> 0.0 ~ 1.0f</returns>
-    public static float SweptAABB(CustomAABB a, CustomAABB b, ref float normalFaceX, ref float normalFaceY, ref float normalFaceZ)
+    public static float SweptAABB(CustomAABB move, CustomAABB fix, ref float normalFaceX, ref float normalFaceY, ref float normalFaceZ)
     {
         float xInvEntry, yInvEntry, zInvEntry;
         float xInvExit, yInvExit, zInvExit;
 
         // find the distance between the objects on the near and far sides for both x and y
-        if (a.vx > 0.0f)
+        if (move.vx > 0.0f)
         {
-            xInvEntry = b.centerPos.x - (a.centerPos.x + a.width);
-            xInvExit = (b.centerPos.x + b.width) - a.centerPos.x;
+            xInvEntry = fix.centerPos.x - (move.centerPos.x + move.width);
+            xInvExit = (fix.centerPos.x + fix.width) - move.centerPos.x;
         }
         else
         {
-            xInvEntry = (b.centerPos.x + b.width) - a.centerPos.x;
-            xInvExit = b.centerPos.x - (a.centerPos.x + a.width);
+            xInvEntry = (fix.centerPos.x + fix.width) - move.centerPos.x;
+            xInvExit = fix.centerPos.x - (move.centerPos.x + move.width);
         }
 
-        if (a.vy > 0.0f)
+        if (move.vy > 0.0f)
         {
-            yInvEntry = b.centerPos.y - (a.centerPos.y + a.height);
-            yInvExit = (b.centerPos.y + b.height) - a.centerPos.y;
+            yInvEntry = fix.centerPos.y - (move.centerPos.y + move.height);
+            yInvExit = (fix.centerPos.y + fix.height) - move.centerPos.y;
         }
         else
         {
-            yInvEntry = (b.centerPos.y + b.height) - a.centerPos.y;
-            yInvExit = b.centerPos.y - (a.centerPos.y + a.height);
+            yInvEntry = (fix.centerPos.y + fix.height) - move.centerPos.y;
+            yInvExit = fix.centerPos.y - (move.centerPos.y + move.height);
         }
 
-        if (a.vz > 0.0f)
+        if (move.vz > 0.0f)
         {
-            zInvEntry = b.centerPos.z - (a.centerPos.z + a.depth);
-            zInvExit = (b.centerPos.z + b.depth) - a.centerPos.z;
+            zInvEntry = fix.centerPos.z - (move.centerPos.z + move.depth);
+            zInvExit = (fix.centerPos.z + fix.depth) - move.centerPos.z;
         }
         else
         {
-            zInvEntry = (b.centerPos.z + b.depth) - a.centerPos.z;
-            zInvExit = b.centerPos.z - (a.centerPos.z + a.depth);
+            zInvEntry = (fix.centerPos.z + fix.depth) - move.centerPos.z;
+            zInvExit = fix.centerPos.z - (move.centerPos.z + move.depth);
         }
 
         //
         float xEntry, yEntry, zEntry;
         float xExit, yExit, zExit;
 
-        if (a.vx == 0.0f)
+        if (move.vx == 0.0f)
         {
             xEntry = -float.PositiveInfinity;
             xExit = float.PositiveInfinity;
         }
         else
         {
-            xEntry = xInvEntry / a.vx;
-            xExit = xInvExit / a.vx;
+            xEntry = xInvEntry / move.vx;
+            xExit = xInvExit / move.vx;
         }
 
-        if (a.vy == 0.0f)
+        if (move.vy == 0.0f)
         {
             yEntry = -float.PositiveInfinity;
             yExit = float.PositiveInfinity;
         }
         else
         {
-            yEntry = yInvEntry / a.vy;
-            yExit = yInvExit / a.vy;
+            yEntry = yInvEntry / move.vy;
+            yExit = yInvExit / move.vy;
         }
 
-        if (a.vz == 0.0f)
+        if (move.vz == 0.0f)
         {
             zEntry = -float.PositiveInfinity;
             zExit = float.PositiveInfinity;
         }
         else
         {
-            zEntry = zInvEntry / a.vz;
-            zExit = zInvExit / a.vz;
+            zEntry = zInvEntry / move.vz;
+            zExit = zInvExit / move.vz;
         }
 
         //
@@ -204,7 +231,7 @@ public struct CustomAABB {
 
         // if there was no collision
         if (entryTime > exitTime ||
-            xEntry < 0.0f && yEntry < 0.0f && zEntry < 0.0f ||
+            (xEntry < 0.0f && yEntry < 0.0f && zEntry < 0.0f) ||
             xEntry > 1.0f || yEntry > 1.0f || zEntry > 1.0f)
         {
             normalFaceX = 0.0f;
