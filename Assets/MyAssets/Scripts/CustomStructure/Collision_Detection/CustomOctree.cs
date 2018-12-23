@@ -44,6 +44,7 @@ public struct CollideInfo
     public bool isCollide;
     public Vector3 hitBlockCenter;
     public Vector3 slidePos;
+    public Vector3 collisionPoint;
     public Block GetBlock()
     {
         var containWorld = WorldManager.instance.ContainedWorld(hitBlockCenter);
@@ -133,6 +134,7 @@ public class CustomOctree
         info.isCollide = false;
         info.hitBlockCenter = Vector3.zero;
         info.slidePos = Vector3.zero;
+        info.collisionPoint = Vector3.zero;
         if (root.size == blockMinSize)
         {
             info.isCollide = true;
@@ -155,27 +157,28 @@ public class CustomOctree
         List<CollideInfo> collideCandidate = new List<CollideInfo>();
         CollideNodeWithRay(ray, root, ref collideCandidate);
 
+        // init.
         CollideInfo info;
         info.isCollide = false;
         info.hitBlockCenter = Vector3.zero;
         info.slidePos = Vector3.zero;
-        Vector3 hitBlockCenter;
+        info.collisionPoint = Vector3.zero;
         if(collideCandidate.Count > 0)
         {
             float minDist = Vector3.Distance(ray.origin, collideCandidate[0].hitBlockCenter);
-            hitBlockCenter = collideCandidate[0].hitBlockCenter;
+            info.isCollide = true;
+            info.hitBlockCenter = collideCandidate[0].hitBlockCenter;
+            info.collisionPoint = collideCandidate[0].collisionPoint;
             for (int i = 1; i < collideCandidate.Count; i++)
             {
                 float d = Vector3.Distance(ray.origin, collideCandidate[i].hitBlockCenter);
                 if (minDist > d)
                 {
                     minDist = d;
-                    hitBlockCenter = collideCandidate[i].hitBlockCenter;
+                    info.hitBlockCenter = collideCandidate[i].hitBlockCenter;
+                    info.collisionPoint = collideCandidate[i].collisionPoint;
                 }
             }
-            info.isCollide = true;
-            info.hitBlockCenter = hitBlockCenter;
-            collideCandidate.Clear();
         }
         return info;
     }
@@ -192,16 +195,18 @@ public class CustomOctree
         info.isCollide = false;
         info.hitBlockCenter = Vector3.zero;
         info.slidePos = Vector3.zero;
+        info.collisionPoint = Vector3.zero;
         if (root.size == blockMinSize)
         {
             info.isCollide = true;
             info.hitBlockCenter = root.center;
+            info.collisionPoint = root.aabb.hitPointWithRay;
             collideCandidate.Add(info);
         }
         for (int i = 0; i < 8; i++)
         {
             if ((root.childs[i] != null) &&
-                (CustomRayCast.InterSectWithAABB(ray, root.childs[i].aabb)))
+                (CustomRayCast.InterSectWithAABB(ray, ref root.childs[i].aabb)))
             {
                 CollideNodeWithRay(ray, root.childs[i], ref collideCandidate);
             }
@@ -224,6 +229,7 @@ public class CustomOctree
         info.isCollide = false;
         info.hitBlockCenter = Vector3.zero;
         info.slidePos = Vector3.zero;
+        info.collisionPoint = Vector3.zero;
         if (root.size == blockMinSize) 
         {
             info.isCollide = true;
@@ -252,6 +258,7 @@ public class CustomOctree
         info.isCollide = false;
         info.hitBlockCenter = Vector3.zero;
         info.slidePos = Vector3.zero;
+        info.collisionPoint = Vector3.zero;
         if (root.size == blockMinSize)
         {
             info.isCollide = true;

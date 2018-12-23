@@ -74,6 +74,10 @@ public class ModifyTerrain : MonoBehaviour
             //-------------------------------------------------------------------------------
             if (isCreate)
             {
+                //Vector3 createPosition = new Vector3(Mathf.Ceil(collideInfo.collisionPoint.x),
+                //    Mathf.Ceil(collideInfo.collisionPoint.y),
+                //    Mathf.Ceil(collideInfo.collisionPoint.z));
+                // 임시코드
                 world.customOctree.Add(collideInfo.hitBlockCenter + new Vector3(0, 1.0f, 0));
                 SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
                 world.worldBlockData[blockX, blockY + 1, blockZ].isRendered = true;

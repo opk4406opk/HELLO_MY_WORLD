@@ -55,7 +55,7 @@ public class CustomRayCast : MonoBehaviour
     /// <param name="ray"></param>
     /// <param name="aabb"></param>
     /// <returns></returns>
-    public static bool InterSectWithAABB(Ray ray, CustomAABB aabb)
+    public static bool InterSectWithAABB(Ray ray, ref CustomAABB aabb)
     {
         float tmin = (aabb.minExtent.x - ray.origin.x) / ray.direction.normalized.x;
         float tmax = (aabb.maxExtent.x - ray.origin.x) / ray.direction.normalized.x;
@@ -104,7 +104,9 @@ public class CustomRayCast : MonoBehaviour
 
         if (tzmax < tmax)
             tmax = tzmax;
-
+        //
+        // tmin 값이 t를 의미하는가? / Ray = Origin + Direction * t ( = distance or time )
+        aabb.hitPointWithRay = ray.GetPoint(tmin);
         return true;
     }
 

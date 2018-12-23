@@ -15,6 +15,7 @@ public struct CustomAABB {
     public Vector3 centerPos { get; private set; }
     public bool isEnable { set; get; }
 
+    public Vector3 hitPointWithRay;
 
     public void SettingSpeed(Vector3 speed)
     {
