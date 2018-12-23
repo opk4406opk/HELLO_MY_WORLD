@@ -60,7 +60,6 @@ public class CustomOctree
     private Vector3 offset = new Vector3(-0.5f, -0.5f, -0.5f);
     // 블록의 최소 단위.
     private Vector3 blockMinSize = new Vector3(1.0f, 1.0f, 1.0f);
-    private List<CollideInfo> collideCandidate = new List<CollideInfo>();
     // root min, max bound 의 경우 Octree가 생성하는 Node들중의
     // 가장 최상위 노드의 extent를 의미한다.
     public Vector3 rootMinBound { get; private set; }
@@ -153,7 +152,8 @@ public class CustomOctree
 
     public CollideInfo Collide(Ray ray)
     {
-        CollideNodeWithRay(ray, root);
+        List<CollideInfo> collideCandidate = new List<CollideInfo>();
+        CollideNodeWithRay(ray, root, ref collideCandidate);
 
         CollideInfo info;
         info.isCollide = false;
@@ -184,7 +184,7 @@ public class CustomOctree
     /// </summary>
     /// <param name="ray"></param>
     /// <param name="root"></param>
-    private void CollideNodeWithRay(Ray ray, COTNode root)
+    private void CollideNodeWithRay(Ray ray, COTNode root, ref List<CollideInfo> collideCandidate)
     {
         if (root == null) return;
 
@@ -203,7 +203,7 @@ public class CustomOctree
             if ((root.childs[i] != null) &&
                 (CustomRayCast.InterSectWithAABB(ray, root.childs[i].aabb)))
             {
-                CollideNodeWithRay(ray, root.childs[i]);
+                CollideNodeWithRay(ray, root.childs[i], ref collideCandidate);
             }
         }
     }

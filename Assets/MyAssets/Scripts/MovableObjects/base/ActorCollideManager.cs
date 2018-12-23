@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActorCollideManager : MonoBehaviour {
-    [SerializeField]
-    private NPCManager npcManager;
-
+public class ActorCollideManager : MonoBehaviour
+{
     private static ActorCollideManager _singleton = null;
     public static ActorCollideManager singleton
     {
@@ -23,16 +21,18 @@ public class ActorCollideManager : MonoBehaviour {
 
     public bool IsNpcCollide(Ray ray)
     {
-        foreach (var npc in npcManager.npcs)
+        if(NPCManager.singleton != null && NPCManager.singleton.npcs != null)
         {
-            if (CustomRayCast.InterSectWithBOX(ray, npc.GetActorController().GetMinExtent(),
-                npc.GetActorController().GetMaxExtent()))
+            foreach (var npc in NPCManager.singleton.npcs)
             {
-                ((INpc)npc).Talk();
-                return true;
+                if (CustomRayCast.InterSectWithBOX(ray, npc.GetActorController().GetMinExtent(),
+                    npc.GetActorController().GetMaxExtent()))
+                {
+                    ((INpc)npc).Talk();
+                    return true;
+                }
             }
         }
         return false;
     }
-
 }

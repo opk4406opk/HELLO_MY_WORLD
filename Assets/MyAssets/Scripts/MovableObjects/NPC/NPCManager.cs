@@ -25,6 +25,7 @@ public class NPCManager : MovableObjectSpawner
     {
         // to do
         _singleton = this;
+        npcs = new List<Actor>();
     }
 
     public override void GenerateToWorld()
