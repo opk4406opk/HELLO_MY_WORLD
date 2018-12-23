@@ -104,9 +104,10 @@ public class CustomRayCast : MonoBehaviour
 
         if (tzmax < tmax)
             tmax = tzmax;
-        //
+        // 테스트 코드임....
         // tmin 값이 t를 의미하는가? / Ray = Origin + Direction * t ( = distance or time )
         aabb.hitPointWithRay = ray.GetPoint(tmin);
+        //----------------------------------
         return true;
     }
 
