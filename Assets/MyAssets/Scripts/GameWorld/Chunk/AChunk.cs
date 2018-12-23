@@ -167,7 +167,7 @@ public abstract class AChunk : MonoBehaviour {
 
     }
 
-    protected void CubeBotFace(float x, float y, float z, BlockTileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
+    protected void CubeBottomFace(float x, float y, float z, BlockTileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
     {
 
         newVertices.Add(new Vector3(x, y - 1, z));
