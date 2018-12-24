@@ -102,7 +102,7 @@ public class World : MonoBehaviour
 
     //void OnDrawGizmos()
     //{
-    //   // _customOctree.DrawFullTree();
+    //    customOctree.DrawFullTree();
     //}
 
     public void LoadProcess()

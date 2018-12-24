@@ -108,7 +108,7 @@ public class PlayerMoveState : IState
         P2PNetworkManager.GetNetworkManagerInstance().PushCharStateMessage(GAMEPLAYER_CHAR_STATE.MOVE);
         //
         KojeomLogger.DebugLog("player moving..", LOG_TYPE.USER_INPUT);
-        Vector3 speed = dir * moveSpeed * Time.deltaTime;
+        Vector3 speed = dir.normalized * moveSpeed * Time.deltaTime;
         newPos = gamePlayer.transform.position + speed;
         gamePlayer.transform.position = newPos;
 
@@ -116,11 +116,21 @@ public class PlayerMoveState : IState
         //var collideInfo = containWorld.customOctree.Collide(gamePlayer.charInstance.GetCustomAABB());
         CustomAABB playerAABB = gamePlayer.charInstance.GetCustomAABB();
         playerAABB.SettingSpeed(speed);
-        var collideInfo = containWorld.customOctree.CollideWithSweptAABB(playerAABB);
+
+        var collideInfo = containWorld.customOctree.Collide(playerAABB);
         if (collideInfo.isCollide)
         {
-            KojeomLogger.DebugLog(string.Format("Player move test -> slide pos : {0}", collideInfo.slidePos, LOG_TYPE.DEBUG_TEST));
-            gamePlayer.AddPosition(collideInfo.slidePos);
+            float normalFaceX = 0.0f, normalFaceY = 0.0f, normalFaceZ = 0.0f;
+            float collisiontime = CustomAABB.SweptAABB(playerAABB, collideInfo.aabb, ref normalFaceX, ref normalFaceY, ref normalFaceZ);
+
+            float newX = playerAABB.centerPos.x + playerAABB.vx * collisiontime;
+            float newY = playerAABB.centerPos.y + playerAABB.vx * collisiontime;
+            float newZ = playerAABB.centerPos.z + playerAABB.vx * collisiontime;
+            playerAABB.Repositioning(new Vector3(newX, newY, newZ));
+            if (collisiontime < 1.0f)
+            {
+                gamePlayer.GetController().SetPosition(new Vector3(newX, newY, newZ));
+            }
         }
     }
 }

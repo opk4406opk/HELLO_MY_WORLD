@@ -43,8 +43,8 @@ public struct CollideInfo
 {
     public bool isCollide;
     public Vector3 hitBlockCenter;
-    public Vector3 slidePos;
     public Vector3 collisionPoint;
+    public CustomAABB aabb;
     public Block GetBlock()
     {
         var containWorld = WorldManager.instance.ContainedWorld(hitBlockCenter);
@@ -133,8 +133,8 @@ public class CustomOctree
         CollideInfo info;
         info.isCollide = false;
         info.hitBlockCenter = Vector3.zero;
-        info.slidePos = Vector3.zero;
         info.collisionPoint = Vector3.zero;
+        info.aabb = root.aabb;
         if (root.size == blockMinSize)
         {
             info.isCollide = true;
@@ -161,9 +161,9 @@ public class CustomOctree
         CollideInfo info;
         info.isCollide = false;
         info.hitBlockCenter = Vector3.zero;
-        info.slidePos = Vector3.zero;
         info.collisionPoint = Vector3.zero;
-        if(collideCandidate.Count > 0)
+        info.aabb = root.aabb;
+        if (collideCandidate.Count > 0)
         {
             float minDist = Vector3.Distance(ray.origin, collideCandidate[0].hitBlockCenter);
             info.isCollide = true;
@@ -194,8 +194,8 @@ public class CustomOctree
         CollideInfo info;
         info.isCollide = false;
         info.hitBlockCenter = Vector3.zero;
-        info.slidePos = Vector3.zero;
         info.collisionPoint = Vector3.zero;
+        info.aabb = root.aabb;
         if (root.size == blockMinSize)
         {
             info.isCollide = true;
@@ -228,8 +228,8 @@ public class CustomOctree
         CollideInfo info;
         info.isCollide = false;
         info.hitBlockCenter = Vector3.zero;
-        info.slidePos = Vector3.zero;
         info.collisionPoint = Vector3.zero;
+        info.aabb = root.aabb;
         if (root.size == blockMinSize) 
         {
             info.isCollide = true;
@@ -246,51 +246,6 @@ public class CustomOctree
         }
         return info;
     }
-
-    public CollideInfo CollideWithSweptAABB(CustomAABB other)
-    {
-        return CollideNodeWithSweptAABB(other, root, Vector3.zero);
-    }
-
-    private CollideInfo CollideNodeWithSweptAABB(CustomAABB other, COTNode root, Vector3 vec)
-    {
-        CollideInfo info;
-        info.isCollide = false;
-        info.hitBlockCenter = Vector3.zero;
-        info.slidePos = Vector3.zero;
-        info.collisionPoint = Vector3.zero;
-        if (root.size == blockMinSize)
-        {
-            info.isCollide = true;
-            info.hitBlockCenter = root.center;
-            info.slidePos = vec;
-            return info;
-        }
-        for (int i = 0; i < 8; i++)
-        {
-            if (root.childs[i] != null)
-            {
-                float normalx = 0.0f, normaly = 0.0f, normalZ = 0.0f;
-                float collisiontime = CustomAABB.SweptAABB(other, root.childs[i].aabb, ref normalx, ref normaly, ref normalZ);
-
-                other.Repositioning(new Vector3(other.vx * collisiontime, other.vy * collisiontime, other.vz * collisiontime));
-                float remainingtime = 1.0f - collisiontime;
-                float dotprod = (other.vx * normaly + other.vy * normalx + other.vz * normalZ) * remainingtime;
-
-                float newX = dotprod * normaly;
-                float newY = dotprod * normalx;
-                float newZ = dotprod * normalZ;
-                KojeomLogger.DebugLog(string.Format("collisionTime : {0}, remainingtime : {1}, dotprod : {2}",
-                    collisiontime, remainingtime, dotprod), LOG_TYPE.DEBUG_TEST);
-                if (remainingtime <= 0.0f)
-                {
-                    return CollideNodeWithSweptAABB(other, root.childs[i], new Vector3(newX, newY, newZ));
-                }
-            }
-        }
-        return info;
-    }
-
 
     private void DeleteNode(Vector3 pos, COTNode root)
     {
