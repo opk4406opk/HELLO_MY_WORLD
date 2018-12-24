@@ -71,8 +71,6 @@ public class WaterChunk : AChunk
                         world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerY = blockCenterY;
                         world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerZ = blockCenterZ;
                         world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].isRendered = true;
-                        // 월드맵에 생성된 블록의 중앙점을 이용해 Octree의 노드를 생성합니다.
-                        world.customOctree.Add(new Vector3(blockCenterX, blockCenterY, blockCenterZ));
                     }
 
                 }
