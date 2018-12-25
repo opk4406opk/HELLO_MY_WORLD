@@ -113,9 +113,7 @@ public class PlayerMoveState : IState
         gamePlayer.transform.position = newPos;
 
         World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
-        //var collideInfo = containWorld.customOctree.Collide(gamePlayer.charInstance.GetCustomAABB());
-        CustomAABB playerAABB = gamePlayer.charInstance.GetCustomAABB();
-        playerAABB.SettingSpeed(speed);
+        CustomAABB playerAABB = gamePlayer.charInstance.GetCustomAABB(speed);
 
         var collideInfo = containWorld.customOctree.Collide(playerAABB);
         if (collideInfo.isCollide)
@@ -123,13 +121,11 @@ public class PlayerMoveState : IState
             float normalFaceX = 0.0f, normalFaceY = 0.0f, normalFaceZ = 0.0f;
             float collisiontime = CustomAABB.SweptAABB(playerAABB, collideInfo.aabb, ref normalFaceX, ref normalFaceY, ref normalFaceZ);
 
-            float newX = playerAABB.centerPos.x + playerAABB.vx * collisiontime;
-            float newY = playerAABB.centerPos.y + playerAABB.vx * collisiontime;
-            float newZ = playerAABB.centerPos.z + playerAABB.vx * collisiontime;
-            playerAABB.Repositioning(new Vector3(newX, newY, newZ));
+            Vector3 slidePos = new Vector3(playerAABB.vx * collisiontime, 0.0f, playerAABB.vx * collisiontime);
             if (collisiontime < 1.0f)
             {
-                gamePlayer.GetController().SetPosition(new Vector3(newX, newY, newZ));
+                KojeomLogger.DebugLog(string.Format("collisionTime :{0}, slidePos : {1}", collisiontime, slidePos), LOG_TYPE.DEBUG_TEST);
+                gamePlayer.GetController().AddPostion(slidePos);
             }
         }
     }

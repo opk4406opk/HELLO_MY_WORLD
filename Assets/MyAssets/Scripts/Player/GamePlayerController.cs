@@ -71,6 +71,11 @@ public class GamePlayerController : MonoBehaviour {
         gamePlayer.transform.position = newPos;
     }
 
+    public void AddPostion(Vector3 addPos)
+    {
+        gamePlayer.transform.position += addPos;
+    }
+
     public void StartControllProcess()
     {
         isControllProcessOn = true;

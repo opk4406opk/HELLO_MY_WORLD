@@ -68,16 +68,6 @@ public class GamePlayer : NetworkBehaviour
         return playerController;
     }
 
-    public void SetPosition(Vector3 pos)
-    {
-        transform.position = pos;
-    }
-
-    public void AddPosition(Vector3 pos)
-    {
-        transform.position += pos;
-    }
-
     private void SetObjectLayer(bool isMine)
     {
         int layer = -999;

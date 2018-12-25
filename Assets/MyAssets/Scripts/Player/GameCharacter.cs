@@ -36,10 +36,10 @@ public class GameCharacter : MonoBehaviour {
         return boxCollider;
     }
 
-    public CustomAABB GetCustomAABB()
+    public CustomAABB GetCustomAABB(Vector3 moveSpeed)
     {
         CustomAABB aabb = new CustomAABB();
-        aabb.MakeAABB(boxCollider);
+        aabb.MakeAABB(boxCollider, moveSpeed.x, moveSpeed.y, moveSpeed.z);
         return aabb;
     }
 }
