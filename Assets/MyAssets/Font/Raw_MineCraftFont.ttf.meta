@@ -1,21 +1,22 @@
 fileFormatVersion: 2
-guid: 3ba81830e4540094b94a170e8f32e96c
-timeCreated: 1489405992
-licenseType: Free
+guid: 2718ce9872856b1409d1eba307b3a52f
 TrueTypeFontImporter:
+  externalObjects: {}
   serializedVersion: 4
   fontSize: 16
   forceTextureCase: -2
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: VCR OSD Mono
+  fontName: Minecraft
   fontNames:
-  - VCR OSD Mono
+  - Minecraft
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
   userData: 
   assetBundleName: 
   assetBundleVariant: 
