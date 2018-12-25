@@ -1,22 +1,25 @@
 [
-	 {"ROW_OFFSET" : "3"},
+  { "ROW_OFFSET": "3" },
 
   {
     "WORLD_IDX": "0",
     "WORLD_NAME": "SUB_WORLD_0",
     "X": "0",
+    "Y": "0",
     "Z": "0"
   },
   {
     "WORLD_IDX": "1",
     "WORLD_NAME": "SUB_WORLD_1",
     "X": "1",
+    "Y": "0",
     "Z": "0"
   },
   {
     "WORLD_IDX": "2",
     "WORLD_NAME": "SUB_WORLD_2",
     "X": "2",
+    "Y": "0",
     "Z": "0"
   },
 
@@ -24,18 +27,21 @@
     "WORLD_IDX": "3",
     "WORLD_NAME": "SUB_WORLD_3",
     "X": "0",
+    "Y": "0",
     "Z": "1"
   },
   {
     "WORLD_IDX": "4",
     "WORLD_NAME": "SUB_WORLD_4",
     "X": "1",
+    "Y": "0",
     "Z": "1"
   },
   {
     "WORLD_IDX": "5",
     "WORLD_NAME": "SUB_WORLD_5",
     "X": "2",
+    "Y": "0",
     "Z": "1"
   },
 
@@ -43,18 +49,87 @@
     "WORLD_IDX": "6",
     "WORLD_NAME": "SUB_WORLD_6",
     "X": "0",
+    "Y": "0",
     "Z": "2"
   },
   {
     "WORLD_IDX": "7",
     "WORLD_NAME": "SUB_WORLD_7",
     "X": "1",
+    "Y": "0",
     "Z": "2"
   },
   {
     "WORLD_IDX": "8",
     "WORLD_NAME": "SUB_WORLD_8",
     "X": "2",
+    "Y": "0",
+    "Z": "2"
+  },
+  {
+    "WORLD_IDX": "9",
+    "WORLD_NAME": "SUB_WORLD_0",
+    "X": "0",
+    "Y": "-1",
+    "Z": "0"
+  },
+  {
+    "WORLD_IDX": "10",
+    "WORLD_NAME": "SUB_WORLD_1",
+    "X": "1",
+    "Y": "-1",
+    "Z": "0"
+  },
+  {
+    "WORLD_IDX": "11",
+    "WORLD_NAME": "SUB_WORLD_2",
+    "X": "2",
+    "Y": "-1",
+    "Z": "0"
+  },
+
+  {
+    "WORLD_IDX": "12",
+    "WORLD_NAME": "SUB_WORLD_3",
+    "X": "0",
+    "Y": "-1",
+    "Z": "1"
+  },
+  {
+    "WORLD_IDX": "13",
+    "WORLD_NAME": "SUB_WORLD_4",
+    "X": "1",
+    "Y": "-1",
+    "Z": "1"
+  },
+  {
+    "WORLD_IDX": "14",
+    "WORLD_NAME": "SUB_WORLD_5",
+    "X": "2",
+    "Y": "-1",
+    "Z": "1"
+  },
+
+  {
+    "WORLD_IDX": "15",
+    "WORLD_NAME": "SUB_WORLD_6",
+    "X": "0",
+    "Y": "-1",
+    "Z": "2"
+  },
+  {
+    "WORLD_IDX": "16",
+    "WORLD_NAME": "SUB_WORLD_7",
+    "X": "1",
+    "Y": "-1",
+    "Z": "2"
+  },
+  {
+    "WORLD_IDX": "17",
+    "WORLD_NAME": "SUB_WORLD_8",
+    "X": "2",
+    "Y": "-1",
     "Z": "2"
   }
+
 ]

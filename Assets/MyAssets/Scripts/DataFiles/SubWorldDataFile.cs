@@ -7,6 +7,7 @@ public struct SubWorldData
     public int worldIdx;
     public string worldName;
     public int x;
+    public int y;
     public int z;
 }
 /// <summary>
@@ -18,6 +19,17 @@ public class SubWorldDataFile : MonoBehaviour
     private TextAsset jsonFile;
     private List<Dictionary<string, string>> jsonDataSheet;
     public List<SubWorldData> subWorldDataList { get; } = new List<SubWorldData>();
+    
+    // subworld 들은 아래와 같은 배열형식으로 구성.
+    // [0][1][2]   -- 1행
+    // [3][4][5]   -- 2행
+    // [6][7][N]...-- 3행
+    //  각 행(row)을 구분지어서 계산하기 위해 offset값을 따로 설정해서 사용.
+    // 여기서는 1행에 3개씩의 서브월드들이 존재하므로 offset값은 3이다.
+
+    /// <summary>
+    /// 각 서브월드들이 1개의 행에 몇개씩 있는지 판별하는 offset 값.
+    /// </summary>
     public int rowOffset { get; private set; }
 
 
@@ -58,6 +70,8 @@ public class SubWorldDataFile : MonoBehaviour
                     subWorldData.worldName = getValue;
                     extractedData.TryGetValue("X", out getValue);
                     subWorldData.x = int.Parse(getValue);
+                    extractedData.TryGetValue("Y", out getValue);
+                    subWorldData.y = int.Parse(getValue);
                     extractedData.TryGetValue("Z", out getValue);
                     subWorldData.z = int.Parse(getValue);
 

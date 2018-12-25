@@ -24,8 +24,9 @@ public class WorldDataFile
 
 public struct SubWorldNormalizedOffset
 {
-    SubWorldNormalizedOffset(int x, int z) { this.x = x; this.z = z; }
+    SubWorldNormalizedOffset(int x, int y, int z) { this.x = x; this.y = y; this.z = z;  }
     public int x;
+    public int y;
     public int z;
 }
 public class WorldState
@@ -145,6 +146,7 @@ public class WorldManager : MonoBehaviour
             worldState.subWorldInstance = subWorld;
             SubWorldNormalizedOffset normalizedSubOffset;
             normalizedSubOffset.x = subWorldData.x;
+            normalizedSubOffset.y = subWorldData.y;
             normalizedSubOffset.z = subWorldData.z;
             worldState.normalizedOffset = normalizedSubOffset;
             worldState.genInfo = WorldGenerateInfo.NotYet;
@@ -192,29 +194,32 @@ public class WorldManager : MonoBehaviour
                 // 
                 for(int x = offset.x - 1; x <= offset.x + 1; x++)
                 {
-                    for(int z = offset.z - 1; z <= offset.z + 1; z++)
+                    for(int y = offset.y - 1; y <= offset.y + 1; y++)
                     {
-                        int worldIdx = 0;
-                        SubWorldNormalizedOffset subWorldOffset;
-                        subWorldOffset.x = x;
-                        subWorldOffset.z = z;
-                        if (worldOffsetToIndex.TryGetValue(subWorldOffset, out worldIdx) == true)
+                        for (int z = offset.z - 1; z <= offset.z + 1; z++)
                         {
-                            switch(wholeWorldStates[worldIdx].realTimeStatus)
+                            int worldIdx = 0;
+                            SubWorldNormalizedOffset subWorldOffset;
+                            subWorldOffset.x = x;
+                            subWorldOffset.y = y;
+                            subWorldOffset.z = z;
+                            if (worldOffsetToIndex.TryGetValue(subWorldOffset, out worldIdx) == true)
                             {
-                                case WorldRealTimeStatus.None:
-                                    // nothing to do.
-                                    break;
-                                case WorldRealTimeStatus.NeedInGameReLoad:
-                                    wholeWorldStates[worldIdx].realTimeStatus = WorldRealTimeStatus.InGameReLoaded;
-                                    wholeWorldStates[worldIdx].subWorldInstance.Init(x * gameWorldConfig.sub_world_x_size,
-                                        z * gameWorldConfig.sub_world_z_size);
-                                    break;
+                                switch (wholeWorldStates[worldIdx].realTimeStatus)
+                                {
+                                    case WorldRealTimeStatus.None:
+                                        // nothing to do.
+                                        break;
+                                    case WorldRealTimeStatus.NeedInGameReLoad:
+                                        wholeWorldStates[worldIdx].realTimeStatus = WorldRealTimeStatus.InGameReLoaded;
+                                        wholeWorldStates[worldIdx].subWorldInstance.Init(x * gameWorldConfig.sub_world_x_size,
+                                            z * gameWorldConfig.sub_world_z_size);
+                                        break;
+                                }
                             }
                         }
                     }
                 }
-                
             }
             yield return null;
         }
@@ -230,7 +235,8 @@ public class WorldManager : MonoBehaviour
     {
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         int x = (int)objectPos.x / gameWorldConfig.sub_world_x_size;
+        int y = (int)objectPos.y / gameWorldConfig.sub_world_y_size;
         int z = ((int)objectPos.z / gameWorldConfig.sub_world_z_size) * SubWorldDataFile.instance.rowOffset;
-        return x + z;
+        return x + y + z;
     }
 }
