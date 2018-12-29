@@ -70,6 +70,7 @@ public class ModifyTerrain : MonoBehaviour
             blockY = (int)(collideInfo.hitBlockCenter.y);
             blockZ = (int)(collideInfo.hitBlockCenter.z);
             blockX -= world.worldOffsetX;
+            blockY -= world.worldOffsetY;
             blockZ -= world.worldOffsetZ;
             //-------------------------------------------------------------------------------
             if (isCreate)

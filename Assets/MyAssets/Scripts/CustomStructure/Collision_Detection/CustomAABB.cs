@@ -217,9 +217,9 @@ public struct CustomAABB {
         float exitTime = Mathf.Min(exitCandidates);
 
         // if there was no collision
-        if (entryTime > exitTime ||
-            xEntry < 0.0f && yEntry < 0.0f && zEntry < 0.0f ||
-            xEntry > 1.0f || yEntry > 1.0f || zEntry > 1.0f)
+        if ((entryTime > exitTime) ||
+            (xEntry < 0.0f && yEntry < 0.0f && zEntry < 0.0f) ||
+            (xEntry > 1.0f || yEntry > 1.0f || zEntry > 1.0f))
         {
             normalFaceX = 0.0f;
             normalFaceY = 0.0f;

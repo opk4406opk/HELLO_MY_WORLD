@@ -212,7 +212,9 @@ public class WorldManager : MonoBehaviour
                                         break;
                                     case WorldRealTimeStatus.NeedInGameReLoad:
                                         wholeWorldStates[worldIdx].realTimeStatus = WorldRealTimeStatus.InGameReLoaded;
-                                        wholeWorldStates[worldIdx].subWorldInstance.Init(x * gameWorldConfig.sub_world_x_size,
+                                        wholeWorldStates[worldIdx].subWorldInstance.Init(
+                                            x * gameWorldConfig.sub_world_x_size,
+                                            y * gameWorldConfig.sub_world_y_size,
                                             z * gameWorldConfig.sub_world_z_size);
                                         break;
                                 }
@@ -237,6 +239,7 @@ public class WorldManager : MonoBehaviour
         int x = (int)objectPos.x / gameWorldConfig.sub_world_x_size;
         int y = (int)objectPos.y / gameWorldConfig.sub_world_y_size;
         int z = ((int)objectPos.z / gameWorldConfig.sub_world_z_size) * SubWorldDataFile.instance.rowOffset;
+        KojeomLogger.DebugLog(string.Format("Player contained World Index : {0}", x + y + z), LOG_TYPE.DEBUG_TEST);
         return x + y + z;
     }
 }

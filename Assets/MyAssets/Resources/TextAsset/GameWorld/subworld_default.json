@@ -68,21 +68,21 @@
   },
   {
     "WORLD_IDX": "9",
-    "WORLD_NAME": "SUB_WORLD_0",
+    "WORLD_NAME": "SUB_WORLD_9",
     "X": "0",
     "Y": "-1",
     "Z": "0"
   },
   {
     "WORLD_IDX": "10",
-    "WORLD_NAME": "SUB_WORLD_1",
+    "WORLD_NAME": "SUB_WORLD_10",
     "X": "1",
     "Y": "-1",
     "Z": "0"
   },
   {
     "WORLD_IDX": "11",
-    "WORLD_NAME": "SUB_WORLD_2",
+    "WORLD_NAME": "SUB_WORLD_11",
     "X": "2",
     "Y": "-1",
     "Z": "0"
@@ -90,21 +90,21 @@
 
   {
     "WORLD_IDX": "12",
-    "WORLD_NAME": "SUB_WORLD_3",
+    "WORLD_NAME": "SUB_WORLD_12",
     "X": "0",
     "Y": "-1",
     "Z": "1"
   },
   {
     "WORLD_IDX": "13",
-    "WORLD_NAME": "SUB_WORLD_4",
+    "WORLD_NAME": "SUB_WORLD_13",
     "X": "1",
     "Y": "-1",
     "Z": "1"
   },
   {
     "WORLD_IDX": "14",
-    "WORLD_NAME": "SUB_WORLD_5",
+    "WORLD_NAME": "SUB_WORLD_14",
     "X": "2",
     "Y": "-1",
     "Z": "1"
@@ -112,21 +112,21 @@
 
   {
     "WORLD_IDX": "15",
-    "WORLD_NAME": "SUB_WORLD_6",
+    "WORLD_NAME": "SUB_WORLD_15",
     "X": "0",
     "Y": "-1",
     "Z": "2"
   },
   {
     "WORLD_IDX": "16",
-    "WORLD_NAME": "SUB_WORLD_7",
+    "WORLD_NAME": "SUB_WORLD_16",
     "X": "1",
     "Y": "-1",
     "Z": "2"
   },
   {
     "WORLD_IDX": "17",
-    "WORLD_NAME": "SUB_WORLD_8",
+    "WORLD_NAME": "SUB_WORLD_17",
     "X": "2",
     "Y": "-1",
     "Z": "2"

@@ -40,23 +40,28 @@ public class World : MonoBehaviour
     private int worldY = 0;
     private int worldZ = 0;
     private int chunkSize = 0;
+
     public int worldOffsetX { get; private set; } = 0;
+    public int worldOffsetY { get; private set; } = 0;
     public int worldOffsetZ { get; private set; } = 0;
+    
     private int chunkNumber = 0;
     public CustomOctree customOctree { get; } = new CustomOctree();
 
-    public void Init(int offsetX, int offsetZ)
+    public void Init(int offsetX, int offsetY, int offsetZ)
 	{
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         //
-        customOctree.Init(new Vector3(offsetX, 0, offsetZ), 
-            new Vector3(gameWorldConfig.sub_world_x_size + offsetX , gameWorldConfig.sub_world_y_size,
+        customOctree.Init(new Vector3(offsetX, offsetY, offsetZ), 
+            new Vector3(gameWorldConfig.sub_world_x_size + offsetX , 
+            gameWorldConfig.sub_world_y_size + offsetY,
             gameWorldConfig.sub_world_z_size + offsetZ));
         worldX = gameWorldConfig.sub_world_x_size;
         worldY = gameWorldConfig.sub_world_y_size;
         worldZ = gameWorldConfig.sub_world_z_size;
         chunkSize = gameWorldConfig.chunk_size;
         worldOffsetX = offsetX;
+        worldOffsetY = offsetY;
         worldOffsetZ = offsetZ;
 
         // init world data.
@@ -158,7 +163,7 @@ public class World : MonoBehaviour
                         chunkSlots[x, y, z].chunks[type].worldDataIdxY = y * chunkSize;
                         chunkSlots[x, y, z].chunks[type].worldDataIdxZ = z * chunkSize;
                         chunkSlots[x, y, z].chunks[type].worldCoordX = worldCoordX + worldOffsetX;
-                        chunkSlots[x, y, z].chunks[type].worldCoordY = worldCoordY;
+                        chunkSlots[x, y, z].chunks[type].worldCoordY = worldCoordY + worldOffsetY;
                         chunkSlots[x, y, z].chunks[type].worldCoordZ = worldCoordZ + worldOffsetZ;
                         chunkSlots[x, y, z].chunks[type].Init();
                         yield return new WaitForSeconds(WorldConfigFile.instance.GetConfig().chunkLoadIntervalSeconds);
