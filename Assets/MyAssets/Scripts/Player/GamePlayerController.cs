@@ -165,6 +165,11 @@ public class GamePlayerController : MonoBehaviour {
 
         // check collide with ground.
         World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
+        if (containWorld == null)
+        {
+            return;
+        }
+
         Vector3 bottomOffsetedPos = gamePlayer.transform.position;
         bottomOffsetedPos -= new Vector3(0.0f, 0.1f, 0.0f);
 

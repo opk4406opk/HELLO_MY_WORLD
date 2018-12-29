@@ -173,6 +173,11 @@ public class WorldManager : MonoBehaviour
     /// <returns></returns>
     public World ContainedWorld(Vector3 pos)
     {
+        int index = CalcSubWorldIndex(pos);
+        if(index > wholeWorldStates.Count)
+        {
+            return null;
+        }
         return wholeWorldStates[CalcSubWorldIndex(pos)].subWorldInstance;
     }
 

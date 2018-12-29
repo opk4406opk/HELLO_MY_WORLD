@@ -113,6 +113,11 @@ public class PlayerMoveState : IState
         gamePlayer.transform.position = newPos;
 
         World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
+        if(containWorld == null)
+        {
+            return;
+        }
+
         CustomAABB playerAABB = gamePlayer.charInstance.GetCustomAABB(speed);
 
         var collideInfo = containWorld.customOctree.Collide(playerAABB);
