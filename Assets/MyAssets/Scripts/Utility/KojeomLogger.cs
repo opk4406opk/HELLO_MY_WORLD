@@ -66,7 +66,7 @@ public class KojeomLogger {
                 guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
             case LOG_TYPE.INFO:
-                consoleLog.AppendFormat("<color=green><b>[INFO]</b></color> {0}", log);
+                consoleLog.AppendFormat("<color=#3366FF><b>[INFO]</b></color> {0}", log);
                 guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
             case LOG_TYPE.NETWORK_SERVER_INFO:
