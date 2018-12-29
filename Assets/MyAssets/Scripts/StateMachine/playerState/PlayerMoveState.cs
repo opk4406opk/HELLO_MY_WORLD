@@ -118,9 +118,9 @@ public class PlayerMoveState : IState
         var collideInfo = containWorld.customOctree.Collide(playerAABB);
         if (collideInfo.isCollide)
         {
-            KojeomLogger.DebugLog(string.Format("Player collision with Block(AABB) x : {0}, y : {1}, z : {2}, type : {3}",
-                collideInfo.GetBlock().centerX, collideInfo.GetBlock().centerY,
-                collideInfo.GetBlock().centerZ, collideInfo.GetBlock().type), LOG_TYPE.DEBUG_TEST);
+            //KojeomLogger.DebugLog(string.Format("Player collision with Block(AABB) x : {0}, y : {1}, z : {2}, type : {3}",
+            //    collideInfo.GetBlock().centerX, collideInfo.GetBlock().centerY,
+            //    collideInfo.GetBlock().centerZ, collideInfo.GetBlock().type), LOG_TYPE.DEBUG_TEST);
             float normalFaceX = 0.0f, normalFaceY = 0.0f, normalFaceZ = 0.0f;
             float collisiontime = CustomAABB.SweptAABB(playerAABB, collideInfo.aabb, ref normalFaceX, ref normalFaceY, ref normalFaceZ);
 
@@ -128,7 +128,7 @@ public class PlayerMoveState : IState
             if (collisiontime < 1.0f)
             {
                 KojeomLogger.DebugLog(string.Format("collisionTime :{0}, slidePos : {1}", collisiontime, slidePos), LOG_TYPE.DEBUG_TEST);
-                gamePlayer.GetController().AddPostion(slidePos);
+                gamePlayer.GetController().LerpPosition(slidePos);
             }
         }
     }

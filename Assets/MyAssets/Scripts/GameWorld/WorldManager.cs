@@ -237,7 +237,7 @@ public class WorldManager : MonoBehaviour
     {
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         int x = (int)objectPos.x / gameWorldConfig.sub_world_x_size;
-        int y = (int)objectPos.y / gameWorldConfig.sub_world_y_size;
+        int y = ((int)objectPos.y / gameWorldConfig.sub_world_y_size) * SubWorldDataFile.instance.elements_per_layer;
         int z = ((int)objectPos.z / gameWorldConfig.sub_world_z_size) * SubWorldDataFile.instance.rowOffset;
         KojeomLogger.DebugLog(string.Format("Player contained World Index : {0}", x + y + z), LOG_TYPE.DEBUG_TEST);
         return x + y + z;

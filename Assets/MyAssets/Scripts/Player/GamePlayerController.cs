@@ -76,6 +76,12 @@ public class GamePlayerController : MonoBehaviour {
         gamePlayer.transform.position += addPos;
     }
 
+    public void LerpPosition(Vector3 addPos)
+    {
+        Vector3 newPos = Vector3.Lerp(gamePlayer.transform.position, gamePlayer.transform.position + addPos, Time.deltaTime);
+        gamePlayer.transform.position = newPos;
+    }
+
     public void StartControllProcess()
     {
         isControllProcessOn = true;
