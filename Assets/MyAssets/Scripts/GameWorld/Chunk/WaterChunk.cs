@@ -39,9 +39,9 @@ public class WaterChunk : AChunk
                     if (blockType == BlockTileType.WATER)
                     {
                         float cubeX, cubeY, cubeZ;
-                        cubeX = relativeX + _worldCoordX;
-                        cubeY = relativeY + _worldCoordY;
-                        cubeZ = relativeZ + _worldCoordZ;
+                        cubeX = relativeX + _realCoordX;
+                        cubeY = relativeY + _realCoordY;
+                        cubeZ = relativeZ + _realCoordZ;
 
                         // 중첩되는 Face들은 버텍스를 생성하지 않는다.
                         if (GetBlockType(blockIdxX, blockIdxY + 1, blockIdxZ) == BlockTileType.EMPTY) CubeTopFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);

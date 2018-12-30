@@ -39,6 +39,9 @@ public class COTNode
         isCanDelete = false;
     }
 }
+/// <summary>
+/// 충돌한 지점에 대한 정보 구조체.
+/// </summary>
 public struct CollideInfo
 {
     public bool isCollide;
@@ -48,7 +51,8 @@ public struct CollideInfo
     public Block GetBlock()
     {
         var containWorld = WorldManager.instance.ContainedWorld(hitBlockCenter);
-        return containWorld.worldBlockData[(int)hitBlockCenter.x, (int)hitBlockCenter.y, (int)hitBlockCenter.z];
+        Vector3 worldCoord = WorldManager.instance.GetRealCoordToWorldCoord(hitBlockCenter);
+        return containWorld.worldBlockData[(int)worldCoord.x, (int)worldCoord.y, (int)worldCoord.z];
     }
 }
 

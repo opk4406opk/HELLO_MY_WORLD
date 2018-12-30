@@ -173,12 +173,12 @@ public class WorldManager : MonoBehaviour
     /// <returns></returns>
     public World ContainedWorld(Vector3 pos)
     {
-        int index = CalcSubWorldIndex(pos);
+        int index = GetSubWorldIndex(pos);
         if(index > wholeWorldStates.Count)
         {
             return null;
         }
-        return wholeWorldStates[CalcSubWorldIndex(pos)].subWorldInstance;
+        return wholeWorldStates[GetSubWorldIndex(pos)].subWorldInstance;
     }
 
     IEnumerator DynamicSubWorldLoader()
@@ -191,7 +191,7 @@ public class WorldManager : MonoBehaviour
             if(PlayerManager.instance != null)
             {
                 Transform playerTrans = PlayerManager.instance.myGamePlayer.charInstance.transform;
-                int playerPositionedSubWorldIdx = CalcSubWorldIndex(playerTrans.position);
+                int playerPositionedSubWorldIdx = GetSubWorldIndex(playerTrans.position);
                 var offset = wholeWorldStates[playerPositionedSubWorldIdx].normalizedOffset;
                 // 플레이어가 위치한 서브월드의 offset 위치를 기준삼아
                 // 8방향(대각선, 좌우상하)의 subWorld를 활성화 시킨다. 
@@ -238,13 +238,26 @@ public class WorldManager : MonoBehaviour
     /// </summary>
     /// <param name="objectPos">오브젝트 위치</param>
     /// <returns></returns>
-    public int CalcSubWorldIndex(Vector3 objectPos)
+    public int GetSubWorldIndex(Vector3 objectPos)
     {
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         int x = (int)objectPos.x / gameWorldConfig.sub_world_x_size;
         int y = ((int)objectPos.y / gameWorldConfig.sub_world_y_size) * SubWorldDataFile.instance.elements_per_layer;
         int z = ((int)objectPos.z / gameWorldConfig.sub_world_z_size) * SubWorldDataFile.instance.rowOffset;
-        KojeomLogger.DebugLog(string.Format("Player contained World Index : {0}", x + y + z), LOG_TYPE.DEBUG_TEST);
         return x + y + z;
+    }
+
+    /// <summary>
+    /// 게임 속 실제 좌표(=Real) 값을 월드배열 좌표값으로 변환.
+    /// </summary>
+    /// <param name="objectPos"></param>
+    /// <returns></returns>
+    public Vector3 GetRealCoordToWorldCoord(Vector3 objectPos)
+    {
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        int x = (int)objectPos.x / gameWorldConfig.sub_world_x_size;
+        int y = ((int)objectPos.y / gameWorldConfig.sub_world_y_size) * SubWorldDataFile.instance.elements_per_layer;
+        int z = ((int)objectPos.z / gameWorldConfig.sub_world_z_size) * SubWorldDataFile.instance.rowOffset;
+        return new Vector3(x, y, z);
     }
 }

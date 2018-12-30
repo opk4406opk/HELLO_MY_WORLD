@@ -12,7 +12,7 @@ public struct CustomAABB {
     public Vector3 minExtent;
     public Vector3 maxExtent;
     // in world space coordinate
-    public Vector3 centerPos { get; private set; }
+    public Vector3 centerPos;
     public bool isEnable { set; get; }
 
     public Vector3 hitPointWithRay;
@@ -27,6 +27,13 @@ public struct CustomAABB {
         width = other.width;
         height = other.height;
         depth = other.depth;
+    }
+
+    public void MakeAABB(Vector3 vec)
+    {
+        minExtent += vec;
+        maxExtent += vec;
+        centerPos = (maxExtent + minExtent) / 2;
     }
 
     public void MakeAABB(Vector3[] points, float velocityX = 0.0f, float velocityY = 0.0f, float velocityZ = 0.0f)
@@ -117,6 +124,21 @@ public struct CustomAABB {
         return false;
     }
 
+
+    public static CustomAABB GetSweptBroadphaseBox(CustomAABB b)
+    {
+        CustomAABB broadphasebox = new CustomAABB();
+        broadphasebox.MakeAABB(b);
+        broadphasebox.centerPos.x = b.vx > 0 ? b.centerPos.x : b.centerPos.x + b.vx;
+        broadphasebox.centerPos.y = b.vy > 0 ? b.centerPos.y : b.centerPos.y + b.vy;
+        broadphasebox.centerPos.y = b.vz > 0 ? b.centerPos.z : b.centerPos.z + b.vz;
+        //
+        broadphasebox.width = b.vx > 0 ? b.vx + b.width : b.width - b.vx;
+        broadphasebox.height = b.vy > 0 ? b.vy + b.height : b.height - b.vy;
+        broadphasebox.depth = b.vz > 0 ? b.vz + b.depth : b.depth - b.vz;
+
+        return broadphasebox;
+    }
     /// <summary>
     /// https://www.gamedev.net/articles/programming/general-and-gameplay-programming/swept-aabb-collision-detection-and-response-r3084/
     /// </summary>

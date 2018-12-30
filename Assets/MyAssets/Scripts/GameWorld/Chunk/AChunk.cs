@@ -48,20 +48,20 @@ public abstract class AChunk : MonoBehaviour {
         set { _worldDataIdxZ = value; }
     }
     // 월드 좌표에서 실제로 Chunk가 존재하는 좌표 x,y,z.
-    protected float _worldCoordX;
-    public float worldCoordX
+    protected float _realCoordX;
+    public float realCoordX
     {
-        set { _worldCoordX = value; }
+        set { _realCoordX = value; }
     }
-    protected float _worldCoordY;
-    public float worldCoordY
+    protected float _realCoordY;
+    public float realCoordY
     {
-        set { _worldCoordY = value; }
+        set { _realCoordY = value; }
     }
-    protected float _worldCoordZ;
-    public float worldCoordZ
+    protected float _realCoordZ;
+    public float realCoordZ
     {
-        set { _worldCoordZ = value; }
+        set { _realCoordZ = value; }
     }
     //-------------------------------------------------------
     protected bool _update;

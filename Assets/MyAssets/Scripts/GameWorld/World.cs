@@ -162,9 +162,9 @@ public class World : MonoBehaviour
                         chunkSlots[x, y, z].chunks[type].worldDataIdxX = x * chunkSize;
                         chunkSlots[x, y, z].chunks[type].worldDataIdxY = y * chunkSize;
                         chunkSlots[x, y, z].chunks[type].worldDataIdxZ = z * chunkSize;
-                        chunkSlots[x, y, z].chunks[type].worldCoordX = worldCoordX + worldOffsetX;
-                        chunkSlots[x, y, z].chunks[type].worldCoordY = worldCoordY + worldOffsetY;
-                        chunkSlots[x, y, z].chunks[type].worldCoordZ = worldCoordZ + worldOffsetZ;
+                        chunkSlots[x, y, z].chunks[type].realCoordX = worldCoordX + worldOffsetX;
+                        chunkSlots[x, y, z].chunks[type].realCoordY = worldCoordY + worldOffsetY;
+                        chunkSlots[x, y, z].chunks[type].realCoordZ = worldCoordZ + worldOffsetZ;
                         chunkSlots[x, y, z].chunks[type].Init();
                         yield return new WaitForSeconds(WorldConfigFile.instance.GetConfig().chunkLoadIntervalSeconds);
                     }

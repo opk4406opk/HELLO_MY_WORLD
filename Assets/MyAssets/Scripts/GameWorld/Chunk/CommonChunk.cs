@@ -51,9 +51,9 @@ public class CommonChunk : AChunk
                         //if (Block(x, y, z - 1) == 0) CubeSouth(x, y, z, Block(x, y, z));
                         //test codes.
                         float cubeX, cubeY, cubeZ;
-                        cubeX = relativeX + _worldCoordX;
-                        cubeY = relativeY + _worldCoordY;
-                        cubeZ = relativeZ + _worldCoordZ;
+                        cubeX = relativeX + _realCoordX;
+                        cubeY = relativeY + _realCoordY;
+                        cubeZ = relativeZ + _realCoordZ;
 
                         CubeTopFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
                         CubeBottomFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
