@@ -223,7 +223,7 @@ public class CustomOctree
     }
 
     /// <summary>
-    /// Octree 중에 특정 AABB와 충돌하는 노드를 찾습니다.
+    /// Octree 노드 중에 특정 AABB와 충돌하는 노드를 찾습니다.
     /// </summary>
     /// <param name="other"></param>
     /// <param name="root"></param>

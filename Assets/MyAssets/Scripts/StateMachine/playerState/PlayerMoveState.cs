@@ -106,11 +106,7 @@ public class PlayerMoveState : IState
         }
         //
         P2PNetworkManager.GetNetworkManagerInstance().PushCharStateMessage(GAMEPLAYER_CHAR_STATE.MOVE);
-        //
-        KojeomLogger.DebugLog("player moving..", LOG_TYPE.USER_INPUT);
-        Vector3 speed = dir.normalized * moveSpeed * Time.deltaTime;
-        newPos = gamePlayer.transform.position + speed;
-        gamePlayer.transform.position = newPos;
+        Vector3 speed = dir.normalized * moveSpeed;
 
         World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
         if(containWorld == null)
@@ -118,22 +114,29 @@ public class PlayerMoveState : IState
             return;
         }
 
-        CustomAABB playerAABB = CustomAABB.GetSweptBroadphaseBox(gamePlayer.charInstance.GetCustomAABB(speed));
+        //CustomAABB playerAABB = CustomAABB.GetSweptBroadphaseBox(gamePlayer.charInstance.GetCustomAABB(speed));
+        CustomAABB playerAABB = gamePlayer.charInstance.GetCustomAABB(speed);
         var collideInfo = containWorld.customOctree.Collide(playerAABB);
         if (collideInfo.isCollide)
         {
             KojeomLogger.DebugLog(string.Format("Player collision with Block(AABB) x : {0}, y : {1}, z : {2}, type : {3}",
                 collideInfo.GetBlock().centerX, collideInfo.GetBlock().centerY,
-                collideInfo.GetBlock().centerZ, collideInfo.GetBlock().type), LOG_TYPE.DEBUG_TEST);
+                collideInfo.GetBlock().centerZ, (BlockTileType)collideInfo.GetBlock().type), LOG_TYPE.DEBUG_TEST);
             float normalFaceX = 0.0f, normalFaceY = 0.0f, normalFaceZ = 0.0f;
             float collisiontime = CustomAABB.SweptAABB(playerAABB, collideInfo.aabb, ref normalFaceX, ref normalFaceY, ref normalFaceZ);
 
-            Vector3 slidePos = new Vector3(playerAABB.vx * collisiontime, 0.0f, playerAABB.vx * collisiontime);
+            Vector3 slide = new Vector3(playerAABB.vx * collisiontime, 0.0f, playerAABB.vz * collisiontime);
+            KojeomLogger.DebugLog(string.Format("collisionTime :{0}, slidePos : {1}", collisiontime, slide), LOG_TYPE.DEBUG_TEST);
+            gamePlayer.GetController().LerpPosition(slide);
             if (collisiontime < 1.0f)
             {
-                KojeomLogger.DebugLog(string.Format("collisionTime :{0}, slidePos : {1}", collisiontime, slidePos), LOG_TYPE.DEBUG_TEST);
-                gamePlayer.GetController().LerpPosition(slidePos);
+               
+                
             }
+        }
+        else
+        {
+            gamePlayer.GetController().LerpPosition(speed);
         }
     }
 }
