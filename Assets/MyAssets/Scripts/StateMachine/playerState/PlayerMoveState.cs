@@ -112,9 +112,8 @@ public class PlayerMoveState : IState
         {
             return;
         }
-        //CustomAABB playerAABB = CustomAABB.GetSweptBroadphaseBox(gamePlayer.charInstance.GetCustomAABB(speed));
         CustomAABB playerAABB = gamePlayer.charInstance.GetCustomAABB(speed);
-        var collideInfo = containWorld.customOctree.Collide(playerAABB);
+        var collideInfo = containWorld.customOctree.Collide(gamePlayer.charInstance.GetCustomAABB());
         if (collideInfo.isCollide)
         {
             KojeomLogger.DebugLog(string.Format("Player collision with Block(AABB) x : {0}, y : {1}, z : {2}, type : {3}",
@@ -127,7 +126,10 @@ public class PlayerMoveState : IState
             Vector3 slide = new Vector3(playerAABB.vx * remainTime * normalFaceZ, 0.0f, playerAABB.vz * remainTime * normalFaceX);
             KojeomLogger.DebugLog(string.Format("collisionTime :{0}, slidePos : {1}, normalFaceX : {2}, normalFaceY : {3}, normalFaceZ : {4}",
                 collisionTime, slide, normalFaceX, normalFaceY, normalFaceZ), LOG_TYPE.DEBUG_TEST);
-            gamePlayer.GetController().LerpPosition(slide);
+            if(collisionTime < 1.0f)
+            {
+                gamePlayer.GetController().LerpPosition(slide);
+            }
         }
         else
         {

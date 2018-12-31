@@ -36,7 +36,7 @@ public struct CustomAABB {
         minExtent += vec;
         maxExtent += vec;
         centerPos = (maxExtent + minExtent) / 2;
-        Vector3 diff = (maxExtent - minExtent) / 2;
+        Vector3 diff = maxExtent - minExtent;
         width = diff.x;
         height = diff.y;
         depth = diff.z;
@@ -61,7 +61,7 @@ public struct CustomAABB {
         }
 
         centerPos = (maxExtent + minExtent) / 2;
-        Vector3 diff = (maxExtent - minExtent) / 2;
+        Vector3 diff = maxExtent - minExtent;
         width = diff.x;
         height = diff.y;
         depth = diff.z;
@@ -75,7 +75,7 @@ public struct CustomAABB {
         this.minExtent = minExtent;
         this.maxExtent = maxExtent;
         centerPos = (this.maxExtent + this.minExtent) / 2;
-        Vector3 diff = (maxExtent - minExtent) /2;
+        Vector3 diff = maxExtent - minExtent;
         width = diff.x;
         height = diff.y;
         depth = diff.z;
@@ -94,7 +94,7 @@ public struct CustomAABB {
         minExtent = boxColl.bounds.min;
         maxExtent = boxColl.bounds.max;
         centerPos = (maxExtent + minExtent) / 2;
-        Vector3 diff = (maxExtent - minExtent) / 2;
+        Vector3 diff = maxExtent - minExtent;
         width = diff.x;
         height = diff.y;
         depth = diff.z;
@@ -138,9 +138,9 @@ public struct CustomAABB {
     {
         CustomAABB broadphasebox = new CustomAABB();
         broadphasebox.MakeAABB(b);
-        broadphasebox.centerPos.x = b.vx > 0 ? b.centerPos.x : b.centerPos.x + b.vx;
-        broadphasebox.centerPos.y = b.vy > 0 ? b.centerPos.y : b.centerPos.y + b.vy;
-        broadphasebox.centerPos.y = b.vz > 0 ? b.centerPos.z : b.centerPos.z + b.vz;
+        broadphasebox.minExtent.x = b.vx > 0 ? b.minExtent.x : b.minExtent.x + b.vx;
+        broadphasebox.minExtent.y = b.vy > 0 ? b.minExtent.y : b.minExtent.y + b.vy;
+        broadphasebox.minExtent.y = b.vz > 0 ? b.minExtent.z : b.minExtent.z + b.vz;
         //
         broadphasebox.width = b.vx > 0 ? b.vx + b.width : b.width - b.vx;
         broadphasebox.height = b.vy > 0 ? b.vy + b.height : b.height - b.vy;
@@ -148,6 +148,18 @@ public struct CustomAABB {
 
         return broadphasebox;
     }
+
+
+    public static bool BroadphaseAABBCheck(CustomAABB broadphase, CustomAABB b2)
+    {
+        return !(broadphase.minExtent.x + broadphase.width < b2.minExtent.x ||
+            broadphase.minExtent.x > b2.minExtent.x + b2.width ||
+            broadphase.minExtent.y + broadphase.height < b2.minExtent.y ||
+            broadphase.minExtent.y > b2.minExtent.y + b2.height ||
+            broadphase.minExtent.z > b2.minExtent.z + b2.depth ||
+            broadphase.minExtent.z + broadphase.depth < b2.minExtent.z);
+    }
+
     /// <summary>
     /// https://www.gamedev.net/articles/programming/general-and-gameplay-programming/swept-aabb-collision-detection-and-response-r3084/
     /// </summary>
@@ -165,35 +177,35 @@ public struct CustomAABB {
         // find the distance between the objects on the near and far sides for both x and y
         if (moveAABB.vx > 0.0f)
         {
-            xInvEntry = staticAABB.maxExtent.x - (moveAABB.maxExtent.x + moveAABB.width);
-            xInvExit = (staticAABB.maxExtent.x + staticAABB.width) - moveAABB.maxExtent.x;
+            xInvEntry = staticAABB.minExtent.x - (moveAABB.minExtent.x + moveAABB.width);
+            xInvExit = (staticAABB.minExtent.x + staticAABB.width) - moveAABB.minExtent.x;
         }
         else
         {
-            xInvEntry = (staticAABB.maxExtent.x + staticAABB.width) - moveAABB.maxExtent.x;
-            xInvExit = staticAABB.maxExtent.x - (moveAABB.maxExtent.x + moveAABB.width);
+            xInvEntry = (staticAABB.minExtent.x + staticAABB.width) - moveAABB.minExtent.x;
+            xInvExit = staticAABB.minExtent.x - (moveAABB.minExtent.x + moveAABB.width);
         }
 
         if (moveAABB.vy > 0.0f)
         {
-            yInvEntry = staticAABB.maxExtent.y - (moveAABB.maxExtent.y + moveAABB.height);
-            yInvExit = (staticAABB.maxExtent.y + staticAABB.height) - moveAABB.maxExtent.y;
+            yInvEntry = staticAABB.minExtent.y - (moveAABB.minExtent.y + moveAABB.height);
+            yInvExit = (staticAABB.minExtent.y + staticAABB.height) - moveAABB.minExtent.y;
         }
         else
         {
-            yInvEntry = (staticAABB.maxExtent.y + staticAABB.height) - moveAABB.maxExtent.y;
-            yInvExit = staticAABB.maxExtent.y - (moveAABB.maxExtent.y + moveAABB.height);
+            yInvEntry = (staticAABB.minExtent.y + staticAABB.height) - moveAABB.minExtent.y;
+            yInvExit = staticAABB.minExtent.y - (moveAABB.minExtent.y + moveAABB.height);
         }
 
         if (moveAABB.vz > 0.0f)
         {
-            zInvEntry = staticAABB.maxExtent.z - (moveAABB.maxExtent.z + moveAABB.depth);
-            zInvExit = (staticAABB.maxExtent.z + staticAABB.depth) - moveAABB.maxExtent.z;
+            zInvEntry = staticAABB.minExtent.z - (moveAABB.minExtent.z + moveAABB.depth);
+            zInvExit = (staticAABB.minExtent.z + staticAABB.depth) - moveAABB.minExtent.z;
         }
         else
         {
-            zInvEntry = (staticAABB.maxExtent.z + staticAABB.depth) - moveAABB.maxExtent.z;
-            zInvExit = staticAABB.maxExtent.z - (moveAABB.maxExtent.z + moveAABB.depth);
+            zInvEntry = (staticAABB.minExtent.z + staticAABB.depth) - moveAABB.minExtent.z;
+            zInvExit = staticAABB.minExtent.z - (moveAABB.minExtent.z + moveAABB.depth);
         }
 
         //
