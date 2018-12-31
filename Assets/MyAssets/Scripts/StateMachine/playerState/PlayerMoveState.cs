@@ -88,7 +88,6 @@ public class PlayerMoveState : IState
             KojeomLogger.DebugLog(string.Format("curPressedKey : {0}", curPressedInput.keyCode), LOG_TYPE.USER_INPUT);
         }
         Vector3 dir = Vector3.zero, newPos = Vector3.zero;
-        Vector3 originPos = gamePlayer.transform.position;
 
         if(Application.platform == RuntimePlatform.WindowsEditor ||
             Application.platform == RuntimePlatform.WindowsPlayer)
@@ -122,16 +121,17 @@ public class PlayerMoveState : IState
             KojeomLogger.DebugLog(string.Format("Player collision with Block(AABB) x : {0}, y : {1}, z : {2}, type : {3}",
                 collideInfo.GetBlock().centerX, collideInfo.GetBlock().centerY,
                 collideInfo.GetBlock().centerZ, (BlockTileType)collideInfo.GetBlock().type), LOG_TYPE.DEBUG_TEST);
-            float normalFaceX = 0.0f, normalFaceY = 0.0f, normalFaceZ = 0.0f;
-            float collisiontime = CustomAABB.SweptAABB(playerAABB, collideInfo.aabb, ref normalFaceX, ref normalFaceY, ref normalFaceZ);
 
-            Vector3 slide = new Vector3(playerAABB.vx * collisiontime, 0.0f, playerAABB.vz * collisiontime);
-            KojeomLogger.DebugLog(string.Format("collisionTime :{0}, slidePos : {1}", collisiontime, slide), LOG_TYPE.DEBUG_TEST);
-            gamePlayer.GetController().LerpPosition(slide);
-            if (collisiontime < 1.0f)
+            float normalFaceX = 0.0f, normalFaceY = 0.0f, normalFaceZ = 0.0f;
+            float collisionTime = CustomAABB.SweptAABB(playerAABB, collideInfo.aabb, ref normalFaceX, ref normalFaceY, ref normalFaceZ);
+            float remainTime = 1.0f - collisionTime;
+            Vector3 slide = new Vector3(playerAABB.vx * collisionTime * normalFaceZ, 0.0f, playerAABB.vz * collisionTime * normalFaceX);
+            KojeomLogger.DebugLog(string.Format("collisionTime :{0}, slidePos : {1}, normalFaceX : {2}, normalFaceY : {3}, normalFaceZ : {4}",
+                collisionTime, slide, normalFaceX, normalFaceY, normalFaceZ), LOG_TYPE.DEBUG_TEST);
+            gamePlayer.GetController().LerpPosition(-slide);
+
+            if (collisionTime < 1.0f)
             {
-               
-                
             }
         }
         else

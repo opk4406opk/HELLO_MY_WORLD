@@ -11,7 +11,9 @@ public struct CustomAABB {
 
     public Vector3 minExtent;
     public Vector3 maxExtent;
-    // in world space coordinate
+    /// <summary>
+    ///  in world space coordinate
+    /// </summary>
     public Vector3 centerPos;
     public bool isEnable { set; get; }
 

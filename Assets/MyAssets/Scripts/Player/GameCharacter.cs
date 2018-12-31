@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
+﻿using UnityEngine;
 
 public class GameCharacter : MonoBehaviour {
     [SerializeField]
@@ -40,6 +37,13 @@ public class GameCharacter : MonoBehaviour {
     {
         CustomAABB aabb = new CustomAABB();
         aabb.MakeAABB(boxCollider, moveSpeed.x, moveSpeed.y, moveSpeed.z);
+        return aabb;
+    }
+
+    public CustomAABB GetCustomAABB()
+    {
+        CustomAABB aabb = new CustomAABB();
+        aabb.MakeAABB(boxCollider);
         return aabb;
     }
 }

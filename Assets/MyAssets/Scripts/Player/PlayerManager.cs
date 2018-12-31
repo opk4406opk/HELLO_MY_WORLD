@@ -31,7 +31,7 @@ public class PlayerManager : MonoBehaviour {
     public static Vector3 GetGamePlayerInitPos()
     {
         //임시로 정해진 값.
-        return new Vector3(0.0f, 48.0f, 0.0f);
+        return new Vector3(0.0f, 60.0f, 0.0f);
     }
     /// <summary>
     /// 플레이어 컨트롤러를 시작합니다.
