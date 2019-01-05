@@ -16,7 +16,8 @@ public enum POPUP_TYPE
     sellItem = 7,
     charInfo = 8,
     // network.
-    waitingConnect = 9
+    waitingConnect = 9,
+    promptServerIP = 10
 }
 
 /// <summary>
@@ -24,73 +25,33 @@ public enum POPUP_TYPE
 /// </summary>
 public class UIPopupSupervisor : MonoBehaviour {
 
-    private static bool _isInvenOpen = false;
-    public static bool isInvenOpen
-    {
-        get { return _isInvenOpen; }
-    }
-    private static bool _isGameMenuOpen = false;
-    public static bool isGameMenuOpen
-    {
-        get { return _isGameMenuOpen; }
-    }
+    // in-game UI popups.
+    public static bool isInvenOpen { get; private set; } = false;
+    public static bool isGameMenuOpen { get; private set; } = false;
+    public static bool isGameMessageOpen { get; private set; } = false;
+    public static bool isItemDataOpen { get; private set; } = false;
+    public static bool isCraftItemOpen { get; private set; } = false;
+    public static bool isShopOpen { get; private set; } = false;
+    public static bool isPurchaseItemOpen { get; private set; } = false;
+    public static bool isSellItemOpen { get; private set; } = false;
+    // network UI popups.
+    public static bool isWaitingConnectOpen { get; private set; } = false;
+    public static bool isPromptServerIPOpen { get; private set; } = false;
 
-    private static bool _isGameMessageOpen = false;
-    public static bool isGameMessageOpen
-    {
-        get { return _isGameMenuOpen; }
-    }
-
-    private static bool _isItemDataOpen = false;
-    public static bool isItemDataOpen
-    {
-        get { return _isItemDataOpen; }
-    }
-
-    private static bool _isCraftItemOpen = false;
-    public static bool isCraftItemOpen
-    {
-        get { return _isCraftItemOpen; }
-    }
-
-    private static bool _isShopOpen = false;
-    public static bool isShopOpen
-    {
-        get { return _isShopOpen; }
-    }
-
-    private static bool _isPurchaseItemOpen = false;
-    public static bool isPurchaseItemOpen
-    {
-        get { return _isPurchaseItemOpen; }
-    }
-
-    private static bool _isSellItemOpen = false;
-    public static bool isSellItemOpen
-    {
-        get { return _isSellItemOpen; }
-    }
-
-    private static bool _isWaitingConnectOpen = false;
-    public static bool isWaitingConnectOpen
-    {
-        get { return _isWaitingConnectOpen; }
-    }
-
+    //
     private static bool _isAllPopupClose = false;
-    public static bool isAllpopupClose
+    public static bool isInGameAllPopupClose
     {
         get
         {
-            if ((_isInvenOpen == false) &&
-               (_isGameMenuOpen == false) &&
-               (_isGameMessageOpen == false) &&
-               (_isItemDataOpen == false) &&
-               (_isCraftItemOpen == false) &&
-               (_isShopOpen == false) &&
-               (_isPurchaseItemOpen == false) &&
-               (_isSellItemOpen == false) &&
-               (_isWaitingConnectOpen == false))
+            if ((isInvenOpen == false) &&
+               (isGameMenuOpen == false) &&
+               (isGameMessageOpen == false) &&
+               (isItemDataOpen == false) &&
+               (isCraftItemOpen == false) &&
+               (isShopOpen == false) &&
+               (isPurchaseItemOpen == false) &&
+               (isSellItemOpen == false))
             {
                 _isAllPopupClose = true;
                 return _isAllPopupClose;
@@ -105,80 +66,87 @@ public class UIPopupSupervisor : MonoBehaviour {
         switch (popuptype)
         {
             case POPUP_TYPE.craftItem:
-                if (_isCraftItemOpen == false)
+                if (isCraftItemOpen == false)
                 {
                     SceneManager.LoadSceneAsync("popup_craftItem", LoadSceneMode.Additive);
-                    _isCraftItemOpen = true;
+                    isCraftItemOpen = true;
                     _isAllPopupClose = false;
                 }
                 break;
             case POPUP_TYPE.inven:
-                if (_isInvenOpen == false)
+                if (isInvenOpen == false)
                 {
                     SceneManager.LoadSceneAsync("popup_inventory", LoadSceneMode.Additive);
-                    _isInvenOpen = true;
+                    isInvenOpen = true;
                     _isAllPopupClose = false;
                 }
                 break;
             case POPUP_TYPE.shop:
-                if (_isShopOpen == false)
+                if (isShopOpen == false)
                 {
                     SceneManager.LoadSceneAsync("popup_shop", LoadSceneMode.Additive);
-                    _isShopOpen = true;
+                    isShopOpen = true;
                     _isAllPopupClose = false;
                 }
                 break;
             case POPUP_TYPE.gameMenu:
-                if (_isGameMenuOpen == false)
+                if (isGameMenuOpen == false)
                 {
                     SceneManager.LoadSceneAsync("popup_menu", LoadSceneMode.Additive);
-                    _isGameMenuOpen = true;
+                    isGameMenuOpen = true;
                     _isAllPopupClose = false;
                 }
                 break;
             case POPUP_TYPE.gameMessage:
-                if (_isGameMessageOpen == false)
+                if (isGameMessageOpen == false)
                 {
                     SceneManager.LoadSceneAsync("popup_message", LoadSceneMode.Additive);
-                    _isGameMessageOpen = true;
+                    isGameMessageOpen = true;
                     _isAllPopupClose = false;
                 }
                 break;
             case POPUP_TYPE.itemData:
-                if (_isItemDataOpen == false)
+                if (isItemDataOpen == false)
                 {
                     SceneManager.LoadSceneAsync("popup_ItemData", LoadSceneMode.Additive);
-                    _isItemDataOpen = true;
+                    isItemDataOpen = true;
                     _isAllPopupClose = false;
                 }
                 break;
             case POPUP_TYPE.purchaseItem:
-                if (_isPurchaseItemOpen == false)
+                if (isPurchaseItemOpen == false)
                 {
                     SceneManager.LoadSceneAsync("popup_purChaseItem", LoadSceneMode.Additive);
-                    _isPurchaseItemOpen = true;
+                    isPurchaseItemOpen = true;
                     _isAllPopupClose = false;
                 }
                 break;
             case POPUP_TYPE.sellItem:
-                if (_isSellItemOpen == false)
+                if (isSellItemOpen == false)
                 {
                     SceneManager.LoadSceneAsync("popup_sellItem", LoadSceneMode.Additive);
-                    _isSellItemOpen = true;
+                    isSellItemOpen = true;
                     _isAllPopupClose = false;
                 }
                 break;
             case POPUP_TYPE.charInfo:
                 SceneManager.LoadSceneAsync("popup_chInfo", LoadSceneMode.Additive);
                 break;
+
+            // Network UI Popups.
             case POPUP_TYPE.waitingConnect:
-                if(_isWaitingConnectOpen == false)
+                if(isWaitingConnectOpen == false)
                 {
                     SceneManager.LoadSceneAsync("popup_waitingConnect", LoadSceneMode.Additive);
-                    _isWaitingConnectOpen = true;
-                    _isAllPopupClose = false;
+                    isWaitingConnectOpen = true;
                 }
-                
+                break;
+            case POPUP_TYPE.promptServerIP:
+                if (isPromptServerIPOpen == false)
+                {
+                    SceneManager.LoadSceneAsync("popup_prompt_server_ip", LoadSceneMode.Additive);
+                    isPromptServerIPOpen = true;
+                }
                 break;
         }
     }
@@ -189,42 +157,48 @@ public class UIPopupSupervisor : MonoBehaviour {
         {
             case POPUP_TYPE.craftItem:
                 SceneManager.UnloadSceneAsync("popup_craftItem");
-                _isCraftItemOpen = false;
+                isCraftItemOpen = false;
                 break;
             case POPUP_TYPE.inven:
                 SceneManager.UnloadSceneAsync("popup_inventory");
-                _isInvenOpen = false;
+                isInvenOpen = false;
                 break;
             case POPUP_TYPE.shop:
                 SceneManager.UnloadSceneAsync("popup_shop");
-                _isShopOpen = false;
+                isShopOpen = false;
                 break;
             case POPUP_TYPE.gameMenu:
                 SceneManager.UnloadSceneAsync("popup_menu");
-                _isGameMenuOpen = false;
+                isGameMenuOpen = false;
                 break;
             case POPUP_TYPE.gameMessage:
                 SceneManager.UnloadSceneAsync("popup_message");
-                _isGameMessageOpen = false;
+                isGameMessageOpen = false;
                 break;
             case POPUP_TYPE.itemData:
                 SceneManager.UnloadSceneAsync("popup_ItemData");
-                _isItemDataOpen = false;
+                isItemDataOpen = false;
                 break;
             case POPUP_TYPE.purchaseItem:
                 SceneManager.UnloadSceneAsync("popup_purChaseItem");
-                _isPurchaseItemOpen = false;
+                isPurchaseItemOpen = false;
                 break;
             case POPUP_TYPE.sellItem:
                 SceneManager.UnloadSceneAsync("popup_sellItem");
-                _isSellItemOpen = false;
+                isSellItemOpen = false;
                 break;
             case POPUP_TYPE.charInfo:
                 SceneManager.UnloadSceneAsync("popup_chInfo");
                 break;
+
+            // Network UI Popups.
             case POPUP_TYPE.waitingConnect:
                 SceneManager.UnloadSceneAsync("popup_waitingConnect");
-                _isWaitingConnectOpen = false;
+                isWaitingConnectOpen = false;
+                break;
+            case POPUP_TYPE.promptServerIP:
+                SceneManager.UnloadSceneAsync("popup_prompt_server_ip");
+                isPromptServerIPOpen = false;
                 break;
         }
     }

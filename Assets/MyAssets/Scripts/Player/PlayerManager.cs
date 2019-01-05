@@ -21,7 +21,7 @@ public class PlayerManager : MonoBehaviour {
         gamePlayerPrefab = P2PNetworkManager.singleton.playerPrefab;
         instance = this;
         //
-        myGamePlayer = P2PNetworkManager.GetNetworkManagerInstance().GetMyGamePlayer();
+        myGamePlayer = P2PNetworkManager.GetInstance().GetMyGamePlayer();
         myGamePlayer.GetController().Init(Camera.main, myGamePlayer);
         //Player Manager 하위 종속으로 변경.
         myGamePlayer.transform.parent = gameObject.transform;

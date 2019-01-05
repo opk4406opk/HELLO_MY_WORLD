@@ -6,32 +6,10 @@ using System.Collections;
 /// </summary>
 public class CharacterData : MonoBehaviour {
 
-    private string _chName;
-    public string chName
-    {
-        set { _chName = value; }
-        get { return _chName; }
-    }
-    private int _chLevel;
-    public int chLevel
-    {
-        set { _chLevel = value; }
-        get { return _chLevel; }
-    }
-
-    private string _detailScript;
-    public string detailScript
-    {
-        set { _detailScript = value; }
-        get { return _detailScript; }
-    }
-
-    private string _chType;
-    public string chType
-    {
-        set { _chType = value; }
-        get { return _chType; }
-    }
+    public string chName { set; get; }
+    public int chLevel { set; get; }
+    public string detailScript { set; get; }
+    public string chType { set; get; }
 
     private string _chFaceName;
     public string chFaceName
@@ -48,7 +26,7 @@ public class CharacterData : MonoBehaviour {
 
     public void InitData()
     {
-        lbl_name.text = _chName;
+        lbl_name.text = chName;
         SetTexture(_chFaceName);
         txt_chFace.mainTexture = faceTexture;
     }

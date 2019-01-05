@@ -6,7 +6,7 @@ using System.Data;
 using System.Text;
 using UnityEngine;
 
-public class ShopUIManager : MonoBehaviour {
+public class ShopUIManager : APopupUI {
 
     [SerializeField]
     private GameObject invenItemSlotPrefab;
@@ -16,9 +16,6 @@ public class ShopUIManager : MonoBehaviour {
     private GameObject shopItemSlotPrefab;
     [SerializeField]
     private GameObject uiShopItemGridObj; 
-
-    [SerializeField]
-    private GameObject popupShopObj;
 
     private readonly int defaultItemSlot = 10;
     private List<ItemData> invenItemSlotList = new List<ItemData>();
@@ -51,43 +48,12 @@ public class ShopUIManager : MonoBehaviour {
         return lastestSelectItem;
     }
 
-    private void ScaleUpEffect()
-    {
-        popupShopObj.transform.localScale = new Vector3(0, 0, 0);
-        Vector3 scaleUp = new Vector3(1, 1, 1);
-        iTween.ScaleTo(popupShopObj, iTween.Hash("scale", scaleUp,
-            "name", "scaleUp",
-            "time", 1.0f,
-            "speed", 10.0f,
-            "easetype", iTween.EaseType.linear,
-            "looptype", iTween.LoopType.none));
-    }
-    private void ScaleDownEffect(string _callBack)
-    {
-        popupShopObj.transform.localScale = new Vector3(1, 1, 1);
-        Vector3 scaleDown = new Vector3(0, 0, 0);
-        iTween.ScaleTo(popupShopObj, iTween.Hash("scale", scaleDown,
-            "name", "scaleDown",
-            "time", 1.0f,
-            "speed", 10.0f,
-            "easetype", iTween.EaseType.linear,
-            "looptype", iTween.LoopType.none,
-            "oncomplete", _callBack,
-            "oncompletetarget", gameObject));
-    }
     public void ClickExit()
     {
         // to do
         ScaleDownEffect("CallBackPopupClose");
     }
-    /// <summary>
-    /// ScaleDown 애니메이션이 종료된 후, 호출되어지는 팝업창 종료 메소드.
-    /// </summary>
-    private void CallBackPopupClose()
-    {
-        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.shop);
-    }
-
+  
     private void CreateInvenEmptySlot(int _num)
     {
         for (int idx = 0; idx < _num; ++idx)
@@ -230,5 +196,10 @@ public class ShopUIManager : MonoBehaviour {
     {
         lastestSelectItem = itemData;
         UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.sellItem);
+    }
+
+    protected override void CallBackPopupClose()
+    {
+        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.shop);
     }
 }

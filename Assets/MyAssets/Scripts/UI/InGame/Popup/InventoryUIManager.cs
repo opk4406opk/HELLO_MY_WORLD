@@ -9,14 +9,12 @@ using System.Text;
 /// <summary>
 /// 게임내 사용자의 인벤토리를 관리하는 클래스.
 /// </summary>
-public class InventoryUIManager : MonoBehaviour {
+public class InventoryUIManager : APopupUI {
 
     [SerializeField]
     private GameObject itemSlotPrefab;
     [SerializeField]
     private GameObject uiGridObj;
-    [SerializeField]
-    private GameObject popupObj;
 
     private readonly int defaultItemSlot = 10;
     private List<ItemData> itemSlotList = new List<ItemData>();
@@ -49,42 +47,11 @@ public class InventoryUIManager : MonoBehaviour {
         return lastestSelectItem;
     }
 
-    private void ScaleUpEffect()
-    {
-        popupObj.transform.localScale = new Vector3(0, 0, 0);
-        Vector3 scaleUp = new Vector3(1, 1, 1);
-        iTween.ScaleTo(popupObj, iTween.Hash("scale", scaleUp,
-            "name", "scaleUp",
-            "time", 1.0f,
-            "speed", 10.0f,
-            "easetype", iTween.EaseType.linear,
-            "looptype", iTween.LoopType.none));
-    }
-    private void ScaleDownEffect(string _callBack)
-    {
-        popupObj.transform.localScale = new Vector3(1, 1, 1);
-        Vector3 scaleDown = new Vector3(0, 0, 0);
-        iTween.ScaleTo(popupObj, iTween.Hash("scale", scaleDown,
-            "name", "scaleDown",
-            "time", 1.0f,
-            "speed", 10.0f,
-            "easetype", iTween.EaseType.linear,
-            "looptype", iTween.LoopType.none,
-            "oncomplete", _callBack,
-            "oncompletetarget", gameObject));
-    }
     public void ClickExit()
     {
         ScaleDownEffect("CallBackPopupClose");
     }
-    /// <summary>
-    /// ScaleDown 애니메이션이 종료된 후, 호출되어지는 팝업창 종료 메소드.
-    /// </summary>
-    private void CallBackPopupClose()
-    {
-        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.inven);
-    }
-
+ 
     private void CreateEmptySlot(int _num)
     {
         for (int idx = 0; idx < _num; ++idx)
@@ -168,4 +135,8 @@ public class InventoryUIManager : MonoBehaviour {
         UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.itemData);
     }
 
+    protected override void CallBackPopupClose()
+    {
+        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.inven);
+    }
 }

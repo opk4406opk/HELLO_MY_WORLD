@@ -125,10 +125,10 @@ public class GameManager : MonoBehaviour
         Instantiate(netMgr, new Vector3(0, 0, 0), Quaternion.identity);
         //
         KojeomLogger.DebugLog("StartHost", LOG_TYPE.INFO);
-        P2PNetworkManager.GetNetworkManagerInstance().onlineScene = "InGame";
-        var netClient = P2PNetworkManager.GetNetworkManagerInstance().StartHost();
-        P2PNetworkManager.GetNetworkManagerInstance().isHost = true;
-        P2PNetworkManager.GetNetworkManagerInstance().LateInit();
+        P2PNetworkManager.GetInstance().onlineScene = "InGame";
+        var netClient = P2PNetworkManager.GetInstance().StartHost();
+        P2PNetworkManager.GetInstance().isHost = true;
+        P2PNetworkManager.GetInstance().LateInit();
         // InGame씬에서 바로 시작하는 경우에는 해당 flag를 true로 설정.
         GameNetworkStateFlags.isReceivedRandomSeedFormServer = true;
         GameNetworkStateFlags.isReceiveGameUserList = true;
@@ -200,7 +200,7 @@ public class GameManager : MonoBehaviour
     {
         if(GameStatus.isInGameSceneStart == false)
         {
-            P2PNetworkManager.GetNetworkManagerInstance().ReqInGameUserList();
+            P2PNetworkManager.GetInstance().ReqInGameUserList();
         }
         KojeomLogger.DebugLog("네트워크 접속이 완료될 때 까지 대기합니다.", LOG_TYPE.SYSTEM);
         while (true)

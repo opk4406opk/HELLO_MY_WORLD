@@ -72,10 +72,8 @@ public class GameMessage
 /// <summary>
 /// UI-팝업 메세지창 클래스.
 /// </summary>
-public class MessageManager : MonoBehaviour {
+public class MessageManager : APopupUI {
 
-    [SerializeField]
-    private GameObject popupObj;
     [SerializeField]
     private UILabel lbl_message;
 
@@ -87,38 +85,11 @@ public class MessageManager : MonoBehaviour {
 
     public void OnClose()
     {
-        ScaleDownEffect("CallBackClose");
+        ScaleDownEffect("CallBackPopupClose");
     }
 
-    private void ScaleUpEffect()
-    {
-        popupObj.transform.localScale = new Vector3(0, 0, 0);
-        Vector3 scaleUp = new Vector3(1, 1, 1);
-        iTween.ScaleTo(popupObj, iTween.Hash("scale", scaleUp,
-            "name", "scaleUp",
-            "time", 1.0f,
-            "speed", 10.0f,
-            "easetype", iTween.EaseType.linear,
-            "looptype", iTween.LoopType.none));
-    }
-
-    private void ScaleDownEffect(string _callBack)
-    {
-        popupObj.transform.localScale = new Vector3(1, 1, 1);
-        Vector3 scaleDown = new Vector3(0, 0, 0);
-        iTween.ScaleTo(popupObj, iTween.Hash("scale", scaleDown,
-            "name", "scaleDown",
-            "time", 1.0f,
-            "speed", 10.0f,
-            "easetype", iTween.EaseType.linear,
-            "looptype", iTween.LoopType.none,
-            "oncomplete", _callBack,
-            "oncompletetarget", gameObject));
-    }
-
-    private void CallBackClose()
+    protected override void CallBackPopupClose()
     {
         UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.gameMessage);
     }
-
 }

@@ -124,9 +124,9 @@ public class GameNetworkStateFlags
     {
         get
         {
-            if(P2PNetworkManager.GetNetworkManagerInstance() != null)
+            if(P2PNetworkManager.GetInstance() != null)
             {
-                return P2PNetworkManager.GetNetworkManagerInstance().IsMyGamePlayerInUserList();
+                return P2PNetworkManager.GetInstance().IsMyGamePlayerInUserList();
             }
             else
             {
@@ -137,7 +137,7 @@ public class GameNetworkStateFlags
 }
 
 /// <summary>
-/// 현재 unity3d 엔진에서 stable .NET 3.5 버전에 맞춘 테스트 네트워크매니저 class.
+/// P2P 네트워크매니저 class.
 /// </summary>
 public class P2PNetworkManager : NetworkManager {
     // TEST_loginServer_func
@@ -231,7 +231,7 @@ public class P2PNetworkManager : NetworkManager {
     }
 
     private static P2PNetworkManager instance;
-    public static P2PNetworkManager GetNetworkManagerInstance()
+    public static P2PNetworkManager GetInstance()
     {
         if (instance == null)
         {

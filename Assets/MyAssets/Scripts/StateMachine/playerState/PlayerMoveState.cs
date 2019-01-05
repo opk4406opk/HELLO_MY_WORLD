@@ -104,7 +104,7 @@ public class PlayerMoveState : IState
             return;
         }
         //
-        P2PNetworkManager.GetNetworkManagerInstance().PushCharStateMessage(GAMEPLAYER_CHAR_STATE.MOVE);
+        P2PNetworkManager.GetInstance().PushCharStateMessage(GAMEPLAYER_CHAR_STATE.MOVE);
         Vector3 speed = dir.normalized * moveSpeed;
 
         World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);

@@ -5,14 +5,12 @@ using Mono.Data.Sqlite;
 using System.Data;
 using System.Text;
 
-public class CraftItemUIManager : MonoBehaviour {
+public class CraftItemUIManager : APopupUI {
 
     [SerializeField]
     private GameObject itemSlotPrefab;
     [SerializeField]
     private GameObject uiGridObj;
-    [SerializeField]
-    private GameObject popupObj;
     [SerializeField]
     private UIPopupList selectCraftItemList;
     [SerializeField]
@@ -351,37 +349,12 @@ public class CraftItemUIManager : MonoBehaviour {
         uiGridObj.GetComponent<UIGrid>().Reposition();
     }
 
-    private void ScaleUpEffect()
-    {
-        popupObj.transform.localScale = new Vector3(0, 0, 0);
-        Vector3 scaleUp = new Vector3(1, 1, 1);
-        iTween.ScaleTo(popupObj, iTween.Hash("scale", scaleUp,
-            "name", "scaleUp",
-            "time", 1.0f,
-            "speed", 10.0f,
-            "easetype", iTween.EaseType.linear,
-            "looptype", iTween.LoopType.none));
-    }
-    private void ScaleDownEffect(string _callBack)
-    {
-        popupObj.transform.localScale = new Vector3(1, 1, 1);
-        Vector3 scaleDown = new Vector3(0, 0, 0);
-        iTween.ScaleTo(popupObj, iTween.Hash("scale", scaleDown,
-            "name", "scaleDown",
-            "time", 1.0f,
-            "speed", 10.0f,
-            "easetype", iTween.EaseType.linear,
-            "looptype", iTween.LoopType.none,
-            "oncomplete", _callBack,
-            "oncompletetarget", gameObject));
-    }
-
     public void OnClose()
     {
         ScaleDownEffect("CallBackPopupClose");
     }
 
-    private void CallBackPopupClose()
+    protected override void CallBackPopupClose()
     {
         UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.craftItem);
     }

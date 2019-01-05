@@ -197,7 +197,7 @@ public class GamePlayerController : MonoBehaviour {
         if (InGameUISupervisor.singleton != null)
         {
             var state = InGameUISupervisor.singleton.chattingBoardState;
-            if (state == CHATTING_BOARD_STATE.CLOSE && UIPopupSupervisor.isAllpopupClose)
+            if (state == CHATTING_BOARD_STATE.CLOSE && UIPopupSupervisor.isInGameAllPopupClose)
             {
                 var inputData = InputManager.singleton.GetInputData();
                 if (inputData.state == INPUT_STATE.CHARACTER_MOVE)

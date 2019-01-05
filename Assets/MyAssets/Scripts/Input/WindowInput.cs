@@ -149,7 +149,7 @@ public class WindowInput : AInput
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
                 curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
-                if (UIPopupSupervisor.isAllpopupClose == true)
+                if (UIPopupSupervisor.isInGameAllPopupClose == true)
                 {
                     modifyTerrain.AddBlockCursor(ray, clickPos, BeltItemSelector.singleton.curSelectBlockType);
                 }
@@ -158,7 +158,7 @@ public class WindowInput : AInput
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
                 curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
-                if (UIPopupSupervisor.isAllpopupClose == true)
+                if (UIPopupSupervisor.isInGameAllPopupClose == true)
                 {
                     modifyTerrain.ReplaceBlockCursor(ray, clickPos, (byte)BlockTileType.EMPTY);
                 }

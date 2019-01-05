@@ -4,7 +4,7 @@ using System;
 /// <summary>
 /// 캐릭터 선택창에서 팝업되는 세부정보를 관리하는 클래스.
 /// </summary>
-public class PopupChData : MonoBehaviour
+public class PopupChData : APopupUI
 {
     [SerializeField]
     private UILabel chName;
@@ -14,38 +14,12 @@ public class PopupChData : MonoBehaviour
     private UILabel chType;
     [SerializeField]
     private UILabel chDetailScript;
-    [SerializeField]
-    private GameObject popupObj;
+
 
     void Start()
     {
         SetData();
         ScaleUpEffect();
-    }
-
-    private void ScaleUpEffect()
-    {
-        popupObj.transform.localScale = new Vector3(0, 0, 0);
-        Vector3 scaleUp = new Vector3(1, 1, 1);
-        iTween.ScaleTo(popupObj, iTween.Hash("scale", scaleUp,
-            "name", "scaleUp",
-            "time", 1.0f,
-            "speed", 10.0f,
-            "easetype", iTween.EaseType.linear,
-            "looptype", iTween.LoopType.none));
-    }
-    private void ScaleDownEffect(string _callBack)
-    {
-        popupObj.transform.localScale = new Vector3(1, 1, 1);
-        Vector3 scaleDown = new Vector3(0, 0, 0);
-        iTween.ScaleTo(popupObj, iTween.Hash("scale", scaleDown,
-            "name", "scaleDown",
-            "time", 1.0f,
-            "speed", 10.0f,
-            "easetype", iTween.EaseType.linear,
-            "looptype", iTween.LoopType.none,
-            "oncomplete", _callBack,
-            "oncompletetarget", gameObject));
     }
 
     public void OnClickClose()
@@ -148,22 +122,14 @@ public class PopupChData : MonoBehaviour
     /// </summary>
     private void CallBackSingleGameProcess()
     {
-        var netClient = P2PNetworkManager.GetNetworkManagerInstance().StartHost();
-        P2PNetworkManager.GetNetworkManagerInstance().LateInit();
-        P2PNetworkManager.GetNetworkManagerInstance().isHost = true;
+        var netClient = P2PNetworkManager.GetInstance().StartHost();
+        P2PNetworkManager.GetInstance().LateInit();
+        P2PNetworkManager.GetInstance().isHost = true;
     }
 
     private void PopupExitProcess()
     {
         ScaleDownEffect("CallBackPopupClose");
-    }
-
-    /// <summary>
-    /// ScaleDown 애니메이션이 종료된 후, 호출되어지는 팝업창 종료 메소드.
-    /// </summary>
-    private void CallBackPopupClose()
-    {
-        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.charInfo);
     }
 
     private void SetData()
@@ -173,5 +139,10 @@ public class PopupChData : MonoBehaviour
         chLevel.text = selectCharData.chLevel.ToString();
         chType.text = selectCharData.chType;
         chDetailScript.text = selectCharData.detailScript;
+    }
+
+    protected override void CallBackPopupClose()
+    {
+        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.charInfo);
     }
 }
