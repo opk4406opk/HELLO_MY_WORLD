@@ -10,16 +10,6 @@ public struct CustomVector3
     public float x;
     public float y;
     public float z;
-    private static readonly CustomVector3 zeroVector;
-    private static readonly CustomVector3 oneVector;
-    private static readonly CustomVector3 upVector;
-    private static readonly CustomVector3 downVector;
-    private static readonly CustomVector3 leftVector;
-    private static readonly CustomVector3 rightVector;
-    private static readonly CustomVector3 forwardVector;
-    private static readonly CustomVector3 backVector;
-    private static readonly CustomVector3 positiveInfinityVector;
-    private static readonly CustomVector3 negativeInfinityVector;
 
     public CustomVector3(float x, float y, float z)
     {
@@ -216,76 +206,16 @@ public struct CustomVector3
         return new CustomVector3(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y), Mathf.Max(lhs.z, rhs.z));
     }
 
-    public static CustomVector3 zero
-    {
-        get
-        {
-            return zeroVector;
-        }
-    }
-    public static CustomVector3 one
-    {
-        get
-        {
-            return oneVector;
-        }
-    }
-    public static CustomVector3 forward
-    {
-        get
-        {
-            return forwardVector;
-        }
-    }
-    public static CustomVector3 back
-    {
-        get
-        {
-            return backVector;
-        }
-    }
-    public static CustomVector3 up
-    {
-        get
-        {
-            return upVector;
-        }
-    }
-    public static CustomVector3 down
-    {
-        get
-        {
-            return downVector;
-        }
-    }
-    public static CustomVector3 left
-    {
-        get
-        {
-            return leftVector;
-        }
-    }
-    public static CustomVector3 right
-    {
-        get
-        {
-            return rightVector;
-        }
-    }
-    public static CustomVector3 positiveInfinity
-    {
-        get
-        {
-            return positiveInfinityVector;
-        }
-    }
-    public static CustomVector3 negativeInfinity
-    {
-        get
-        {
-            return negativeInfinityVector;
-        }
-    }
+    public static CustomVector3 zero { get; private set; }
+    public static CustomVector3 one { get; private set; }
+    public static CustomVector3 forward { get; private set; }
+    public static CustomVector3 back { get; private set; }
+    public static CustomVector3 up { get; private set; }
+    public static CustomVector3 down { get; private set; }
+    public static CustomVector3 left { get; private set; }
+    public static CustomVector3 right { get; private set; }
+    public static CustomVector3 positiveInfinity { get; private set; }
+    public static CustomVector3 negativeInfinity { get; private set; }
     public static CustomVector3 operator +(CustomVector3 a, CustomVector3 b)
     {
         return new CustomVector3(a.x + b.x, a.y + b.y, a.z + b.z);
@@ -329,15 +259,15 @@ public struct CustomVector3
     
     static CustomVector3()
     {
-        zeroVector = new CustomVector3(0f, 0f, 0f);
-        oneVector = new CustomVector3(1f, 1f, 1f);
-        upVector = new CustomVector3(0f, 1f, 0f);
-        downVector = new CustomVector3(0f, -1f, 0f);
-        leftVector = new CustomVector3(-1f, 0f, 0f);
-        rightVector = new CustomVector3(1f, 0f, 0f);
-        forwardVector = new CustomVector3(0f, 0f, 1f);
-        backVector = new CustomVector3(0f, 0f, -1f);
-        positiveInfinityVector = new CustomVector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
-        negativeInfinityVector = new CustomVector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
+        zero = new CustomVector3(0f, 0f, 0f);
+        one = new CustomVector3(1f, 1f, 1f);
+        up = new CustomVector3(0f, 1f, 0f);
+        down = new CustomVector3(0f, -1f, 0f);
+        left = new CustomVector3(-1f, 0f, 0f);
+        right = new CustomVector3(1f, 0f, 0f);
+        forward = new CustomVector3(0f, 0f, 1f);
+        back = new CustomVector3(0f, 0f, -1f);
+        positiveInfinity = new CustomVector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+        negativeInfinity = new CustomVector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
     }
 }

@@ -149,7 +149,7 @@ public class GamePlayer : NetworkBehaviour
                 // 게임플레이어가 먼저 로컬에 생성될 수 있다. 따라서, 유저리스트에서 해당 Connection에 대한 정보를
                 // 가져올 수 있을때까지 계속 기다린다.
                 // -> 접속, 생성에 따른 절차가 일목요연하게 정리되지 않아 일단 임시로 이러한 방법을 사용한다.
-                GameNetUser user = null;
+                P2PGameNetUser user = null;
                 while(true)
                 {
                     user = P2PNetworkManager.GetInstance().FindUserInList(netConnectionID);

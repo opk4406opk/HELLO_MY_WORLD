@@ -133,6 +133,29 @@ public struct CustomAABB {
         return false;
     }
 
+    bool GetCollideFaceNormal(CustomAABB other, ref Vector3 normal)
+    {
+        Vector3[] faces =
+        {
+            new Vector3(-1, 0, 0), // 'left' face normal (-x direction)
+            new Vector3(1, 0, 0), // 'right' face normal (+x direction)
+            new Vector3(0, -1, 0), // 'bottom' face normal (-y direction)
+            new Vector3(0, 1, 0), // 'top' face normal (+y direction)
+            new Vector3(0, 0, -1), // 'far' face normal (-z direction)
+            new Vector3(0, 0, 1) // 'near' face normal (+z direction)
+        };
+        float[] distances =
+        {
+            (centerPos.x - other.centerPos.x), 
+            (other.centerPos.x - centerPos.x), 
+            (centerPos.y - other.centerPos.y),
+            (other.centerPos.y - centerPos.y),
+            (centerPos.z - other.centerPos.z), 
+            (other.centerPos.z - centerPos.z), 
+        };
+        return false;
+    }
+
 
     public static CustomAABB GetSweptBroadphaseBox(CustomAABB b)
     {
@@ -214,7 +237,7 @@ public struct CustomAABB {
 
         if (moveAABB.vx == 0.0f)
         {
-            xEntry = -float.PositiveInfinity;
+            xEntry = float.NegativeInfinity;
             xExit = float.PositiveInfinity;
         }
         else
@@ -225,7 +248,7 @@ public struct CustomAABB {
 
         if (moveAABB.vy == 0.0f)
         {
-            yEntry = -float.PositiveInfinity;
+            yEntry = float.NegativeInfinity;
             yExit = float.PositiveInfinity;
         }
         else
@@ -236,7 +259,7 @@ public struct CustomAABB {
 
         if (moveAABB.vz == 0.0f)
         {
-            zEntry = -float.PositiveInfinity;
+            zEntry = float.NegativeInfinity;
             zExit = float.PositiveInfinity;
         }
         else

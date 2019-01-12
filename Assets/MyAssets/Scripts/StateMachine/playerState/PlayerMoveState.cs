@@ -107,29 +107,19 @@ public class PlayerMoveState : IState
         P2PNetworkManager.GetInstance().PushCharStateMessage(GAMEPLAYER_CHAR_STATE.MOVE);
         Vector3 speed = dir.normalized * moveSpeed;
 
-        World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
+        World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);   
         if(containWorld == null)
         {
             return;
         }
         CustomAABB playerAABB = gamePlayer.charInstance.GetCustomAABB(speed);
-        var collideInfo = containWorld.customOctree.Collide(gamePlayer.charInstance.GetCustomAABB());
+        var collideInfo = containWorld.customOctree.Collide(playerAABB);
         if (collideInfo.isCollide)
         {
-            KojeomLogger.DebugLog(string.Format("Player collision with Block(AABB) x : {0}, y : {1}, z : {2}, type : {3}",
-                collideInfo.GetBlock().centerX, collideInfo.GetBlock().centerY,
-                collideInfo.GetBlock().centerZ, (BlockTileType)collideInfo.GetBlock().type), LOG_TYPE.DEBUG_TEST);
-
-            float normalFaceX = 0.0f, normalFaceY = 0.0f, normalFaceZ = 0.0f;
-            float collisionTime = CustomAABB.SweptAABB(playerAABB, collideInfo.aabb, ref normalFaceX, ref normalFaceY, ref normalFaceZ);
-            float remainTime = 1.0f - collisionTime;
-            Vector3 slide = new Vector3(playerAABB.vx * remainTime * normalFaceZ, 0.0f, playerAABB.vz * remainTime * normalFaceX);
-            KojeomLogger.DebugLog(string.Format("collisionTime :{0}, slidePos : {1}, normalFaceX : {2}, normalFaceY : {3}, normalFaceZ : {4}",
-                collisionTime, slide, normalFaceX, normalFaceY, normalFaceZ), LOG_TYPE.DEBUG_TEST);
-            if(collisionTime < 1.0f)
-            {
-                gamePlayer.GetController().LerpPosition(slide);
-            }
+            //float normalX = 0.0f, normalY = 0.0f, normalZ = 0.0f;
+            //float collisionTime = CustomAABB.SweptAABB(playerAABB, collideInfo.aabb,
+            //    ref normalX, ref normalY, ref normalZ);
+            //KojeomLogger.DebugLog(string.Format("coll time : {0}", collisionTime), LOG_TYPE.DEBUG_TEST);
         }
         else
         {

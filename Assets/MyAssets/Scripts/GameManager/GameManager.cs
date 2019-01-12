@@ -130,8 +130,8 @@ public class GameManager : MonoBehaviour
         P2PNetworkManager.GetInstance().isHost = true;
         P2PNetworkManager.GetInstance().LateInit();
         // InGame씬에서 바로 시작하는 경우에는 해당 flag를 true로 설정.
-        GameNetworkStateFlags.isReceivedRandomSeedFormServer = true;
-        GameNetworkStateFlags.isReceiveGameUserList = true;
+        P2PNetworkStateFlagBoard.isReceivedRandomSeedFormServer = true;
+        P2PNetworkStateFlagBoard.isReceiveGameUserList = true;
         P2PNetworkManager.InitGameRandomSeed(System.DateTime.Now.Second);
     }
 
@@ -205,9 +205,9 @@ public class GameManager : MonoBehaviour
         KojeomLogger.DebugLog("네트워크 접속이 완료될 때 까지 대기합니다.", LOG_TYPE.SYSTEM);
         while (true)
         {
-            if(GameNetworkStateFlags.isReceivedRandomSeedFormServer == true &&
-                GameNetworkStateFlags.isReceiveGameUserList == true &&
-                GameNetworkStateFlags.isCreatedMyGamePlayer == true)
+            if(P2PNetworkStateFlagBoard.isReceivedRandomSeedFormServer == true &&
+                P2PNetworkStateFlagBoard.isReceiveGameUserList == true &&
+                P2PNetworkStateFlagBoard.isCreatedMyGamePlayer == true)
             {
                 break;
             }
