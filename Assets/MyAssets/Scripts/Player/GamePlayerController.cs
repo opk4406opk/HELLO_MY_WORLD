@@ -82,6 +82,11 @@ public class GamePlayerController : MonoBehaviour {
         gamePlayer.transform.position = newPos;
     }
 
+    public Vector3 GetLerpValue(Vector3 addPos)
+    {
+        return Vector3.Lerp(gamePlayer.transform.position, gamePlayer.transform.position + addPos, Time.deltaTime);
+    }
+
     public void StartControllProcess()
     {
         isControllProcessOn = true;
@@ -154,7 +159,7 @@ public class GamePlayerController : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        if(gamePlayer == null)
+        if (gamePlayer == null)
         {
             return;
         }
@@ -185,10 +190,7 @@ public class GamePlayerController : MonoBehaviour {
         {
             KojeomCoroutineHelper.singleton.ReleaseRoutine("Jump");
         }
-    }
-
-    private void Update()
-    {
+        //
         if (isControllProcessOn == false)
         {
             return;

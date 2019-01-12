@@ -87,7 +87,7 @@ public class PlayerMoveState : IState
             curPressedInput = InputManager.singleton.GetInputData();
             KojeomLogger.DebugLog(string.Format("curPressedKey : {0}", curPressedInput.keyCode), LOG_TYPE.USER_INPUT);
         }
-        Vector3 dir = Vector3.zero, newPos = Vector3.zero;
+        Vector3 dir = Vector3.zero;
 
         if(Application.platform == RuntimePlatform.WindowsEditor ||
             Application.platform == RuntimePlatform.WindowsPlayer)
@@ -105,30 +105,34 @@ public class PlayerMoveState : IState
         }
         //
         P2PNetworkManager.GetInstance().PushCharStateMessage(GAMEPLAYER_CHAR_STATE.MOVE);
-        Vector3 speed = dir.normalized * moveSpeed;
+        Vector3 move = dir.normalized * moveSpeed;
 
         World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);   
         if(containWorld == null)
         {
             return;
         }
-        CustomAABB playerAABB = gamePlayer.charInstance.GetCustomAABB(speed);
+
+        Vector3 origin = gamePlayer.charInstance.transform.position;
+        gamePlayer.GetController().LerpPosition(move.normalized);       
+        //
+        CustomAABB playerAABB = gamePlayer.charInstance.GetCustomAABB(move.normalized);
         var collideInfo = containWorld.customOctree.Collide(playerAABB);
         if (collideInfo.isCollide)
         {
             float normalX = 0.0f, normalY = 0.0f, normalZ = 0.0f;
             float collisionTime = CustomAABB.SweptAABB(playerAABB, collideInfo.aabb,
-                ref normalX, ref normalY, ref normalZ);
+                     ref normalX, ref normalY, ref normalZ);
             KojeomLogger.DebugLog(string.Format("coll time : {0}", collisionTime), LOG_TYPE.DEBUG_TEST);
             if (collisionTime < 1.0f)
             {
-                Vector3 sliding = new Vector3(speed.x * normalZ, 0.0f, speed.z * normalX);
+                Vector3 sliding = new Vector3(playerAABB.vx * normalZ, 0.0f, playerAABB.vz * normalX);
                 gamePlayer.GetController().LerpPosition(sliding);
             }
-        }
-        else
-        {
-            gamePlayer.GetController().LerpPosition(speed);
+            else
+            {
+                gamePlayer.GetController().SetPosition(origin);
+            }
         }
     }
 }
