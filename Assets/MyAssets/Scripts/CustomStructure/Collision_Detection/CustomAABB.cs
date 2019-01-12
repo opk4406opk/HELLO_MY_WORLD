@@ -14,7 +14,7 @@ public struct CustomAABB {
     /// <summary>
     ///  in world space coordinate
     /// </summary>
-    public Vector3 centerPos;
+    public Vector3 position;
     public bool isEnable { set; get; }
 
     public Vector3 hitPointWithRay;
@@ -35,7 +35,7 @@ public struct CustomAABB {
     {
         minExtent += vec;
         maxExtent += vec;
-        centerPos = (maxExtent + minExtent) / 2;
+        position = (maxExtent + minExtent) / 2;
         Vector3 diff = maxExtent - minExtent;
         width = diff.x;
         height = diff.y;
@@ -60,7 +60,7 @@ public struct CustomAABB {
             else if (points[idx].z > maxExtent.z) maxExtent.z = points[idx].z;
         }
 
-        centerPos = (maxExtent + minExtent) / 2;
+        position = (maxExtent + minExtent) / 2;
         Vector3 diff = maxExtent - minExtent;
         width = diff.x;
         height = diff.y;
@@ -74,7 +74,7 @@ public struct CustomAABB {
 
         this.minExtent = minExtent;
         this.maxExtent = maxExtent;
-        centerPos = (this.maxExtent + this.minExtent) / 2;
+        position = (this.maxExtent + this.minExtent) / 2;
         Vector3 diff = maxExtent - minExtent;
         width = diff.x;
         height = diff.y;
@@ -93,7 +93,7 @@ public struct CustomAABB {
        
         minExtent = boxColl.bounds.min;
         maxExtent = boxColl.bounds.max;
-        centerPos = (maxExtent + minExtent) / 2;
+        position = (maxExtent + minExtent) / 2;
         Vector3 diff = maxExtent - minExtent;
         width = diff.x;
         height = diff.y;
@@ -146,12 +146,12 @@ public struct CustomAABB {
         };
         float[] distances =
         {
-            (centerPos.x - other.centerPos.x), 
-            (other.centerPos.x - centerPos.x), 
-            (centerPos.y - other.centerPos.y),
-            (other.centerPos.y - centerPos.y),
-            (centerPos.z - other.centerPos.z), 
-            (other.centerPos.z - centerPos.z), 
+            (position.x - other.position.x), 
+            (other.position.x - position.x), 
+            (position.y - other.position.y),
+            (other.position.y - position.y),
+            (position.z - other.position.z), 
+            (other.position.z - position.z), 
         };
         return false;
     }
@@ -200,35 +200,35 @@ public struct CustomAABB {
         // find the distance between the objects on the near and far sides for both x and y
         if (moveAABB.vx > 0.0f)
         {
-            xInvEntry = staticAABB.minExtent.x - (moveAABB.minExtent.x + moveAABB.width);
-            xInvExit = (staticAABB.minExtent.x + staticAABB.width) - moveAABB.minExtent.x;
+            xInvEntry = staticAABB.position.x - (moveAABB.position.x + moveAABB.width);
+            xInvExit = (staticAABB.position.x + staticAABB.width) - moveAABB.position.x;
         }
         else
         {
-            xInvEntry = (staticAABB.minExtent.x + staticAABB.width) - moveAABB.minExtent.x;
-            xInvExit = staticAABB.minExtent.x - (moveAABB.minExtent.x + moveAABB.width);
+            xInvEntry = (staticAABB.position.x + staticAABB.width) - moveAABB.position.x;
+            xInvExit = staticAABB.position.x - (moveAABB.position.x + moveAABB.width);
         }
 
         if (moveAABB.vy > 0.0f)
         {
-            yInvEntry = staticAABB.minExtent.y - (moveAABB.minExtent.y + moveAABB.height);
-            yInvExit = (staticAABB.minExtent.y + staticAABB.height) - moveAABB.minExtent.y;
+            yInvEntry = staticAABB.position.y - (moveAABB.position.y + moveAABB.height);
+            yInvExit = (staticAABB.position.y + staticAABB.height) - moveAABB.position.y;
         }
         else
         {
-            yInvEntry = (staticAABB.minExtent.y + staticAABB.height) - moveAABB.minExtent.y;
-            yInvExit = staticAABB.minExtent.y - (moveAABB.minExtent.y + moveAABB.height);
+            yInvEntry = (staticAABB.position.y + staticAABB.height) - moveAABB.position.y;
+            yInvExit = staticAABB.position.y - (moveAABB.position.y + moveAABB.height);
         }
 
         if (moveAABB.vz > 0.0f)
         {
-            zInvEntry = staticAABB.minExtent.z - (moveAABB.minExtent.z + moveAABB.depth);
-            zInvExit = (staticAABB.minExtent.z + staticAABB.depth) - moveAABB.minExtent.z;
+            zInvEntry = staticAABB.position.z - (moveAABB.position.z + moveAABB.depth);
+            zInvExit = (staticAABB.position.z + staticAABB.depth) - moveAABB.position.z;
         }
         else
         {
-            zInvEntry = (staticAABB.minExtent.z + staticAABB.depth) - moveAABB.minExtent.z;
-            zInvExit = staticAABB.minExtent.z - (moveAABB.minExtent.z + moveAABB.depth);
+            zInvEntry = (staticAABB.position.z + staticAABB.depth) - moveAABB.position.z;
+            zInvExit = staticAABB.position.z - (moveAABB.position.z + moveAABB.depth);
         }
 
         //
