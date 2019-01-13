@@ -190,7 +190,7 @@ public class WorldManager : MonoBehaviour
             // to do
             if(PlayerManager.instance != null)
             {
-                Transform playerTrans = PlayerManager.instance.myGamePlayer.charInstance.transform;
+                Transform playerTrans = PlayerManager.instance.myGamePlayer.GetController().characterObject.transform;
                 int playerPositionedSubWorldIdx = GetSubWorldIndex(playerTrans.position);
                 var offset = wholeWorldStates[playerPositionedSubWorldIdx].normalizedOffset;
                 // 플레이어가 위치한 서브월드의 offset 위치를 기준삼아

@@ -12,7 +12,6 @@ using UnityEngine.Networking;
 public class PlayerManager : MonoBehaviour {
 
     public GamePlayer myGamePlayer;
-    private GamePlayerController myPlayerController;
     public static PlayerManager instance;
     private GameObject gamePlayerPrefab;
 
@@ -25,7 +24,6 @@ public class PlayerManager : MonoBehaviour {
         myGamePlayer.GetController().Init(Camera.main, myGamePlayer);
         //Player Manager 하위 종속으로 변경.
         myGamePlayer.transform.parent = gameObject.transform;
-        myPlayerController = myGamePlayer.GetController();
     }
 
     public static Vector3 GetGamePlayerInitPos()
@@ -38,14 +36,14 @@ public class PlayerManager : MonoBehaviour {
     /// </summary>
     public void StartController()
     {
-        myPlayerController.StartControllProcess();
+        myGamePlayer.GetController().StartControllProcess();
     }
     /// <summary>
     /// 플레이어 컨트롤러를 중지합니다.
     /// </summary>
     public void StopController()
     {
-        myPlayerController.StopControllProcess();
+        myGamePlayer.GetController().StopControllProcess();
     }
 
 }

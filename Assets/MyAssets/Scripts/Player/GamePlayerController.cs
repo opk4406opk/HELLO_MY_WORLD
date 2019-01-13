@@ -47,6 +47,8 @@ public class GamePlayerController : MonoBehaviour {
     private PlayerStateController poseStateController;
     private GAMEPLAYER_CHAR_STATE curPlayerState;
 
+    public GameCharacter characterObject { get; private set; }
+
     public void Init(Camera mainCam, GamePlayer player)
     {
         //
@@ -64,6 +66,11 @@ public class GamePlayerController : MonoBehaviour {
         jumpStateController = new PlayerStateController();
         poseStateController = new PlayerStateController();
         curPlayerState = GAMEPLAYER_CHAR_STATE.IDLE;
+    }
+
+    public void RegisterCharacter(GameCharacter character)
+    {
+        characterObject = character;
     }
 
     public void SetPosition(Vector3 newPos)

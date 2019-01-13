@@ -13,8 +13,8 @@ public class PlayerMoveState : IState
     {
         gamePlayer = player;
         //
-        aniController = gamePlayer.charInstance.GetQueryMecanimController();
-        boxCollider = gamePlayer.charInstance.GetBoxCollider();
+        aniController = gamePlayer.GetController().characterObject.GetQueryMecanimController();
+        boxCollider = gamePlayer.GetController().characterObject.GetBoxCollider();
         //
         moveSpeed = 3.5f;
     }
@@ -113,10 +113,11 @@ public class PlayerMoveState : IState
             return;
         }
 
-        Vector3 origin = gamePlayer.charInstance.transform.position;
-        gamePlayer.GetController().LerpPosition(move.normalized);       
+        Vector3 origin = gamePlayer.GetController().characterObject.transform.position;
+        CustomAABB last = gamePlayer.GetController().characterObject.GetCustomAABB();
+        gamePlayer.GetController().LerpPosition(move);       
         //
-        CustomAABB playerAABB = gamePlayer.charInstance.GetCustomAABB(move.normalized);
+        CustomAABB playerAABB = gamePlayer.GetController().characterObject.GetCustomAABB(move);
         var collideInfo = containWorld.customOctree.Collide(playerAABB);
         if (collideInfo.isCollide)
         {
@@ -127,7 +128,7 @@ public class PlayerMoveState : IState
             if (collisionTime < 1.0f)
             {
                 Vector3 sliding = new Vector3(playerAABB.vx * normalZ, 0.0f, playerAABB.vz * normalX);
-                gamePlayer.GetController().LerpPosition(sliding);
+                //gamePlayer.GetController().LerpPosition(sliding);
             }
             else
             {
