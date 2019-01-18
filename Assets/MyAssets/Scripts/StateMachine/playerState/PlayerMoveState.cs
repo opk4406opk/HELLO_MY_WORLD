@@ -115,24 +115,30 @@ public class PlayerMoveState : IState
 
         Vector3 origin = gamePlayer.GetController().characterObject.transform.position;
         CustomAABB last = gamePlayer.GetController().characterObject.GetCustomAABB();
-        gamePlayer.GetController().LerpPosition(move);       
+        gamePlayer.GetController().LerpPosition(move);
         //
         CustomAABB playerAABB = gamePlayer.GetController().characterObject.GetCustomAABB(move);
         var collideInfo = containWorld.customOctree.Collide(playerAABB);
         if (collideInfo.isCollide)
         {
-            float normalX = 0.0f, normalY = 0.0f, normalZ = 0.0f;
-            float collisionTime = CustomAABB.SweptAABB(playerAABB, collideInfo.aabb,
-                     ref normalX, ref normalY, ref normalZ);
-            KojeomLogger.DebugLog(string.Format("coll time : {0}", collisionTime), LOG_TYPE.DEBUG_TEST);
-            if (collisionTime < 1.0f)
+            float dist = Vector3.Distance(playerAABB.position, collideInfo.aabb.position);
+            float between = (playerAABB.width + collideInfo.aabb.width) / 2;
+            if (dist < between)
             {
-                Vector3 sliding = new Vector3(playerAABB.vx * normalZ, 0.0f, playerAABB.vz * normalX);
-                //gamePlayer.GetController().LerpPosition(sliding);
+                gamePlayer.GetController().SetPosition(new Vector3(origin.x + (dist - between) / 3,
+                    origin.y, origin.z + (dist - between) / 3));
             }
             else
             {
-                gamePlayer.GetController().SetPosition(origin);
+                float normalX = 0.0f, normalY = 0.0f, normalZ = 0.0f;
+                float collisionTime = CustomAABB.SweptAABB(playerAABB, collideInfo.aabb,
+                         ref normalX, ref normalY, ref normalZ);
+                KojeomLogger.DebugLog(string.Format("coll time : {0}", collisionTime), LOG_TYPE.DEBUG_TEST);
+                if (collisionTime < 1.0f)
+                {
+                    Vector3 sliding = new Vector3(playerAABB.vx * normalZ, 0.0f, playerAABB.vz * normalX);
+                    gamePlayer.GetController().LerpPosition(sliding);
+                }
             }
         }
     }
