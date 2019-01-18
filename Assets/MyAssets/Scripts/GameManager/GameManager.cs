@@ -169,11 +169,10 @@ public class GameManager : MonoBehaviour
         //
         kojeomCoroutineHelper.Init();
         inputManager.Init();
-        //player Init
-        playerManager.Init();
         //GameWorld Init
         worldManager.Init();
-        //player controller start.
+        //player Init
+        playerManager.Init();
         playerManager.StartController();
         //LootingSystem Init;
         lootingSystem.Init();

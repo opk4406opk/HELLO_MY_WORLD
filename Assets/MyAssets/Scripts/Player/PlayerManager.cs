@@ -1,11 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Mono.Data.Sqlite;
-using System.Data;
-using System;
-using System.Text;
-using System.Collections.Generic;
-using UnityEngine.Networking;
 /// <summary>
 /// 게임내 사용자(캐릭터)를 관리하는 클래스.
 /// </summary>

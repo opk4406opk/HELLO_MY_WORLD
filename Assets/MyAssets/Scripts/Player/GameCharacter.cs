@@ -46,4 +46,9 @@ public class GameCharacter : MonoBehaviour {
         aabb.MakeAABB(boxCollider);
         return aabb;
     }
+
+    public Vector3 GetPosition()
+    {
+        return transform.position;
+    }
 }

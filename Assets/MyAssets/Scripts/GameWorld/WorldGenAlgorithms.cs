@@ -64,7 +64,6 @@ public class WorldGenAlgorithms {
                     
                 }
             }
-            KojeomLogger.DebugLog(string.Format("가장 높은 Block의 높이값은 : {0}", highestBlockHeight));
         }
         // caves
         GenerateSphereCaves(worldBlockData);

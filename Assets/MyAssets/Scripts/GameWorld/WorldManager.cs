@@ -190,8 +190,18 @@ public class WorldManager : MonoBehaviour
             // to do
             if(PlayerManager.instance != null)
             {
-                Transform playerTrans = PlayerManager.instance.myGamePlayer.GetController().characterObject.transform;
-                int playerPositionedSubWorldIdx = GetSubWorldIndex(playerTrans.position);
+                Vector3 playerPos = Vector3.zero;
+                if (PlayerManager.instance != null)
+                {
+                    playerPos = PlayerManager.instance.myGamePlayer.GetController().characterObject.GetPosition();
+                }
+                else
+                {
+                    // 임시값.
+                    playerPos = new Vector3(0.0f, 60.0f, 0.0f);
+                }
+
+                int playerPositionedSubWorldIdx = GetSubWorldIndex(playerPos);
                 var offset = wholeWorldStates[playerPositionedSubWorldIdx].normalizedOffset;
                 // 플레이어가 위치한 서브월드의 offset 위치를 기준삼아
                 // 8방향(대각선, 좌우상하)의 subWorld를 활성화 시킨다. 
