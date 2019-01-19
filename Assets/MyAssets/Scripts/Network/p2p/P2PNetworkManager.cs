@@ -31,7 +31,10 @@ public enum P2P_NETWORK_PROTOCOL
     push_charStateToServer = 1005,
     res_charStateToAllUser = 1006,
     req_gameRandomSeed = 1007,
-    res_gameRandomSeed = 1008
+    res_gameRandomSeed = 1008,
+    //
+    req_data_gameWorld = 2000,
+    res_data_gameWorld = 2001
 }
 
 public class P2PMessageGameRandSeed : MessageBase
@@ -505,9 +508,9 @@ public class P2PNetworkManager : NetworkManager {
     {
         bool isSuccess = false;
         P2PMessageGameCharState pushStateMsg = new P2PMessageGameCharState();
-        if(PlayerManager.instance != null)
+        if(GamePlayerManager.instance != null)
         {
-            pushStateMsg.ownerCharState = PlayerManager.instance.myGamePlayer.GetController().GetPlayerState();
+            pushStateMsg.ownerCharState = GamePlayerManager.instance.myGamePlayer.GetController().GetPlayerState();
             pushStateMsg.ownerConnID = clientNetworkConnection.connectionId;
             isSuccess = clientNetworkConnection.Send((short)P2P_NETWORK_PROTOCOL.push_charStateToServer, pushStateMsg);
 

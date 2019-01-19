@@ -133,7 +133,7 @@ public class PlayerMoveState : IState
                 float normalX = 0.0f, normalY = 0.0f, normalZ = 0.0f;
                 float collisionTime = CustomAABB.SweptAABB(playerAABB, collideInfo.aabb,
                          ref normalX, ref normalY, ref normalZ);
-                KojeomLogger.DebugLog(string.Format("coll time : {0}", collisionTime), LOG_TYPE.DEBUG_TEST);
+                //KojeomLogger.DebugLog(string.Format("coll time : {0}", collisionTime), LOG_TYPE.DEBUG_TEST);
                 if (collisionTime < 1.0f)
                 {
                     Vector3 sliding = new Vector3(playerAABB.vx * normalZ, 0.0f, playerAABB.vz * normalX);

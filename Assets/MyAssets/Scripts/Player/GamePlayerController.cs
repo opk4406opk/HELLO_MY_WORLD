@@ -166,7 +166,7 @@ public class GamePlayerController : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        if (gamePlayer == null)
+        if (gamePlayer == null || WorldManager.instance == null)
         {
             return;
         }
@@ -175,7 +175,6 @@ public class GamePlayerController : MonoBehaviour {
         playerPos.y += 2.0f;
         playerCamera.transform.position = playerPos;
 
-        // check collide with ground.
         World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
         if (containWorld == null)
         {
@@ -185,6 +184,7 @@ public class GamePlayerController : MonoBehaviour {
         {
             return;
         }
+
 
         Vector3 bottomOffsetedPos = gamePlayer.transform.position;
         bottomOffsetedPos -= new Vector3(0.0f, 0.1f, 0.0f);

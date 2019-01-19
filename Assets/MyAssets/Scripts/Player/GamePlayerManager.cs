@@ -2,10 +2,10 @@
 /// <summary>
 /// 게임내 사용자(캐릭터)를 관리하는 클래스.
 /// </summary>
-public class PlayerManager : MonoBehaviour {
+public class GamePlayerManager : MonoBehaviour {
 
     public GamePlayer myGamePlayer;
-    public static PlayerManager instance;
+    public static GamePlayerManager instance;
     private GameObject gamePlayerPrefab;
 
     public void Init()

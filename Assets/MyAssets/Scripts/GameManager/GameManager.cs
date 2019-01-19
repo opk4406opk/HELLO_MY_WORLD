@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameConfigDataFile gameConfigDataFile;
     [SerializeField]
-    private PlayerManager playerManager;
+    private GamePlayerManager playerManager;
     [SerializeField]
     private BeltItemSelector beltItemSelector;
     [SerializeField]

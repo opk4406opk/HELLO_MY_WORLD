@@ -188,12 +188,12 @@ public class WorldManager : MonoBehaviour
         while (true)
         {
             // to do
-            if(PlayerManager.instance != null)
+            if(GamePlayerManager.instance != null)
             {
                 Vector3 playerPos = Vector3.zero;
-                if (PlayerManager.instance != null)
+                if (GamePlayerManager.instance != null)
                 {
-                    playerPos = PlayerManager.instance.myGamePlayer.GetController().characterObject.GetPosition();
+                    playerPos = GamePlayerManager.instance.myGamePlayer.GetController().characterObject.GetPosition();
                 }
                 else
                 {
