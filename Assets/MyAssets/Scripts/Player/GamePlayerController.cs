@@ -181,6 +181,10 @@ public class GamePlayerController : MonoBehaviour {
         {
             return;
         }
+        else if(containWorld != null && containWorld.isInitialize == false)
+        {
+            return;
+        }
 
         Vector3 bottomOffsetedPos = gamePlayer.transform.position;
         bottomOffsetedPos -= new Vector3(0.0f, 0.1f, 0.0f);

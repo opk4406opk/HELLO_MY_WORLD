@@ -30,6 +30,8 @@ public class World : MonoBehaviour
         get { return _worldName; }
     }
 
+    public bool isInitialize { get; private set; }
+
     /// <summary>
     /// 월드 create idx 넘버.
     /// </summary>
@@ -103,6 +105,8 @@ public class World : MonoBehaviour
         {
             LoadProcess();
         }
+
+        isInitialize = true;
     }
 
     //void OnDrawGizmos()
