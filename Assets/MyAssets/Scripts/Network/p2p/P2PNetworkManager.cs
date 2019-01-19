@@ -224,7 +224,7 @@ public class P2PNetworkManager : NetworkManager {
     }
    
     private static int gameRandomSeed = 0;
-    public static int GetGameCurrentRandomSeed()
+    public static int GetGameRandomSeed()
     {
         return gameRandomSeed;
     }
@@ -391,7 +391,7 @@ public class P2PNetworkManager : NetworkManager {
     {
         var msg = netMsg.ReadMessage<P2PMessageGameRandSeed>();
         P2PMessageGameRandSeed responseNetMsg = new P2PMessageGameRandSeed();
-        responseNetMsg.randomSeed = GetGameCurrentRandomSeed();
+        responseNetMsg.randomSeed = GetGameRandomSeed();
         NetworkServer.SendToClient(msg.connectionID, (short)P2P_NETWORK_PROTOCOL.res_gameRandomSeed, responseNetMsg);
         KojeomLogger.DebugLog(string.Format("GameRandomSeed val :{0} 을 클라이언트(connID : {1})에게 전송했습니다.", 
             responseNetMsg.randomSeed, msg.connectionID),

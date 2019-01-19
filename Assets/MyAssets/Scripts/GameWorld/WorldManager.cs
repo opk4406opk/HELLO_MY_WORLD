@@ -73,6 +73,10 @@ public class WorldManager : MonoBehaviour
 
         StartCoroutine(DynamicSubWorldLoader());
         KojeomLogger.DebugLog("GameWorld 생성을 종료합니다.");
+
+        //debug
+        KojeomLogger.DebugLog(string.Format("seed_val : {0}", P2PNetworkManager.GetGameRandomSeed()), LOG_TYPE.DEBUG_TEST);
+        KojeomLogger.DebugLog(string.Format("rand_val : {0}", KojeomUtility.RandomInteger(1, 5)), LOG_TYPE.DEBUG_TEST);
     }
     /// <summary>
     /// C# sereialization 기능을 이용한
