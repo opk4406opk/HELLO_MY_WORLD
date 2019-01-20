@@ -173,8 +173,7 @@ public class GameManager : MonoBehaviour
         worldManager.Init();
         //player Init
         playerManager.Init();
-        playerManager.StartController();
-        //LootingSystem Init;
+        // looting init.
         lootingSystem.Init();
         //InGameUI Init
         beltItemSelector.Init();

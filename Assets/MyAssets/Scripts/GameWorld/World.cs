@@ -30,17 +30,13 @@ public class World : MonoBehaviour
         get { return _worldName; }
     }
 
-    public bool isInitializeEnd { get; private set; }
+    public bool isInitializeFinish { get; private set; } = false;
 
     /// <summary>
     /// 월드 create idx 넘버.
     /// </summary>
     public int worldIndex;
     public Block[,,] worldBlockData { get; private set; }
-
-    private int worldX = 0;
-    private int worldY = 0;
-    private int worldZ = 0;
     private int chunkSize = 0;
 
     public int worldOffsetX { get; private set; } = 0;
@@ -58,21 +54,20 @@ public class World : MonoBehaviour
             new Vector3(gameWorldConfig.sub_world_x_size + offsetX , 
             gameWorldConfig.sub_world_y_size + offsetY,
             gameWorldConfig.sub_world_z_size + offsetZ));
-        worldX = gameWorldConfig.sub_world_x_size;
-        worldY = gameWorldConfig.sub_world_y_size;
-        worldZ = gameWorldConfig.sub_world_z_size;
         chunkSize = gameWorldConfig.chunk_size;
         worldOffsetX = offsetX;
         worldOffsetY = offsetY;
         worldOffsetZ = offsetZ;
 
         // init world data.
-        worldBlockData = new Block[worldX, worldY, worldZ];
-        for (int x = 0; x < worldX; x++)
+        worldBlockData = new Block[gameWorldConfig.sub_world_x_size,
+            gameWorldConfig.sub_world_y_size,
+            gameWorldConfig.sub_world_z_size];
+        for (int x = 0; x < gameWorldConfig.sub_world_x_size; x++)
         {
-            for (int z = 0; z < worldZ; z++)
+            for (int z = 0; z < gameWorldConfig.sub_world_z_size; z++)
             {
-                for (int y = 0; y < worldY; y++)
+                for (int y = 0; y < gameWorldConfig.sub_world_y_size; y++)
                 {
                     worldBlockData[x, y, z] = new Block();
                     worldBlockData[x, y, z].isRendered = false;
@@ -80,8 +75,9 @@ public class World : MonoBehaviour
             }
         }
         // init chunk group.
-        chunkSlots = new ChunkSlot[Mathf.FloorToInt(worldX / chunkSize), Mathf.FloorToInt(worldY / chunkSize),
-            Mathf.FloorToInt(worldZ / chunkSize)];
+        chunkSlots = new ChunkSlot[Mathf.FloorToInt(gameWorldConfig.sub_world_x_size / chunkSize),
+            Mathf.FloorToInt(gameWorldConfig.sub_world_y_size / chunkSize),
+            Mathf.FloorToInt(gameWorldConfig.sub_world_z_size / chunkSize)];
         for (int x = 0; x < chunkSlots.GetLength(0); x++)
         {
             for (int z = 0; z < chunkSlots.GetLength(2); z++)
@@ -106,13 +102,22 @@ public class World : MonoBehaviour
             LoadProcess();
         }
 
-        isInitializeEnd = true;
+        isInitializeFinish = true;
     }
 
     //void OnDrawGizmos()
     //{
     //    customOctree.DrawFullTree();
     //}
+
+    /// <summary>
+    /// World GameObject의 실제 게임속 좌표값.
+    /// </summary>
+    /// <returns></returns>   
+    public Vector3 GetRealCoordPosition()
+    {
+        return transform.position;
+    }
 
     public void LoadProcess()
     {

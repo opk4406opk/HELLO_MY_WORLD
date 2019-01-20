@@ -69,14 +69,14 @@ public class WorldManager : MonoBehaviour
         {
             SaveSubWorldFile();
         }
-        instance = this;
-
         StartCoroutine(DynamicSubWorldLoader());
         KojeomLogger.DebugLog("GameWorld 생성을 종료합니다.");
 
         //debug
         KojeomLogger.DebugLog(string.Format("seed_val : {0}", P2PNetworkManager.GetGameRandomSeed()), LOG_TYPE.DEBUG_TEST);
         KojeomLogger.DebugLog(string.Format("rand_val : {0}", KojeomUtility.RandomInteger(1, 5)), LOG_TYPE.DEBUG_TEST);
+        //
+        instance = this;
     }
     /// <summary>
     /// C# sereialization 기능을 이용한
@@ -194,7 +194,7 @@ public class WorldManager : MonoBehaviour
             // to do
             Vector3 playerPos = Vector3.zero;
             SubWorldNormalizedOffset offset;
-            if(GamePlayerManager.instance != null)
+            if(GamePlayerManager.instance != null && GamePlayerManager.instance.isInitializeFinish == true)
             {
                 playerPos = GamePlayerManager.instance.myGamePlayer.GetController().GetPosition();
                 offset = wholeWorldStates[GetSubWorldIndex(playerPos)].normalizedOffset;
@@ -269,6 +269,15 @@ public class WorldManager : MonoBehaviour
         int x = (int)objectPos.x / gameWorldConfig.sub_world_x_size;
         int y = ((int)objectPos.y / gameWorldConfig.sub_world_y_size) * SubWorldDataFile.instance.elements_per_layer;
         int z = ((int)objectPos.z / gameWorldConfig.sub_world_z_size) * SubWorldDataFile.instance.rowOffset;
+        return new Vector3(x, y, z);
+    }
+
+    public Vector3 GetWorldCoordToRealCoord(Vector3 objectPos)
+    {
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        int x = (int)objectPos.x * gameWorldConfig.sub_world_x_size;
+        int y = ((int)objectPos.y * gameWorldConfig.sub_world_y_size) / SubWorldDataFile.instance.elements_per_layer;
+        int z = ((int)objectPos.z * gameWorldConfig.sub_world_z_size) / SubWorldDataFile.instance.rowOffset;
         return new Vector3(x, y, z);
     }
 }

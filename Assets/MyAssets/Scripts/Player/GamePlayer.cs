@@ -157,7 +157,7 @@ public class GamePlayer : NetworkBehaviour
                     if (user != null) break;
                     yield return new WaitForSeconds(0.25f);
                 }
-                PostInit(user.selectCharType, user.userName, GamePlayerManager.GetGamePlayerInitPos());
+                PostInit(user.selectCharType, user.userName, Vector3.zero);
                 user.gamePlayer = this;
                 break;
             }

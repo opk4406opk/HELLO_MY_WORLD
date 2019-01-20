@@ -185,7 +185,7 @@ public class GamePlayerController : MonoBehaviour {
         {
             return;
         }
-        else if(containWorld != null && containWorld.isInitializeEnd == false)
+        else if(containWorld != null && containWorld.isInitializeFinish == false)
         {
             return;
         }
