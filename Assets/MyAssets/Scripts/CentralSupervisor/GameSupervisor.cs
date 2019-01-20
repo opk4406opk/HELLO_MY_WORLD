@@ -8,35 +8,34 @@ public interface IManager
     void ResetManager();
 }
 
+public enum GameMode
+{
+    NONE,
+    INGAME_EDITOR,
+    SINGLE,
+    MULTI_P2P,
+    MULTI_INTERNET
+}
+public enum DetailSingleMode
+{
+    NONE,
+    SAVE_GAME,
+    LOAD_GAME
+}
 /// <summary>
 /// 게임 상태(single, multi, load, save)를 관리하는 클래스.
 /// </summary>
 public class GameStatus
 {
-    public static bool isLoadGame = false;
-    public static bool isMultiPlay = false;
-    public static bool isSingleHostPlay = false;
-    public static bool isInGameSceneStart
-    {
-        get
-        {
-            if(isMultiPlay == false && isSingleHostPlay == false)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
+    public static GameMode gameMode = GameMode.INGAME_EDITOR;
+    public static DetailSingleMode detailSingleMode = DetailSingleMode.NONE;
 }
 
 /// <summary>
 /// 게임에 전반적인 관리를 하는 클래스.
 /// ( 게임의 시작점 )
 /// </summary>
-public class GameManager : MonoBehaviour
+public class GameSupervisor : MonoBehaviour
 {
     #region Inspector variables.
 
@@ -88,16 +87,15 @@ public class GameManager : MonoBehaviour
     private ActorCollideManager actorCollideManager;
     #endregion
 
-    public static GameManager instance = null;
+    public static GameSupervisor instance = null;
 
     void Start ()
     {
-        KojeomLogger.DebugLog(string.Format("Multi_game : {0}, Loaded_game : {1}, SingleHost_game : {2}",
-               GameStatus.isMultiPlay, GameStatus.isLoadGame, GameStatus.isSingleHostPlay), LOG_TYPE.SYSTEM);
+        KojeomLogger.DebugLog(string.Format("GameMode : {0}, DataMode : {1}", GameStatus.gameMode, GameStatus.detailSingleMode), LOG_TYPE.SYSTEM);
         instance = this;
         // single or multi play 게임이 아니라면
         // InGame Scene에서 바로 시작하는 경우 ( in editor mode )
-        if (GameStatus.isInGameSceneStart)
+        if (GameStatus.gameMode == GameMode.INGAME_EDITOR)
         {
             InitInGameSceneStart();
         }
@@ -190,13 +188,16 @@ public class GameManager : MonoBehaviour
         // 프로토타입의 수준으로 기능이 매우 미흡한 수준임.
         weatherManager.Init();
 
-        if (GameStatus.isLoadGame == true) { saveAndLoadManager.Load(); }
+        if (GameStatus.detailSingleMode == DetailSingleMode.LOAD_GAME)
+        {
+            saveAndLoadManager.Load();
+        }
         KojeomLogger.DebugLog("게임매니저 클래스 초기화 완료.");
     }
 
     private IEnumerator WaitingLogin()
     {
-        if(GameStatus.isInGameSceneStart == false)
+        if(GameStatus.gameMode == GameMode.MULTI_INTERNET || GameStatus.gameMode == GameMode.MULTI_P2P)
         {
             P2PNetworkManager.GetInstance().ReqInGameUserList();
         }

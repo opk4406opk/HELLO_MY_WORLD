@@ -26,7 +26,7 @@ public class SaveAndLoadManager : MonoBehaviour {
     private string filePath;
 
     [SerializeField]
-    private GameManager gameManager;
+    private GameSupervisor gameManager;
 
     private LZFCompress lzfCompress;
 
@@ -142,7 +142,7 @@ public class SaveAndLoadManager : MonoBehaviour {
 
         foreach (var element in gameWorldStateList)
         {
-            element.Value.subWorldInstance.LoadProcess();
+            element.Value.subWorldInstance.LoadChunkProcess();
         }
         fileStream.Close();
         return true;

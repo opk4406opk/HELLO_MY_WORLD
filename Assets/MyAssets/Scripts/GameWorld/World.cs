@@ -89,17 +89,17 @@ public class World : MonoBehaviour
             }
         }
 
-        if (GameStatus.isLoadGame == false)
+        if (GameStatus.detailSingleMode != DetailSingleMode.LOAD_GAME)
         {
             MakeWorldParam param;
             param.baseOffset = KojeomUtility.RandomInteger(2, 29);
             WorldGenAlgorithms.DefaultGenWorld(worldBlockData, param);
             //
-            LoadProcess();
+            LoadChunkProcess();
         }
         else
         {
-            LoadProcess();
+            LoadChunkProcess();
         }
 
         isInitializeFinish = true;
@@ -119,7 +119,7 @@ public class World : MonoBehaviour
         return transform.position;
     }
 
-    public void LoadProcess()
+    public void LoadChunkProcess()
     {
         KojeomLogger.DebugLog(string.Format("World name : {0}, Chunk 로드를 시작합니다.", worldName), LOG_TYPE.DEBUG_TEST);
         StartCoroutine(LoadChunks());

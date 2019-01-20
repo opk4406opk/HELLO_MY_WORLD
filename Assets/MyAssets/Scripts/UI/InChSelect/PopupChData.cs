@@ -46,7 +46,7 @@ public class PopupChData : APopupUI
             }
         };
         InsertInfo();
-        if (GameStatus.isMultiPlay)
+        if (GameStatus.gameMode == GameMode.MULTI_P2P || GameStatus.gameMode == GameMode.MULTI_INTERNET)
         {
             MultiPlayLobbyProcess();
         }

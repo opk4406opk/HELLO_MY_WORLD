@@ -65,7 +65,7 @@ public class WorldManager : MonoBehaviour
     {
         KojeomLogger.DebugLog("GameWorld 생성을 시작합니다.");
         CreateWholeWorld();
-        if (GameManager.instance != null && GameManager.instance.isSubWorldDataSave == true)
+        if (GameSupervisor.instance != null && GameSupervisor.instance.isSubWorldDataSave == true)
         {
             SaveSubWorldFile();
         }

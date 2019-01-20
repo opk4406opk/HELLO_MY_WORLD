@@ -58,7 +58,7 @@ public class MainMenuManager : MonoBehaviour {
     public void OnClickMultiPlay()
     {
         //멀티플레이로 값 설정.
-        GameStatus.isMultiPlay = true;
+        GameStatus.gameMode = GameMode.MULTI_P2P;
         //
         GameStartProcess();
     }
@@ -70,10 +70,8 @@ public class MainMenuManager : MonoBehaviour {
     /// </summary>
 	public void OnClickSinglePlay()
 	{
-        //싱글플레이 스테이터스 설정.
-        GameStatus.isMultiPlay = false;
         // 싱글플레이-> sing host 플레이로 설정.
-        GameStatus.isSingleHostPlay = true;
+        GameStatus.gameMode = GameMode.SINGLE;
         //
         GameStartProcess();
     }
@@ -143,7 +141,7 @@ public class MainMenuManager : MonoBehaviour {
     {
         if(ChkIsFile())
         {
-            GameStatus.isLoadGame = true;
+            GameStatus.detailSingleMode = DetailSingleMode.LOAD_GAME;
             SceneManager.LoadSceneAsync("GameLoading");
         }
         else
