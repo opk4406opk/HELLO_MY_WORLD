@@ -185,58 +185,55 @@ public class WorldManager : MonoBehaviour
         return wholeWorldStates[GetSubWorldIndex(pos)].subWorldInstance;
     }
 
-    IEnumerator DynamicSubWorldLoader()
+    private IEnumerator DynamicSubWorldLoader()
     {
         KojeomLogger.DebugLog("DynamicSubWorldLoader Co-Routine Start.");
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         while (true)
         {
             // to do
+            Vector3 playerPos = Vector3.zero;
+            SubWorldNormalizedOffset offset;
             if(GamePlayerManager.instance != null)
             {
-                Vector3 playerPos = Vector3.zero;
-                if (GamePlayerManager.instance != null)
+                playerPos = GamePlayerManager.instance.myGamePlayer.GetController().GetPosition();
+                offset = wholeWorldStates[GetSubWorldIndex(playerPos)].normalizedOffset;
+            }
+            else
+            {
+                int randIdx = KojeomUtility.RandomInteger(0, SubWorldDataFile.instance.subWorldDataList.Count - 1);
+                offset = wholeWorldStates[randIdx].normalizedOffset;
+            }
+            
+            // 플레이어가 위치한 서브월드의 offset 위치를 기준삼아
+            // 8방향(대각선, 좌우상하)의 subWorld를 활성화 시킨다. 
+            // 플레이어 주변을 넘어서는 그 바깥의 영역들은 외부 파일로 저장시키는걸 비동기로..
+            // 
+            for (int x = offset.x - 1; x <= offset.x + 1; x++)
+            {
+                for (int y = offset.y - 1; y <= offset.y + 1; y++)
                 {
-                    playerPos = GamePlayerManager.instance.myGamePlayer.GetController().characterObject.GetPosition();
-                }
-                else
-                {
-                    // 임시값.
-                    playerPos = new Vector3(0.0f, 60.0f, 0.0f);
-                }
-
-                int playerPositionedSubWorldIdx = GetSubWorldIndex(playerPos);
-                var offset = wholeWorldStates[playerPositionedSubWorldIdx].normalizedOffset;
-                // 플레이어가 위치한 서브월드의 offset 위치를 기준삼아
-                // 8방향(대각선, 좌우상하)의 subWorld를 활성화 시킨다. 
-                // 플레이어 주변을 넘어서는 그 바깥의 영역들은 외부 파일로 저장시키는걸 비동기로..
-                // 
-                for(int x = offset.x - 1; x <= offset.x + 1; x++)
-                {
-                    for(int y = offset.y - 1; y <= offset.y + 1; y++)
+                    for (int z = offset.z - 1; z <= offset.z + 1; z++)
                     {
-                        for (int z = offset.z - 1; z <= offset.z + 1; z++)
+                        int worldIdx = 0;
+                        SubWorldNormalizedOffset subWorldOffset;
+                        subWorldOffset.x = x;
+                        subWorldOffset.y = y;
+                        subWorldOffset.z = z;
+                        if (worldOffsetToIndex.TryGetValue(subWorldOffset, out worldIdx) == true)
                         {
-                            int worldIdx = 0;
-                            SubWorldNormalizedOffset subWorldOffset;
-                            subWorldOffset.x = x;
-                            subWorldOffset.y = y;
-                            subWorldOffset.z = z;
-                            if (worldOffsetToIndex.TryGetValue(subWorldOffset, out worldIdx) == true)
+                            switch (wholeWorldStates[worldIdx].realTimeStatus)
                             {
-                                switch (wholeWorldStates[worldIdx].realTimeStatus)
-                                {
-                                    case WorldRealTimeStatus.None:
-                                        // nothing to do.
-                                        break;
-                                    case WorldRealTimeStatus.NeedInGameReLoad:
-                                        wholeWorldStates[worldIdx].realTimeStatus = WorldRealTimeStatus.InGameReLoaded;
-                                        wholeWorldStates[worldIdx].subWorldInstance.Init(
-                                            x * gameWorldConfig.sub_world_x_size,
-                                            y * gameWorldConfig.sub_world_y_size,
-                                            z * gameWorldConfig.sub_world_z_size);
-                                        break;
-                                }
+                                case WorldRealTimeStatus.None:
+                                    // nothing to do.
+                                    break;
+                                case WorldRealTimeStatus.NeedInGameReLoad:
+                                    wholeWorldStates[worldIdx].realTimeStatus = WorldRealTimeStatus.InGameReLoaded;
+                                    wholeWorldStates[worldIdx].subWorldInstance.Init(
+                                        x * gameWorldConfig.sub_world_x_size,
+                                        y * gameWorldConfig.sub_world_y_size,
+                                        z * gameWorldConfig.sub_world_z_size);
+                                    break;
                             }
                         }
                     }

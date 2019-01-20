@@ -15,12 +15,12 @@ public class KojeomUtility
         return parent.GetComponentsInChildren<T>(true);
     }
 
-    public static Stack<PathNode> ReversePathStack(Stack<PathNode> src)
+    public static Stack<T> ReverseStack<T>(Stack<T> src)
     {
-        Stack<PathNode> v = new Stack<PathNode>();
+        Stack<T> v = new Stack<T>();
         if (src != null)
         {
-            foreach (PathNode p in src)
+            foreach (T p in src)
             {
                 v.Push(p);
             }

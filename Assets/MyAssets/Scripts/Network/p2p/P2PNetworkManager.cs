@@ -140,7 +140,7 @@ public class P2PNetworkStateFlagBoard
 }
 
 /// <summary>
-/// P2P 네트워크매니저 class.
+/// P2P 네트워크매니저 class. ( NetworkManager 래핑클래스)
 /// </summary>
 public class P2PNetworkManager : NetworkManager {
     // TEST_loginServer_func

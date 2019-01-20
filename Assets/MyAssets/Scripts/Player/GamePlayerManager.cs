@@ -10,13 +10,14 @@ public class GamePlayerManager : MonoBehaviour {
 
     public void Init()
     {
-        gamePlayerPrefab = P2PNetworkManager.singleton.playerPrefab;
-        instance = this;
+        gamePlayerPrefab = P2PNetworkManager.GetInstance().playerPrefab;
         //
         myGamePlayer = P2PNetworkManager.GetInstance().GetMyGamePlayer();
         myGamePlayer.GetController().Init(Camera.main, myGamePlayer);
         //Player Manager 하위 종속으로 변경.
         myGamePlayer.transform.parent = gameObject.transform;
+        //
+        instance = this;
     }
 
     public static Vector3 GetGamePlayerInitPos()

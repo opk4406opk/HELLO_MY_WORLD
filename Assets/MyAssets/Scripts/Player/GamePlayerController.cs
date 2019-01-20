@@ -73,6 +73,11 @@ public class GamePlayerController : MonoBehaviour {
         characterObject = character;
     }
 
+    public Vector3 GetPosition()
+    {
+        return characterObject.GetPosition();
+    }
+
     public void SetPosition(Vector3 newPos)
     {
         gamePlayer.transform.position = newPos;
@@ -180,7 +185,7 @@ public class GamePlayerController : MonoBehaviour {
         {
             return;
         }
-        else if(containWorld != null && containWorld.isInitialize == false)
+        else if(containWorld != null && containWorld.isInitializeEnd == false)
         {
             return;
         }

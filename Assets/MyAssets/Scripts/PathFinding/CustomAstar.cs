@@ -216,7 +216,7 @@ public class CustomAstar
         // Stack<T> 의 복사 생성자는 오리지널의 스택 순서에서 반대로 카피를 한다.
         // # 1 : https://msdn.microsoft.com/en-us/library/76atxd68(v=vs.110).aspx
         // # 2 : http://stackoverflow.com/questions/7391348/c-sharp-clone-a-stack
-        return KojeomUtility.ReversePathStack(new Stack<PathNode>(navigatePath));
+        return KojeomUtility.ReverseStack(new Stack<PathNode>(navigatePath));
     }
 
     private void SetStartPathNode()

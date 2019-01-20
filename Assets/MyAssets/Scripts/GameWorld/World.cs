@@ -30,7 +30,7 @@ public class World : MonoBehaviour
         get { return _worldName; }
     }
 
-    public bool isInitialize { get; private set; }
+    public bool isInitializeEnd { get; private set; }
 
     /// <summary>
     /// 월드 create idx 넘버.
@@ -106,7 +106,7 @@ public class World : MonoBehaviour
             LoadProcess();
         }
 
-        isInitialize = true;
+        isInitializeEnd = true;
     }
 
     //void OnDrawGizmos()
