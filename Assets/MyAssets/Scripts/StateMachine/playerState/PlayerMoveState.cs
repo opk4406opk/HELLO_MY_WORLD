@@ -13,8 +13,8 @@ public class PlayerMoveState : IState
     {
         gamePlayer = player;
         //
-        aniController = gamePlayer.GetController().characterObject.GetQueryMecanimController();
-        boxCollider = gamePlayer.GetController().characterObject.GetBoxCollider();
+        aniController = gamePlayer.controller.characterObject.queryMecanimController;
+        boxCollider = gamePlayer.controller.characterObject.GetBoxCollider();
         //
         moveSpeed = 3.5f;
     }
@@ -113,11 +113,11 @@ public class PlayerMoveState : IState
             return;
         }
 
-        Vector3 origin = gamePlayer.GetController().characterObject.transform.position;
-        CustomAABB last = gamePlayer.GetController().characterObject.GetCustomAABB();
-        gamePlayer.GetController().LerpPosition(move);
+        Vector3 origin = gamePlayer.controller.characterObject.transform.position;
+        CustomAABB last = gamePlayer.controller.characterObject.GetCustomAABB();
+        gamePlayer.controller.LerpPosition(move);
         //
-        CustomAABB playerAABB = gamePlayer.GetController().characterObject.GetCustomAABB(move);
+        CustomAABB playerAABB = gamePlayer.controller.characterObject.GetCustomAABB(move);
         var collideInfo = containWorld.customOctree.Collide(playerAABB);
         if (collideInfo.isCollide)
         {
@@ -125,7 +125,7 @@ public class PlayerMoveState : IState
             float between = (playerAABB.width + collideInfo.aabb.width) / 2;
             if (dist < between)
             {
-                gamePlayer.GetController().SetPosition(new Vector3(origin.x + (dist - between) / 3,
+                gamePlayer.controller.SetPosition(new Vector3(origin.x + (dist - between) / 3,
                     origin.y, origin.z + (dist - between) / 3));
             }
             else
@@ -137,7 +137,7 @@ public class PlayerMoveState : IState
                 if (collisionTime < 1.0f)
                 {
                     Vector3 sliding = new Vector3(playerAABB.vx * normalZ, 0.0f, playerAABB.vz * normalX);
-                    gamePlayer.GetController().LerpPosition(sliding);
+                    gamePlayer.controller.LerpPosition(sliding);
                 }
             }
         }

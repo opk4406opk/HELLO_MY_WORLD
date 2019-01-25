@@ -10,7 +10,9 @@ public class GamePlayer : NetworkBehaviour
     {
         get { return _isMyPlayer; }
     }
-    private GamePlayerController playerController;
+
+    public GamePlayerController controller { get; private set; }
+
     [SerializeField]
     private int characterType;
     [SerializeField]
@@ -46,8 +48,8 @@ public class GamePlayer : NetworkBehaviour
         charInstance.transform.parent = gameObject.transform;
         charInstance.transform.localPosition = new Vector3(0, 0, 0);
         //
-        playerController = gameObject.GetComponent<GamePlayerController>();
-        playerController.RegisterCharacter(charInstance);
+        controller = gameObject.GetComponent<GamePlayerController>();
+        controller.RegisterCharacter(charInstance);
         networkAnimator = gameObject.AddComponent<NetworkAnimator>();
         // 네트워크 애니메이터를 붙이고 나서 디폴트로 생기는 Animator 컴포넌트를 disable 한다.
         gameObject.GetComponent<Animator>().enabled = false;
@@ -63,10 +65,6 @@ public class GamePlayer : NetworkBehaviour
     private void SingleGameInit()
     {
 
-    }
-    public GamePlayerController GetController()
-    {
-        return playerController;
     }
 
     private void SetObjectLayer(bool isMine)

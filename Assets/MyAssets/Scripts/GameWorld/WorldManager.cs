@@ -196,7 +196,7 @@ public class WorldManager : MonoBehaviour
             SubWorldNormalizedOffset offset;
             if(GamePlayerManager.instance != null && GamePlayerManager.instance.isInitializeFinish == true)
             {
-                playerPos = GamePlayerManager.instance.myGamePlayer.GetController().GetPosition();
+                playerPos = GamePlayerManager.instance.myGamePlayer.controller.GetPosition();
                 offset = wholeWorldStates[GetSubWorldIndex(playerPos)].normalizedOffset;
             }
             else

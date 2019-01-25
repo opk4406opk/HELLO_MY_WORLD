@@ -8,7 +8,6 @@ using UnityEngine;
 public class RoamingMerchant : Actor, INpc, IMerchantNPC
 {
     public override event del_OnClickActor OnClickedActor;
-    private ActorController actorController;
     [SerializeField]
     private RoamingNpcAI ai;
     [SerializeField]
@@ -32,14 +31,14 @@ public class RoamingMerchant : Actor, INpc, IMerchantNPC
     public override void Init(Vector3 pos, World world, ACTOR_TYPE actorType)
     {
         this.actorType = actorType;
-        actorController = gameObject.GetComponent<ActorController>();
-        actorController.Init(world);
+        controller = gameObject.GetComponent<ActorController>();
+        controller.Init(world);
         gameObject.transform.position = pos;
     }
 
-    public override ActorController GetActorController()
+    public override ActorController GetController()
     {
-        return actorController;
+        return controller;
     }
 
     void INpc.Talk()

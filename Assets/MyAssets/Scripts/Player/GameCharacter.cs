@@ -4,7 +4,7 @@ public class GameCharacter : MonoBehaviour {
     [SerializeField]
     private Animator characterAnimator;
     [SerializeField]
-    private QuerySDMecanimController queryMecanimController;
+    public QuerySDMecanimController queryMecanimController { get; private set; }
     [SerializeField]
     private BoxCollider boxCollider;
     public void Init()
@@ -21,11 +21,6 @@ public class GameCharacter : MonoBehaviour {
     public Animator GetAnimator()
     {
         return characterAnimator;
-    }
-
-    public QuerySDMecanimController GetQueryMecanimController()
-    {
-        return queryMecanimController;
     }
 
     public BoxCollider GetBoxCollider()

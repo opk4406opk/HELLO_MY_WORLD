@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 public interface IManager
 {
@@ -27,6 +26,7 @@ public enum DetailSingleMode
 /// </summary>
 public class GameStatus
 {
+    // 빠른 테스트를 위한 디폴트값으로 인게임에디터로 설정.
     public static GameMode gameMode = GameMode.INGAME_EDITOR;
     public static DetailSingleMode detailSingleMode = DetailSingleMode.NONE;
 }

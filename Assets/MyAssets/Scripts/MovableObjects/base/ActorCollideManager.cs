@@ -25,8 +25,8 @@ public class ActorCollideManager : MonoBehaviour
         {
             foreach (var npc in NPCManager.singleton.npcs)
             {
-                if (CustomRayCast.InterSectWithBOX(ray, npc.GetActorController().GetMinExtent(),
-                    npc.GetActorController().GetMaxExtent()))
+                if (CustomRayCast.InterSectWithBOX(ray, npc.GetController().GetMinExtent(),
+                    npc.GetController().GetMaxExtent()))
                 {
                     ((INpc)npc).Talk();
                     return true;
