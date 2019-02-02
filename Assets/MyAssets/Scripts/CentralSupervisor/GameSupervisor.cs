@@ -87,12 +87,12 @@ public class GameSupervisor : MonoBehaviour
     private ActorCollideManager actorCollideManager;
     #endregion
 
-    public static GameSupervisor instance = null;
+    public static GameSupervisor Instance = null;
 
     void Start ()
     {
         KojeomLogger.DebugLog(string.Format("GameMode : {0}, DataMode : {1}", GameStatus.gameMode, GameStatus.detailSingleMode), LOG_TYPE.SYSTEM);
-        instance = this;
+        Instance = this;
         // single or multi play 게임이 아니라면
         // InGame Scene에서 바로 시작하는 경우 ( in editor mode )
         if (GameStatus.gameMode == GameMode.INGAME_EDITOR)

@@ -9,7 +9,7 @@ public class NPCManager : MovableObjectSpawner
     [SerializeField]
     private GameObject prefab_shopMerchantNPC;
 
-    public List<Actor> npcs { get; private set; }
+    public List<Actor> npcs { get; private set; } = new List<Actor>();
     private Actor lastestClickedActor;
 
     private static NPCManager _singleton = null;
@@ -25,26 +25,6 @@ public class NPCManager : MovableObjectSpawner
     {
         // to do
         _singleton = this;
-        npcs = new List<Actor>();
-    }
-
-    public override void GenerateToWorld()
-    {
-        // 돌아다니는 상인 NPC 생성.
-        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-        foreach(var data in NPCDataFile.instance.roamingMerchantDatas)
-        {
-            GameObject npc = Instantiate(prefab_roamingMerchantNPC, data.spawnPos, Quaternion.identity);
-            var roamingMerchant = npc.GetComponent<RoamingMerchant>();
-            roamingMerchant.Init(data.spawnPos,
-                WorldManager.instance.wholeWorldStates[data.spawnWorld].subWorldInstance,
-                ACTOR_TYPE.NPC);
-            roamingMerchant.sellingItemIDs = data.sellingItemsID;
-            roamingMerchant.textMeshController.Init(gameConfig.ingame_font_size);
-            roamingMerchant.textMeshController.SetText(data.name);
-            roamingMerchant.OnClickedActor += OnClickedActor;
-            npcs.Add(roamingMerchant);
-        }
     }
 
     /// <summary>
@@ -60,5 +40,24 @@ public class NPCManager : MovableObjectSpawner
     {
         KojeomLogger.DebugLog(string.Format("OnCliked Actor name : {0}, type : {1}", actor.name, actor.GetActorType()));
         lastestClickedActor = actor;
+    }
+
+    public override void Spawn()
+    { 
+        // 돌아다니는 상인 NPC 생성.
+        var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
+        foreach (var data in NPCDataFile.instance.roamingMerchantDatas)
+        {
+            GameObject npc = Instantiate(prefab_roamingMerchantNPC, data.spawnPos, Quaternion.identity);
+            var roamingMerchant = npc.GetComponent<RoamingMerchant>();
+            roamingMerchant.Init(data.spawnPos,
+                WorldManager.instance.wholeWorldStates[data.spawnWorld].subWorldInstance,
+                ACTOR_TYPE.NPC);
+            roamingMerchant.sellingItemIDs = data.sellingItemsID;
+            roamingMerchant.textMeshController.Init(gameConfig.ingame_font_size);
+            roamingMerchant.textMeshController.SetText(data.name);
+            roamingMerchant.OnClickedActor += OnClickedActor;
+            npcs.Add(roamingMerchant);
+        }
     }
 }

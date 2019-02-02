@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ChunkSlot
 {
@@ -38,26 +39,26 @@ public class World : MonoBehaviour
     public int worldIndex;
     public Block[,,] worldBlockData { get; private set; }
     private int chunkSize = 0;
-
-    public int worldOffsetX { get; private set; } = 0;
-    public int worldOffsetY { get; private set; } = 0;
-    public int worldOffsetZ { get; private set; } = 0;
+    public Vector3 position { get; private set; }
     
     private int chunkNumber = 0;
-    public CustomOctree customOctree { get; } = new CustomOctree();
+    public CustomOctree customOctree { get; private set; } = new CustomOctree();
+    //
+    public List<Actor> registeredActors { get; private set; } = new List<Actor>();
+    private InGameObjectRegister inGameObjRegister;
 
-    public void Init(int offsetX, int offsetY, int offsetZ)
+    public void Init(Vector3 pos)
 	{
-        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        inGameObjRegister = new InGameObjectRegister();
+        inGameObjRegister.Initialize(this);
         //
-        customOctree.Init(new Vector3(offsetX, offsetY, offsetZ), 
-            new Vector3(gameWorldConfig.sub_world_x_size + offsetX , 
-            gameWorldConfig.sub_world_y_size + offsetY,
-            gameWorldConfig.sub_world_z_size + offsetZ));
+        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        customOctree.Init(pos, new Vector3(gameWorldConfig.sub_world_x_size + pos.x, 
+            gameWorldConfig.sub_world_y_size + pos.y,
+            gameWorldConfig.sub_world_z_size + pos.z));
         chunkSize = gameWorldConfig.chunk_size;
-        worldOffsetX = offsetX;
-        worldOffsetY = offsetY;
-        worldOffsetZ = offsetZ;
+        //
+        position = pos;
 
         // init world data.
         worldBlockData = new Block[gameWorldConfig.sub_world_x_size,
@@ -110,15 +111,6 @@ public class World : MonoBehaviour
     //    customOctree.DrawFullTree();
     //}
 
-    /// <summary>
-    /// World GameObject의 실제 게임속 좌표값.
-    /// </summary>
-    /// <returns></returns>   
-    public Vector3 GetRealCoordPosition()
-    {
-        return transform.position;
-    }
-
     public void LoadChunkProcess()
     {
         KojeomLogger.DebugLog(string.Format("World name : {0}, Chunk 로드를 시작합니다.", worldName), LOG_TYPE.DEBUG_TEST);
@@ -145,22 +137,22 @@ public class World : MonoBehaviour
                         // 따라서, 유니티엔진에 맞춰서 오브젝트의 중점을 정중앙으로 블록들을 생성하려면(= 1개의 블록은 6개의 면을 생성한다),
                         // 아래와 같은 0.5f(offset)값을 추가한다. ( worldCoordX,Y,Z 값은 개별 블록을 생성할 때 사용된다. )
                         // p.s. 이 프로젝트에서 1개의 block의 기준점(block을 생성할 때 쓰이는)은 최상단면의 좌측하단의 포인트가 된다.(디폴트)
-                        float worldCoordX = x * chunkSize - 0.5f;
-                        float worldCoordY = y * chunkSize + 0.5f;
-                        float worldCoordZ = z * chunkSize - 0.5f;
+                        float chunkRealCoordX = x * chunkSize - 0.5f;
+                        float chunkRealCoordY = y * chunkSize + 0.5f;
+                        float chunkRealCoordZ = z * chunkSize - 0.5f;
 
                         GameObject newChunk = null;
                         switch ((ChunkType)type)
                         {
                             case ChunkType.COMMON:
-                                newChunk = Instantiate(PrefabStorage.instance.commonChunkPrefab, new Vector3(0, 0, 0),
+                                newChunk = Instantiate(PrefabStorage.instance.CommonChunkPrefab.LoadSynchro(), new Vector3(0, 0, 0),
                                                            new Quaternion(0, 0, 0, 0)) as GameObject;
                                 newChunk.transform.parent = gameObject.transform;
                                 newChunk.transform.name = string.Format("CommonChunk_{0}", chunkNumber++);
                                 chunkSlots[x, y, z].chunks[type] = newChunk.GetComponent<CommonChunk>();
                                 break;
                             case ChunkType.WATER:
-                                newChunk = Instantiate(PrefabStorage.instance.waterChunkPrefab, new Vector3(0, 0, 0),
+                                newChunk = Instantiate(PrefabStorage.instance.WaterChunkPrefab.LoadSynchro(), new Vector3(0, 0, 0),
                                                            new Quaternion(0, 0, 0, 0)) as GameObject;
                                 newChunk.transform.parent = gameObject.transform;
                                 newChunk.transform.name = string.Format("WaterChunk_{0}", chunkNumber++);
@@ -171,9 +163,9 @@ public class World : MonoBehaviour
                         chunkSlots[x, y, z].chunks[type].worldDataIdxX = x * chunkSize;
                         chunkSlots[x, y, z].chunks[type].worldDataIdxY = y * chunkSize;
                         chunkSlots[x, y, z].chunks[type].worldDataIdxZ = z * chunkSize;
-                        chunkSlots[x, y, z].chunks[type].realCoordX = worldCoordX + worldOffsetX;
-                        chunkSlots[x, y, z].chunks[type].realCoordY = worldCoordY + worldOffsetY;
-                        chunkSlots[x, y, z].chunks[type].realCoordZ = worldCoordZ + worldOffsetZ;
+                        chunkSlots[x, y, z].chunks[type].realCoordX = chunkRealCoordX + position.x;
+                        chunkSlots[x, y, z].chunks[type].realCoordY = chunkRealCoordY + position.y;
+                        chunkSlots[x, y, z].chunks[type].realCoordZ = chunkRealCoordZ + position.z;
                         chunkSlots[x, y, z].chunks[type].Init();
                         yield return new WaitForSeconds(WorldConfigFile.instance.GetConfig().chunkLoadIntervalSeconds);
                     }
@@ -206,5 +198,17 @@ public class World : MonoBehaviour
 		if (power != 0) rValue = Mathf.Pow(rValue, power);
 		return (int)rValue;
 	}
-    
+
+    public void RegisterObject(GameObject obj)
+    {
+        inGameObjRegister.Register(obj);
+    }
+    public void RegisterActor(Actor actor)
+    {
+        inGameObjRegister.Register(actor);
+    }
+    public void UnRegister(InGameObjectType type, GameObject obj)
+    {
+        inGameObjRegister.UnRegister(type, obj);
+    }
 }

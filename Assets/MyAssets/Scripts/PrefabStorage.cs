@@ -7,19 +7,30 @@ using UnityEngine;
 /// </summary>
 public class PrefabStorage : MonoBehaviour {
 
-    public GameObject worldPrefab { get; private set; }
-    public GameObject commonChunkPrefab { get; private set; }
-    public GameObject waterChunkPrefab { get; private set; }
-    private static GameObject[] characterPrefabs;
+    public SoftGameObjectPtr WorldPrefab { get; private set; }
+    public SoftGameObjectPtr CommonChunkPrefab { get; private set; }
+    public SoftGameObjectPtr WaterChunkPrefab { get; private set; }
+    //
+    //
+    private static GameObject[] CharacterPrefabs;
 
     public static PrefabStorage instance = null;
     private PrefabStorage()
     {
-        characterPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
+        CharacterPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
         //
-        commonChunkPrefab = Resources.Load<GameObject>(ConstFilePath.COMMON_CHUNK_PREFAB);
-        waterChunkPrefab = Resources.Load<GameObject>(ConstFilePath.WATER_CHUNK_PREFAB);
-        worldPrefab = Resources.Load<GameObject>(ConstFilePath.SUB_WORLD_PREFAB);
+        CommonChunkPrefab = new SoftGameObjectPtr
+        {
+            ObjectPath = ConstFilePath.COMMON_CHUNK_PREFAB
+        };
+        WorldPrefab = new SoftGameObjectPtr
+        {
+            ObjectPath = ConstFilePath.SUB_WORLD_PREFAB
+        };
+        WaterChunkPrefab = new SoftGameObjectPtr
+        {
+            ObjectPath = ConstFilePath.WATER_CHUNK_PREFAB
+        };
     }
 
     public static PrefabStorage GetInstance()
@@ -30,6 +41,6 @@ public class PrefabStorage : MonoBehaviour {
 
     public GameObject GetCharacterPrefab(int characterType)
     {
-        return characterPrefabs[characterType];
+        return CharacterPrefabs[characterType];
     }
 }

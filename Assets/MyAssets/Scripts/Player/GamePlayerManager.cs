@@ -6,7 +6,7 @@ using UnityEngine;
 public class GamePlayerManager : MonoBehaviour {
 
     public GamePlayer myGamePlayer { get; private set; }
-    public static GamePlayerManager instance;
+    public static GamePlayerManager instance { get; private set; }
     private GameObject gamePlayerPrefab;
     public bool isInitializeFinish { get; private set; }
 
@@ -34,7 +34,7 @@ public class GamePlayerManager : MonoBehaviour {
                         myGamePlayer.controller.Init(Camera.main, myGamePlayer);
                         myGamePlayer.controller.StartControllProcess();
 
-                        Vector3 worldInstPos = state.Value.subWorldInstance.GetRealCoordPosition();
+                        Vector3 worldInstPos = state.Value.subWorldInstance.position;
                         myGamePlayer.controller.SetPosition(new Vector3(worldInstPos.x, 60.0f, worldInstPos.z));
                         //Player Manager 하위 종속으로 변경.
                         myGamePlayer.transform.parent = gameObject.transform;

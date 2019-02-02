@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ConstFilePath
 {
-
     // 상대주소. Json 형식의 파일 path 모음.
     public readonly static string TXT_NPC_DATAS = "TextAsset/ActorData/NPC_DATAS";
     public readonly static string TXT_CHARACTER_DATAS = "TextAsset/ChDatas/characterDatas";
@@ -84,6 +83,11 @@ public class ConstFilePath
     /// 서브월드 프리팹 경로.
     /// </summary>
     public readonly static string SUB_WORLD_PREFAB = "GamePrefabs/SubWorld";
+
+    /// <summary>
+    /// 상인 NPC 프리팹 경로.
+    /// </summary>
+    public readonly static string MERCHANT_NPC_PREFAB = "GamePrefabs/NPCs/NPC_RoamingMerchant";
 }
 
 

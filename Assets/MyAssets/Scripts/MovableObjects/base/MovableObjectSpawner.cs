@@ -5,5 +5,5 @@ using UnityEngine;
 public abstract class MovableObjectSpawner : MonoBehaviour
 {
     public abstract void Init();
-    public abstract void GenerateToWorld();
+    public abstract void Spawn();
 }

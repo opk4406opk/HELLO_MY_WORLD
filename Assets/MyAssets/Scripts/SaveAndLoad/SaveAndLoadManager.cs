@@ -26,7 +26,7 @@ public class SaveAndLoadManager : MonoBehaviour {
     private string filePath;
 
     [SerializeField]
-    private GameSupervisor gameManager;
+    private readonly GameSupervisor GameSupervisor;
 
     private LZFCompress lzfCompress;
 

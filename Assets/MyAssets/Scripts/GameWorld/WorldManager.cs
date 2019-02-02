@@ -65,7 +65,7 @@ public class WorldManager : MonoBehaviour
     {
         KojeomLogger.DebugLog("GameWorld 생성을 시작합니다.");
         CreateWholeWorld();
-        if (GameSupervisor.instance != null && GameSupervisor.instance.isSubWorldDataSave == true)
+        if (GameSupervisor.Instance != null && GameSupervisor.Instance.isSubWorldDataSave == true)
         {
             SaveSubWorldFile();
         }
@@ -138,7 +138,7 @@ public class WorldManager : MonoBehaviour
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
         foreach(var subWorldData in SubWorldDataFile.instance.subWorldDataList)
         {
-            GameObject newSubWorld = Instantiate(PrefabStorage.instance.worldPrefab, new Vector3(0, 0, 0),
+            GameObject newSubWorld = Instantiate(PrefabStorage.instance.WorldPrefab.LoadSynchro(), new Vector3(0, 0, 0),
                new Quaternion(0, 0, 0, 0)) as GameObject;
             World subWorld = newSubWorld.GetComponent<World>();
             subWorld.OnFinishLoadChunks += OnSubWorldFinishLoadChunks;
@@ -230,9 +230,9 @@ public class WorldManager : MonoBehaviour
                                 case WorldRealTimeStatus.NeedInGameReLoad:
                                     wholeWorldStates[worldIdx].realTimeStatus = WorldRealTimeStatus.InGameReLoaded;
                                     wholeWorldStates[worldIdx].subWorldInstance.Init(
-                                        x * gameWorldConfig.sub_world_x_size,
+                                        new Vector3(x * gameWorldConfig.sub_world_x_size,
                                         y * gameWorldConfig.sub_world_y_size,
-                                        z * gameWorldConfig.sub_world_z_size);
+                                        z * gameWorldConfig.sub_world_z_size));
                                     break;
                             }
                         }
