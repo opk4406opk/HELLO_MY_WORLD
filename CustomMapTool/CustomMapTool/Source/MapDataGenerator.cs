@@ -13,10 +13,18 @@ namespace CustomMapTool.Source
         public int Row;
         public int Column;
         public int Layer;
+        public string SelectPath;
     }
         
     class MapDataGenerator
     {
+        #region defualt values.
+        public static readonly int  DefaultRowValue = 2;
+        public static readonly int  DefaultColumnValue = 2;
+        public static readonly int  DefaultLayerValue = 2;
+        //
+        #endregion
+
         private struct Properties
         {
             public int ROW;
@@ -82,8 +90,7 @@ namespace CustomMapTool.Source
                     }
                 }
             }
-
-            File.WriteAllText("D:\\WorldMapData.json", JsonConvert.SerializeObject(mapData, Formatting.Indented));
+            File.WriteAllText(GenData.SelectPath, JsonConvert.SerializeObject(mapData, Formatting.Indented));
         }
     }
 }
