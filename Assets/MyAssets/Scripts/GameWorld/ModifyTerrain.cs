@@ -15,8 +15,6 @@ public class ModifyTerrain : MonoBehaviour
     [SerializeField]
     private LootingSystem lootingSystem;
     [SerializeField]
-    private ItemDataFile itemDataFile;
-    [SerializeField]
     private GameSupervisor gameManager;
 
     private World world;
@@ -127,7 +125,7 @@ public class ModifyTerrain : MonoBehaviour
                     string itemID;
                     itemID = lootingSystem.GetTypeToItemID(blockType.ToString());
                     string type;
-                    ItemInfo itemInfo = itemDataFile.GetItemData(itemID);
+                    ItemInfo itemInfo = ItemDataFile.instance.GetItemData(itemID);
                     type = itemInfo.type;
                    
                     try

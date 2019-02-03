@@ -26,7 +26,7 @@ public class NPC_TYPE
     public static readonly string TYPE_SHOP_MERCHANT = "shop_merchant";
     public static readonly string TYPE_ROAMING_MERCHANT = "roaming_merchant";
 }
-public class NPCDataFile : MonoBehaviour {
+public class NPCDataFile {
     
     private JSONObject jsonObject;
     private TextAsset jsonFile;

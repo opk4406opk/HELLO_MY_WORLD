@@ -136,29 +136,29 @@ public class WorldManager : MonoBehaviour
     private void CreateWholeWorld()
     {
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-        foreach(var subWorldData in SubWorldDataFile.instance.subWorldDataList)
+        foreach(var subWorldData in WorldMapDataFile.instance.WorldMapData.SubWorldDatas)
         {
             GameObject newSubWorld = Instantiate(PrefabStorage.instance.WorldPrefab.LoadSynchro(), new Vector3(0, 0, 0),
                new Quaternion(0, 0, 0, 0)) as GameObject;
             World subWorld = newSubWorld.GetComponent<World>();
             subWorld.OnFinishLoadChunks += OnSubWorldFinishLoadChunks;
-            subWorld.worldName = subWorldData.worldName;
-            subWorld.worldIndex = subWorldData.worldIdx;
+            subWorld.worldName = subWorldData.WorldName;
+            subWorld.worldIndex = subWorldData.WorldIdx;
             newSubWorld.transform.parent = worldGroupTrans;
             //add world.
             WorldState worldState = new WorldState();
             worldState.subWorldInstance = subWorld;
             SubWorldNormalizedOffset normalizedSubOffset;
-            normalizedSubOffset.x = subWorldData.x;
-            normalizedSubOffset.y = subWorldData.y;
-            normalizedSubOffset.z = subWorldData.z;
+            normalizedSubOffset.x = subWorldData.X;
+            normalizedSubOffset.y = subWorldData.Y;
+            normalizedSubOffset.z = subWorldData.Z;
             worldState.normalizedOffset = normalizedSubOffset;
             worldState.genInfo = WorldGenerateInfo.NotYet;
             worldState.realTimeStatus = WorldRealTimeStatus.NeedInGameReLoad;
-            wholeWorldStates.Add(subWorldData.worldIdx, worldState);
+            wholeWorldStates.Add(subWorldData.WorldIdx, worldState);
 
             // offset to index 
-            worldOffsetToIndex.Add(normalizedSubOffset, subWorldData.worldIdx);
+            worldOffsetToIndex.Add(normalizedSubOffset, subWorldData.WorldIdx);
         }
     }
 
@@ -201,7 +201,7 @@ public class WorldManager : MonoBehaviour
             }
             else
             {
-                int randIdx = KojeomUtility.RandomInteger(0, SubWorldDataFile.instance.subWorldDataList.Count - 1);
+                int randIdx = KojeomUtility.RandomInteger(0, WorldMapDataFile.instance.WorldMapData.SubWorldDatas.Count - 1);
                 offset = wholeWorldStates[randIdx].normalizedOffset;
             }
             
@@ -252,9 +252,9 @@ public class WorldManager : MonoBehaviour
     public int GetSubWorldIndex(Vector3 objectPos)
     {
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
-        int x = (int)objectPos.x / gameWorldConfig.sub_world_x_size;
-        int y = ((int)objectPos.y / gameWorldConfig.sub_world_y_size) * SubWorldDataFile.instance.elements_per_layer;
-        int z = ((int)objectPos.z / gameWorldConfig.sub_world_z_size) * SubWorldDataFile.instance.rowOffset;
+        int x = (Mathf.CeilToInt(objectPos.x) / gameWorldConfig.sub_world_x_size) * WorldMapDataFile.instance.WorldMapData.Row;
+        int y = (Mathf.CeilToInt(objectPos.y) / gameWorldConfig.sub_world_y_size) * WorldMapDataFile.instance.WorldMapData.Layer;
+        int z = (Mathf.CeilToInt(objectPos.z) / gameWorldConfig.sub_world_z_size) * WorldMapDataFile.instance.WorldMapData.Column;
         return x + y + z;
     }
 
@@ -266,18 +266,18 @@ public class WorldManager : MonoBehaviour
     public Vector3 GetRealCoordToWorldCoord(Vector3 objectPos)
     {
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
-        int x = (int)objectPos.x / gameWorldConfig.sub_world_x_size;
-        int y = ((int)objectPos.y / gameWorldConfig.sub_world_y_size) * SubWorldDataFile.instance.elements_per_layer;
-        int z = ((int)objectPos.z / gameWorldConfig.sub_world_z_size) * SubWorldDataFile.instance.rowOffset;
+        int x = (Mathf.CeilToInt(objectPos.x) / gameWorldConfig.sub_world_x_size) * WorldMapDataFile.instance.WorldMapData.Row;
+        int y = (Mathf.CeilToInt(objectPos.y) / gameWorldConfig.sub_world_y_size) * WorldMapDataFile.instance.WorldMapData.Layer;
+        int z = (Mathf.CeilToInt(objectPos.z) / gameWorldConfig.sub_world_z_size) * WorldMapDataFile.instance.WorldMapData.Column;
         return new Vector3(x, y, z);
     }
 
     public Vector3 GetWorldCoordToRealCoord(Vector3 objectPos)
     {
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
-        int x = (int)objectPos.x * gameWorldConfig.sub_world_x_size;
-        int y = ((int)objectPos.y * gameWorldConfig.sub_world_y_size) / SubWorldDataFile.instance.elements_per_layer;
-        int z = ((int)objectPos.z * gameWorldConfig.sub_world_z_size) / SubWorldDataFile.instance.rowOffset;
+        int x = (Mathf.CeilToInt(objectPos.x) * gameWorldConfig.sub_world_x_size) / WorldMapDataFile.instance.WorldMapData.Row;
+        int y = (Mathf.CeilToInt(objectPos.y) * gameWorldConfig.sub_world_y_size) / WorldMapDataFile.instance.WorldMapData.Layer;
+        int z = (Mathf.CeilToInt(objectPos.z) * gameWorldConfig.sub_world_z_size) / WorldMapDataFile.instance.WorldMapData.Column;
         return new Vector3(x, y, z);
     }
 }

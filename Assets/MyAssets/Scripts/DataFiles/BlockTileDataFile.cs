@@ -36,7 +36,7 @@ public struct BlockTileInfo
 /// <summary>
 /// 블록 수정 또는 삭제, 월드 생성시에 쓰이는 TileDataFile.
 /// </summary>
-public class BlockTileDataFile : MonoBehaviour {
+public class BlockTileDataFile {
 
     private JSONObject tileDataJsonObj;
     private TextAsset jsonFile;

@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public struct GameConfigData
 {
     public int ingame_font_size;
 }
 
-public class GameConfigDataFile : MonoBehaviour {
+public class GameConfigDataFile {
     private static GameConfigDataFile _singleton = null;
     public static GameConfigDataFile singleton
     {

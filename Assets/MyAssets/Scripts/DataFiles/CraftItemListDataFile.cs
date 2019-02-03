@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
@@ -25,7 +24,7 @@ public struct CraftRawMaterial
 /// <summary>
 /// 제작아이템 리스트 Json데이터 파일을 관리하는 클래스.
 /// </summary>
-public class CraftItemListDataFile : MonoBehaviour
+public class CraftItemListDataFile
 {
     private JSONObject craftItemListJsonObj;
     private TextAsset jsonFile;

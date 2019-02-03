@@ -10,7 +10,7 @@ public class ConstFilePath
     public readonly static string TXT_CRAFT_ITEM_LIST_DATAS = "TextAsset/ItemDatas/craftItemListDatas";
     public readonly static string TXT_ITEM_DATAS = "TextAsset/ItemDatas/itemDatas";
     public readonly static string TXT_TYPE_TO_ITEM_DATAS = "TextAsset/ItemDatas/typeToItemID";
-    public readonly static string TXT_SUB_WORLD_DEFAULT_DATAS = "TextAsset/GameWorld/subworld_default";
+    public readonly static string TXT_WORLD_MAP_DATAS = "TextAsset/GameWorld/WorldMapData";
     public readonly static string TXT_WORLD_CONFIG_DATA = "TextAsset/GameWorld/WorldConfigData";
     public readonly static string TXT_BLOCK_TILE_DATAS = "TextAsset/TileDatas/blockTileDatas";
 

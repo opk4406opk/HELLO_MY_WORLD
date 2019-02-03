@@ -26,7 +26,7 @@ public struct WorldEnviromentsConfig
     //
 }
 
-public class WorldConfigFile : MonoBehaviour {
+public class WorldConfigFile {
     private JSONObject jsonObject;
     private TextAsset jsonFile;
 

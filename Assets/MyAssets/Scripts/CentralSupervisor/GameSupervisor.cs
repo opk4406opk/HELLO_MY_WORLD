@@ -37,26 +37,25 @@ public class GameStatus
 /// </summary>
 public class GameSupervisor : MonoBehaviour
 {
-    #region Inspector variables.
+    #region data file.
+    // data file parser.
+    private WorldConfigFile worldConfigDataFile = new WorldConfigFile();
+    private WorldMapDataFile subWorldDataFile = new WorldMapDataFile();
+    private BlockTileDataFile tileDataFile = new BlockTileDataFile();
+    private ItemDataFile itemDataFile = new ItemDataFile();
+    private CraftItemListDataFile craftItemListDataFile = new CraftItemListDataFile();
+    private NPCDataFile npcDataFile = new NPCDataFile();
+    private GameConfigDataFile gameConfigDataFile = new GameConfigDataFile();
+    //
+    #endregion
 
+    #region simple config.
     public bool isSoundOn = false;
     public bool isSubWorldDataSave = false;
     public bool isLockCursor = false;
-
-    [SerializeField]
-    private WorldConfigFile worldConfigDataFile;
-    [SerializeField]
-    private SubWorldDataFile subWorldDataFile;
-    [SerializeField]
-    private BlockTileDataFile tileDataFile;
-    [SerializeField]
-    private ItemDataFile itemDataFile;
-    [SerializeField]
-    private CraftItemListDataFile craftItemListDataFile;
-    [SerializeField]
-    private NPCDataFile npcDataFile;
-    [SerializeField]
-    private GameConfigDataFile gameConfigDataFile;
+    #endregion
+    //
+    #region Inspector variables.
     [SerializeField]
     private GamePlayerManager playerManager;
     [SerializeField]

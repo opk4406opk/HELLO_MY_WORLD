@@ -190,6 +190,8 @@ public class GamePlayerController : MonoBehaviour {
             return;
         }
 
+        KojeomLogger.DebugLog(string.Format("Player's contain world : {0}, position : {1}", 
+            containWorld.name, containWorld.position), LOG_TYPE.DEBUG_TEST);
 
         Vector3 bottomOffsetedPos = gamePlayer.transform.position;
         bottomOffsetedPos -= new Vector3(0.0f, 0.1f, 0.0f);

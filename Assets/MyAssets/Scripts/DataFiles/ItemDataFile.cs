@@ -16,7 +16,7 @@ public struct ItemInfo
 /// <summary>
 /// 게임 Item 데이터를 가지고 있는 클래스. (json)
 /// </summary>
-public class ItemDataFile : MonoBehaviour
+public class ItemDataFile
 {
 
     private JSONObject itemDataJsonObj;
