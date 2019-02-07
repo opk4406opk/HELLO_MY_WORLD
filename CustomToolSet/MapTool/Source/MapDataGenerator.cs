@@ -44,7 +44,7 @@ namespace MapTool.Source
 
         private MapGenerateData GenData;
 
-        class MapData
+        class MapJsonData
         {
             public Properties Properties;
             public List<SubWorldData> SubWorldDatas = new List<SubWorldData>();
@@ -55,9 +55,9 @@ namespace MapTool.Source
             GenData = genData;
         }
 
-        public void Generate()
+        public bool Generate()
         {
-            MapData mapData = new MapData();
+            MapJsonData mapData = new MapJsonData();
             mapData.Properties.ROW = GenData.Row;
             mapData.Properties.COLUMN = GenData.Column;
             mapData.Properties.LAYER = GenData.Layer;
@@ -91,6 +91,7 @@ namespace MapTool.Source
                 }
             }
             File.WriteAllText(GenData.SelectPath, JsonConvert.SerializeObject(mapData, Formatting.Indented));
+            return true;
         }
     }
 }
