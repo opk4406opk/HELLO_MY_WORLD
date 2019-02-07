@@ -68,7 +68,7 @@ public class NPCController : MonoBehaviour, ActorController
     {
         for (;;)
         {
-            CollideInfo collideInfo = containWorld.customOctree.Collide(transform.position);
+            CollideInfo collideInfo = containWorld.CustomOctree.Collide(transform.position);
             if (!collideInfo.isCollide)
             {
                 transform.position = new Vector3(transform.position.x,

@@ -78,12 +78,12 @@ public class CommonChunk : AChunk
                         float blockCenterX = cubeX + 0.5f;
                         float blockCenterY = cubeY - 0.5f;
                         float blockCenterZ = cubeZ + 0.5f;
-                        world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerX = blockCenterX;
-                        world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerY = blockCenterY;
-                        world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerZ = blockCenterZ;
-                        world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].isRendered = true;
+                        world.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerX = blockCenterX;
+                        world.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerY = blockCenterY;
+                        world.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerZ = blockCenterZ;
+                        world.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].isRendered = true;
                         // 월드맵에 생성된 블록의 중앙점을 이용해 Octree의 노드를 생성합니다.
-                        world.customOctree.Add(new Vector3(blockCenterX, blockCenterY, blockCenterZ));
+                        world.CustomOctree.Add(new Vector3(blockCenterX, blockCenterY, blockCenterZ));
                     }
 
                 }

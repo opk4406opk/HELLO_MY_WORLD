@@ -57,8 +57,8 @@ public class CustomRayCast : MonoBehaviour
     /// <returns></returns>
     public static bool InterSectWithAABB(Ray ray, ref CustomAABB aabb)
     {
-        float tmin = (aabb.minExtent.x - ray.origin.x) / ray.direction.normalized.x;
-        float tmax = (aabb.maxExtent.x - ray.origin.x) / ray.direction.normalized.x;
+        float tmin = (aabb.MinExtent.x - ray.origin.x) / ray.direction.normalized.x;
+        float tmax = (aabb.MaxExtent.x - ray.origin.x) / ray.direction.normalized.x;
 
         if (tmin > tmax)
         {
@@ -67,8 +67,8 @@ public class CustomRayCast : MonoBehaviour
             tmax = tmp;
         }
 
-        float tymin = (aabb.minExtent.y - ray.origin.y) / ray.direction.normalized.y;
-        float tymax = (aabb.maxExtent.y - ray.origin.y) / ray.direction.normalized.y;
+        float tymin = (aabb.MinExtent.y - ray.origin.y) / ray.direction.normalized.y;
+        float tymax = (aabb.MaxExtent.y - ray.origin.y) / ray.direction.normalized.y;
 
         if (tymin > tymax)
         {
@@ -86,8 +86,8 @@ public class CustomRayCast : MonoBehaviour
         if (tymax < tmax)
             tmax = tymax;
 
-        float tzmin = (aabb.minExtent.z - ray.origin.z) / ray.direction.normalized.z;
-        float tzmax = (aabb.maxExtent.z - ray.origin.z) / ray.direction.normalized.z;
+        float tzmin = (aabb.MinExtent.z - ray.origin.z) / ray.direction.normalized.z;
+        float tzmax = (aabb.MaxExtent.z - ray.origin.z) / ray.direction.normalized.z;
 
         if (tzmin > tzmax)
         {
@@ -106,7 +106,7 @@ public class CustomRayCast : MonoBehaviour
             tmax = tzmax;
         // 테스트 코드임....
         // tmin 값이 t를 의미하는가? / Ray = Origin + Direction * t ( = distance or time )
-        aabb.hitPointWithRay = ray.GetPoint(tmin);
+        aabb.HitPointWithRay = ray.GetPoint(tmin);
         //----------------------------------
         return true;
     }
@@ -119,7 +119,7 @@ public class CustomRayCast : MonoBehaviour
     /// <returns></returns>
     public static bool InterSectWithAABB_TEST_Version(Ray r, CustomAABB aabb)
     {
-        if (!aabb.isEnable) return false;
+        if (!aabb.IsEnable) return false;
 
         Vector3 dirfrac;
         float t;
@@ -129,12 +129,12 @@ public class CustomRayCast : MonoBehaviour
         dirfrac.z = 1.0f / r.direction.z;
         // aabb.minExtent is the corner of AABB with minimal coordinates - left bottom, aabb.maxExtent is maximal corner
         // r.origin is origin of ray
-        float t1 = (aabb.minExtent.x - r.origin.x) * dirfrac.x;
-        float t2 = (aabb.maxExtent.x - r.origin.x) * dirfrac.x;
-        float t3 = (aabb.minExtent.y - r.origin.y) * dirfrac.y;
-        float t4 = (aabb.maxExtent.y - r.origin.y) * dirfrac.y;
-        float t5 = (aabb.minExtent.z - r.origin.z) * dirfrac.z;
-        float t6 = (aabb.maxExtent.z - r.origin.z) * dirfrac.z;
+        float t1 = (aabb.MinExtent.x - r.origin.x) * dirfrac.x;
+        float t2 = (aabb.MaxExtent.x - r.origin.x) * dirfrac.x;
+        float t3 = (aabb.MinExtent.y - r.origin.y) * dirfrac.y;
+        float t4 = (aabb.MaxExtent.y - r.origin.y) * dirfrac.y;
+        float t5 = (aabb.MinExtent.z - r.origin.z) * dirfrac.z;
+        float t6 = (aabb.MaxExtent.z - r.origin.z) * dirfrac.z;
 
         float tmin = Mathf.Max(Mathf.Max(Mathf.Min(t1, t2), Mathf.Min(t3, t4)), Mathf.Min(t5, t6));
         float tmax = Mathf.Min(Mathf.Min(Mathf.Max(t1, t2), Mathf.Max(t3, t4)), Mathf.Max(t5, t6));

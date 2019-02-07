@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 
-namespace CustomMapTool.Source
+namespace MapTool.Source
 {
     public struct MapGenerateData
     {
@@ -31,14 +31,14 @@ namespace CustomMapTool.Source
             public int COLUMN;
             public int LAYER;
         }
-
+       
         private struct SubWorldData
         {
-            public string WORLD_IDX;
-            public string WORLD_NAME;
+            public string UNIQUE_ID;
             public string X;
             public string Y;
             public string Z;
+            public string WORLD_NAME;
             public string IS_SURFACE;
         }
 
@@ -71,10 +71,10 @@ namespace CustomMapTool.Source
                     {
                         SubWorldData subWorldData = new SubWorldData
                         {
+                            UNIQUE_ID = string.Format("unique_{0}:{1}:{2}", x.ToString(), y.ToString(), z.ToString()),
                             X = x.ToString(),
                             Y = y.ToString(),
                             Z = z.ToString(),
-                            WORLD_IDX = worldIndex.ToString(),
                             WORLD_NAME = string.Format("SUB_WORLD_{0}", worldIndex)
                         };
                         if(y == (GenData.Layer - 1))

@@ -11,7 +11,7 @@ abstract public class NPCData
     public string name;
     public string type;
     public Vector3 spawnPos;
-    public int spawnWorld;
+    public string WorldUniqueID;
 }
 public class RoamingMerchantData : NPCData
 {
@@ -92,7 +92,7 @@ public class NPCDataFile {
                         data.ToDictionary().TryGetValue("hp", out value);
                         npcData.hp = float.Parse(value);
                         data.ToDictionary().TryGetValue("spawn_world", out value);
-                        npcData.spawnWorld = int.Parse(value);
+                        npcData.WorldUniqueID = value;
                         data.ToDictionary().TryGetValue("spawn_position", out value);
                         npcData.spawnPos = GetSpwanPos(value);
                         data.ToDictionary().TryGetValue("selling_items_id", out value);
@@ -117,7 +117,7 @@ public class NPCDataFile {
                         data.ToDictionary().TryGetValue("hp", out value);
                         npcData.hp = float.Parse(value);
                         data.ToDictionary().TryGetValue("spawn_world", out value);
-                        npcData.spawnWorld = int.Parse(value);
+                        npcData.WorldUniqueID = value;
                         data.ToDictionary().TryGetValue("spawn_position", out value);
                         npcData.spawnPos = GetSpwanPos(value);
                         data.ToDictionary().TryGetValue("selling_items_id", out value);

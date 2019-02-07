@@ -5,41 +5,41 @@ public struct CustomAABB {
     public float vx;
     public float vy;
     public float vz;
-    public float width;
-    public float height;
-    public float depth;
+    public float Width;
+    public float Height;
+    public float Depth;
 
-    public Vector3 minExtent;
-    public Vector3 maxExtent;
+    public Vector3 MinExtent;
+    public Vector3 MaxExtent;
     /// <summary>
     ///  in world space coordinate
     /// </summary>
-    public Vector3 position;
-    public bool isEnable { set; get; }
+    public Vector3 Position;
+    public bool IsEnable { set; get; }
 
-    public Vector3 hitPointWithRay;
+    public Vector3 HitPointWithRay;
 
     public void MakeAABB(CustomAABB other)
     {
-        minExtent = other.minExtent;
-        maxExtent = other.maxExtent;
+        MinExtent = other.MinExtent;
+        MaxExtent = other.MaxExtent;
         vx = other.vx;
         vy = other.vy;
         vz = other.vz;
-        width = other.width;
-        height = other.height;
-        depth = other.depth;
+        Width = other.Width;
+        Height = other.Height;
+        Depth = other.Depth;
     }
 
     public void MakeAABB(Vector3 vec)
     {
-        minExtent += vec;
-        maxExtent += vec;
-        position = (maxExtent + minExtent) / 2;
-        Vector3 diff = maxExtent - minExtent;
-        width = diff.x;
-        height = diff.y;
-        depth = diff.z;
+        MinExtent += vec;
+        MaxExtent += vec;
+        Position = (MaxExtent + MinExtent) / 2;
+        Vector3 diff = MaxExtent - MinExtent;
+        Width = diff.x;
+        Height = diff.y;
+        Depth = diff.z;
     }
 
     public void MakeAABB(Vector3[] points, float velocityX = 0.0f, float velocityY = 0.0f, float velocityZ = 0.0f)
@@ -48,23 +48,23 @@ public struct CustomAABB {
         vy = velocityY;
         vz = velocityZ;
 
-        minExtent = points[0];
-        maxExtent = points[0];
+        MinExtent = points[0];
+        MaxExtent = points[0];
         for(int idx = 1; idx < points.Length; idx++)
         {
-            if (points[idx].x < minExtent.x) minExtent.x = points[idx].x;
-            else if (points[idx].x > maxExtent.x) maxExtent.x = points[idx].x;
-            if (points[idx].y < minExtent.y) minExtent.y = points[idx].y;
-            else if (points[idx].y > maxExtent.y) maxExtent.y = points[idx].y;
-            if (points[idx].z < minExtent.z) minExtent.z = points[idx].z;
-            else if (points[idx].z > maxExtent.z) maxExtent.z = points[idx].z;
+            if (points[idx].x < MinExtent.x) MinExtent.x = points[idx].x;
+            else if (points[idx].x > MaxExtent.x) MaxExtent.x = points[idx].x;
+            if (points[idx].y < MinExtent.y) MinExtent.y = points[idx].y;
+            else if (points[idx].y > MaxExtent.y) MaxExtent.y = points[idx].y;
+            if (points[idx].z < MinExtent.z) MinExtent.z = points[idx].z;
+            else if (points[idx].z > MaxExtent.z) MaxExtent.z = points[idx].z;
         }
 
-        position = (maxExtent + minExtent) / 2;
-        Vector3 diff = maxExtent - minExtent;
-        width = diff.x;
-        height = diff.y;
-        depth = diff.z;
+        Position = (MaxExtent + MinExtent) / 2;
+        Vector3 diff = MaxExtent - MinExtent;
+        Width = diff.x;
+        Height = diff.y;
+        Depth = diff.z;
     }
     public void MakeAABB(Vector3 minExtent, Vector3 maxExtent, float velocityX = 0.0f, float velocityY = 0.0f, float velocityZ = 0.0f)
     {
@@ -72,13 +72,13 @@ public struct CustomAABB {
         vy = velocityY;
         vz = velocityZ;
 
-        this.minExtent = minExtent;
-        this.maxExtent = maxExtent;
-        position = (this.maxExtent + this.minExtent) / 2;
+        this.MinExtent = minExtent;
+        this.MaxExtent = maxExtent;
+        Position = (this.MaxExtent + this.MinExtent) / 2;
         Vector3 diff = maxExtent - minExtent;
-        width = diff.x;
-        height = diff.y;
-        depth = diff.z;
+        Width = diff.x;
+        Height = diff.y;
+        Depth = diff.z;
     }
 
     /// <summary>
@@ -91,20 +91,20 @@ public struct CustomAABB {
         vy = velocityY;
         vz = velocityZ;
        
-        minExtent = boxColl.bounds.min;
-        maxExtent = boxColl.bounds.max;
-        position = (maxExtent + minExtent) / 2;
-        Vector3 diff = maxExtent - minExtent;
-        width = diff.x;
-        height = diff.y;
-        depth = diff.z;
+        MinExtent = boxColl.bounds.min;
+        MaxExtent = boxColl.bounds.max;
+        Position = (MaxExtent + MinExtent) / 2;
+        Vector3 diff = MaxExtent - MinExtent;
+        Width = diff.x;
+        Height = diff.y;
+        Depth = diff.z;
     }
 
     public bool IsInterSectPoint(Vector3 point)
     {
-        if ((point.x > minExtent.x && point.x < maxExtent.x ) &&
-           (point.y > minExtent.y && point.y < maxExtent.y) &&
-           (point.z > minExtent.z && point.z < maxExtent.z))
+        if ((point.x > MinExtent.x && point.x < MaxExtent.x ) &&
+           (point.y > MinExtent.y && point.y < MaxExtent.y) &&
+           (point.z > MinExtent.z && point.z < MaxExtent.z))
         {
             return true;
         }
@@ -124,9 +124,9 @@ public struct CustomAABB {
 
     public bool IsInterSectAABB(CustomAABB other)
     {
-        if ((minExtent.x <= other.maxExtent.x && maxExtent.x >= other.minExtent.x) &&
-         (minExtent.y <= other.maxExtent.y && maxExtent.y >= other.minExtent.y) &&
-         (minExtent.z <= other.maxExtent.z && maxExtent.z >= other.minExtent.z))
+        if ((MinExtent.x <= other.MaxExtent.x && MaxExtent.x >= other.MinExtent.x) &&
+         (MinExtent.y <= other.MaxExtent.y && MaxExtent.y >= other.MinExtent.y) &&
+         (MinExtent.z <= other.MaxExtent.z && MaxExtent.z >= other.MinExtent.z))
         {
             return true;
         }
@@ -146,12 +146,12 @@ public struct CustomAABB {
         };
         float[] distances =
         {
-            (position.x - other.position.x), 
-            (other.position.x - position.x), 
-            (position.y - other.position.y),
-            (other.position.y - position.y),
-            (position.z - other.position.z), 
-            (other.position.z - position.z), 
+            (Position.x - other.Position.x), 
+            (other.Position.x - Position.x), 
+            (Position.y - other.Position.y),
+            (other.Position.y - Position.y),
+            (Position.z - other.Position.z), 
+            (other.Position.z - Position.z), 
         };
         return false;
     }
@@ -161,13 +161,13 @@ public struct CustomAABB {
     {
         CustomAABB broadphasebox = new CustomAABB();
         broadphasebox.MakeAABB(b);
-        broadphasebox.minExtent.x = b.vx > 0 ? b.minExtent.x : b.minExtent.x + b.vx;
-        broadphasebox.minExtent.y = b.vy > 0 ? b.minExtent.y : b.minExtent.y + b.vy;
-        broadphasebox.minExtent.y = b.vz > 0 ? b.minExtent.z : b.minExtent.z + b.vz;
+        broadphasebox.MinExtent.x = b.vx > 0 ? b.MinExtent.x : b.MinExtent.x + b.vx;
+        broadphasebox.MinExtent.y = b.vy > 0 ? b.MinExtent.y : b.MinExtent.y + b.vy;
+        broadphasebox.MinExtent.y = b.vz > 0 ? b.MinExtent.z : b.MinExtent.z + b.vz;
         //
-        broadphasebox.width = b.vx > 0 ? b.vx + b.width : b.width - b.vx;
-        broadphasebox.height = b.vy > 0 ? b.vy + b.height : b.height - b.vy;
-        broadphasebox.depth = b.vz > 0 ? b.vz + b.depth : b.depth - b.vz;
+        broadphasebox.Width = b.vx > 0 ? b.vx + b.Width : b.Width - b.vx;
+        broadphasebox.Height = b.vy > 0 ? b.vy + b.Height : b.Height - b.vy;
+        broadphasebox.Depth = b.vz > 0 ? b.vz + b.Depth : b.Depth - b.vz;
 
         return broadphasebox;
     }
@@ -175,12 +175,12 @@ public struct CustomAABB {
 
     public static bool BroadphaseAABBCheck(CustomAABB broadphase, CustomAABB b2)
     {
-        return !(broadphase.minExtent.x + broadphase.width < b2.minExtent.x ||
-            broadphase.minExtent.x > b2.minExtent.x + b2.width ||
-            broadphase.minExtent.y + broadphase.height < b2.minExtent.y ||
-            broadphase.minExtent.y > b2.minExtent.y + b2.height ||
-            broadphase.minExtent.z > b2.minExtent.z + b2.depth ||
-            broadphase.minExtent.z + broadphase.depth < b2.minExtent.z);
+        return !(broadphase.MinExtent.x + broadphase.Width < b2.MinExtent.x ||
+            broadphase.MinExtent.x > b2.MinExtent.x + b2.Width ||
+            broadphase.MinExtent.y + broadphase.Height < b2.MinExtent.y ||
+            broadphase.MinExtent.y > b2.MinExtent.y + b2.Height ||
+            broadphase.MinExtent.z > b2.MinExtent.z + b2.Depth ||
+            broadphase.MinExtent.z + broadphase.Depth < b2.MinExtent.z);
     }
 
     /// <summary>
@@ -200,35 +200,35 @@ public struct CustomAABB {
         // find the distance between the objects on the near and far sides for both x and y
         if (moveAABB.vx > 0.0f)
         {
-            xInvEntry = staticAABB.position.x - (moveAABB.position.x + moveAABB.width);
-            xInvExit = (staticAABB.position.x + staticAABB.width) - moveAABB.position.x;
+            xInvEntry = staticAABB.Position.x - (moveAABB.Position.x + moveAABB.Width);
+            xInvExit = (staticAABB.Position.x + staticAABB.Width) - moveAABB.Position.x;
         }
         else
         {
-            xInvEntry = (staticAABB.position.x + staticAABB.width) - moveAABB.position.x;
-            xInvExit = staticAABB.position.x - (moveAABB.position.x + moveAABB.width);
+            xInvEntry = (staticAABB.Position.x + staticAABB.Width) - moveAABB.Position.x;
+            xInvExit = staticAABB.Position.x - (moveAABB.Position.x + moveAABB.Width);
         }
 
         if (moveAABB.vy > 0.0f)
         {
-            yInvEntry = staticAABB.position.y - (moveAABB.position.y + moveAABB.height);
-            yInvExit = (staticAABB.position.y + staticAABB.height) - moveAABB.position.y;
+            yInvEntry = staticAABB.Position.y - (moveAABB.Position.y + moveAABB.Height);
+            yInvExit = (staticAABB.Position.y + staticAABB.Height) - moveAABB.Position.y;
         }
         else
         {
-            yInvEntry = (staticAABB.position.y + staticAABB.height) - moveAABB.position.y;
-            yInvExit = staticAABB.position.y - (moveAABB.position.y + moveAABB.height);
+            yInvEntry = (staticAABB.Position.y + staticAABB.Height) - moveAABB.Position.y;
+            yInvExit = staticAABB.Position.y - (moveAABB.Position.y + moveAABB.Height);
         }
 
         if (moveAABB.vz > 0.0f)
         {
-            zInvEntry = staticAABB.position.z - (moveAABB.position.z + moveAABB.depth);
-            zInvExit = (staticAABB.position.z + staticAABB.depth) - moveAABB.position.z;
+            zInvEntry = staticAABB.Position.z - (moveAABB.Position.z + moveAABB.Depth);
+            zInvExit = (staticAABB.Position.z + staticAABB.Depth) - moveAABB.Position.z;
         }
         else
         {
-            zInvEntry = (staticAABB.position.z + staticAABB.depth) - moveAABB.position.z;
-            zInvExit = staticAABB.position.z - (moveAABB.position.z + moveAABB.depth);
+            zInvEntry = (staticAABB.Position.z + staticAABB.Depth) - moveAABB.Position.z;
+            zInvExit = staticAABB.Position.z - (moveAABB.Position.z + moveAABB.Depth);
         }
 
         //

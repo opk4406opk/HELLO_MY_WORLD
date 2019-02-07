@@ -24,7 +24,7 @@ public class InGameObjectRegister
 
     public void Register(Actor actor)
     {
-        world.registeredActors.Add(actor);
+        world.RegisteredActors.Add(actor);
     }
 
     public void UnRegister(InGameObjectType objectType, GameObject obj)
@@ -34,7 +34,7 @@ public class InGameObjectRegister
             case InGameObjectType.OBJECT:
                 break;
             case InGameObjectType.ACTOR:
-                world.registeredActors.Remove(obj.GetComponent<Actor>());
+                world.RegisteredActors.Remove(obj.GetComponent<Actor>());
                 break;
         }
     }

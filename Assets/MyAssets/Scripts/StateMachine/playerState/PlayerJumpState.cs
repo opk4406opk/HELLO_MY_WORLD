@@ -42,7 +42,7 @@ public class PlayerJumpState : IState
             Vector3 topOffsetedPos = gamePlayer.transform.position;
             topOffsetedPos += new Vector3(0.0f, 0.1f, 0.0f);
 
-            CollideInfo collideInfo = containWorld.customOctree.Collide(topOffsetedPos);
+            CollideInfo collideInfo = containWorld.CustomOctree.Collide(topOffsetedPos);
             if (collideInfo.isCollide == false)
             {
                 startPos = gamePlayer.transform.position;

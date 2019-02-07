@@ -12,9 +12,10 @@ using System;
 /// <summary>
 /// 게임내 세이브&로드를 관리하는 클래스.
 /// </summary>
+[Obsolete("Save and Load Manager Deprecated. Don't Use.")]
 public class SaveAndLoadManager : MonoBehaviour {
 
-    private Dictionary<int, WorldState> gameWorldStateList;
+    private Dictionary<string, WorldState> GameWorldStates;
     private byte[] mergeWorldData;
     private int mergeWorldSize = 0;
     private int mergeIdx = 0;
@@ -33,7 +34,7 @@ public class SaveAndLoadManager : MonoBehaviour {
     public void Init()
     {
         filePath = Application.dataPath + "/GameSavefile.dat";
-        gameWorldStateList = WorldManager.instance.wholeWorldStates;
+        GameWorldStates = WorldManager.instance.wholeWorldStates;
         lzfCompress = new LZFCompress();
         CalcWorldDataSize();
     }
@@ -48,10 +49,14 @@ public class SaveAndLoadManager : MonoBehaviour {
         // 파일 생성.
         BinaryFormatter bf = new BinaryFormatter();
         FileStream fileStream = File.Open(filePath, FileMode.OpenOrCreate);
-        if (fileStream == null) return false;
-
-        for (int idx = 0; idx < gameWorldStateList.Count; ++idx)
-            SubWorldToTotalWorld(idx);
+        if (fileStream == null)
+        {
+            return false;
+        }
+        foreach (var state in GameWorldStates)
+        {
+            SubWorldToTotalWorld(state.Key);
+        }
         // 마지막 원소에 데이터의 끝을 알리는 구분자를 넣는다.
         mergeWorldData[mergeWorldSize - 1] = DELIMETER_END;
 
@@ -71,7 +76,7 @@ public class SaveAndLoadManager : MonoBehaviour {
         return true;
     }
   
-    private void SubWorldToTotalWorld(int subWorldIdx)
+    private void SubWorldToTotalWorld(string uniqueID)
     {
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         for (int x = 0; x < gameWorldConfig.sub_world_x_size; ++x)
@@ -79,12 +84,12 @@ public class SaveAndLoadManager : MonoBehaviour {
                 for (int z = 0; z < gameWorldConfig.sub_world_z_size; ++z)
                 {
                     mergeIdx = (x * gameWorldConfig.sub_world_y_size * gameWorldConfig.sub_world_z_size) + (y * gameWorldConfig.sub_world_z_size) + z;
-                    mergeWorldData[mergeIdx + mergeIdxOffset] = gameWorldStateList[subWorldIdx].subWorldInstance.worldBlockData[x, y, z].type;
+                    mergeWorldData[mergeIdx + mergeIdxOffset] = GameWorldStates[uniqueID].subWorldInstance.WorldBlockData[x, y, z].type;
                 }
         
         // 데이터 입력이 끝나면, 구분자를 삽입한다.
-        if(subWorldIdx != (gameWorldStateList.Count-1)) 
-            mergeWorldData[mergeIdx + mergeIdxOffset + 1] = DELIMETER_AND;
+        //if(uniqueID != (GameWorldStates.Count-1)) 
+        //    mergeWorldData[mergeIdx + mergeIdxOffset + 1] = DELIMETER_AND;
         // Delimeter 포함하여 +2를 해줘야한다.
         mergeIdxOffset += (mergeIdx+2);
     }
@@ -136,11 +141,11 @@ public class SaveAndLoadManager : MonoBehaviour {
         int idx = 0;
         while(mergeWorldData[mergeIdxOffset] != DELIMETER_END)
         {
-            TotalWorldToSubWorld(idx);
+            //TotalWorldToSubWorld(idx);
             idx++;
         }
 
-        foreach (var element in gameWorldStateList)
+        foreach (var element in GameWorldStates)
         {
             element.Value.subWorldInstance.LoadChunkProcess();
         }
@@ -148,29 +153,29 @@ public class SaveAndLoadManager : MonoBehaviour {
         return true;
     }
 
-    private void TotalWorldToSubWorld(int subWorldIdx)
-    {
-        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
-        for (int x = 0; x < gameWorldConfig.sub_world_x_size; ++x)
-            for (int y = 0; y < gameWorldConfig.sub_world_y_size; ++y)
-                for (int z = 0; z < gameWorldConfig.sub_world_z_size; ++z)
-                {
-                    mergeIdx = (x * gameWorldConfig.sub_world_y_size * gameWorldConfig.sub_world_z_size) + (y * gameWorldConfig.sub_world_z_size) + z;
-                    gameWorldStateList[subWorldIdx].subWorldInstance.worldBlockData[x, y, z].type = mergeWorldData[mergeIdx + mergeIdxOffset];
-                }
+    //private void TotalWorldToSubWorld(string subWorldIdx)
+    //{
+    //    var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+    //    for (int x = 0; x < gameWorldConfig.sub_world_x_size; ++x)
+    //        for (int y = 0; y < gameWorldConfig.sub_world_y_size; ++y)
+    //            for (int z = 0; z < gameWorldConfig.sub_world_z_size; ++z)
+    //            {
+    //                mergeIdx = (x * gameWorldConfig.sub_world_y_size * gameWorldConfig.sub_world_z_size) + (y * gameWorldConfig.sub_world_z_size) + z;
+    //                GameWorldStates[subWorldIdx].subWorldInstance.WorldBlockData[x, y, z].type = mergeWorldData[mergeIdx + mergeIdxOffset];
+    //            }
 
-        if((subWorldIdx != (gameWorldStateList.Count-1)) &&
-           (mergeWorldData[mergeIdx + mergeIdxOffset + 1] == DELIMETER_AND))
-        {
-            mergeIdx += 2;
-            mergeIdxOffset += mergeIdx;
-        }
-        else
-        {
-            mergeIdx += 1;
-            mergeIdxOffset += mergeIdx;
-        } 
-    }
+    //    if((subWorldIdx != (GameWorldStates.Count-1)) &&
+    //       (mergeWorldData[mergeIdx + mergeIdxOffset + 1] == DELIMETER_AND))
+    //    {
+    //        mergeIdx += 2;
+    //        mergeIdxOffset += mergeIdx;
+    //    }
+    //    else
+    //    {
+    //        mergeIdx += 1;
+    //        mergeIdxOffset += mergeIdx;
+    //    } 
+    //}
 
     /// <summary>
     /// 전체 게임 월드 크기를 구합니다.
@@ -183,7 +188,7 @@ public class SaveAndLoadManager : MonoBehaviour {
     {
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         int subWorldSize = gameWorldConfig.sub_world_x_size * gameWorldConfig.sub_world_y_size * gameWorldConfig.sub_world_z_size;
-        mergeWorldSize = (subWorldSize * gameWorldStateList.Count) + gameWorldStateList.Count;
+        mergeWorldSize = (subWorldSize * GameWorldStates.Count) + GameWorldStates.Count;
 
         int recordNum = 0;
         del_GetRecordNum GetRecordNum = () =>

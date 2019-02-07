@@ -69,17 +69,6 @@ public class PlayerMoveState : IState
         }
     }
 
-    ///// <summary>
-    ///// 클라이언트로부터 서버로 호출되는 RPC 함수.
-    ///// Commands are sent from player objects on the client to player objects on the server.
-    ///// </summary>
-    ///// <param name="clientConnectionID"></param>
-    //[Command]
-    //private void CmdMoveEvent(int clientConnectionID)
-    //{
-    //    KojeomLogger.DebugLog(string.Format("[RPC_CALL] Move from connectionID : {0}", clientConnectionID), LOG_TYPE.NETWORK_SERVER_INFO);
-    //}
-
     private void Move()
     {
         if(InputManager.singleton != null)
@@ -118,11 +107,11 @@ public class PlayerMoveState : IState
         gamePlayer.controller.LerpPosition(move);
         //
         CustomAABB playerAABB = gamePlayer.controller.characterObject.GetCustomAABB(move);
-        var collideInfo = containWorld.customOctree.Collide(playerAABB);
+        var collideInfo = containWorld.CustomOctree.Collide(ref playerAABB);
         if (collideInfo.isCollide)
         {
-            float dist = Vector3.Distance(playerAABB.position, collideInfo.aabb.position);
-            float between = (playerAABB.width + collideInfo.aabb.width) / 2;
+            float dist = Vector3.Distance(playerAABB.Position, collideInfo.aabb.Position);
+            float between = (playerAABB.Width + collideInfo.aabb.Width) / 2;
             if (dist < between)
             {
                 gamePlayer.controller.SetPosition(new Vector3(origin.x + (dist - between) / 3,

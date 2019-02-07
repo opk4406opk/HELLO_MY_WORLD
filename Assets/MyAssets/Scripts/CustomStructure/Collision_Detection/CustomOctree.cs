@@ -52,7 +52,7 @@ public struct CollideInfo
     {
         var containWorld = WorldManager.instance.ContainedWorld(hitBlockCenter);
         Vector3 worldCoord = WorldManager.instance.GetRealCoordToWorldCoord(hitBlockCenter);
-        return containWorld.worldBlockData[(int)worldCoord.x, (int)worldCoord.y, (int)worldCoord.z];
+        return containWorld.WorldBlockData[(int)worldCoord.x, (int)worldCoord.y, (int)worldCoord.z];
     }
 }
 
@@ -91,9 +91,9 @@ public class CustomOctree
     /// </summary>
     public void DrawFullTree()
     {
-        if(root != null) DrawAllNodes(root);
+        if(root != null) DrawAllNodes(ref root);
     }
-    private void DrawAllNodes(COTNode node)
+    private void DrawAllNodes(ref COTNode node)
     {
         Gizmos.color = Color.yellow;
         if (node.size == blockMinSize) Gizmos.DrawWireCube(node.center, node.size);
@@ -101,7 +101,7 @@ public class CustomOctree
         {
             if (node.childs[i] == null) continue;
             if (node.size == blockMinSize) Gizmos.DrawWireCube(node.childs[i].center, node.childs[i].size);
-            DrawAllNodes(node.childs[i]);
+            DrawAllNodes(ref node.childs[i]);
         }
     }
     /// <summary>
@@ -110,7 +110,7 @@ public class CustomOctree
     /// <param name="pos">추가할 위치.</param>
     public void Add(Vector3 pos)
     {
-        AddNode(pos, root);
+        AddNode(pos, ref root);
     }
     /// <summary>
     /// Octree에 특정 위치의 노드를 삭제 합니다.
@@ -118,21 +118,21 @@ public class CustomOctree
     /// <param name="pos">삭제할 위치.</param>
     public void Delete(Vector3 pos)
     {
-        DeleteNode(pos, root);
+        DeleteNode(pos, ref root);
     }
     /// <summary>
     /// Octree가 생성할 수 있는 최대 노드까지 생성합니다. ( 최대 깊이 만큼.)
     /// </summary>
     public void CreateFullTree()
     {
-        CreateALLNodes(root, 1);
+        CreateALLNodes(ref root, 1);
     }
 
     public CollideInfo Collide(Vector3 point)
     {
-        return CollideWithPoint(point, root);
+        return CollideWithPoint(point, ref root);
     }
-    private CollideInfo CollideWithPoint(Vector3 point, COTNode root)
+    private CollideInfo CollideWithPoint(Vector3 point, ref COTNode root)
     {
         CollideInfo info;
         info.isCollide = false;
@@ -150,7 +150,7 @@ public class CustomOctree
             if ((root.childs[i] != null) &&
                (root.childs[i].aabb.IsInterSectPoint(point)))
             {
-                return CollideWithPoint(point, root.childs[i]);
+                return CollideWithPoint(point, ref root.childs[i]);
             }
         }
         return info;
@@ -159,7 +159,7 @@ public class CustomOctree
     public CollideInfo Collide(Ray ray)
     {
         List<CollideInfo> collideCandidate = new List<CollideInfo>();
-        CollideNodeWithRay(ray, root, ref collideCandidate);
+        CollideNodeWithRay(ray, ref root, ref collideCandidate);
 
         // init.
         CollideInfo info;
@@ -191,7 +191,7 @@ public class CustomOctree
     /// </summary>
     /// <param name="ray"></param>
     /// <param name="root"></param>
-    private void CollideNodeWithRay(Ray ray, COTNode root, ref List<CollideInfo> collideCandidate)
+    private void CollideNodeWithRay(Ray ray, ref COTNode root, ref List<CollideInfo> collideCandidate)
     {
         if (root == null) return;
 
@@ -204,7 +204,7 @@ public class CustomOctree
         {
             info.isCollide = true;
             info.hitBlockCenter = root.center;
-            info.collisionPoint = root.aabb.hitPointWithRay;
+            info.collisionPoint = root.aabb.HitPointWithRay;
             collideCandidate.Add(info);
         }
         for (int i = 0; i < 8; i++)
@@ -212,14 +212,14 @@ public class CustomOctree
             if ((root.childs[i] != null) &&
                 (CustomRayCast.InterSectWithAABB(ray, ref root.childs[i].aabb)))
             {
-                CollideNodeWithRay(ray, root.childs[i], ref collideCandidate);
+                CollideNodeWithRay(ray, ref root.childs[i], ref collideCandidate);
             }
         }
     }
 
-    public CollideInfo Collide(CustomAABB other)
+    public CollideInfo Collide(ref CustomAABB other)
     {
-        return CollideNodeWithAABB(other, root);
+        return CollideNodeWithAABB(ref other, ref root);
     }
 
     /// <summary>
@@ -227,7 +227,7 @@ public class CustomOctree
     /// </summary>
     /// <param name="other"></param>
     /// <param name="root"></param>
-    private CollideInfo CollideNodeWithAABB(CustomAABB other, COTNode root)
+    private CollideInfo CollideNodeWithAABB(ref CustomAABB other, ref COTNode root)
     {
         CollideInfo info;
         info.isCollide = false;
@@ -245,13 +245,13 @@ public class CustomOctree
             if ((root.childs[i] != null) &&
                (root.childs[i].aabb.IsInterSectAABB(other)))
             {
-                return CollideNodeWithAABB(other, root.childs[i]);
+                return CollideNodeWithAABB(ref other, ref root.childs[i]);
             }
         }
         return info;
     }
 
-    private void DeleteNode(Vector3 pos, COTNode root)
+    private void DeleteNode(Vector3 pos, ref COTNode root)
     {
         if (root.center == pos)
         {
@@ -266,7 +266,7 @@ public class CustomOctree
             // 0번 노드.
             if (root.childs[0] != null)
             {
-                DeleteNode(pos, root.childs[0]);
+                DeleteNode(pos, ref root.childs[0]);
                 if (root.childs[0].isCanDelete) root.childs[0] = null;
             }
         }
@@ -277,7 +277,7 @@ public class CustomOctree
             // 1번 노드.
             if (root.childs[1] != null)
             {
-                DeleteNode(pos, root.childs[1]);
+                DeleteNode(pos, ref root.childs[1]);
                 if (root.childs[1].isCanDelete) root.childs[1] = null;
             }
         }
@@ -288,7 +288,7 @@ public class CustomOctree
             // 2번 노드.
             if (root.childs[2] != null)
             {
-                DeleteNode(pos, root.childs[2]);
+                DeleteNode(pos, ref root.childs[2]);
                 if (root.childs[2].isCanDelete) root.childs[2] = null;
             }
         }
@@ -299,7 +299,7 @@ public class CustomOctree
             // 3번 노드.
             if (root.childs[3] != null)
             {
-                DeleteNode(pos, root.childs[3]);
+                DeleteNode(pos, ref root.childs[3]);
                 if (root.childs[3].isCanDelete) root.childs[3] = null;
             }
         }
@@ -310,7 +310,7 @@ public class CustomOctree
             // 4번 노드.
             if (root.childs[4] != null)
             {
-                DeleteNode(pos, root.childs[4]);
+                DeleteNode(pos, ref root.childs[4]);
                 if (root.childs[4].isCanDelete) root.childs[4] = null;
             }
         }
@@ -321,7 +321,7 @@ public class CustomOctree
             //5번 노드.
             if (root.childs[5] != null)
             {
-                DeleteNode(pos, root.childs[5]);
+                DeleteNode(pos, ref root.childs[5]);
                 if (root.childs[5].isCanDelete) root.childs[5] = null;
             }
         }
@@ -332,7 +332,7 @@ public class CustomOctree
             // 6번 노드.
             if (root.childs[6] != null)
             {
-                DeleteNode(pos, root.childs[6]);
+                DeleteNode(pos, ref root.childs[6]);
                 if (root.childs[6].isCanDelete) root.childs[6] = null;
             }
         }
@@ -343,18 +343,18 @@ public class CustomOctree
             // 7번 노드.
             if (root.childs[7] != null)
             {
-                DeleteNode(pos, root.childs[7]);
+                DeleteNode(pos, ref root.childs[7]);
                 if (root.childs[7].isCanDelete) root.childs[7] = null;
             }
         }
     }
 
-    private void AddNode(Vector3 pos, COTNode root)
+    private void AddNode(Vector3 pos, ref COTNode root)
     {
         Vector3 parentCenter = root.center;
-        float parentHalfWidth = root.aabb.maxExtent.x - parentCenter.x;
-        float parentHalfHeight = root.aabb.maxExtent.y - parentCenter.y;
-        float parentHalfDepth = root.aabb.maxExtent.z - parentCenter.z;
+        float parentHalfWidth = root.aabb.MaxExtent.x - parentCenter.x;
+        float parentHalfHeight = root.aabb.MaxExtent.y - parentCenter.y;
+        float parentHalfDepth = root.aabb.MaxExtent.z - parentCenter.z;
         Vector3 minExtent, maxExtent;
 
         if (root.center == pos)
@@ -368,7 +368,7 @@ public class CustomOctree
             // 0번 노드.
             if(root.childs[0] != null)
             {
-                AddNode(pos, root.childs[0]);
+                AddNode(pos, ref root.childs[0]);
             }else
             {
                 root.childs[0] = new COTNode();
@@ -379,7 +379,7 @@ public class CustomOctree
                 root.childs[0].center = (maxExtent + minExtent) / 2;
                 root.childs[0].size = maxExtent - minExtent;
                 root.childs[0].aabb.MakeAABB(minExtent, maxExtent);
-                AddNode(pos, root.childs[0]);
+                AddNode(pos, ref root.childs[0]);
             }
         }
         else if ((root.center.x < pos.x) &&
@@ -389,7 +389,7 @@ public class CustomOctree
             // 1번 노드.
             if (root.childs[1] != null)
             {
-                AddNode(pos, root.childs[1]);
+                AddNode(pos, ref root.childs[1]);
             }
             else
             {
@@ -403,7 +403,7 @@ public class CustomOctree
                 root.childs[1].center = (maxExtent + minExtent) / 2;
                 root.childs[1].size = maxExtent - minExtent;
                 root.childs[1].aabb.MakeAABB(minExtent, maxExtent);
-                AddNode(pos, root.childs[1]);
+                AddNode(pos, ref root.childs[1]);
             }
         }
         else if ((root.center.x < pos.x) &&
@@ -413,7 +413,7 @@ public class CustomOctree
             // 2번 노드.
             if (root.childs[2] != null)
             {
-                AddNode(pos, root.childs[2]);
+                AddNode(pos, ref root.childs[2]);
             }
             else
             {
@@ -427,7 +427,7 @@ public class CustomOctree
                 root.childs[2].center = (maxExtent + minExtent) / 2;
                 root.childs[2].size = maxExtent - minExtent;
                 root.childs[2].aabb.MakeAABB(minExtent, maxExtent);
-                AddNode(pos, root.childs[2]);
+                AddNode(pos, ref root.childs[2]);
             }
         }
         else if ((root.center.x > pos.x) &&
@@ -437,7 +437,7 @@ public class CustomOctree
             // 3번 노드.
             if (root.childs[3] != null)
             {
-                AddNode(pos, root.childs[3]);
+                AddNode(pos, ref root.childs[3]);
             }
             else
             {
@@ -451,7 +451,7 @@ public class CustomOctree
                 root.childs[3].center = (maxExtent + minExtent) / 2;
                 root.childs[3].size = maxExtent - minExtent;
                 root.childs[3].aabb.MakeAABB(minExtent, maxExtent);
-                AddNode(pos, root.childs[3]);
+                AddNode(pos, ref root.childs[3]);
             }
         }
         else if ((root.center.x > pos.x) &&
@@ -461,7 +461,7 @@ public class CustomOctree
             // 4번 노드.
             if (root.childs[4] != null)
             {
-                AddNode(pos, root.childs[4]);
+                AddNode(pos, ref root.childs[4]);
             }
             else
             {
@@ -475,7 +475,7 @@ public class CustomOctree
                 root.childs[4].center = (maxExtent + minExtent) / 2;
                 root.childs[4].size = maxExtent - minExtent;
                 root.childs[4].aabb.MakeAABB(minExtent, maxExtent);
-                AddNode(pos, root.childs[4]);
+                AddNode(pos, ref root.childs[4]);
             }
         }
         else if ((root.center.x < pos.x) &&
@@ -485,7 +485,7 @@ public class CustomOctree
             //5번 노드.
             if (root.childs[5] != null)
             {
-                AddNode(pos, root.childs[5]);
+                AddNode(pos, ref root.childs[5]);
             }
             else
             {
@@ -499,7 +499,7 @@ public class CustomOctree
                 root.childs[5].center = (maxExtent + minExtent) / 2;
                 root.childs[5].size = maxExtent - minExtent;
                 root.childs[5].aabb.MakeAABB(minExtent, maxExtent);
-                AddNode(pos, root.childs[5]);
+                AddNode(pos, ref root.childs[5]);
             }
         }
         else if ((root.center.x < pos.x) &&
@@ -509,7 +509,7 @@ public class CustomOctree
             // 6번 노드.
             if (root.childs[6] != null)
             {
-                AddNode(pos, root.childs[6]);
+                AddNode(pos, ref root.childs[6]);
             }
             else
             {
@@ -523,7 +523,7 @@ public class CustomOctree
                 root.childs[6].center = (maxExtent + minExtent) / 2;
                 root.childs[6].size = maxExtent - minExtent;
                 root.childs[6].aabb.MakeAABB(minExtent, maxExtent);
-                AddNode(pos, root.childs[6]);
+                AddNode(pos, ref root.childs[6]);
             }
         }
         else if ((root.center.x > pos.x) &&
@@ -533,7 +533,7 @@ public class CustomOctree
             // 7번 노드.
             if (root.childs[7] != null)
             {
-                AddNode(pos, root.childs[7]);
+                AddNode(pos, ref root.childs[7]);
             }
             else
             {
@@ -547,19 +547,19 @@ public class CustomOctree
                 root.childs[7].center = (maxExtent + minExtent) / 2;
                 root.childs[7].size = maxExtent - minExtent;
                 root.childs[7].aabb.MakeAABB(minExtent, maxExtent);
-                AddNode(pos, root.childs[7]);
+                AddNode(pos, ref root.childs[7]);
             }
         }
 
     }
-    private void CreateALLNodes(COTNode root, int maxDepth)
+    private void CreateALLNodes(ref COTNode root, int maxDepth)
     {
         if (maxDepth == 0) return;
 
         Vector3 parentCenter = root.center;
-        float parentHalfWidth = root.aabb.maxExtent.x - parentCenter.x;
-        float parentHalfHeight = root.aabb.maxExtent.y- parentCenter.y;
-        float parentHalfDepth = root.aabb.maxExtent.z - parentCenter.z;
+        float parentHalfWidth = root.aabb.MaxExtent.x - parentCenter.x;
+        float parentHalfHeight = root.aabb.MaxExtent.y- parentCenter.y;
+        float parentHalfDepth = root.aabb.MaxExtent.z - parentCenter.z;
 
         Vector3 minExtent, maxExtent;
         root.childs[0] = new COTNode();
@@ -570,7 +570,7 @@ public class CustomOctree
         root.childs[0].center = (maxExtent + minExtent) / 2;
         root.childs[0].size = maxExtent - minExtent;
         root.childs[0].aabb.MakeAABB(minExtent, maxExtent);
-        CreateALLNodes(root.childs[0], maxDepth -1);
+        CreateALLNodes(ref root.childs[0], maxDepth -1);
 
         root.childs[1] = new COTNode();
         minExtent = new Vector3(parentCenter.x,
@@ -582,7 +582,7 @@ public class CustomOctree
         root.childs[1].center = (maxExtent + minExtent) / 2;
         root.childs[1].size = maxExtent - minExtent;
         root.childs[1].aabb.MakeAABB(minExtent, maxExtent);
-        CreateALLNodes(root.childs[1], maxDepth - 1);
+        CreateALLNodes(ref root.childs[1], maxDepth - 1);
 
         root.childs[2] = new COTNode();
         minExtent = new Vector3(parentCenter.x,
@@ -594,7 +594,7 @@ public class CustomOctree
         root.childs[2].center = (maxExtent + minExtent) / 2;
         root.childs[2].size = maxExtent - minExtent;
         root.childs[2].aabb.MakeAABB(minExtent, maxExtent);
-        CreateALLNodes(root.childs[2], maxDepth - 1);
+        CreateALLNodes(ref root.childs[2], maxDepth - 1);
 
         root.childs[3] = new COTNode();
         minExtent = new Vector3(parentCenter.x - parentHalfWidth,
@@ -606,7 +606,7 @@ public class CustomOctree
         root.childs[3].center = (maxExtent + minExtent) / 2;
         root.childs[3].size = maxExtent - minExtent;
         root.childs[3].aabb.MakeAABB(minExtent, maxExtent);
-        CreateALLNodes(root.childs[3], maxDepth - 1);
+        CreateALLNodes(ref root.childs[3], maxDepth - 1);
 
         root.childs[4] = new COTNode();
         minExtent = new Vector3(parentCenter.x - parentHalfWidth,
@@ -618,7 +618,7 @@ public class CustomOctree
         root.childs[4].center = (maxExtent + minExtent) / 2;
         root.childs[4].size = maxExtent - minExtent;
         root.childs[4].aabb.MakeAABB(minExtent, maxExtent);
-        CreateALLNodes(root.childs[4], maxDepth - 1);
+        CreateALLNodes(ref root.childs[4], maxDepth - 1);
 
         root.childs[5] = new COTNode();
         minExtent = new Vector3(parentCenter.x,
@@ -630,7 +630,7 @@ public class CustomOctree
         root.childs[5].center = (maxExtent + minExtent) / 2;
         root.childs[5].size = maxExtent - minExtent;
         root.childs[5].aabb.MakeAABB(minExtent, maxExtent);
-        CreateALLNodes(root.childs[5], maxDepth - 1);
+        CreateALLNodes(ref root.childs[5], maxDepth - 1);
 
         root.childs[6] = new COTNode();
         minExtent = new Vector3(parentCenter.x,
@@ -642,7 +642,7 @@ public class CustomOctree
         root.childs[6].center = (maxExtent + minExtent) / 2;
         root.childs[6].size = maxExtent - minExtent;
         root.childs[6].aabb.MakeAABB(minExtent, maxExtent);
-        CreateALLNodes(root.childs[6], maxDepth - 1);
+        CreateALLNodes(ref root.childs[6], maxDepth - 1);
 
         root.childs[7] = new COTNode();
         minExtent = new Vector3(parentCenter.x - parentHalfWidth,
@@ -654,7 +654,7 @@ public class CustomOctree
         root.childs[7].center = (maxExtent + minExtent) / 2;
         root.childs[7].size = maxExtent - minExtent;
         root.childs[7].aabb.MakeAABB(minExtent, maxExtent);
-        CreateALLNodes(root.childs[7], maxDepth - 1);
+        CreateALLNodes(ref root.childs[7], maxDepth - 1);
     }
 
 }

@@ -67,10 +67,10 @@ public class WaterChunk : AChunk
                         float blockCenterX = cubeX + 0.5f;
                         float blockCenterY = cubeY - 0.5f;
                         float blockCenterZ = cubeZ + 0.5f;
-                        world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerX = blockCenterX;
-                        world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerY = blockCenterY;
-                        world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerZ = blockCenterZ;
-                        world.worldBlockData[blockIdxX, blockIdxY, blockIdxZ].isRendered = true;
+                        world.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerX = blockCenterX;
+                        world.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerY = blockCenterY;
+                        world.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerZ = blockCenterZ;
+                        world.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].isRendered = true;
                     }
 
                 }

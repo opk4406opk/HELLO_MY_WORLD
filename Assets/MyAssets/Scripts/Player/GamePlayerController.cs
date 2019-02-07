@@ -185,18 +185,18 @@ public class GamePlayerController : MonoBehaviour {
         {
             return;
         }
-        else if(containWorld != null && containWorld.isInitializeFinish == false)
+        else if(containWorld != null && containWorld.IsLoadSyncroFinish == false)
         {
             return;
         }
 
         KojeomLogger.DebugLog(string.Format("Player's contain world : {0}, position : {1}", 
-            containWorld.name, containWorld.position), LOG_TYPE.DEBUG_TEST);
+            containWorld.name, containWorld.Position), LOG_TYPE.DEBUG_TEST);
 
         Vector3 bottomOffsetedPos = gamePlayer.transform.position;
         bottomOffsetedPos -= new Vector3(0.0f, 0.1f, 0.0f);
 
-        CollideInfo collideInfo = containWorld.customOctree.Collide(bottomOffsetedPos);
+        CollideInfo collideInfo = containWorld.CustomOctree.Collide(bottomOffsetedPos);
         var collidedBlock = collideInfo.GetBlock();
         if (!collideInfo.isCollide)
         {

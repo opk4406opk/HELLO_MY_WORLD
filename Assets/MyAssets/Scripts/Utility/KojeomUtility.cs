@@ -27,7 +27,8 @@ public class KojeomUtility
         }
         return v;
     }
-
+    
+    private static System.Random RandomInstance = new System.Random(0);
     /// <summary>
     /// 
     /// </summary>
@@ -36,7 +37,7 @@ public class KojeomUtility
     /// <returns></returns>
     public static int RandomInteger(int min, int max)
     {
-        return Random.Range(min, max);
+        return RandomInstance.Next(min, max);
     }
     /// <summary>
     /// 
@@ -46,6 +47,7 @@ public class KojeomUtility
     /// <returns></returns>
     public static float RandomFloat(float min, float max)
     {
-        return Random.Range(min, max);
+        //return RandomInstance.Next(min, max);
+        return 1.0f;
     }
 }

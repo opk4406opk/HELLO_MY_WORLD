@@ -40,7 +40,7 @@ public class WorldGenAlgorithms {
             for (int z = 0; z < gameWorldConfig.sub_world_z_size; z++)
             {
                 int stone = PerlinNoise(x, 20, z, 3, KojeomUtility.RandomInteger(1, 3), 2);
-                stone += param.baseOffset;
+                stone += param.BaseOffset;
                 int grass = PerlinNoise(x, 21, z, 1, KojeomUtility.RandomInteger(1, 2), 1) + 1;
 
                 for (int y = 0; y < gameWorldConfig.sub_world_y_size; y++)

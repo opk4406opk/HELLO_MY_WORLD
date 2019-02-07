@@ -34,7 +34,7 @@ public class GamePlayerManager : MonoBehaviour {
                         myGamePlayer.controller.Init(Camera.main, myGamePlayer);
                         myGamePlayer.controller.StartControllProcess();
 
-                        Vector3 worldInstPos = state.Value.subWorldInstance.position;
+                        Vector3 worldInstPos = state.Value.subWorldInstance.Position;
                         myGamePlayer.controller.SetPosition(new Vector3(worldInstPos.x, 60.0f, worldInstPos.z));
                         //Player Manager 하위 종속으로 변경.
                         myGamePlayer.transform.parent = gameObject.transform;

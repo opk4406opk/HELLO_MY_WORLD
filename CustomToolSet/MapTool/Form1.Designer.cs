@@ -1,4 +1,4 @@
-﻿namespace CustomMapTool
+﻿namespace MapTool
 {
     partial class MainForm
     {

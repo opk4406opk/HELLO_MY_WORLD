@@ -11,11 +11,9 @@ public class WorldMapData
 
 public struct SubWorldData
 {
-    public int WorldIdx;
+    public string UniqueID;
+    public int X, Y, Z;
     public string WorldName;
-    public int X;
-    public int Y;
-    public int Z;
     public bool IsSurface;
 }
 
@@ -79,23 +77,21 @@ public class WorldMapDataFile
         {
             SubWorldData subWorldData = new SubWorldData();
             //
-            string val;
             var data = subworld.ToDictionary();
-            data.TryGetValue("WORLD_IDX", out val);
-            subWorldData.WorldIdx = int.Parse(val);
-            //
+            string val;
             data.TryGetValue("WORLD_NAME", out val);
             subWorldData.WorldName = val;
             //
             data.TryGetValue("X", out val);
             subWorldData.X = int.Parse(val);
-            //
             data.TryGetValue("Y", out val);
             subWorldData.Y = int.Parse(val);
-            //
             data.TryGetValue("Z", out val);
             subWorldData.Z = int.Parse(val);
             //
+            data.TryGetValue("UNIQUE_ID", out val);
+            subWorldData.UniqueID = val;
+
             data.TryGetValue("IS_SURFACE", out val);
             if(val == "False")
             {

@@ -8,8 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using CustomMapTool.Source;
-namespace CustomMapTool
+using MapTool.Source;
+namespace MapTool
 {
     public partial class MainForm : Form
     {

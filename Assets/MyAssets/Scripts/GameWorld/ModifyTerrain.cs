@@ -49,8 +49,8 @@ public class ModifyTerrain : MonoBehaviour
     {
         foreach (var element in WorldManager.instance.wholeWorldStates)
         {
-            if (CustomAABB.IsInterSectPoint(element.Value.subWorldInstance.customOctree.rootMinBound,
-                element.Value.subWorldInstance.customOctree.rootMaxBound, clickWorldPos))
+            if (CustomAABB.IsInterSectPoint(element.Value.subWorldInstance.CustomOctree.rootMinBound,
+                element.Value.subWorldInstance.CustomOctree.rootMaxBound, clickWorldPos))
             {
                 world = element.Value.subWorldInstance;
                 break;
@@ -60,16 +60,16 @@ public class ModifyTerrain : MonoBehaviour
 
     private void RayCastingProcess(Ray ray, byte blockType, bool isCreate)
     {
-        CollideInfo collideInfo = world.customOctree.Collide(ray);
+        CollideInfo collideInfo = world.CustomOctree.Collide(ray);
         if (collideInfo.isCollide)
         {
             int blockX, blockY, blockZ;
             blockX = (int)(collideInfo.hitBlockCenter.x);
             blockY = (int)(collideInfo.hitBlockCenter.y);
             blockZ = (int)(collideInfo.hitBlockCenter.z);
-            blockX -= (int)world.position.x;
-            blockY -= (int)world.position.y;
-            blockZ -= (int)world.position.z;
+            blockX -= (int)world.Position.x;
+            blockY -= (int)world.Position.y;
+            blockZ -= (int)world.Position.z;
             //-------------------------------------------------------------------------------
             if (isCreate)
             {
@@ -77,15 +77,15 @@ public class ModifyTerrain : MonoBehaviour
                 //    Mathf.Ceil(collideInfo.collisionPoint.y),
                 //    Mathf.Ceil(collideInfo.collisionPoint.z));
                 // 임시코드
-                world.customOctree.Add(collideInfo.hitBlockCenter + new Vector3(0, 1.0f, 0));
+                world.CustomOctree.Add(collideInfo.hitBlockCenter + new Vector3(0, 1.0f, 0));
                 SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
-                world.worldBlockData[blockX, blockY + 1, blockZ].isRendered = true;
+                world.WorldBlockData[blockX, blockY + 1, blockZ].isRendered = true;
             }
             else
             {
-                world.customOctree.Delete(collideInfo.hitBlockCenter);
+                world.CustomOctree.Delete(collideInfo.hitBlockCenter);
                 SetBlockForDelete(blockX, blockY, blockZ, blockType);
-                world.worldBlockData[blockX, blockY, blockZ].isRendered = false;
+                world.WorldBlockData[blockX, blockY, blockZ].isRendered = false;
             }
         }
     }
@@ -98,8 +98,8 @@ public class ModifyTerrain : MonoBehaviour
            (z < gameWorldConfig.sub_world_z_size) &&
            (x >= 0) && (y >= 0) && (z >= 0)) 
         {
-            world.worldBlockData[x, y, z].type = block;
-            world.worldBlockData[x, y, z].isRendered = true;
+            world.WorldBlockData[x, y, z].type = block;
+            world.WorldBlockData[x, y, z].isRendered = true;
             UpdateChunkAt(x, y, z, block);
         }
         else
@@ -172,9 +172,9 @@ public class ModifyTerrain : MonoBehaviour
            (z < gameWorldConfig.sub_world_z_size) &&
            (x >= 0) && (y >= 0) && (z >= 0))
         {
-            UpdateUserItem(world.worldBlockData[x, y, z].type);
-            world.worldBlockData[x, y, z].type = block;
-            world.worldBlockData[x, y, z].isRendered = false;
+            UpdateUserItem(world.WorldBlockData[x, y, z].type);
+            world.WorldBlockData[x, y, z].type = block;
+            world.WorldBlockData[x, y, z].isRendered = false;
             UpdateChunkAt(x, y, z, block);
         }
         else
@@ -194,40 +194,40 @@ public class ModifyTerrain : MonoBehaviour
         updateX = Mathf.FloorToInt(x / chunkSize);
         updateY = Mathf.FloorToInt(y / chunkSize);
         updateZ = Mathf.FloorToInt(z / chunkSize);
-        if (world.chunkSlots[updateX, updateY, updateZ].chunks[(int)ChunkType.COMMON] == null)
+        if (world.ChunkSlots[updateX, updateY, updateZ].Chunks[(int)ChunkType.COMMON] == null)
         {
             return;
         }
-        world.chunkSlots[updateX, updateY, updateZ].chunks[(int)ChunkType.COMMON].update = true;
+        world.ChunkSlots[updateX, updateY, updateZ].Chunks[(int)ChunkType.COMMON].update = true;
 
         if (x - (chunkSize * updateX) == 0 && updateX != 0)
         {
-            world.chunkSlots[updateX - 1, updateY, updateZ].chunks[(int)ChunkType.COMMON].update = true;
+            world.ChunkSlots[updateX - 1, updateY, updateZ].Chunks[(int)ChunkType.COMMON].update = true;
         }
 
-        if (x - (chunkSize * updateX) == gameWorldConfig.chunk_size && updateX != world.chunkSlots.GetLength(0) - 1)
+        if (x - (chunkSize * updateX) == gameWorldConfig.chunk_size && updateX != world.ChunkSlots.GetLength(0) - 1)
         {
-            world.chunkSlots[updateX + 1, updateY, updateZ].chunks[(int)ChunkType.COMMON].update = true;
+            world.ChunkSlots[updateX + 1, updateY, updateZ].Chunks[(int)ChunkType.COMMON].update = true;
         }
 
         if (y - (chunkSize * updateY) == 0 && updateY != 0)
         {
-            world.chunkSlots[updateX, updateY - 1, updateZ].chunks[(int)ChunkType.COMMON].update = true;
+            world.ChunkSlots[updateX, updateY - 1, updateZ].Chunks[(int)ChunkType.COMMON].update = true;
         }
 
-        if (y - (chunkSize * updateY) == gameWorldConfig.chunk_size && updateY != world.chunkSlots.GetLength(1) - 1)
+        if (y - (chunkSize * updateY) == gameWorldConfig.chunk_size && updateY != world.ChunkSlots.GetLength(1) - 1)
         {
-            world.chunkSlots[updateX, updateY + 1, updateZ].chunks[(int)ChunkType.COMMON].update = true;
+            world.ChunkSlots[updateX, updateY + 1, updateZ].Chunks[(int)ChunkType.COMMON].update = true;
         }
 
         if (z - (chunkSize * updateZ) == 0 && updateZ != 0)
         {
-            world.chunkSlots[updateX, updateY, updateZ - 1].chunks[(int)ChunkType.COMMON].update = true;
+            world.ChunkSlots[updateX, updateY, updateZ - 1].Chunks[(int)ChunkType.COMMON].update = true;
         }
 
-        if (z - (chunkSize * updateZ) == gameWorldConfig.chunk_size && updateZ != world.chunkSlots.GetLength(2) - 1)
+        if (z - (chunkSize * updateZ) == gameWorldConfig.chunk_size && updateZ != world.ChunkSlots.GetLength(2) - 1)
         {
-            world.chunkSlots[updateX, updateY, updateZ + 1].chunks[(int)ChunkType.COMMON].update = true;
+            world.ChunkSlots[updateX, updateY, updateZ + 1].Chunks[(int)ChunkType.COMMON].update = true;
         }
     }
 }

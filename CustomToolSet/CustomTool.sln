@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomMapTool", "CustomMapTool\CustomMapTool.csproj", "{C2542939-D163-4042-944A-1D7D18219376}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapTool", "CustomMapTool\MapTool.csproj", "{C2542939-D163-4042-944A-1D7D18219376}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
