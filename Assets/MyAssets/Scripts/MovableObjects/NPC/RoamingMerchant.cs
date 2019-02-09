@@ -9,36 +9,31 @@ public class RoamingMerchant : Actor, INpc, IMerchantNPC
 {
     public override event del_OnClickActor OnClickedActor;
     [SerializeField]
-    private RoamingNpcAI ai;
-    [SerializeField]
-    private TextMeshController _textMeshController;
-    public TextMeshController textMeshController
+    private RoamingNpcAI AI;
+
+    private List<int> SellingItemIds;
+
+    public List<int> GetSellingItemIDList()
     {
-        get { return _textMeshController; }
+        return SellingItemIds;
     }
 
-    private List<int> _sellingItemIDs;
-    public List<int> sellingItemIDs
+    public void SetSellingItemIDList(List<int> ids)
     {
-        set { _sellingItemIDs = value; }
-    }
-
-    public List<int> GetSellingItemIds()
-    {
-        return _sellingItemIDs;
+        SellingItemIds = ids;
     }
 
     public override void Init(Vector3 pos, World world, ACTOR_TYPE actorType)
     {
-        this.actorType = actorType;
-        controller = gameObject.GetComponent<ActorController>();
-        controller.Init(world);
+        ActorType = actorType;
+        Controller = gameObject.GetComponent<ActorController>();
+        Controller.Init(world);
         gameObject.transform.position = pos;
     }
 
     public override ActorController GetController()
     {
-        return controller;
+        return Controller;
     }
 
     void INpc.Talk()
@@ -50,6 +45,7 @@ public class RoamingMerchant : Actor, INpc, IMerchantNPC
 
     public override ACTOR_TYPE GetActorType()
     {
-        return actorType;
+        return ActorType;
     }
+
 }

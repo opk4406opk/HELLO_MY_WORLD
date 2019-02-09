@@ -56,7 +56,6 @@ namespace MapTool
                 {
                     SaveSlotFile = BinFormatter.Deserialize(SaveFileStream) as SaveSlotFile;
                     mapGenData.SelectPath = SaveSlotFile.LastestSavePath;
-                    SaveFileStream.Close();
                 }
             }
             else if (string.Equals(dig_folderBrowser.SelectedPath, string.Empty) == false)

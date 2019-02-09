@@ -1,0 +1,74 @@
+{
+  "SpawnDatas": [
+    {
+      "TYPE": "MERCHANT",
+      "AP": "3",
+      "HP": "6",
+      "MP": "2",
+      "NAME": "Default_NPC_0"
+    },
+    {
+      "TYPE": "MERCHANT",
+      "AP": "1",
+      "HP": "9",
+      "MP": "5",
+      "NAME": "Default_NPC_1"
+    },
+    {
+      "TYPE": "MERCHANT",
+      "AP": "8",
+      "HP": "7",
+      "MP": "8",
+      "NAME": "Default_NPC_2"
+    },
+    {
+      "TYPE": "MERCHANT",
+      "AP": "7",
+      "HP": "7",
+      "MP": "2",
+      "NAME": "Default_NPC_3"
+    },
+    {
+      "TYPE": "MERCHANT",
+      "AP": "8",
+      "HP": "7",
+      "MP": "1",
+      "NAME": "Default_NPC_4"
+    },
+    {
+      "TYPE": "MERCHANT",
+      "AP": "9",
+      "HP": "9",
+      "MP": "9",
+      "NAME": "Default_NPC_5"
+    },
+    {
+      "TYPE": "MERCHANT",
+      "AP": "9",
+      "HP": "7",
+      "MP": "2",
+      "NAME": "Default_NPC_6"
+    },
+    {
+      "TYPE": "MERCHANT",
+      "AP": "8",
+      "HP": "5",
+      "MP": "6",
+      "NAME": "Default_NPC_7"
+    },
+    {
+      "TYPE": "MERCHANT",
+      "AP": "3",
+      "HP": "3",
+      "MP": "7",
+      "NAME": "Default_NPC_8"
+    },
+    {
+      "TYPE": "MERCHANT",
+      "AP": "2",
+      "HP": "6",
+      "MP": "6",
+      "NAME": "Default_NPC_9"
+    }
+  ]
+}

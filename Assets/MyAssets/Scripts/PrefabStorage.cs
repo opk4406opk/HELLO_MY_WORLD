@@ -6,10 +6,15 @@ using UnityEngine;
 /// 게임내에 사용되는 프리팹들을 저장하고 있는 클래스.
 /// </summary>
 public class PrefabStorage : MonoBehaviour {
-
+    #region world
     public SoftGameObjectPtr WorldPrefab { get; private set; }
     public SoftGameObjectPtr CommonChunkPrefab { get; private set; }
     public SoftGameObjectPtr WaterChunkPrefab { get; private set; }
+    #endregion
+
+    #region Actor
+    public SoftGameObjectPtr NPCPrefab { get; private set; }
+    #endregion
     //
     //
     private static GameObject[] CharacterPrefabs;
@@ -30,6 +35,11 @@ public class PrefabStorage : MonoBehaviour {
         WaterChunkPrefab = new SoftGameObjectPtr
         {
             ObjectPath = ConstFilePath.WATER_CHUNK_PREFAB
+        };
+        //
+        NPCPrefab = new SoftGameObjectPtr
+        {
+            ObjectPath = ConstFilePath.NPC_PREFAB
         };
     }
 

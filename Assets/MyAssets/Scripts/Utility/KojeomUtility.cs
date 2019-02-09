@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class KojeomUtility
@@ -27,7 +28,12 @@ public class KojeomUtility
         }
         return v;
     }
-    
+
+    public static T StringToEnum<T>(string value, bool ignoreCase = true)
+    {
+        return (T)Enum.Parse(typeof(T), value, ignoreCase);
+    }
+
     private static System.Random RandomInstance = new System.Random(0);
     /// <summary>
     /// 

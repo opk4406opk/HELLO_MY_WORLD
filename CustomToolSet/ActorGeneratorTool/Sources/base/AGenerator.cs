@@ -9,7 +9,7 @@ namespace ActorGeneratorTool.Sources
     abstract class AGenerator
     {
         abstract public void Init();
-        abstract public bool Generate();
+        abstract public bool Generate(bool isDefaultGenerate, string savePath);
         abstract public void Release();
     }
 }

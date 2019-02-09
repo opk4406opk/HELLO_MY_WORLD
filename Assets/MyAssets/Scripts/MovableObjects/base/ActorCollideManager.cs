@@ -21,9 +21,9 @@ public class ActorCollideManager : MonoBehaviour
 
     public bool IsNpcCollide(Ray ray)
     {
-        if(NPCManager.singleton != null && NPCManager.singleton.npcs != null)
+        if(NPCManager.Singleton != null && NPCManager.Singleton.NPCGroup != null)
         {
-            foreach (var npc in NPCManager.singleton.npcs)
+            foreach (var npc in NPCManager.Singleton.NPCGroup)
             {
                 if (CustomRayCast.InterSectWithBOX(ray, npc.GetController().GetMinExtent(),
                     npc.GetController().GetMaxExtent()))

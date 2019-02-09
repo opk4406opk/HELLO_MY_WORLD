@@ -2,135 +2,64 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-abstract public class NPCData
+public struct NPCSpawnData
 {
-    public float hp;
-    public float mp;
-    public float ap;
-    public float dp;
-    public string name;
-    public string type;
-    public Vector3 spawnPos;
-    public string WorldUniqueID;
+    public int HP;
+    public int MP;
+    public int AP;
+    public string NAME;
+    public NPC_TYPE TYPE;
 }
-public class RoamingMerchantData : NPCData
+
+public enum NPC_TYPE
 {
-    public List<int> sellingItemsID;
+    MERCHANT,
+    GUARD
 }
-public class ShopMerchantData : NPCData
-{
-    public List<int> sellingItemsID;
-}
-public class NPC_TYPE
-{
-    public static readonly string TYPE_SHOP_MERCHANT = "shop_merchant";
-    public static readonly string TYPE_ROAMING_MERCHANT = "roaming_merchant";
-}
+
 public class NPCDataFile {
     
-    private JSONObject jsonObject;
-    private TextAsset jsonFile;
-    public List<RoamingMerchantData> roamingMerchantDatas { get; } = new List<RoamingMerchantData>();
-    public List<ShopMerchantData> shopMerchantDatas { get; } = new List<ShopMerchantData>();
-
-    public static NPCDataFile instance = null;
+    private JSONObject JsonObject;
+    private TextAsset JsonFile;
+ 
+    public static NPCDataFile Instance = null;
+    //
+    public List<NPCSpawnData> NpcSpawnDatas { get; private set; } = new List<NPCSpawnData>();
 
 	public void Init()
     {
-        jsonFile =Resources.Load(ConstFilePath.TXT_NPC_DATAS) as TextAsset;
-        jsonObject = new JSONObject(jsonFile.text);
-        AccessData(jsonObject);
+        JsonFile = Resources.Load(ConstFilePath.TXT_NPC_DATAS) as TextAsset;
+        JsonObject = new JSONObject(JsonFile.text);
+        AccessData(JsonObject);
 
-        if (instance == null) instance = this;
+        if (Instance == null) Instance = this;
     }
 
-    private List<int> GetItemsID(string ids)
-    {
-        List<int> itemIDs = new List<int>();
-        string[] s = ids.Split(',');
-        foreach(var id in s)
-        {
-            itemIDs.Add(int.Parse(id));
-        }
-        return itemIDs;
-    }
-    private Vector3 GetSpwanPos(string pos)
-    {
-        Vector3 p;
-        string[] s = pos.Split(',');
-        p.x = float.Parse(s[0]);
-        p.y = float.Parse(s[1]);
-        p.z = float.Parse(s[2]);
-        return p;
-    }
     private void AccessData(JSONObject jsonObj)
     {
-        switch (jsonObj.type)
+        foreach(var json in jsonObj.list[0].list)
         {
-            case JSONObject.Type.OBJECT:
-                //to do
-                break;
-            case JSONObject.Type.ARRAY:
-                foreach(var data in jsonObj.list)
-                {
-                    string type;
-                    data.ToDictionary().TryGetValue("type", out type);
-                    if (type.Equals(NPC_TYPE.TYPE_ROAMING_MERCHANT))
-                    {
-                        RoamingMerchantData npcData = new RoamingMerchantData();
-                        string value;
-                        data.ToDictionary().TryGetValue("name", out value);
-                        npcData.name = value;
-                        data.ToDictionary().TryGetValue("type", out value);
-                        npcData.type = value;
-                        data.ToDictionary().TryGetValue("ap", out value);
-                        npcData.ap = float.Parse(value);
-                        data.ToDictionary().TryGetValue("dp", out value);
-                        npcData.dp = float.Parse(value);
-                        data.ToDictionary().TryGetValue("mp", out value);
-                        npcData.mp = float.Parse(value);
-                        data.ToDictionary().TryGetValue("hp", out value);
-                        npcData.hp = float.Parse(value);
-                        data.ToDictionary().TryGetValue("spawn_world", out value);
-                        npcData.WorldUniqueID = value;
-                        data.ToDictionary().TryGetValue("spawn_position", out value);
-                        npcData.spawnPos = GetSpwanPos(value);
-                        data.ToDictionary().TryGetValue("selling_items_id", out value);
-                        npcData.sellingItemsID = GetItemsID(value);
-
-                        roamingMerchantDatas.Add(npcData);
-                    }
-                    else if (type.Equals(NPC_TYPE.TYPE_SHOP_MERCHANT))
-                    {
-                        ShopMerchantData npcData = new ShopMerchantData();
-                        string value;
-                        data.ToDictionary().TryGetValue("name", out value);
-                        npcData.name = value;
-                        data.ToDictionary().TryGetValue("type", out value);
-                        npcData.type = value;
-                        data.ToDictionary().TryGetValue("ap", out value);
-                        npcData.ap = float.Parse(value);
-                        data.ToDictionary().TryGetValue("dp", out value);
-                        npcData.dp = float.Parse(value);
-                        data.ToDictionary().TryGetValue("mp", out value);
-                        npcData.mp = float.Parse(value);
-                        data.ToDictionary().TryGetValue("hp", out value);
-                        npcData.hp = float.Parse(value);
-                        data.ToDictionary().TryGetValue("spawn_world", out value);
-                        npcData.WorldUniqueID = value;
-                        data.ToDictionary().TryGetValue("spawn_position", out value);
-                        npcData.spawnPos = GetSpwanPos(value);
-                        data.ToDictionary().TryGetValue("selling_items_id", out value);
-                        npcData.sellingItemsID = GetItemsID(value);
-
-                        shopMerchantDatas.Add(npcData);
-                    }
-                }
-               // to do
-                break;
-            default:
-                Debug.Log("Json Level Data Sheet Access ERROR");
-                break;
+            NPCSpawnData spawnData = new NPCSpawnData();
+            //
+            var data = json.ToDictionary();
+            string outValue;
+            data.TryGetValue("HP", out outValue);
+            spawnData.HP = int.Parse(outValue);
+            //
+            data.TryGetValue("MP", out outValue);
+            spawnData.MP = int.Parse(outValue);
+            //
+            data.TryGetValue("AP", out outValue);
+            spawnData.AP = int.Parse(outValue);
+            //
+            data.TryGetValue("NAME", out outValue);
+            spawnData.NAME = outValue;
+            //
+            data.TryGetValue("TYPE", out outValue);
+            spawnData.TYPE = KojeomUtility.StringToEnum<NPC_TYPE>(outValue);
+            //
+            NpcSpawnDatas.Add(spawnData);
         }
     }
+
 }

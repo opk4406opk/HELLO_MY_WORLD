@@ -9,5 +9,6 @@ public interface INpc
 
 public interface IMerchantNPC
 {
-    List<int> GetSellingItemIds();
+    List<int> GetSellingItemIDList();
+    void SetSellingItemIDList(List<int> ids);
 }

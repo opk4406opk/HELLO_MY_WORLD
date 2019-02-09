@@ -7,8 +7,8 @@ public enum ACTOR_TYPE
 }
 abstract public class Actor : MonoBehaviour
 {
-    protected ACTOR_TYPE actorType;
-    protected ActorController controller;
+    protected ACTOR_TYPE ActorType;
+    protected ActorController Controller;
 
     public delegate void del_OnClickActor(Actor actor);
     abstract public event del_OnClickActor OnClickedActor;
