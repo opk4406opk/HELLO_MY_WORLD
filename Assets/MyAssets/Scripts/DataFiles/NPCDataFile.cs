@@ -11,12 +11,6 @@ public struct NPCSpawnData
     public NPC_TYPE TYPE;
 }
 
-public enum NPC_TYPE
-{
-    MERCHANT,
-    GUARD
-}
-
 public class NPCDataFile {
     
     private JSONObject JsonObject;

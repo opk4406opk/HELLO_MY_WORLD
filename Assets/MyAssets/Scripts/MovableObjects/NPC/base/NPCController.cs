@@ -3,35 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCController : MonoBehaviour, ActorController
+public class NPCController : ActorController
 {
     [SerializeField]
-    private Animator animator;
-    private CustomOBB obb;
-    private World containWorld;
-    [SerializeField]
-    private Transform maxExtent;
-    [SerializeField]
-    private Transform minExtent;
+    private Animator Animator;
+    private World ContainWorld;
 
-    Vector3 ActorController.GetMinExtent()
+    public override void Move(Vector3 dir, float speed)
     {
-        return minExtent.position;
-    }
-
-    Vector3 ActorController.GetMaxExtent()
-    {
-        return maxExtent.position;
-    }
-
-    CustomOBB ActorController.GetOBB()
-    {
-        return obb;
-    }
-
-    void ActorController.Move(Vector3 dir, float speed)
-    {
-        animator.Play("Running@loop", 0);
+        Animator.Play("Running@loop", 0);
         Vector3 newPos = gameObject.transform.position;
         newPos += dir.normalized * Time.deltaTime * speed;
         gameObject.transform.position = newPos;
@@ -43,7 +23,17 @@ public class NPCController : MonoBehaviour, ActorController
     //    Gizmos.DrawWireCube(offsetPos, new Vector3(obb.xRadius, obb.yRadius, obb.zRadius));
     //}
 
-    void ActorController.LookAt(Vector3 dir)
+    public override void StartController()
+    {
+        StartCoroutine(SimpleGravityForce());
+    }
+
+    public override void StopController()
+    {
+        StopCoroutine(SimpleGravityForce());
+    }
+
+    public override void LookAt(Vector3 dir)
     {
         float theta = Vector3.Dot(dir, transform.forward) / (transform.forward.magnitude * dir.magnitude);
         float angle = Mathf.Acos(theta) * Mathf.Rad2Deg;
@@ -52,15 +42,13 @@ public class NPCController : MonoBehaviour, ActorController
         transform.Rotate(transform.up, angle);
     }
 
-    void ActorController.Init(World world)
+    public override void Init(World world)
     {
-        containWorld = world;
-        obb = new CustomOBB();
-        obb.Init(transform, maxExtent);
-        StartCoroutine(SimpleGravityForce());
+        ContainWorld = world;
+        BoxCollider = gameObject.GetComponent<BoxCollider>();
     }
 
-    Transform ActorController.GetActorTransform()
+    public override Transform GetActorTransform()
     {
         return transform;
     }
@@ -68,7 +56,7 @@ public class NPCController : MonoBehaviour, ActorController
     {
         for (;;)
         {
-            CollideInfo collideInfo = containWorld.CustomOctree.Collide(transform.position);
+            CollideInfo collideInfo = ContainWorld.CustomOctree.Collide(transform.position);
             if (!collideInfo.isCollide)
             {
                 transform.position = new Vector3(transform.position.x,

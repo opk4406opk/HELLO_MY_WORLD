@@ -29,10 +29,29 @@ public class KojeomUtility
         return v;
     }
 
+    // ref : https://stackoverflow.com/questions/16100/how-should-i-convert-a-string-to-an-enum-in-c
+    // ref : https://docs.microsoft.com/en-us/dotnet/api/system.enum.tryparse?redirectedfrom=MSDN&view=netframework-4.7.2#overloads
     public static T StringToEnum<T>(string value, bool ignoreCase = true)
     {
         return (T)Enum.Parse(typeof(T), value, ignoreCase);
     }
+
+    public static T GetActorDetailTypeFromAssetPath<T>(string assetPath)
+    {
+        string prefabName = assetPath.Substring(assetPath.LastIndexOf('/') + 1);
+        var splits = prefabName.Split('.');
+        var tokens = splits[0].Split('_');
+        return StringToEnum<T>(tokens[1]);
+    }
+
+    public static string GetActorNameFromAssetPath(string assetPath)
+    {
+        string prefabName = assetPath.Substring(assetPath.LastIndexOf('/') + 1);
+        var splits = prefabName.Split('.');
+        var tokens = splits[0].Split('_');
+        return tokens[2];
+    }
+
 
     private static System.Random RandomInstance = new System.Random(0);
     /// <summary>

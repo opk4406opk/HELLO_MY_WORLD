@@ -2,9 +2,24 @@
 
 public enum ACTOR_TYPE
 {
-    NPC = 0,
-    MONSTER = 1
+    NPC,
+    MONSTER,
+    COUNT
 }
+
+public enum NPC_TYPE
+{
+    MERCHANT,
+    GUARD,
+    COUNT
+}
+
+public enum MONSTER_TYPE
+{
+    // to do
+    COUNT
+}
+
 abstract public class Actor : MonoBehaviour
 {
     protected ACTOR_TYPE ActorType;
@@ -15,5 +30,4 @@ abstract public class Actor : MonoBehaviour
     abstract public void Init(Vector3 pos, World world, ACTOR_TYPE actorType);
     abstract public ACTOR_TYPE GetActorType();
     abstract public ActorController GetController();
-
 }

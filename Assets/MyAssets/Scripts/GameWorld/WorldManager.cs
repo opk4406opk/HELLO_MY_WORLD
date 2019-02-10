@@ -138,7 +138,7 @@ public class WorldManager : MonoBehaviour
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
         foreach(var subWorldData in WorldMapDataFile.instance.WorldMapData.SubWorldDatas)
         {
-            GameObject newSubWorld = Instantiate(PrefabStorage.instance.WorldPrefab.LoadSynchro(), new Vector3(0, 0, 0),
+            GameObject newSubWorld = Instantiate(PrefabStorage.Instance.WorldPrefab.LoadSynchro(), new Vector3(0, 0, 0),
                new Quaternion(0, 0, 0, 0)) as GameObject;
             newSubWorld.transform.parent = worldGroupTrans;
             //

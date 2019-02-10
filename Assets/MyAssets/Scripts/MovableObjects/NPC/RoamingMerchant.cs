@@ -8,8 +8,6 @@ using UnityEngine;
 public class RoamingMerchant : Actor, INpc, IMerchantNPC
 {
     public override event del_OnClickActor OnClickedActor;
-    [SerializeField]
-    private RoamingNpcAI AI;
 
     private List<int> SellingItemIds;
 
@@ -26,7 +24,7 @@ public class RoamingMerchant : Actor, INpc, IMerchantNPC
     public override void Init(Vector3 pos, World world, ACTOR_TYPE actorType)
     {
         ActorType = actorType;
-        Controller = gameObject.GetComponent<ActorController>();
+        Controller = gameObject.AddComponent<NPCController>();
         Controller.Init(world);
         gameObject.transform.position = pos;
     }
@@ -47,5 +45,4 @@ public class RoamingMerchant : Actor, INpc, IMerchantNPC
     {
         return ActorType;
     }
-
 }
