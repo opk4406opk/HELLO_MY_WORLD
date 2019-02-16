@@ -30,4 +30,5 @@ abstract public class Actor : MonoBehaviour
     abstract public void Init(Vector3 pos, World world, ACTOR_TYPE actorType);
     abstract public ACTOR_TYPE GetActorType();
     abstract public ActorController GetController();
+    abstract public void Tick(float deltaTime);
 }

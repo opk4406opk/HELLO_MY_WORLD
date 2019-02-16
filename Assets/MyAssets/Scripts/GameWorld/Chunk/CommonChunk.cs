@@ -10,35 +10,36 @@ public class CommonChunk : AChunk
 {
     protected override void LateUpdate()
     {
-        if (_update)
+        if (_Update)
         {
             GenerateMesh();
-            _update = false;
+            _Update = false;
         }
     }
 
     public override void Init()
     {
-        chunkType = ChunkType.COMMON;
+        ChunkType = ChunkType.COMMON;
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
-        chunkSize = gameWorldConfig.chunk_size;
-        tileUnit = gameWorldConfig.one_tile_unit;
-        mesh = GetComponent<MeshFilter>().mesh;
+        ChunkSize = gameWorldConfig.chunk_size;
+        TileUnit = gameWorldConfig.one_tile_unit;
+        Mesh = GetComponent<MeshFilter>().mesh;
+        MeshColliderComponent = GetComponent<MeshCollider>();
         GenerateMesh();
     }
 
     protected override void GenerateMesh()
     {
-        for (int relativeX = 0; relativeX < chunkSize; relativeX++)
+        for (int relativeX = 0; relativeX < ChunkSize; relativeX++)
         {
-            for (int relativeY = 0; relativeY < chunkSize; relativeY++)
+            for (int relativeY = 0; relativeY < ChunkSize; relativeY++)
             {
-                for (int relativeZ = 0; relativeZ < chunkSize; relativeZ++)
+                for (int relativeZ = 0; relativeZ < ChunkSize; relativeZ++)
                 {
                     int blockIdxX, blockIdxY, blockIdxZ;
-                    blockIdxX = relativeX + _worldDataIdxX;
-                    blockIdxY = relativeY + _worldDataIdxY;
-                    blockIdxZ = relativeZ + _worldDataIdxZ;
+                    blockIdxX = relativeX + _WorldDataIdxX;
+                    blockIdxY = relativeY + _WorldDataIdxY;
+                    blockIdxZ = relativeZ + _WorldDataIdxZ;
                     //This code will run for every block in the chunk
                     var blockType = GetBlockType(blockIdxX, blockIdxY, blockIdxZ);
                     if (blockType != BlockTileType.EMPTY && blockType != BlockTileType.WATER)
@@ -51,9 +52,9 @@ public class CommonChunk : AChunk
                         //if (Block(x, y, z - 1) == 0) CubeSouth(x, y, z, Block(x, y, z));
                         //test codes.
                         float cubeX, cubeY, cubeZ;
-                        cubeX = relativeX + _realCoordX;
-                        cubeY = relativeY + _realCoordY;
-                        cubeZ = relativeZ + _realCoordZ;
+                        cubeX = relativeX + _RealCoordX;
+                        cubeY = relativeY + _RealCoordY;
+                        cubeZ = relativeZ + _RealCoordZ;
 
                         CubeTopFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
                         CubeBottomFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
@@ -78,12 +79,12 @@ public class CommonChunk : AChunk
                         float blockCenterX = cubeX + 0.5f;
                         float blockCenterY = cubeY - 0.5f;
                         float blockCenterZ = cubeZ + 0.5f;
-                        world.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerX = blockCenterX;
-                        world.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerY = blockCenterY;
-                        world.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerZ = blockCenterZ;
-                        world.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].isRendered = true;
+                        World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerX = blockCenterX;
+                        World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerY = blockCenterY;
+                        World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerZ = blockCenterZ;
+                        World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].isRendered = true;
                         // 월드맵에 생성된 블록의 중앙점을 이용해 Octree의 노드를 생성합니다.
-                        world.CustomOctree.Add(new Vector3(blockCenterX, blockCenterY, blockCenterZ));
+                        World.CustomOctree.Add(new Vector3(blockCenterX, blockCenterY, blockCenterZ));
                     }
 
                 }

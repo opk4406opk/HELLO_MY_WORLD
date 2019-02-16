@@ -45,4 +45,9 @@ public class RoamingMerchant : Actor, INpc, IMerchantNPC
     {
         return ActorType;
     }
+
+    public override void Tick(float deltaTime)
+    {
+        // to do
+    }
 }

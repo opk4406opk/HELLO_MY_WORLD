@@ -95,40 +95,6 @@ public class PlayerMoveState : IState
         //
         P2PNetworkManager.GetInstance().PushCharStateMessage(GAMEPLAYER_CHAR_STATE.MOVE);
         Vector3 move = dir.normalized * moveSpeed;
-
-        World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);   
-        if(containWorld == null)
-        {
-            return;
-        }
-
-        Vector3 origin = gamePlayer.controller.characterObject.transform.position;
-        CustomAABB last = gamePlayer.controller.characterObject.GetCustomAABB();
         gamePlayer.controller.LerpPosition(move);
-        //
-        CustomAABB playerAABB = gamePlayer.controller.characterObject.GetCustomAABB(move);
-        var collideInfo = containWorld.CustomOctree.Collide(ref playerAABB);
-        if (collideInfo.isCollide)
-        {
-            float dist = Vector3.Distance(playerAABB.Position, collideInfo.aabb.Position);
-            float between = (playerAABB.Width + collideInfo.aabb.Width) / 2;
-            if (dist < between)
-            {
-                gamePlayer.controller.SetPosition(new Vector3(origin.x + (dist - between) / 3,
-                    origin.y, origin.z + (dist - between) / 3));
-            }
-            else
-            {
-                float normalX = 0.0f, normalY = 0.0f, normalZ = 0.0f;
-                float collisionTime = CustomAABB.SweptAABB(playerAABB, collideInfo.aabb,
-                         ref normalX, ref normalY, ref normalZ);
-                //KojeomLogger.DebugLog(string.Format("coll time : {0}", collisionTime), LOG_TYPE.DEBUG_TEST);
-                if (collisionTime < 1.0f)
-                {
-                    Vector3 sliding = new Vector3(playerAABB.vx * normalZ, 0.0f, playerAABB.vz * normalX);
-                    gamePlayer.controller.LerpPosition(sliding);
-                }
-            }
-        }
     }
 }

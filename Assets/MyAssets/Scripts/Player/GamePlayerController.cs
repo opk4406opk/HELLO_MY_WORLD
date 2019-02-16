@@ -192,22 +192,6 @@ public class GamePlayerController : MonoBehaviour {
 
         KojeomLogger.DebugLog(string.Format("Player's contain world : {0}, position : {1}", 
             containWorld.name, containWorld.Position), LOG_TYPE.DEBUG_TEST);
-
-        Vector3 bottomOffsetedPos = gamePlayer.transform.position;
-        bottomOffsetedPos -= new Vector3(0.0f, 0.1f, 0.0f);
-
-        CollideInfo collideInfo = containWorld.CustomOctree.Collide(bottomOffsetedPos);
-        var collidedBlock = collideInfo.GetBlock();
-        if (!collideInfo.isCollide)
-        {
-            gamePlayer.transform.position = new Vector3(gamePlayer.transform.position.x,
-                gamePlayer.transform.position.y - 0.1f,
-                gamePlayer.transform.position.z);
-        }
-        else if (collidedBlock.type != (byte)BlockTileType.EMPTY)
-        {
-            KojeomCoroutineHelper.singleton.ReleaseRoutine("Jump");
-        }
         //
         if (isControllProcessOn == false)
         {

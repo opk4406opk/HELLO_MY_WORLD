@@ -12,62 +12,66 @@ public enum ChunkType
 
 public abstract class AChunk : MonoBehaviour {
 
-	public World world { set; get; }
-    protected List<Vector3> newVertices = new List<Vector3>();
-    protected List<int> newTriangles = new List<int>();
-    protected List<Vector2> newUV = new List<Vector2>();
+	public World World { set; get; }
+    protected List<Vector3> NewVertices = new List<Vector3>();
+    protected List<int> NewTriangles = new List<int>();
+    protected List<Vector2> NewUV = new List<Vector2>();
 
     /// <summary>
     /// size per tile.
     ///  ex) 256 x 256(pixel) CommonBlockSheet 기준. 1tile(16pixel) 이 차지하는 텍스처 좌표값.  16/256
     /// </summary>
-    protected float tileUnit;
-    protected Vector2 texturePos;
-    protected Mesh mesh;
-    protected int faceCount;
+    protected float TileUnit;
+    protected Vector2 TexturePos;
+    protected Mesh Mesh;
+    protected int FaceCount;
 
-    protected int chunkSize = 0;
+    #region Components
+    protected MeshCollider MeshColliderComponent;
+    #endregion
 
-    protected ChunkType chunkType = ChunkType.NONE;
-    public ChunkType GetChunkType() { return chunkType; }
+    protected int ChunkSize = 0;
+
+    protected ChunkType ChunkType = ChunkType.NONE;
+    public ChunkType GetChunkType() { return ChunkType; }
 
     // 월드 데이터 배열에서 Chunk가 존재하는 인덱스 값( x,y,z).----------
-    protected int _worldDataIdxX;
-    public int worldDataIdxX
+    protected int _WorldDataIdxX;
+    public int WorldDataIdxX
     {
-        set { _worldDataIdxX = value; }
+        set { _WorldDataIdxX = value; }
     }
-    protected int _worldDataIdxY;
-    public int worldDataIdxY
+    protected int _WorldDataIdxY;
+    public int WorldDataIdxY
     {
-        set { _worldDataIdxY = value; }
+        set { _WorldDataIdxY = value; }
     }
-    protected int _worldDataIdxZ;
-    public int worldDataIdxZ
+    protected int _WorldDataIdxZ;
+    public int WorldDataIdxZ
     {
-        set { _worldDataIdxZ = value; }
+        set { _WorldDataIdxZ = value; }
     }
     // 월드 좌표에서 실제로 Chunk가 존재하는 좌표 x,y,z.
-    protected float _realCoordX;
-    public float realCoordX
+    protected float _RealCoordX;
+    public float RealCoordX
     {
-        set { _realCoordX = value; }
+        set { _RealCoordX = value; }
     }
-    protected float _realCoordY;
-    public float realCoordY
+    protected float _RealCoordY;
+    public float RealCoordY
     {
-        set { _realCoordY = value; }
+        set { _RealCoordY = value; }
     }
-    protected float _realCoordZ;
-    public float realCoordZ
+    protected float _RealCoordZ;
+    public float RealCoordZ
     {
-        set { _realCoordZ = value; }
+        set { _RealCoordZ = value; }
     }
     //-------------------------------------------------------
-    protected bool _update;
-    public bool update
+    protected bool _Update;
+    public bool Update
     {
-        set { _update = value; }
+        set { _Update = value; }
     }
 
     protected abstract void GenerateMesh();
@@ -86,131 +90,138 @@ public abstract class AChunk : MonoBehaviour {
         {
             return BlockTileType.EMPTY;
         }
-        return (BlockTileType)world.WorldBlockData[x, y, z].type;
+        return (BlockTileType)World.WorldBlockData[x, y, z].type;
     }
 
     protected void CubeTopFace(float x, float y, float z, BlockTileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
     {
-        newVertices.Add(new Vector3(x, y, z + 1));
-        newVertices.Add(new Vector3(x + 1, y, z + 1));
-        newVertices.Add(new Vector3(x + 1, y, z));
-        newVertices.Add(new Vector3(x, y, z));
+        NewVertices.Add(new Vector3(x, y, z + 1));
+        NewVertices.Add(new Vector3(x + 1, y, z + 1));
+        NewVertices.Add(new Vector3(x + 1, y, z));
+        NewVertices.Add(new Vector3(x, y, z));
 
         BlockTileInfo tileInfo = BlockTileDataFile.instance.GetBlockTileInfo(tileType);
-        texturePos.x = tileInfo.posX;
-        texturePos.y = tileInfo.posY;
+        TexturePos.x = tileInfo.posX;
+        TexturePos.y = tileInfo.posY;
 
-        CreateFace(texturePos);
+        CreateFace(TexturePos);
     }
 
     protected void CubeNorthFace(float x, float y, float z, BlockTileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
     {
 
-        newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
-        newVertices.Add(new Vector3(x + 1, y, z + 1));
-        newVertices.Add(new Vector3(x, y, z + 1));
-        newVertices.Add(new Vector3(x, y - 1, z + 1));
+        NewVertices.Add(new Vector3(x + 1, y - 1, z + 1));
+        NewVertices.Add(new Vector3(x + 1, y, z + 1));
+        NewVertices.Add(new Vector3(x, y, z + 1));
+        NewVertices.Add(new Vector3(x, y - 1, z + 1));
 
         BlockTileInfo tileInfo = BlockTileDataFile.instance.GetBlockTileInfo(tileType);
-        texturePos.x = tileInfo.posX;
-        texturePos.y = tileInfo.posY;
+        TexturePos.x = tileInfo.posX;
+        TexturePos.y = tileInfo.posY;
 
-        CreateFace(texturePos);
+        CreateFace(TexturePos);
 
     }
 
     protected void CubeEastFace(float x, float y, float z, BlockTileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
     {
 
-        newVertices.Add(new Vector3(x + 1, y - 1, z));
-        newVertices.Add(new Vector3(x + 1, y, z));
-        newVertices.Add(new Vector3(x + 1, y, z + 1));
-        newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
+        NewVertices.Add(new Vector3(x + 1, y - 1, z));
+        NewVertices.Add(new Vector3(x + 1, y, z));
+        NewVertices.Add(new Vector3(x + 1, y, z + 1));
+        NewVertices.Add(new Vector3(x + 1, y - 1, z + 1));
 
         BlockTileInfo tileInfo = BlockTileDataFile.instance.GetBlockTileInfo(tileType);
-        texturePos.x = tileInfo.posX;
-        texturePos.y = tileInfo.posY;
+        TexturePos.x = tileInfo.posX;
+        TexturePos.y = tileInfo.posY;
 
-        CreateFace(texturePos);
+        CreateFace(TexturePos);
 
     }
 
     protected void CubeSouthFace(float x, float y, float z, BlockTileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
     {
 
-        newVertices.Add(new Vector3(x, y - 1, z));
-        newVertices.Add(new Vector3(x, y, z));
-        newVertices.Add(new Vector3(x + 1, y, z));
-        newVertices.Add(new Vector3(x + 1, y - 1, z));
+        NewVertices.Add(new Vector3(x, y - 1, z));
+        NewVertices.Add(new Vector3(x, y, z));
+        NewVertices.Add(new Vector3(x + 1, y, z));
+        NewVertices.Add(new Vector3(x + 1, y - 1, z));
 
         BlockTileInfo tileInfo = BlockTileDataFile.instance.GetBlockTileInfo(tileType);
-        texturePos.x = tileInfo.posX;
-        texturePos.y = tileInfo.posY;
+        TexturePos.x = tileInfo.posX;
+        TexturePos.y = tileInfo.posY;
 
-        CreateFace(texturePos);
+        CreateFace(TexturePos);
 
     }
 
     protected void CubeWestFace(float x, float y, float z, BlockTileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
     {
 
-        newVertices.Add(new Vector3(x, y - 1, z + 1));
-        newVertices.Add(new Vector3(x, y, z + 1));
-        newVertices.Add(new Vector3(x, y, z));
-        newVertices.Add(new Vector3(x, y - 1, z));
+        NewVertices.Add(new Vector3(x, y - 1, z + 1));
+        NewVertices.Add(new Vector3(x, y, z + 1));
+        NewVertices.Add(new Vector3(x, y, z));
+        NewVertices.Add(new Vector3(x, y - 1, z));
 
         BlockTileInfo tileInfo = BlockTileDataFile.instance.GetBlockTileInfo(tileType);
-        texturePos.x = tileInfo.posX;
-        texturePos.y = tileInfo.posY;
+        TexturePos.x = tileInfo.posX;
+        TexturePos.y = tileInfo.posY;
 
-        CreateFace(texturePos);
+        CreateFace(TexturePos);
 
     }
 
     protected void CubeBottomFace(float x, float y, float z, BlockTileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
     {
 
-        newVertices.Add(new Vector3(x, y - 1, z));
-        newVertices.Add(new Vector3(x + 1, y - 1, z));
-        newVertices.Add(new Vector3(x + 1, y - 1, z + 1));
-        newVertices.Add(new Vector3(x, y - 1, z + 1));
+        NewVertices.Add(new Vector3(x, y - 1, z));
+        NewVertices.Add(new Vector3(x + 1, y - 1, z));
+        NewVertices.Add(new Vector3(x + 1, y - 1, z + 1));
+        NewVertices.Add(new Vector3(x, y - 1, z + 1));
 
         BlockTileInfo tileInfo = BlockTileDataFile.instance.GetBlockTileInfo(tileType);
-        texturePos.x = tileInfo.posX;
-        texturePos.y = tileInfo.posY;
+        TexturePos.x = tileInfo.posX;
+        TexturePos.y = tileInfo.posY;
 
-        CreateFace(texturePos);
+        CreateFace(TexturePos);
 
     }
 
     protected void CreateFace(Vector2 texturePos)
     {
-        newTriangles.Add(faceCount * 4); //1
-        newTriangles.Add(faceCount * 4 + 1); //2
-        newTriangles.Add(faceCount * 4 + 2); //3
-        newTriangles.Add(faceCount * 4); //1
-        newTriangles.Add(faceCount * 4 + 2); //3
-        newTriangles.Add(faceCount * 4 + 3); //4
+        NewTriangles.Add(FaceCount * 4); //1
+        NewTriangles.Add(FaceCount * 4 + 1); //2
+        NewTriangles.Add(FaceCount * 4 + 2); //3
+        NewTriangles.Add(FaceCount * 4); //1
+        NewTriangles.Add(FaceCount * 4 + 2); //3
+        NewTriangles.Add(FaceCount * 4 + 3); //4
 
-        newUV.Add(new Vector2(tileUnit * texturePos.x + tileUnit, tileUnit * texturePos.y));
-        newUV.Add(new Vector2(tileUnit * texturePos.x + tileUnit, tileUnit * texturePos.y + tileUnit));
-        newUV.Add(new Vector2(tileUnit * texturePos.x, tileUnit * texturePos.y + tileUnit));
-        newUV.Add(new Vector2(tileUnit * texturePos.x, tileUnit * texturePos.y));
+        NewUV.Add(new Vector2(TileUnit * texturePos.x + TileUnit, TileUnit * texturePos.y));
+        NewUV.Add(new Vector2(TileUnit * texturePos.x + TileUnit, TileUnit * texturePos.y + TileUnit));
+        NewUV.Add(new Vector2(TileUnit * texturePos.x, TileUnit * texturePos.y + TileUnit));
+        NewUV.Add(new Vector2(TileUnit * texturePos.x, TileUnit * texturePos.y));
 
-        faceCount++; // Add this line
+        FaceCount++; // Add this line
     }
 
     protected void UpdateMesh()
     {
-        mesh.Clear();
-        mesh.vertices = newVertices.ToArray();
-        mesh.uv = newUV.ToArray();
-        mesh.triangles = newTriangles.ToArray();
-        mesh.RecalculateNormals();
-
-        newVertices.Clear();
-        newUV.Clear();
-        newTriangles.Clear();
-        faceCount = 0;
+        Mesh.Clear();
+        Mesh.vertices = NewVertices.ToArray();
+        Mesh.uv = NewUV.ToArray();
+        Mesh.triangles = NewTriangles.ToArray();
+        Mesh.RecalculateNormals();
+        //
+        switch(ChunkType)
+        {
+            case ChunkType.COMMON:
+                MeshColliderComponent.sharedMesh = Mesh;
+                break;
+        }
+        //
+        NewVertices.Clear();
+        NewUV.Clear();
+        NewTriangles.Clear();
+        FaceCount = 0;
     }
 }

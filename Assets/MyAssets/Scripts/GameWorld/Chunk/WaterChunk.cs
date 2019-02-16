@@ -6,42 +6,42 @@ public class WaterChunk : AChunk
 {
     protected override void LateUpdate()
     {
-        if (_update)
+        if (_Update)
         {
             GenerateMesh();
-            _update = false;
+            _Update = false;
         }
     }
     public override void Init()
     {
-        chunkType = ChunkType.WATER;
+        ChunkType = ChunkType.WATER;
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
-        chunkSize = gameWorldConfig.chunk_size;
-        tileUnit = gameWorldConfig.one_tile_unit;
-        mesh = GetComponent<MeshFilter>().mesh;
+        ChunkSize = gameWorldConfig.chunk_size;
+        TileUnit = gameWorldConfig.one_tile_unit;
+        Mesh = GetComponent<MeshFilter>().mesh;
         GenerateMesh();
     }
 
     protected override void GenerateMesh()
     {
-        for (int relativeX = 0; relativeX < chunkSize; relativeX++)
+        for (int relativeX = 0; relativeX < ChunkSize; relativeX++)
         {
-            for (int relativeY = 0; relativeY < chunkSize; relativeY++)
+            for (int relativeY = 0; relativeY < ChunkSize; relativeY++)
             {
-                for (int relativeZ = 0; relativeZ < chunkSize; relativeZ++)
+                for (int relativeZ = 0; relativeZ < ChunkSize; relativeZ++)
                 {
                     int blockIdxX, blockIdxY, blockIdxZ;
-                    blockIdxX = relativeX + _worldDataIdxX;
-                    blockIdxY = relativeY + _worldDataIdxY;
-                    blockIdxZ = relativeZ + _worldDataIdxZ;
+                    blockIdxX = relativeX + _WorldDataIdxX;
+                    blockIdxY = relativeY + _WorldDataIdxY;
+                    blockIdxZ = relativeZ + _WorldDataIdxZ;
                     //This code will run for every block in the chunk
                     var blockType = GetBlockType(blockIdxX, blockIdxY, blockIdxZ);
                     if (blockType == BlockTileType.WATER)
                     {
                         float cubeX, cubeY, cubeZ;
-                        cubeX = relativeX + _realCoordX;
-                        cubeY = relativeY + _realCoordY;
-                        cubeZ = relativeZ + _realCoordZ;
+                        cubeX = relativeX + _RealCoordX;
+                        cubeY = relativeY + _RealCoordY;
+                        cubeZ = relativeZ + _RealCoordZ;
 
                         // 중첩되는 Face들은 버텍스를 생성하지 않는다.
                         if (GetBlockType(blockIdxX, blockIdxY + 1, blockIdxZ) == BlockTileType.EMPTY) CubeTopFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
@@ -67,10 +67,10 @@ public class WaterChunk : AChunk
                         float blockCenterX = cubeX + 0.5f;
                         float blockCenterY = cubeY - 0.5f;
                         float blockCenterZ = cubeZ + 0.5f;
-                        world.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerX = blockCenterX;
-                        world.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerY = blockCenterY;
-                        world.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerZ = blockCenterZ;
-                        world.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].isRendered = true;
+                        World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerX = blockCenterX;
+                        World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerY = blockCenterY;
+                        World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerZ = blockCenterZ;
+                        World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].isRendered = true;
                     }
 
                 }

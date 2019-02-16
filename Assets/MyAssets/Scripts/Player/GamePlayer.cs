@@ -59,9 +59,7 @@ public class GamePlayer : NetworkBehaviour
         //
         KojeomLogger.DebugLog("게임플레이어 PostInit 완료. ", LOG_TYPE.INFO);
     }
-    /// <summary>
-    /// 
-    /// </summary>
+
     private void SingleGameInit()
     {
 

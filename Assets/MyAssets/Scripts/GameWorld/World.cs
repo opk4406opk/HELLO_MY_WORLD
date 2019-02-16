@@ -162,13 +162,13 @@ public class World : MonoBehaviour
                                 ChunkSlots[x, y, z].Chunks[type] = newChunk.GetComponent<WaterChunk>();
                                 break;
                         }
-                        ChunkSlots[x, y, z].Chunks[type].world = this;
-                        ChunkSlots[x, y, z].Chunks[type].worldDataIdxX = x * ChunkSize;
-                        ChunkSlots[x, y, z].Chunks[type].worldDataIdxY = y * ChunkSize;
-                        ChunkSlots[x, y, z].Chunks[type].worldDataIdxZ = z * ChunkSize;
-                        ChunkSlots[x, y, z].Chunks[type].realCoordX = chunkRealCoordX + Position.x;
-                        ChunkSlots[x, y, z].Chunks[type].realCoordY = chunkRealCoordY + Position.y;
-                        ChunkSlots[x, y, z].Chunks[type].realCoordZ = chunkRealCoordZ + Position.z;
+                        ChunkSlots[x, y, z].Chunks[type].World = this;
+                        ChunkSlots[x, y, z].Chunks[type].WorldDataIdxX = x * ChunkSize;
+                        ChunkSlots[x, y, z].Chunks[type].WorldDataIdxY = y * ChunkSize;
+                        ChunkSlots[x, y, z].Chunks[type].WorldDataIdxZ = z * ChunkSize;
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordX = chunkRealCoordX + Position.x;
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordY = chunkRealCoordY + Position.y;
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordZ = chunkRealCoordZ + Position.z;
                         ChunkSlots[x, y, z].Chunks[type].Init();
                         yield return new WaitForSeconds(WorldConfigFile.instance.GetConfig().chunkLoadIntervalSeconds);
                     }
