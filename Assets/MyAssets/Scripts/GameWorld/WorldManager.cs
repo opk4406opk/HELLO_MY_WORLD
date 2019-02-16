@@ -199,7 +199,7 @@ public class WorldManager : MonoBehaviour
             offset.z = 0;
             if(GamePlayerManager.instance != null && GamePlayerManager.instance.isInitializeFinish == true)
             {
-                playerPos = GamePlayerManager.instance.myGamePlayer.controller.GetPosition();
+                playerPos = GamePlayerManager.instance.myGamePlayer.Controller.GetPosition();
                 offset = wholeWorldStates[GetSubWorldUniqueID(playerPos)].normalizedOffset;
             }
             else

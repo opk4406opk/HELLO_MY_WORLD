@@ -510,7 +510,7 @@ public class P2PNetworkManager : NetworkManager {
         P2PMessageGameCharState pushStateMsg = new P2PMessageGameCharState();
         if(GamePlayerManager.instance != null)
         {
-            pushStateMsg.ownerCharState = GamePlayerManager.instance.myGamePlayer.controller.GetPlayerState();
+            pushStateMsg.ownerCharState = GamePlayerManager.instance.myGamePlayer.Controller.GetPlayerState();
             pushStateMsg.ownerConnID = clientNetworkConnection.connectionId;
             isSuccess = clientNetworkConnection.Send((short)P2P_NETWORK_PROTOCOL.push_charStateToServer, pushStateMsg);
 
@@ -563,7 +563,7 @@ public class P2PNetworkManager : NetworkManager {
         if ((user != null) && (user.gamePlayer != null))
         {
             if (user.gamePlayer.isMyPlayer &&
-                user.gamePlayer.isInitProcessFinish == true) return true;
+                user.gamePlayer.IsInitProcessFinish == true) return true;
         }
         return false;
     }

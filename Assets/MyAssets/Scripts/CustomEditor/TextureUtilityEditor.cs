@@ -3,11 +3,11 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 
-public class TextureUtility : EditorWindow
+public class TextureUtilityEditor : EditorWindow
 {
     //https://docs.unity3d.com/ScriptReference/RenderTexture-active.html
     //https://stackoverflow.com/questions/44264468/convert-rendertexture-to-texture2d
-    [MenuItem("CustomEditor/TextureUtility/RenderTextureToTexture2D")]
+    [MenuItem("CustomEditor/TextureUtility/Convert Character's RenderTexture To Texture2D")]
     public static void RenderTextureToTexture2D()
     {
         KojeomLogger.DebugLog("캐릭터 렌더텍스처를 텍스처2D로 변환 시작합니다.", LOG_TYPE.EDITOR_TOOL);

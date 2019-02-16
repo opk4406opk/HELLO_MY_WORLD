@@ -16,7 +16,6 @@ public enum GAMEPLAYER_CHAR_STATE
 public class GamePlayerController : MonoBehaviour {
 
     private Camera playerCamera;
-    private GamePlayer gamePlayer;
     //
     #region cam_option
     private List<float> camRotArrayX = new List<float>();
@@ -47,17 +46,15 @@ public class GamePlayerController : MonoBehaviour {
     private PlayerStateController poseStateController;
     private GAMEPLAYER_CHAR_STATE curPlayerState;
 
-    public GameCharacter characterObject { get; private set; }
+    public GameCharacterInstance CharacterInstance { get; private set; }
 
-    public void Init(Camera mainCam, GamePlayer player)
+    public void Init(Camera mainCam, GamePlayer gamePlayer)
     {
-        //
-        gamePlayer = player;
         playerCamera = mainCam;
         //
         camOrigRotation = playerCamera.transform.localRotation;
-        // 게임 플레이어가 아닌, 하위 오브젝트인 캐릭터 오브젝트의 방향을 변경해야한다.
-        playerOrigRotation = gamePlayer.transform.localRotation;
+        // 게임 플레이어가 아닌, 하위 오브젝트인 캐릭터 인스턴스 방향을 변경해야한다.
+        playerOrigRotation = CharacterInstance.transform.localRotation;
         //
         moveState = new PlayerMoveState(gamePlayer);
         idleState = new PlayerIdleState(gamePlayer);
@@ -68,35 +65,35 @@ public class GamePlayerController : MonoBehaviour {
         curPlayerState = GAMEPLAYER_CHAR_STATE.IDLE;
     }
 
-    public void RegisterCharacter(GameCharacter character)
+    public void RegisterCharacter(GameCharacterInstance character)
     {
-        characterObject = character;
+        CharacterInstance = character;
     }
 
     public Vector3 GetPosition()
     {
-        return characterObject.GetPosition();
+        return CharacterInstance.GetPosition();
     }
 
     public void SetPosition(Vector3 newPos)
     {
-        gamePlayer.transform.position = newPos;
+        CharacterInstance.transform.position = newPos;
     }
 
     public void AddPostion(Vector3 addPos)
     {
-        gamePlayer.transform.position += addPos;
+        CharacterInstance.transform.position += addPos;
     }
 
     public void LerpPosition(Vector3 addPos)
     {
-        Vector3 newPos = Vector3.Lerp(gamePlayer.transform.position, gamePlayer.transform.position + addPos, Time.deltaTime);
-        gamePlayer.transform.position = newPos;
+        Vector3 newPos = Vector3.Lerp(CharacterInstance.transform.position, CharacterInstance.transform.position + addPos, Time.deltaTime);
+        CharacterInstance.transform.position = newPos;
     }
 
     public Vector3 GetLerpValue(Vector3 addPos)
     {
-        return Vector3.Lerp(gamePlayer.transform.position, gamePlayer.transform.position + addPos, Time.deltaTime);
+        return Vector3.Lerp(CharacterInstance.transform.position, CharacterInstance.transform.position + addPos, Time.deltaTime);
     }
 
     public void StartControllProcess()
@@ -166,21 +163,21 @@ public class GamePlayerController : MonoBehaviour {
         // rot cam
         playerCamera.transform.localRotation = camOrigRotation * xQuaternion * yQuaternion;
         // rot player
-        gamePlayer.transform.localRotation = playerOrigRotation * xQuaternion;
+        CharacterInstance.transform.localRotation = playerOrigRotation * xQuaternion;
     }
 
     private void FixedUpdate()
     {
-        if (gamePlayer == null || WorldManager.instance == null)
+        if (CharacterInstance == null || WorldManager.instance == null)
         {
             return;
         }
         //
-        Vector3 playerPos = gamePlayer.transform.position;
+        Vector3 playerPos = CharacterInstance.transform.position;
         playerPos.y += 2.0f;
         playerCamera.transform.position = playerPos;
 
-        World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
+        World containWorld = WorldManager.instance.ContainedWorld(CharacterInstance.transform.position);
         if (containWorld == null)
         {
             return;
@@ -232,21 +229,21 @@ public class GamePlayerController : MonoBehaviour {
                 {
                     case GAMEPLAYER_CHAR_STATE.MOVE:
                         moveStateController.SetState(moveState);
-                        moveStateController.UpdateState();
+                        moveStateController.Tick();
                         break;
                     case GAMEPLAYER_CHAR_STATE.JUMP:
                         jumpStateController.SetState(jumpState);
-                        jumpStateController.UpdateState();
+                        jumpStateController.Tick();
                         break;
                     case GAMEPLAYER_CHAR_STATE.IDLE:
                         poseStateController.SetState(idleState);
-                        poseStateController.UpdateState();
+                        poseStateController.Tick();
                         break;
                     case GAMEPLAYER_CHAR_STATE.MOVING_JUMP:
                         jumpStateController.SetState(jumpState);
-                        jumpStateController.UpdateState();
+                        jumpStateController.Tick();
                         moveStateController.SetState(moveState);
-                        moveStateController.UpdateState();
+                        moveStateController.Tick();
                         break;
                 }
                 RotationCamAndPlayer();

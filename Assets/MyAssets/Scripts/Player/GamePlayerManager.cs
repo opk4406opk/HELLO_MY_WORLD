@@ -31,11 +31,11 @@ public class GamePlayerManager : MonoBehaviour {
                     {
                         gamePlayerPrefab = P2PNetworkManager.GetInstance().playerPrefab;
                         myGamePlayer = P2PNetworkManager.GetInstance().GetMyGamePlayer();
-                        myGamePlayer.controller.Init(Camera.main, myGamePlayer);
-                        myGamePlayer.controller.StartControllProcess();
+                        myGamePlayer.Controller.Init(Camera.main, myGamePlayer);
+                        myGamePlayer.Controller.StartControllProcess();
 
                         Vector3 worldInstPos = state.Value.subWorldInstance.Position;
-                        myGamePlayer.controller.SetPosition(new Vector3(worldInstPos.x, 60.0f, worldInstPos.z));
+                        myGamePlayer.Controller.SetPosition(new Vector3(worldInstPos.x, 60.0f, worldInstPos.z));
                         //Player Manager 하위 종속으로 변경.
                         myGamePlayer.transform.parent = gameObject.transform;
                         //

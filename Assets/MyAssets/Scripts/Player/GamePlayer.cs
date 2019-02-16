@@ -11,18 +11,16 @@ public class GamePlayer : NetworkBehaviour
         get { return _isMyPlayer; }
     }
 
-    public GamePlayerController controller { get; private set; }
+    public GamePlayerController Controller { get; private set; }
 
     [SerializeField]
-    private int characterType;
+    private int CharacterType;
     [SerializeField]
-    private string characterName;
-    private GameCharacter charInstance;
-    public bool isInitProcessFinish { get; private set; } = false;
+    private string CharacterName;
+    private GameCharacterInstance CharInstance;
+    public bool IsInitProcessFinish { get; private set; } = false;
 
-    [SerializeField]
-    private NetworkIdentity networkIdentity;
-    private NetworkAnimator networkAnimator;
+    private NetworkAnimator NetworkAnimatorComponent;
 
     /// <summary>
     /// 게임플레이어는 게임 시작 이전에 미리 생성되므로, DontDestroyOnLoad를 명시적으로 호출해야한다.
@@ -41,20 +39,21 @@ public class GamePlayer : NetworkBehaviour
         gameObject.name = charName;
         //
         KojeomLogger.DebugLog("게임플레이어 PostInit 시작", LOG_TYPE.INFO);
-        characterName = charName;
-        characterType = charType;
-        charInstance = MakeGameChararacter(PrefabStorage.GetInstance().GetCharacterPrefab(charType));
+        CharacterName = charName;
+        CharacterType = charType;
+        CharInstance = MakeGameChararacter(PrefabStorage.GetInstance().GetCharacterPrefab(charType));
         // 캐릭터 인스턴스는 게임플레이어 하위종속으로 설정.
-        charInstance.transform.parent = gameObject.transform;
-        charInstance.transform.localPosition = new Vector3(0, 0, 0);
+        CharInstance.transform.parent = gameObject.transform;
+        CharInstance.transform.localPosition = new Vector3(0, 0, 0);
         //
-        controller = gameObject.GetComponent<GamePlayerController>();
-        controller.RegisterCharacter(charInstance);
-        networkAnimator = gameObject.AddComponent<NetworkAnimator>();
+        NetworkAnimatorComponent = gameObject.AddComponent<NetworkAnimator>();
+        //
+        Controller = gameObject.GetComponent<GamePlayerController>();
+        Controller.RegisterCharacter(CharInstance);
         // 네트워크 애니메이터를 붙이고 나서 디폴트로 생기는 Animator 컴포넌트를 disable 한다.
         gameObject.GetComponent<Animator>().enabled = false;
         // 캐릭터 인스턴스에 있는 실제 애니메이터 컴포넌트를 새롭게 등록.
-        networkAnimator.animator = charInstance.GetAnimator();
+        NetworkAnimatorComponent.animator = CharInstance.GetAnimator();
         SetObjectLayer(_isMyPlayer);
         //
         KojeomLogger.DebugLog("게임플레이어 PostInit 완료. ", LOG_TYPE.INFO);
@@ -62,7 +61,6 @@ public class GamePlayer : NetworkBehaviour
 
     private void SingleGameInit()
     {
-
     }
 
     private void SetObjectLayer(bool isMine)
@@ -73,19 +71,19 @@ public class GamePlayer : NetworkBehaviour
 
         gameObject.layer = layer;
         // GameObject가 아닌 트랜스폼으로 자식노드들을 가져와야 정상 동작.
-        var childObjects = KojeomUtility.GetChilds<Transform>(charInstance.gameObject);
+        var childObjects = KojeomUtility.GetChilds<Transform>(CharInstance.gameObject);
         foreach (var child in childObjects)
         {
             child.gameObject.layer = layer;
         }
     }
 
-    private GameCharacter MakeGameChararacter(GameObject _prefab)
+    private GameCharacterInstance MakeGameChararacter(GameObject _prefab)
     {
         GameObject characterObject = Instantiate(_prefab, new Vector3(0, 0, 0),
             new Quaternion(0, 0, 0, 0)) as GameObject;
         //
-        GameCharacter gameChar = characterObject.GetComponent<GameCharacter>();
+        GameCharacterInstance gameChar = characterObject.GetComponent<GameCharacterInstance>();
         gameChar.Init();
         return gameChar;
     }
@@ -133,9 +131,9 @@ public class GamePlayer : NetworkBehaviour
                 (P2PNetworkManager.GetInstance().netUserList.Count > 0))
             {
                 var netConnectionID = -999;
-                if (networkIdentity.connectionToClient != null) netConnectionID = networkIdentity.connectionToClient.connectionId;
-                else if(networkIdentity.connectionToServer != null) netConnectionID = networkIdentity.connectionToServer.connectionId;
-                else if(networkIdentity.connectionToServer == null && networkIdentity.connectionToClient == null)
+                if (connectionToClient != null) netConnectionID = connectionToClient.connectionId;
+                else if(connectionToServer != null) netConnectionID = connectionToServer.connectionId;
+                else if(connectionToServer == null && connectionToClient == null)
                 {
                     KojeomLogger.DebugLog(string.Format("NetworkIdentity connection null pointer error."), LOG_TYPE.ERROR);
                 }
@@ -159,7 +157,7 @@ public class GamePlayer : NetworkBehaviour
             }
             yield return new WaitForSeconds(1.0f);
         }
-        isInitProcessFinish = true;
+        IsInitProcessFinish = true;
         KojeomLogger.DebugLog(string.Format("[Finish]LateRegisterGamePlayerToUserList Finish."), LOG_TYPE.NETWORK_CLIENT_INFO);
     }
 }

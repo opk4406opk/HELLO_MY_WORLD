@@ -4,17 +4,17 @@ using UnityEngine.Networking;
 public class PlayerMoveState : IState
 {
     private float moveSpeed;
-    private GamePlayer gamePlayer;
+    private GamePlayer GamePlayer;
     private QuerySDMecanimController aniController;
     private BoxCollider boxCollider;
     private InputData curPressedInput;
 
-    public PlayerMoveState(GamePlayer player)
+    public PlayerMoveState(GamePlayer gamePlayer)
     {
-        gamePlayer = player;
+        GamePlayer = gamePlayer;
         //
-        aniController = gamePlayer.controller.characterObject.queryMecanimController;
-        boxCollider = gamePlayer.controller.characterObject.GetBoxCollider();
+        aniController = GamePlayer.Controller.CharacterInstance.queryMecanimController;
+        boxCollider = GamePlayer.Controller.CharacterInstance.GetBoxCollider();
         //
         moveSpeed = 3.5f;
     }
@@ -41,7 +41,7 @@ public class PlayerMoveState : IState
         if(virtualJoystick != null)
         {
             // 스크린좌표에서 얻은 2차원 방향값을 3차원 좌표계로 변환.
-            dir = gamePlayer.transform.TransformDirection(virtualJoystick.GetMoveDirection());
+            dir = GamePlayer.transform.TransformDirection(virtualJoystick.GetMoveDirection());
         }
         return dir;
     }
@@ -49,19 +49,19 @@ public class PlayerMoveState : IState
     {
         if (curPressedInput.keyCode == KeyCode.W)
         {
-            return gamePlayer.transform.forward;
+            return GamePlayer.transform.forward;
         }
         else if (curPressedInput.keyCode == KeyCode.S)
         {
-            return -gamePlayer.transform.forward;
+            return -GamePlayer.transform.forward;
         }
         else if (curPressedInput.keyCode == KeyCode.D)
         {
-            return gamePlayer.transform.right;
+            return GamePlayer.transform.right;
         }
         else if (curPressedInput.keyCode == KeyCode.A)
         {
-            return -gamePlayer.transform.right;
+            return -GamePlayer.transform.right;
         }
         else
         {
@@ -95,6 +95,6 @@ public class PlayerMoveState : IState
         //
         P2PNetworkManager.GetInstance().PushCharStateMessage(GAMEPLAYER_CHAR_STATE.MOVE);
         Vector3 move = dir.normalized * moveSpeed;
-        gamePlayer.controller.LerpPosition(move);
+        GamePlayer.Controller.LerpPosition(move);
     }
 }

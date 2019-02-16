@@ -1,21 +1,22 @@
 ﻿#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
-public class CustomComponentSupervisor : EditorWindow
+public class CustomComponentEditor : EditorWindow
 {
-    [MenuItem("CustomEditor/CustomComponentSupervisor")]
+    [MenuItem("CustomEditor/CustomComponentEditor Menu")]
     static void Init()
     {
-        CustomComponentSupervisor window = (CustomComponentSupervisor)EditorWindow.GetWindow(typeof(CustomComponentSupervisor));
+        CustomComponentEditor window = (CustomComponentEditor)EditorWindow.GetWindow(typeof(CustomComponentEditor));
         window.Show();
     }
 
     private void OnGUI()
     {
-        EditorGUILayout.BeginToggleGroup("Func", true);
+        EditorGUILayout.BeginToggleGroup("Utility", true);
         if (GUILayout.Button("Add GameCharacter to CharPrefabs")) AddGameCharComponentToCharPrefabs();
         if (GUILayout.Button("Add BoxCollider to CharPrefabs")) AddBoxColliderToCharPerfabs();
         if (GUILayout.Button("Add CharacterController to CharPrefabs")) AddCharControllerToCharPrefabs();
+        if (GUILayout.Button("Add RigidBody to CharPrefabs")) AddRigidBodyToCharPrefabs();
         EditorGUILayout.EndToggleGroup();
     }
 
@@ -25,14 +26,15 @@ public class CustomComponentSupervisor : EditorWindow
         GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
         foreach(var charPrefab in charPrefabs)
         {
-            if(charPrefab.GetComponent<GameCharacter>() == null)
+            if(charPrefab.GetComponent<GameCharacterInstance>() == null)
             {
-                var gameCharacterComponent = charPrefab.AddComponent<GameCharacter>();
+                var gameCharacterComponent = charPrefab.AddComponent<GameCharacterInstance>();
             }
             else
             {
                 KojeomLogger.DebugLog("이미 GameCharacter 컴포넌트가 붙어있습니다.");
             }
+            PrefabUtility.SavePrefabAsset(charPrefab);
         }
         KojeomLogger.DebugLog("GameCharacter 컴포넌트 할당 작업 완료.");
     }
@@ -53,6 +55,7 @@ public class CustomComponentSupervisor : EditorWindow
             {
                 KojeomLogger.DebugLog("이미 BoxCollider 컴포넌트가 붙어있습니다.");
             }
+            PrefabUtility.SavePrefabAsset(element);
         }
         KojeomLogger.DebugLog("GameCharacter 컴포넌트 할당 작업 완료.");
     }
@@ -71,8 +74,44 @@ public class CustomComponentSupervisor : EditorWindow
             {
                 KojeomLogger.DebugLog("이미 CharacterController 컴포넌트가 붙어있습니다.");
             }
+            PrefabUtility.SavePrefabAsset(element);
         }
         KojeomLogger.DebugLog("CharacterController 컴포넌트 할당 작업 완료.");
+    }
+
+    private void AddRigidBodyToCharPrefabs()
+    {
+        KojeomLogger.DebugLog("Rigidbody 컴포넌트 할당 작업 시작.");
+        GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
+        foreach (var element in charPrefabs)
+        {
+            var comp = element.GetComponent<Rigidbody>();
+            if (comp != null)
+            {
+                DestroyImmediate(comp, true);
+            }
+            var rigidBody = element.AddComponent<Rigidbody>();
+            rigidBody.mass = 1.0f;
+            rigidBody.useGravity = true;
+            rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+            PrefabUtility.SavePrefabAsset(element);
+        }
+        KojeomLogger.DebugLog("Rigidbody 컴포넌트 할당 작업 완료.");
+    }
+
+    private void RemoveComponent<T>()
+    {
+        KojeomLogger.DebugLog("컴포넌트 삭제 작업 시작.");
+        GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
+        foreach (var element in charPrefabs)
+        {
+            T component = element.GetComponent<T>();
+            if (component != null)
+            {
+                DestroyImmediate(component as Object, true);
+            }
+            PrefabUtility.SavePrefabAsset(element);
+        }
     }
 }
 #endif

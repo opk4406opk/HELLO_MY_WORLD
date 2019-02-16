@@ -11,7 +11,7 @@
         curState.InitState();
     }
 
-    public void UpdateState()
+    public void Tick()
     {
         if(curState != null)
         {

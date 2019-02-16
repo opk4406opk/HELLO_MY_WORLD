@@ -20,7 +20,7 @@ public struct CharacterJsonDataFormat
 /// <summary>
 /// Chracter RenderTexture 생성기.
 /// </summary>
-public class Ch_RTMaker : EditorWindow
+public class CharacterRenderTextureEditor : EditorWindow
 {
     private string filePath = null;
 
@@ -29,11 +29,11 @@ public class Ch_RTMaker : EditorWindow
     private List<Dictionary<string, string>> jsonDataSheet;
     private int maxChCard = 0;
 
-    [MenuItem("CustomEditor/Ch_RTMaker")]
+    [MenuItem("CustomEditor/Character RenderTexture Menu")]
     static void Init()
     {
         // Get existing open window or if none, make a new one:
-        Ch_RTMaker window = (Ch_RTMaker)EditorWindow.GetWindow(typeof(Ch_RTMaker));
+        CharacterRenderTextureEditor window = (CharacterRenderTextureEditor)EditorWindow.GetWindow(typeof(CharacterRenderTextureEditor));
         window.Show();
     }
 

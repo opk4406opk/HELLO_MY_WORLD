@@ -2,24 +2,24 @@
 
 public class PlayerJumpState : IState
 {
-    private float jumpScale;
-    private float jumpSpeed;
-    private GamePlayer gamePlayer;
-    private QuerySDMecanimController aniController;
+    private float JumpScale;
+    private float JumpSpeed;
+    private GamePlayer GamePlayer;
+    private QuerySDMecanimController AniController;
 
     private float t;
 
     public PlayerJumpState(GamePlayer player)
     {
-        gamePlayer = player;
-        jumpSpeed = 2.5f;
-        jumpScale = 1.8f;
+        GamePlayer = player;
+        JumpSpeed = 2.5f;
+        JumpScale = 1.8f;
         t = 0.0f;
-        aniController = gamePlayer.controller.characterObject.queryMecanimController;
+        AniController = GamePlayer.Controller.CharacterInstance.queryMecanimController;
     }
     public void InitState()
     {
-        aniController.ChangeAnimation(QuerySDMecanimController.QueryChanSDAnimationType.NORMAL_FLY_UP);
+        AniController.ChangeAnimation(QuerySDMecanimController.QueryChanSDAnimationType.NORMAL_FLY_UP);
         KojeomCoroutineHelper.singleton.StartCoroutineService(Jump(), "Jump");
     }
 
@@ -34,24 +34,24 @@ public class PlayerJumpState : IState
     private System.Collections.IEnumerator Jump()
     {
         //
-        Vector3 startPos = gamePlayer.transform.position;
-        Vector3 destPos = startPos + (gamePlayer.transform.up * jumpScale);
+        Vector3 startPos = GamePlayer.transform.position;
+        Vector3 destPos = startPos + (GamePlayer.transform.up * JumpScale);
         while (t <= 1.0f)
         {
-            World containWorld = WorldManager.instance.ContainedWorld(gamePlayer.transform.position);
-            Vector3 topOffsetedPos = gamePlayer.transform.position;
+            World containWorld = WorldManager.instance.ContainedWorld(GamePlayer.transform.position);
+            Vector3 topOffsetedPos = GamePlayer.transform.position;
             topOffsetedPos += new Vector3(0.0f, 0.1f, 0.0f);
 
             CollideInfo collideInfo = containWorld.CustomOctree.Collide(topOffsetedPos);
             if (collideInfo.isCollide == false)
             {
-                startPos = gamePlayer.transform.position;
+                startPos = GamePlayer.transform.position;
                 destPos.x = startPos.x;
                 destPos.z = startPos.z;
 
                 Vector3 newPos = Vector3.Lerp(startPos, destPos, t);
-                gamePlayer.transform.position = newPos;
-                t += (Time.deltaTime * jumpSpeed);
+                GamePlayer.transform.position = newPos;
+                t += (Time.deltaTime * JumpSpeed);
             }
             yield return null;
         }
