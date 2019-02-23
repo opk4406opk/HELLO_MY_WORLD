@@ -5,10 +5,11 @@ using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 
+
 public enum TCPServerType
 {
-    Main,
-    Login
+    Login,
+    Game
 }
 
 /// <summary>
@@ -49,14 +50,21 @@ public class SocketNetworkManager : MonoBehaviour {
                 clientSocket = new Socket(ipEndpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 var aSyncresult = clientSocket.BeginConnect(ipEndpoint, OnConnectToServer, clientSocket);
                 break;
-            case TCPServerType.Main:
+            case TCPServerType.Game:
                 break;
         }
     }
 
     public void SendToServer(TCPServerType type)
     {
-
+        switch (type)
+        {
+            case TCPServerType.Login:
+                //clientSocket.Send(new LoginPacket());
+                break;
+            case TCPServerType.Game:
+                break;
+        }
     }
 
     private void OnConnectToServer(IAsyncResult ar)
@@ -64,6 +72,7 @@ public class SocketNetworkManager : MonoBehaviour {
         // call back.
         // Retrieve the socket from the state object.  
         Socket client = (Socket)ar.AsyncState;
+        SendToServer(TCPServerType.Game);
         // Complete the connection.  
         client.EndConnect(ar);
     }
