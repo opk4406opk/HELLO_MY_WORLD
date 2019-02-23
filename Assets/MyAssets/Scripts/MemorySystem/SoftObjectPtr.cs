@@ -12,7 +12,10 @@ public class SoftObjectPtr
    
     public GameObject LoadSynchro()
     {
-        Obj = Resources.Load<GameObject>(ObjectPath);
+        if(Obj == null)
+        {
+            Obj = Resources.Load<GameObject>(ObjectPath);
+        }
         return Obj;
     }
 

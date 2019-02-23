@@ -36,6 +36,11 @@ public class KojeomUtility
         return (T)Enum.Parse(typeof(T), value, ignoreCase);
     }
 
+    public static string EnumToString<T>(T value)
+    {
+        return value.ToString();
+    }
+
     public static T GetActorDetailTypeFromAssetPath<T>(string assetPath)
     {
         string prefabName = assetPath.Substring(assetPath.LastIndexOf('/') + 1);

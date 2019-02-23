@@ -21,7 +21,7 @@ public class World : MonoBehaviour
 
     public ChunkSlot[,,] ChunkSlots { get; private set; }
 
-    public bool IsLoadSyncroFinish { get; private set; } = false;
+    public bool IsLoadFinish { get; private set; } = false;
 
     #region world infomation.
     public string WorldName { get; private set; }
@@ -34,8 +34,7 @@ public class World : MonoBehaviour
     private int ChunkSize = 0;
     private int ChunkNumber = 0;
     public CustomOctree CustomOctree { get; private set; } = new CustomOctree();
-    //
-    public List<Actor> RegisteredActors { get; private set; } = new List<Actor>();
+
     private InGameObjectRegister InGameObjRegister;
 
     public void Init(SubWorldData worldData)
@@ -51,7 +50,7 @@ public class World : MonoBehaviour
     public void LoadSyncro(Vector3 pos)
 	{
         InGameObjRegister = new InGameObjectRegister();
-        InGameObjRegister.Initialize(this);
+        InGameObjRegister.Initialize();
         //
         var gameWorldConfig = WorldConfigFile.instance.GetConfig();
         CustomOctree.Init(pos, new Vector3(gameWorldConfig.sub_world_x_size + pos.x, 
@@ -105,8 +104,6 @@ public class World : MonoBehaviour
         {
             LoadChunkProcess();
         }
-
-        IsLoadSyncroFinish = true;
     }
 
     //void OnDrawGizmos()
@@ -176,6 +173,12 @@ public class World : MonoBehaviour
                 }
             }
         KojeomLogger.DebugLog(string.Format("World name : {0} Chunk 로드를 완료했습니다.", WorldName), LOG_TYPE.DEBUG_TEST);
+        // 월드 로딩이 끝나면 속해있는 Actor들은 모두 Show.
+        foreach (var actor in InGameObjRegister.RegisteredActors)
+        {
+            actor.Show();
+        }
+        IsLoadFinish = true;
         OnFinishLoadChunks(UniqueID);
     }
 

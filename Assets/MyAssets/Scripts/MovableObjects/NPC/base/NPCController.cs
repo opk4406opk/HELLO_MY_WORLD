@@ -25,12 +25,10 @@ public class NPCController : ActorController
 
     public override void StartController()
     {
-        StartCoroutine(SimpleGravityForce());
     }
 
     public override void StopController()
     {
-        StopCoroutine(SimpleGravityForce());
     }
 
     public override void LookAt(Vector3 dir)
@@ -52,19 +50,4 @@ public class NPCController : ActorController
     {
         return transform;
     }
-    private IEnumerator SimpleGravityForce()
-    {
-        for (;;)
-        {
-            CollideInfo collideInfo = ContainWorld.CustomOctree.Collide(transform.position);
-            if (!collideInfo.isCollide)
-            {
-                transform.position = new Vector3(transform.position.x,
-                    transform.position.y - 0.1f,
-                    transform.position.z);
-            }
-            yield return null;
-        }
-    }
-
 }

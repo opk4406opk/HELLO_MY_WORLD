@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCManager : MovableObjectSpawner
+public class NPCManager : NPCSpawner
 {
     public List<Actor> NPCGroup { get; private set; } = new List<Actor>();
     private Actor LastestClickedActor;
@@ -37,22 +37,27 @@ public class NPCManager : MovableObjectSpawner
         LastestClickedActor = actor;
     }
 
-    public override void Spawn()
+    public override void RandomSpawn()
     { 
-        // 돌아다니는 상인 NPC 생성.
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
         foreach (var data in NPCDataFile.Instance.NpcSpawnDatas)
         {
-            //GameObject npc = Instantiate(prefab_roamingMerchantNPC, data.spawnPos, Quaternion.identity);
-            //var roamingMerchant = npc.GetComponent<RoamingMerchant>();
-            //roamingMerchant.Init(data.spawnPos,
-            //    WorldManager.instance.wholeWorldStates[data.WorldUniqueID].subWorldInstance,
-            //    ACTOR_TYPE.NPC);
-            //roamingMerchant.sellingItemIDs = data.sellingItemsID;
-            //roamingMerchant.textMeshController.Init(gameConfig.ingame_font_size);
-            //roamingMerchant.textMeshController.SetText(data.name);
-            //roamingMerchant.OnClickedActor += OnClickedActor;
-            //npcs.Add(roamingMerchant);
+            
+        }
+    }
+
+    public override void Spawn(NPC_TYPE npcType, World world, int num, bool initShow = false)
+    {
+        Actor instance = Instantiate(PrefabStorage.Instance.ActorPrefabs[(int)ACTOR_TYPE.NPC].Group[(int)npcType].LoadSynchro(), Vector3.zero, Quaternion.identity).GetComponent<Actor>();
+        //
+        NPCSpawnData spawnData;
+        NPCDataFile.Instance.NpcSpawnDatas.TryGetValue(npcType, out spawnData);
+        switch(npcType)
+        {
+            case NPC_TYPE.MERCHANT:
+            case NPC_TYPE.GUARD:
+                instance.Init(spawnData, world);
+                break;
         }
     }
 }

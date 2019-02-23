@@ -5,7 +5,7 @@ using UnityEngine;
 
 // bug issue # 1 : http://answers.unity3d.com/questions/745685/nullreferenceexception-on-startcoroutine.html
 
-public class RoamingMerchant : Actor, INpc, IMerchantNPC
+public class RoamingMerchant : NPCActor, IMerchantNPC
 {
     public override event del_OnClickActor OnClickedActor;
 
@@ -21,14 +21,18 @@ public class RoamingMerchant : Actor, INpc, IMerchantNPC
         SellingItemIds = ids;
     }
 
-    public override void Init(Vector3 pos, World world, ACTOR_TYPE actorType)
+    public override void Init(ActorSpawnData spawnData, World world)
     {
-        ActorType = actorType;
+        ActorType = spawnData.ActorType;
+        HealthPoint = spawnData.HP;
+        MagicaPoint = spawnData.MP;
+        AttackPoint = spawnData.AP;
+        Name = spawnData.NAME;
+        NpcType = ((NPCSpawnData)spawnData).NpcType;
+        //
         Controller = gameObject.AddComponent<NPCController>();
         Controller.Init(world);
-        gameObject.transform.position = pos;
     }
-
     public override ActorController GetController()
     {
         return Controller;
@@ -50,4 +54,15 @@ public class RoamingMerchant : Actor, INpc, IMerchantNPC
     {
         // to do
     }
+
+    public override void Show()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public override void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+
 }

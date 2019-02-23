@@ -7,7 +7,7 @@ public interface INpc
     void Talk();
 }
 
-public interface IMerchantNPC
+public interface IMerchantNPC : INpc
 {
     List<int> GetSellingItemIDList();
     void SetSellingItemIDList(List<int> ids);

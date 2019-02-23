@@ -2,15 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct NPCSpawnData
-{
-    public int HP;
-    public int MP;
-    public int AP;
-    public string NAME;
-    public NPC_TYPE TYPE;
-}
-
 public class NPCDataFile {
     
     private JSONObject JsonObject;
@@ -18,7 +9,7 @@ public class NPCDataFile {
  
     public static NPCDataFile Instance = null;
     //
-    public List<NPCSpawnData> NpcSpawnDatas { get; private set; } = new List<NPCSpawnData>();
+    public Dictionary<NPC_TYPE, NPCSpawnData> NpcSpawnDatas { get; private set; } = new Dictionary<NPC_TYPE, NPCSpawnData>();
 
 	public void Init()
     {
@@ -50,9 +41,9 @@ public class NPCDataFile {
             spawnData.NAME = outValue;
             //
             data.TryGetValue("TYPE", out outValue);
-            spawnData.TYPE = KojeomUtility.StringToEnum<NPC_TYPE>(outValue);
+            spawnData.NpcType = KojeomUtility.StringToEnum<NPC_TYPE>(outValue);
             //
-            NpcSpawnDatas.Add(spawnData);
+            NpcSpawnDatas.Add(spawnData.NpcType, spawnData);
         }
     }
 

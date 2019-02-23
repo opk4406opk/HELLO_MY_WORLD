@@ -11,10 +11,9 @@ public enum InGameObjectType
 
 public class InGameObjectRegister
 {
-    private World world;
-    public void Initialize(World world)
+    public List<Actor> RegisteredActors { get; private set; } = new List<Actor>();
+    public void Initialize()
     {
-        this.world = world;
     }
 
     public void Register(GameObject obj)
@@ -24,7 +23,7 @@ public class InGameObjectRegister
 
     public void Register(Actor actor)
     {
-        world.RegisteredActors.Add(actor);
+        RegisteredActors.Add(actor);
     }
 
     public void UnRegister(InGameObjectType objectType, GameObject obj)
@@ -34,7 +33,7 @@ public class InGameObjectRegister
             case InGameObjectType.OBJECT:
                 break;
             case InGameObjectType.ACTOR:
-                world.RegisteredActors.Remove(obj.GetComponent<Actor>());
+                RegisteredActors.Remove(obj.GetComponent<Actor>());
                 break;
         }
     }

@@ -15,7 +15,7 @@ public enum GAMEPLAYER_CHAR_STATE
 }
 public class GamePlayerController : MonoBehaviour {
 
-    private Camera playerCamera;
+    private Camera PlayerCamera;
     //
     #region cam_option
     private List<float> camRotArrayX = new List<float>();
@@ -50,9 +50,9 @@ public class GamePlayerController : MonoBehaviour {
 
     public void Init(Camera mainCam, GamePlayer gamePlayer)
     {
-        playerCamera = mainCam;
+        PlayerCamera = mainCam;
         //
-        camOrigRotation = playerCamera.transform.localRotation;
+        camOrigRotation = PlayerCamera.transform.localRotation;
         // 게임 플레이어가 아닌, 하위 오브젝트인 캐릭터 인스턴스 방향을 변경해야한다.
         playerOrigRotation = CharacterInstance.transform.localRotation;
         //
@@ -161,28 +161,28 @@ public class GamePlayerController : MonoBehaviour {
         Quaternion xQuaternion = Quaternion.AngleAxis(camRotAverageX, Vector3.up);
 
         // rot cam
-        playerCamera.transform.localRotation = camOrigRotation * xQuaternion * yQuaternion;
+        PlayerCamera.transform.localRotation = camOrigRotation * xQuaternion * yQuaternion;
         // rot player
         CharacterInstance.transform.localRotation = playerOrigRotation * xQuaternion;
     }
 
     private void FixedUpdate()
     {
-        if (CharacterInstance == null || WorldManager.instance == null)
+        if (CharacterInstance == null || WorldManager.instance == null || PlayerCamera == null)
         {
             return;
         }
         //
         Vector3 playerPos = CharacterInstance.transform.position;
         playerPos.y += 2.0f;
-        playerCamera.transform.position = playerPos;
+        PlayerCamera.transform.position = playerPos;
 
         World containWorld = WorldManager.instance.ContainedWorld(CharacterInstance.transform.position);
         if (containWorld == null)
         {
             return;
         }
-        else if(containWorld != null && containWorld.IsLoadSyncroFinish == false)
+        else if(containWorld != null && containWorld.IsLoadFinish == false)
         {
             return;
         }
