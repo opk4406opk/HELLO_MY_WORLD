@@ -220,7 +220,7 @@ public class P2PNetworkManager : NetworkManager {
     {
         gameRandomSeed = seed;
         UnityEngine.Random.InitState(seed);
-        KojeomLogger.DebugLog(string.Format("GameRandomSeed Init. seed value : {0}", seed), LOG_TYPE.NETWORK_MANAGER_INFO);
+        KojeomLogger.DebugLog(string.Format("GameRandomSeed Init. seed value : {0}", seed), LOG_TYPE.P2P_NETWORK_MANAGER_INFO);
     }
    
     private static int gameRandomSeed = 0;
@@ -245,10 +245,10 @@ public class P2PNetworkManager : NetworkManager {
     /// </summary>
     public void LateInit()
     {
-        KojeomLogger.DebugLog("게임네트워크 매니저 늦은 초기화(서버/클라이언트 셋팅) 시작.", LOG_TYPE.NETWORK_MANAGER_INFO);
+        KojeomLogger.DebugLog("게임네트워크 매니저 늦은 초기화(서버/클라이언트 셋팅) 시작.", LOG_TYPE.P2P_NETWORK_MANAGER_INFO);
         ServerSettings();
         ClientSettings();
-        KojeomLogger.DebugLog("게임네트워크 매니저 늦은 초기화(서버/클라이언트 셋팅) 완료.", LOG_TYPE.NETWORK_MANAGER_INFO);
+        KojeomLogger.DebugLog("게임네트워크 매니저 늦은 초기화(서버/클라이언트 셋팅) 완료.", LOG_TYPE.P2P_NETWORK_MANAGER_INFO);
     }
 
     private void ServerSettings()
@@ -299,7 +299,7 @@ public class P2PNetworkManager : NetworkManager {
     {
         base.OnServerConnect(conn);
         KojeomLogger.DebugLog(string.Format("[OnServerConnect] connection INFO :{0} 서버에 접속했습니다.", conn),
-            LOG_TYPE.NETWORK_SERVER_INFO);
+            LOG_TYPE.P2P_NETWORK_SERVER_INFO);
     }
 
     // client입장에서 서버에 접속시에 불려지는 콜백 메소드.
@@ -307,7 +307,7 @@ public class P2PNetworkManager : NetworkManager {
     public override void OnClientConnect(NetworkConnection conn)
     {
         clientNetworkConnection = conn;
-        KojeomLogger.DebugLog("서버로 접속을 했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
+        KojeomLogger.DebugLog("서버로 접속을 했습니다.", LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
         //서버한테 Game에서 사용하게 될 RandomSeed를 요청한다.
         //Host(Client & Server)인 경우에는 따로 요청을 할 필요가 없다.
         if(isHost == false)
@@ -331,8 +331,8 @@ public class P2PNetworkManager : NetworkManager {
             ClientScene.Ready(conn);
         }
         bool isSuccesAddPlayer = ClientScene.AddPlayer(conn, (short)clientNetworkConnection.connectionId, msgData);
-        if (isSuccesAddPlayer == true) KojeomLogger.DebugLog("ClientScene.AddPlayer is Success.", LOG_TYPE.NETWORK_CLIENT_INFO);
-        else KojeomLogger.DebugLog("ClientScene.AddPlayer is Failed.", LOG_TYPE.NETWORK_CLIENT_INFO);
+        if (isSuccesAddPlayer == true) KojeomLogger.DebugLog("ClientScene.AddPlayer is Success.", LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
+        else KojeomLogger.DebugLog("ClientScene.AddPlayer is Failed.", LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
     }
     
     private void ResCharStateToAllUsers(P2PMessageGameCharState charStateMsg)
@@ -346,7 +346,7 @@ public class P2PNetworkManager : NetworkManager {
                 NetworkServer.SendToClient(user.Value.connectionID,
                     (short)P2P_NETWORK_PROTOCOL.res_charStateToAllUser, charStateMsg);
                 KojeomLogger.DebugLog(string.Format("client[id:{0}] 에게 client[id:{1}]의state정보를 모든 클라이언트에 전송 했습니다.",
-                    user.Value.connectionID, charStateMsg.ownerConnID), LOG_TYPE.NETWORK_SERVER_INFO);
+                    user.Value.connectionID, charStateMsg.ownerConnID), LOG_TYPE.P2P_NETWORK_SERVER_INFO);
             }
         }
     }
@@ -359,14 +359,14 @@ public class P2PNetworkManager : NetworkManager {
     {
         var netPlayerData = netMsg.ReadMessage<P2PMessageGameNetPlayerData>();
         KojeomLogger.DebugLog(string.Format("conneted clinet info [ connection_id : {0}, addr : {1}, selectChType : {2} ]",
-            netPlayerData.connectionID, netPlayerData.address, netPlayerData.selectChType), LOG_TYPE.NETWORK_SERVER_INFO);
+            netPlayerData.connectionID, netPlayerData.address, netPlayerData.selectChType), LOG_TYPE.P2P_NETWORK_SERVER_INFO);
     }
 
     private void OnRecvFromClient_CharState(NetworkMessage netMsg)
     {
         var clientCharState = netMsg.ReadMessage<P2PMessageGameCharState>();
         KojeomLogger.DebugLog(string.Format("connID : {0} current chracter state : {1}",
-            clientCharState.ownerConnID, clientCharState.ownerCharState), LOG_TYPE.NETWORK_SERVER_INFO);
+            clientCharState.ownerConnID, clientCharState.ownerCharState), LOG_TYPE.P2P_NETWORK_SERVER_INFO);
         ResCharStateToAllUsers(clientCharState);
     }
     private void OnRecvFromClient_ReqGameUserList(NetworkMessage netMsg)
@@ -395,7 +395,7 @@ public class P2PNetworkManager : NetworkManager {
         NetworkServer.SendToClient(msg.connectionID, (short)P2P_NETWORK_PROTOCOL.res_gameRandomSeed, responseNetMsg);
         KojeomLogger.DebugLog(string.Format("GameRandomSeed val :{0} 을 클라이언트(connID : {1})에게 전송했습니다.", 
             responseNetMsg.randomSeed, msg.connectionID),
-            LOG_TYPE.NETWORK_SERVER_INFO);
+            LOG_TYPE.P2P_NETWORK_SERVER_INFO);
     }
 
     private void OnRecvFromClient_PushGameChatMsg(NetworkMessage netMsg)
@@ -405,8 +405,8 @@ public class P2PNetworkManager : NetworkManager {
         responseChatMsg.gameChatMessage = msg.gameChatMessage;
         bool isSuccess = NetworkServer.SendToAll((short)P2P_NETWORK_PROTOCOL.res_ChatMsgToAllUser, responseChatMsg);
 
-        if (isSuccess == true) KojeomLogger.DebugLog("게임채팅 메세지를 모든 클라이언트에 전송 했습니다.", LOG_TYPE.NETWORK_SERVER_INFO);
-        else KojeomLogger.DebugLog("게임채팅 메세지를 모든 클라이언트에 전송 실패했습니다.", LOG_TYPE.NETWORK_SERVER_INFO);
+        if (isSuccess == true) KojeomLogger.DebugLog("게임채팅 메세지를 모든 클라이언트에 전송 했습니다.", LOG_TYPE.P2P_NETWORK_SERVER_INFO);
+        else KojeomLogger.DebugLog("게임채팅 메세지를 모든 클라이언트에 전송 실패했습니다.", LOG_TYPE.P2P_NETWORK_SERVER_INFO);
     }
     #endregion
 
@@ -414,13 +414,13 @@ public class P2PNetworkManager : NetworkManager {
     private void OnRecvFromServer_GameUserList(NetworkMessage netMsg)
     {
         var userListInfo = netMsg.ReadMessage<P2PMessageGameUserList>();
-        KojeomLogger.DebugLog("서버로부터 유저리스트를 응답받았습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
+        KojeomLogger.DebugLog("서버로부터 유저리스트를 응답받았습니다.", LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
         var userList = userListInfo.userList;
         for (int idx = 0; idx < userListInfo.userList.GetLength(0); idx++)
         {
             KojeomLogger.DebugLog(string.Format("[user_info] connID : {0}, name : {1}, charType : {2}",
                 userList[idx].connectionID, userList[idx].userName,
-                userList[idx].selectCharType), LOG_TYPE.NETWORK_CLIENT_INFO);
+                userList[idx].selectCharType), LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
             // 서버로부터 받은 유저리스트를 클라이언트 유저리스트에 저장한다.
             P2PGameNetUser netUser = new P2PGameNetUser(userList[idx].userName, userList[idx].connectionID, userList[idx].selectCharType);
             if(netUserList.ContainsKey(userList[idx].connectionID) == false)
@@ -438,7 +438,7 @@ public class P2PNetworkManager : NetworkManager {
         {
             KojeomLogger.DebugLog(string.Format("서버로부터 ConnID : {0} 유저의 GamePlayer State(:{1})를 수신했습니다.",
                 gameCharState.ownerConnID, gameCharState.ownerCharState),
-                LOG_TYPE.NETWORK_CLIENT_INFO);
+                LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
         }
     }
 
@@ -446,7 +446,7 @@ public class P2PNetworkManager : NetworkManager {
     {
         var msg = netMsg.ReadMessage<P2PMessageGameChat>();
         KojeomLogger.DebugLog(string.Format("{0} : 채팅 메세지를 서버로부터 수신했습니다.", msg.gameChatMessage), 
-            LOG_TYPE.NETWORK_CLIENT_INFO);
+            LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
         if(InGameUISupervisor.singleton != null)
         {
             InGameUISupervisor.singleton.SetMsgToChattingLog(msg.gameChatMessage,
@@ -458,7 +458,7 @@ public class P2PNetworkManager : NetworkManager {
     {
         var msg = netMsg.ReadMessage<P2PMessageGameRandSeed>();
         KojeomLogger.DebugLog(string.Format("GameRandSeed val : {0} 을 서버로부터 수신했습니다.", msg.randomSeed),
-           LOG_TYPE.NETWORK_CLIENT_INFO);
+           LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
         InitGameRandomSeed(msg.randomSeed);
         P2PNetworkStateFlagBoard.isReceivedRandomSeedFormServer = true;
     }
@@ -466,7 +466,7 @@ public class P2PNetworkManager : NetworkManager {
     private void ResNetUserList(int clientConnID, P2PMessageGameUserList resUserList)
     {
         KojeomLogger.DebugLog(string.Format("clientConnID : {0} 에게 GameUser List를 전달했습니다.", clientConnID),
-          LOG_TYPE.NETWORK_SERVER_INFO);
+          LOG_TYPE.P2P_NETWORK_SERVER_INFO);
         NetworkServer.SendToClient(clientConnID, (short)P2P_NETWORK_PROTOCOL.res_inGameUserList,
             resUserList);
     }
@@ -480,9 +480,9 @@ public class P2PNetworkManager : NetworkManager {
         {
             KojeomLogger.DebugLog(string.Format("클라이언트(id :{0})가 게임유저리스트 요청을 서버로 전달했습니다.",
             client.connection.connectionId),
-            LOG_TYPE.NETWORK_CLIENT_INFO);
+            LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
         } 
-        else KojeomLogger.DebugLog("게임유저리스트 요청이 실패했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
+        else KojeomLogger.DebugLog("게임유저리스트 요청이 실패했습니다.", LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
     }
 
     public void ReqGameRandomSeed()
@@ -490,8 +490,8 @@ public class P2PNetworkManager : NetworkManager {
         P2PMessageGameRandSeed reqRandSeed = new P2PMessageGameRandSeed();
         reqRandSeed.connectionID = clientNetworkConnection.connectionId;
         bool isSuccess = clientNetworkConnection.Send((short)P2P_NETWORK_PROTOCOL.req_gameRandomSeed, reqRandSeed);
-        if (isSuccess == true) KojeomLogger.DebugLog("게임랜덤시드 요청을 서버로 전달했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
-        else KojeomLogger.DebugLog("게임랜덤시드 요청이 실패했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
+        if (isSuccess == true) KojeomLogger.DebugLog("게임랜덤시드 요청을 서버로 전달했습니다.", LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
+        else KojeomLogger.DebugLog("게임랜덤시드 요청이 실패했습니다.", LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
     }
 
     public void PushChatMessage(string chatMessage)
@@ -500,8 +500,8 @@ public class P2PNetworkManager : NetworkManager {
         pushChatMsg.gameChatMessage = chatMessage;
         bool isSuccess = client.connection.Send((short)P2P_NETWORK_PROTOCOL.push_ChatMsgToServer, pushChatMsg);
 
-        if (isSuccess == true) KojeomLogger.DebugLog("게임채팅 메세지 데이터를 서버로 전달했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
-        else KojeomLogger.DebugLog("게임채팅 메세지 데이터 전달에 실패했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
+        if (isSuccess == true) KojeomLogger.DebugLog("게임채팅 메세지 데이터를 서버로 전달했습니다.", LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
+        else KojeomLogger.DebugLog("게임채팅 메세지 데이터 전달에 실패했습니다.", LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
     }
 
     public void PushCharStateMessage(GAMEPLAYER_CHAR_STATE charState)
@@ -514,8 +514,8 @@ public class P2PNetworkManager : NetworkManager {
             pushStateMsg.ownerConnID = clientNetworkConnection.connectionId;
             isSuccess = clientNetworkConnection.Send((short)P2P_NETWORK_PROTOCOL.push_charStateToServer, pushStateMsg);
 
-            if (isSuccess == false) KojeomLogger.DebugLog("현재 게임캐릭터 스테이트 정보를 서버에 전달 실패했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
-            else KojeomLogger.DebugLog("현재 게임캐릭터 스테이트 정보를 서버에 전달 성공했습니다.", LOG_TYPE.NETWORK_CLIENT_INFO);
+            if (isSuccess == false) KojeomLogger.DebugLog("현재 게임캐릭터 스테이트 정보를 서버에 전달 실패했습니다.", LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
+            else KojeomLogger.DebugLog("현재 게임캐릭터 스테이트 정보를 서버에 전달 성공했습니다.", LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
         }
     }
     #endregion
@@ -580,7 +580,7 @@ public class P2PNetworkManager : NetworkManager {
     {
         var msg = extraMessageReader.ReadMessage<P2PMessageGameNetPlayerData>();
         KojeomLogger.DebugLog(string.Format("[OnServerAddPlayer] netConn : {0}, playerControllerId : {1}, playerName : {2}",
-           conn, playerControllerId, msg.playerName), LOG_TYPE.NETWORK_SERVER_INFO);
+           conn, playerControllerId, msg.playerName), LOG_TYPE.P2P_NETWORK_SERVER_INFO);
         // instancing..
         GameObject instance = Instantiate(playerPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         instance.name = msg.playerName;
@@ -588,8 +588,8 @@ public class P2PNetworkManager : NetworkManager {
         GamePlayer gamePlayer = instance.GetComponent<GamePlayer>();
         // 네트워크 서버에 플레이어 등록.
         var addPlayerSuccess = NetworkServer.AddPlayerForConnection(conn, instance, playerControllerId);
-        if (addPlayerSuccess) KojeomLogger.DebugLog(string.Format("Successed add Player to Server (connID : {0}", conn.connectionId),LOG_TYPE.NETWORK_SERVER_INFO);
-        else KojeomLogger.DebugLog(string.Format("Failed add Player to Server (connID : {0}", conn.connectionId), LOG_TYPE.NETWORK_SERVER_INFO);
+        if (addPlayerSuccess) KojeomLogger.DebugLog(string.Format("Successed add Player to Server (connID : {0}", conn.connectionId),LOG_TYPE.P2P_NETWORK_SERVER_INFO);
+        else KojeomLogger.DebugLog(string.Format("Failed add Player to Server (connID : {0}", conn.connectionId), LOG_TYPE.P2P_NETWORK_SERVER_INFO);
         // 서버에 접속한 유저의 캐릭터를 생성 후, 이를 유저리스트에 등록한다. 
         P2PGameNetUser gameNetUser = new P2PGameNetUser(msg.playerName, msg.connectionID, msg.selectChType, gamePlayer);
         if(netUserList.ContainsKey(conn.connectionId) == false)
@@ -599,22 +599,22 @@ public class P2PNetworkManager : NetworkManager {
         else
         {
             KojeomLogger.DebugLog(string.Format("[OnServerAddPlayer] connection Info : {0} 는 이미 NetUserList에 있습니다. 새로 등록하지 않습니다.",
-          conn), LOG_TYPE.NETWORK_SERVER_INFO);
+          conn), LOG_TYPE.P2P_NETWORK_SERVER_INFO);
         }
     }
    
     public override void OnServerDisconnect(NetworkConnection conn)
     {
         base.OnServerDisconnect(conn);
-        KojeomLogger.DebugLog(string.Format("connID : {0} 유저가 접속을 종료했습니다.", conn.connectionId), LOG_TYPE.NETWORK_SERVER_INFO);
+        KojeomLogger.DebugLog(string.Format("connID : {0} 유저가 접속을 종료했습니다.", conn.connectionId), LOG_TYPE.P2P_NETWORK_SERVER_INFO);
         bool deleteSuccess = DeleteUserInList(conn.connectionId);
         if (deleteSuccess)
         {
-            KojeomLogger.DebugLog(string.Format("connID : {0} 유저를 게임유저 목록에서 삭제했습니다.", conn.connectionId), LOG_TYPE.NETWORK_SERVER_INFO);
+            KojeomLogger.DebugLog(string.Format("connID : {0} 유저를 게임유저 목록에서 삭제했습니다.", conn.connectionId), LOG_TYPE.P2P_NETWORK_SERVER_INFO);
         }
         else
         {
-            KojeomLogger.DebugLog(string.Format("connID : {0} 유저를 게임유저 목록에서 삭제 실패했습니다.", conn.connectionId), LOG_TYPE.NETWORK_SERVER_ERROR);
+            KojeomLogger.DebugLog(string.Format("connID : {0} 유저를 게임유저 목록에서 삭제 실패했습니다.", conn.connectionId), LOG_TYPE.P2P_NETWORK_SERVER_ERROR);
         }
     }
 

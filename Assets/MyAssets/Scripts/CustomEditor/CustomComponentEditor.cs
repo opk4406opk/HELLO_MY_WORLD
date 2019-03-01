@@ -17,13 +17,14 @@ public class CustomComponentEditor : EditorWindow
         if (GUILayout.Button("Add BoxCollider to CharPrefabs")) AddBoxColliderToCharPerfabs();
         if (GUILayout.Button("Add CharacterController to CharPrefabs")) AddCharControllerToCharPrefabs();
         if (GUILayout.Button("Add RigidBody to CharPrefabs")) AddRigidBodyToCharPrefabs();
+        if (GUILayout.Button("Add Components to NPCPrefabs")) AddComponentsToNPCPrefabs();
         EditorGUILayout.EndToggleGroup();
     }
 
     private void AddGameCharComponentToCharPrefabs()
     {
         KojeomLogger.DebugLog("GameCharacter 컴포넌트 할당 작업 시작.");
-        GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
+        GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER_RESOURCE_PATH);
         foreach(var charPrefab in charPrefabs)
         {
             if(charPrefab.GetComponent<GameCharacterInstance>() == null)
@@ -42,7 +43,7 @@ public class CustomComponentEditor : EditorWindow
     private void AddBoxColliderToCharPerfabs()
     {
         KojeomLogger.DebugLog("BoxCollider 컴포넌트 할당 작업 시작.");
-        GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
+        GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER_RESOURCE_PATH);
         foreach (var element in charPrefabs)
         {
             if (element.GetComponent<BoxCollider>() == null)
@@ -59,11 +60,41 @@ public class CustomComponentEditor : EditorWindow
         }
         KojeomLogger.DebugLog("GameCharacter 컴포넌트 할당 작업 완료.");
     }
+    
+    private void AddComponentsToNPCPrefabs()
+    {
+        KojeomLogger.DebugLog("NPC 프리팹에 필수적인 컴포넌트 추가 작업 시작.");
+        GameObject[] npcPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.NPC_PREFABS_RESOURCE_PATH);
+        foreach (var element in npcPrefabs)
+        {
+            if (element.GetComponent<BoxCollider>() == null)
+            {
+                var coll = element.AddComponent<BoxCollider>();
+                coll.size = new Vector3(0.3f, 1.0f, 0.3f);
+                coll.center = new Vector3(0.0f, 0.5f, 0.0f);
+            }
+            //
+            if(element.GetComponent<NPCController>() == null)
+            {
+                element.AddComponent<NPCController>();
+            }
+            //
+            //ref : https://docs.unity3d.com/ScriptReference/PrefabUtility.InstantiatePrefab.html
+            if (element.GetComponentInChildren<TMPro.TextMeshPro>() == null)
+            {
+                var meshInstance = Instantiate(Resources.Load<TMPro.TextMeshPro>(ConstFilePath.ACTOR_COMMONS_NAME_RESOURCE_PATH), Vector3.zero, Quaternion.identity);
+                meshInstance.transform.SetParent(element.transform);
+                DestroyImmediate(meshInstance);
+            }
+            PrefabUtility.SavePrefabAsset(element);
+        }
+        KojeomLogger.DebugLog("NPC 프리팹에 필수적인 컴포넌트 추가 작업 완료.");
+    }
 
     private void AddCharControllerToCharPrefabs()
     {
         KojeomLogger.DebugLog("CharacterController 컴포넌트 할당 작업 시작.");
-        GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
+        GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER_RESOURCE_PATH);
         foreach (var element in charPrefabs)
         {
             if (element.GetComponent<CharacterController>() == null)
@@ -82,7 +113,7 @@ public class CustomComponentEditor : EditorWindow
     private void AddRigidBodyToCharPrefabs()
     {
         KojeomLogger.DebugLog("Rigidbody 컴포넌트 할당 작업 시작.");
-        GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
+        GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER_RESOURCE_PATH);
         foreach (var element in charPrefabs)
         {
             var comp = element.GetComponent<Rigidbody>();
@@ -99,10 +130,15 @@ public class CustomComponentEditor : EditorWindow
         KojeomLogger.DebugLog("Rigidbody 컴포넌트 할당 작업 완료.");
     }
 
+    private void AddComponentToPrefab<T>()
+    {
+
+    }
+
     private void RemoveComponent<T>()
     {
         KojeomLogger.DebugLog("컴포넌트 삭제 작업 시작.");
-        GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
+        GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER_RESOURCE_PATH);
         foreach (var element in charPrefabs)
         {
             T component = element.GetComponent<T>();

@@ -29,12 +29,12 @@ public class ConstFilePath
     /// <summary>
     /// Resource.Load 사용시에 쓰이는 캐릭터 RT 리소스 상대경로.
     /// </summary>
-    public readonly static string SELECT_CHARS_RT_RESOURCES_PATH = "Texture(RT)/userCharacters/{0}";
+    public readonly static string SELECT_CHARS_RT_RESOURCE_PATH = "Texture(RT)/userCharacters/{0}";
 
     /// <summary>
     /// 캐릭터 프리팹이 위치한 path.
     /// </summary>
-    public readonly static string PREFAB_CHARACTER = "GamePrefabs/Characters/user/";
+    public readonly static string PREFAB_CHARACTER_RESOURCE_PATH = "GamePrefabs/Characters/user/";
 
     /// <summary>
     ///  RenderTexture에 사용될 캐릭터 프리팹이 저장될 path.
@@ -49,12 +49,12 @@ public class ConstFilePath
     /// <summary>
     /// 게임네트워크매니저 프리팹 path.
     /// </summary>
-    public readonly static string GAME_NET_MGR_PREFAB = "GamePrefabs/Network/P2PNetworkManager";
+    public readonly static string GAME_NET_MGR_PREFAB_RESOURCE_PATH = "GamePrefabs/Network/P2PNetworkManager";
 
     /// <summary>
     /// 네트워크 게임에서 사용될 플레이어 프리팹 path.
     /// </summary>
-    public readonly static string GAME_NET_PLAYER_PREFAB = "GamePrefabs/Network/GamePlayer";
+    public readonly static string GAME_NET_PLAYER_PREFAB_RESOURCE_PATH = "GamePrefabs/Network/GamePlayer";
 
     /// <summary>
     /// 캐릭터 얼굴 Texture2D 파일 path.
@@ -73,19 +73,26 @@ public class ConstFilePath
     /// <summary>
     /// 공용 청크 프리팹 경로.
     /// </summary>
-    public readonly static string COMMON_CHUNK_PREFAB = "GamePrefabs/CommonChunk";
+    public readonly static string COMMON_CHUNK_PREFAB_RESOURCE_PATH = "GamePrefabs/CommonChunk";
     /// <summary>
     /// 워터 청크 프리팹 경로.
     /// </summary>
-    public readonly static string WATER_CHUNK_PREFAB = "GamePrefabs/WaterChunk";
+    public readonly static string WATER_CHUNK_PREFAB_RESOURCE_PATH = "GamePrefabs/WaterChunk";
 
     /// <summary>
     /// 서브월드 프리팹 경로.
     /// </summary>
     public readonly static string SUB_WORLD_PREFAB = "GamePrefabs/SubWorld";
 
-    public readonly static string NPC_PREFABS = "Assets/MyAssets/Resources/GamePrefabs/Actor/NPC";
-    public readonly static string MONSTER_PREFABS = "Assets/MyAssets/Resources/GamePrefabs/Actor/MONSTER";
+    public readonly static string NPC_PREFABS_ASSET_PATH = "Assets/MyAssets/Resources/GamePrefabs/Actor/NPC";
+    public readonly static string NPC_PREFABS_RESOURCE_PATH = "GamePrefabs/Actor/NPC";
+    //
+    public readonly static string MONSTER_PREFABS_ASSET_PATH = "Assets/MyAssets/Resources/GamePrefabs/Actor/MONSTER";
+    public readonly static string MONSTER_PREFABS_RESOURCE_PATH = "GamePrefabs/Actor/MONSTER";
+    /// <summary>
+    /// Actor 공용 프리팹.
+    /// </summary>
+    public readonly static string ACTOR_COMMONS_NAME_RESOURCE_PATH = "GamePrefabs/Actor/Commons/txt_mesh_Name";
 }
 
 

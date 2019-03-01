@@ -16,28 +16,23 @@ public enum TCPServerType
 /// TCP 소켓 네트워킹 매니저.
 /// 참고 문서 : https://docs.microsoft.com/ko-kr/dotnet/framework/network-programming/asynchronous-client-socket-example
 /// </summary>
-public class SocketNetworkManager : MonoBehaviour {
-
-    private static SocketNetworkManager _singleton = null;
-    public static SocketNetworkManager singleton
+public class SocketNetworkManager
+{
+    private static SocketNetworkManager Instance;
+    
+    public static SocketNetworkManager GetInstance()
     {
-        get
+        if(Instance == null)
         {
-            if (_singleton == null) KojeomLogger.DebugLog("SocketNetworkManager 초기화 되지 않았습니다", LOG_TYPE.ERROR);
-            return _singleton;
+            Instance = new SocketNetworkManager();
         }
-    }
-
-    public void Init()
-    {
-        KojeomLogger.DebugLog("SocketNetworkManager Init.", LOG_TYPE.INFO);
-        _singleton = this;
+        return Instance;
     }
 
     /// <summary>
     ///  client  socket.
     /// </summary>
-    private Socket clientSocket;
+    private Socket ClientSocket;
 
     public void ConnectToServer(TCPServerType type)
     {
@@ -46,9 +41,13 @@ public class SocketNetworkManager : MonoBehaviour {
         switch (type)
         {
             case TCPServerType.Login:
+                //
+                KojeomLogger.DebugLog(string.Format("{0} 로그인서버로 접속 시도합니다.", gameServerData.login_server_ip), LOG_TYPE.SYSTEM);
+                UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.waitingConnect);
+                //
                 ipEndpoint = new IPEndPoint(IPAddress.Parse(gameServerData.login_server_ip), gameServerData.login_server_port);
-                clientSocket = new Socket(ipEndpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                var aSyncresult = clientSocket.BeginConnect(ipEndpoint, OnConnectToServer, clientSocket);
+                ClientSocket = new Socket(ipEndpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                var aSyncresult = ClientSocket.BeginConnect(ipEndpoint, OnConnectToServer, ClientSocket);
                 break;
             case TCPServerType.Game:
                 break;
@@ -60,7 +59,7 @@ public class SocketNetworkManager : MonoBehaviour {
         switch (type)
         {
             case TCPServerType.Login:
-                //clientSocket.Send(new LoginPacket());
+                ClientSocket.Send(new byte[]{ byte.Parse("TEST_DUMMY_DATA")});
                 break;
             case TCPServerType.Game:
                 break;
@@ -69,11 +68,16 @@ public class SocketNetworkManager : MonoBehaviour {
 
     private void OnConnectToServer(IAsyncResult ar)
     {
+        Socket client = (Socket)ar.AsyncState;
         // call back.
         // Retrieve the socket from the state object.  
-        Socket client = (Socket)ar.AsyncState;
-        SendToServer(TCPServerType.Game);
+        KojeomLogger.DebugLog(string.Format("OnConnectToServer"), LOG_TYPE.SOCKET_NETWORK_INFO);
+        SendToServer(TCPServerType.Login);
         // Complete the connection.  
         client.EndConnect(ar);
+
+        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.waitingConnect);
+        GameSoundManager.GetInstnace().StopSound(GAME_SOUND_TYPE.BGM_mainMenu);
+        GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.SELECT_CHARACTERS);
     }
 }

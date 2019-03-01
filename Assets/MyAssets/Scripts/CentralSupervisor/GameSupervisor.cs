@@ -118,7 +118,7 @@ public class GameSupervisor : MonoBehaviour
     {
         KojeomLogger.DebugLog("InGameScene Start.", LOG_TYPE.INFO);
         //
-        GameObject netMgr = Resources.Load<GameObject>(ConstFilePath.GAME_NET_MGR_PREFAB);
+        GameObject netMgr = Resources.Load<GameObject>(ConstFilePath.GAME_NET_MGR_PREFAB_RESOURCE_PATH);
         Instantiate(netMgr, new Vector3(0, 0, 0), Quaternion.identity);
         //
         KojeomLogger.DebugLog("StartHost", LOG_TYPE.INFO);

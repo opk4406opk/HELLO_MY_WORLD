@@ -52,7 +52,7 @@ public class CharacterRenderTextureEditor : EditorWindow
 
 	private void CreateCharsDataFile()
 	{
-		GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
+		GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER_RESOURCE_PATH);
 		if (charPrefabs == null) KojeomLogger.DebugLog("캐릭터 프리팹로딩에 실패했습니다.(데이터파일생성에 필요한)", LOG_TYPE.ERROR);
 		else
 		{
@@ -129,7 +129,7 @@ public class CharacterRenderTextureEditor : EditorWindow
 
         // Instanciate character object;
         StringBuilder prefabPath = new StringBuilder();
-        prefabPath.AppendFormat(ConstFilePath.PREFAB_CHARACTER + "{0}", prefabName);
+        prefabPath.AppendFormat(ConstFilePath.PREFAB_CHARACTER_RESOURCE_PATH + "{0}", prefabName);
         GameObject character = Instantiate(Resources.Load(prefabPath.ToString()),
             new Vector3(idx * objIntervalPos, 0, idx * objIntervalPos), Quaternion.identity) as GameObject;
         character.name = chName;
@@ -154,7 +154,7 @@ public class CharacterRenderTextureEditor : EditorWindow
         cam.clearFlags = CameraClearFlags.Nothing;
 
 		StringBuilder targetRT_Path = new StringBuilder();
-        targetRT_Path.AppendFormat(ConstFilePath.SELECT_CHARS_RT_RESOURCES_PATH, rtFileName);
+        targetRT_Path.AppendFormat(ConstFilePath.SELECT_CHARS_RT_RESOURCE_PATH, rtFileName);
 		//FileStream fs = File.Open(targetRT_Path.ToString(), FileMode.Open);
 		// RenderTexture는 Texture 상속, 그리고 Texture는 오브젝트 상속.
 		RenderTexture rt = Resources.Load<RenderTexture>(targetRT_Path.ToString());

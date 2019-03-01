@@ -6,19 +6,22 @@ using System;
 
 public enum LOG_TYPE
 {
-	NORMAL = 0,
-	ERROR = 1,
-    INFO = 2,
-    NETWORK_SERVER_INFO = 3,
-    NETWORK_CLIENT_INFO = 4,
-    SYSTEM = 5,
-    EDITOR_TOOL = 6,
-    USER_INPUT = 7,
-    DATABASE = 8,
-    NETWORK_MANAGER_INFO = 9,
-    NETWORK_SERVER_ERROR = 10,
-    NETWORK_SERVER_WARNNING = 11,
-    DEBUG_TEST = 12
+	NORMAL,
+	ERROR,
+    INFO,
+    SYSTEM,
+    EDITOR_TOOL,
+    USER_INPUT,
+    DATABASE,
+    DEBUG_TEST,
+    //
+    P2P_NETWORK_SERVER_INFO,
+    P2P_NETWORK_CLIENT_INFO,
+    P2P_NETWORK_MANAGER_INFO,
+    P2P_NETWORK_SERVER_ERROR,
+    P2P_NETWORK_SERVER_WARNNING,
+    //
+    SOCKET_NETWORK_INFO
 }
 public class KojeomLogger {
     public static string GetGUIDebugLogs()
@@ -37,14 +40,14 @@ public class KojeomLogger {
         string savedLog = string.Format("[Time-stamp]{0}::[{1}]{2}\n", TimeStamp(), logType, log);
         if (logType == LOG_TYPE.ERROR ||
             logType == LOG_TYPE.EDITOR_TOOL ||
-            logType == LOG_TYPE.NETWORK_CLIENT_INFO ||
-            logType == LOG_TYPE.NETWORK_SERVER_INFO ||
-            logType == LOG_TYPE.NETWORK_SERVER_ERROR ||
-            logType == LOG_TYPE.NETWORK_SERVER_WARNNING ||
+            logType == LOG_TYPE.P2P_NETWORK_CLIENT_INFO ||
+            logType == LOG_TYPE.P2P_NETWORK_SERVER_INFO ||
+            logType == LOG_TYPE.P2P_NETWORK_SERVER_ERROR ||
+            logType == LOG_TYPE.P2P_NETWORK_SERVER_WARNNING ||
+            logType == LOG_TYPE.P2P_NETWORK_MANAGER_INFO ||
             logType == LOG_TYPE.SYSTEM ||
             logType == LOG_TYPE.INFO ||
-            logType == LOG_TYPE.DATABASE ||
-            logType == LOG_TYPE.NETWORK_MANAGER_INFO)
+            logType == LOG_TYPE.DATABASE)
         {
             logFileBuffer.Add(savedLog);
         }
@@ -69,12 +72,12 @@ public class KojeomLogger {
                 consoleLog.AppendFormat("<color=#3366FF><b>[INFO]</b></color> {0}", log);
                 guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
-            case LOG_TYPE.NETWORK_SERVER_INFO:
-                consoleLog.AppendFormat("<color=#99CCFF><b>[NETWORK_SERVER_INFO]</b></color> {0}", log);
+            case LOG_TYPE.P2P_NETWORK_SERVER_INFO:
+                consoleLog.AppendFormat("<color=#99CCFF><b>[P2P_NETWORK_SERVER_INFO]</b></color> {0}", log);
                 guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
-            case LOG_TYPE.NETWORK_CLIENT_INFO:
-                consoleLog.AppendFormat("<color=#6633FF><b>[NETWORK_CLIENT_INFO]</b></color> {0}", log);
+            case LOG_TYPE.P2P_NETWORK_CLIENT_INFO:
+                consoleLog.AppendFormat("<color=#6633FF><b>[P2P_NETWORK_CLIENT_INFO]</b></color> {0}", log);
                 guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
             case LOG_TYPE.SYSTEM:
@@ -91,20 +94,24 @@ public class KojeomLogger {
                 consoleLog.AppendFormat("<color=#FFCC00><b>[DATABASE]</b></color> {0}", log);
                 guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
-            case LOG_TYPE.NETWORK_MANAGER_INFO:
-                consoleLog.AppendFormat("<color=#6699CC><b>[NETWORK_MANAGER_INFO]</b></color> {0}", log);
+            case LOG_TYPE.P2P_NETWORK_MANAGER_INFO:
+                consoleLog.AppendFormat("<color=#6699CC><b>[P2P_NETWORK_MANAGER_INFO]</b></color> {0}", log);
                 guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
-            case LOG_TYPE.NETWORK_SERVER_ERROR:
-                consoleLog.AppendFormat("<color=red><b>[NETWORK_SERVER_ERROR]</b></color> {0}", log);
+            case LOG_TYPE.P2P_NETWORK_SERVER_ERROR:
+                consoleLog.AppendFormat("<color=red><b>[P2P_NETWORK_SERVER_ERROR]</b></color> {0}", log);
                 guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
-            case LOG_TYPE.NETWORK_SERVER_WARNNING:
-                consoleLog.AppendFormat("<color=yellow><b>[NETWORK_SERVER_WARNNING]</b></color> {0}", log);
+            case LOG_TYPE.P2P_NETWORK_SERVER_WARNNING:
+                consoleLog.AppendFormat("<color=yellow><b>[P2P_NETWORK_SERVER_WARNNING]</b></color> {0}", log);
                 guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
             case LOG_TYPE.DEBUG_TEST:
                 consoleLog.AppendFormat("<color=#9cfab3><b>[DEBUG_TEST]</b></color> {0}", log);
+                guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
+                break;
+            case LOG_TYPE.SOCKET_NETWORK_INFO:
+                consoleLog.AppendFormat("<color=#99FF33><b>[SOCKET_NETWORK_INFO]</b></color> {0}", log);
                 guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
             default:

@@ -25,11 +25,11 @@ public class PrefabStorage : MonoBehaviour {
     public static PrefabStorage Instance = null;
     private PrefabStorage()
     {
-        CharacterPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER);
+        CharacterPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER_RESOURCE_PATH);
         //
-        CommonChunkPrefab = new SoftObjectPtr(ConstFilePath.COMMON_CHUNK_PREFAB);
+        CommonChunkPrefab = new SoftObjectPtr(ConstFilePath.COMMON_CHUNK_PREFAB_RESOURCE_PATH);
         WorldPrefab = new SoftObjectPtr(ConstFilePath.SUB_WORLD_PREFAB);
-        WaterChunkPrefab = new SoftObjectPtr(ConstFilePath.WATER_CHUNK_PREFAB);
+        WaterChunkPrefab = new SoftObjectPtr(ConstFilePath.WATER_CHUNK_PREFAB_RESOURCE_PATH);
         //
         for(int idx = 0; idx < (int)ACTOR_TYPE.COUNT; idx++)
         {
@@ -37,7 +37,7 @@ public class PrefabStorage : MonoBehaviour {
         }
 
         ActorPrefabs[(int)ACTOR_TYPE.NPC].Group = new SoftObjectPtr[(int)NPC_TYPE.COUNT];
-        var npcGuids = AssetDatabase.FindAssets("NPC", new[] { ConstFilePath.NPC_PREFABS });
+        var npcGuids = AssetDatabase.FindAssets("NPC", new[] { ConstFilePath.NPC_PREFABS_ASSET_PATH });
         foreach (var guid in npcGuids)
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
@@ -45,7 +45,7 @@ public class PrefabStorage : MonoBehaviour {
         }
 
         ActorPrefabs[(int)ACTOR_TYPE.MONSTER].Group = new SoftObjectPtr[(int)MONSTER_TYPE.COUNT];
-        var monsterGuids = AssetDatabase.FindAssets("MONSTER", new[] { ConstFilePath.NPC_PREFABS });
+        var monsterGuids = AssetDatabase.FindAssets("MONSTER", new[] { ConstFilePath.NPC_PREFABS_ASSET_PATH });
         foreach(var guid in monsterGuids)
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);

@@ -95,7 +95,7 @@ public class GamePlayer : NetworkBehaviour
     {
         base.OnStartAuthority();
         KojeomLogger.DebugLog(string.Format("[OnStartAuthority] connID : {0}",
-            P2PNetworkManager.GetInstance().client.connection.connectionId), LOG_TYPE.NETWORK_CLIENT_INFO);
+            P2PNetworkManager.GetInstance().client.connection.connectionId), LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
         _isMyPlayer = true;
     }
 
@@ -124,7 +124,7 @@ public class GamePlayer : NetworkBehaviour
     
     private IEnumerator LateRegisterGamePlayerToUserList()
     {
-        KojeomLogger.DebugLog(string.Format("[Start]LateRegisterGamePlayerToUserList Start."), LOG_TYPE.NETWORK_CLIENT_INFO);
+        KojeomLogger.DebugLog(string.Format("[Start]LateRegisterGamePlayerToUserList Start."), LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
         while (true)
         {
             if ((P2PNetworkManager.GetInstance() != null) &&
@@ -138,7 +138,7 @@ public class GamePlayer : NetworkBehaviour
                     KojeomLogger.DebugLog(string.Format("NetworkIdentity connection null pointer error."), LOG_TYPE.ERROR);
                 }
                 KojeomLogger.DebugLog(string.Format("[※LateRegisterGamePlayer Done.※] connID : {0}", netConnectionID),
-                   LOG_TYPE.NETWORK_CLIENT_INFO);
+                   LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
 
                 // 서버에서 Connection에 대해 유저를 생성하는 작업이 성공적으로 완료 되기 이전에
                 // 게임플레이어가 먼저 로컬에 생성될 수 있다. 따라서, 유저리스트에서 해당 Connection에 대한 정보를
@@ -158,6 +158,6 @@ public class GamePlayer : NetworkBehaviour
             yield return new WaitForSeconds(1.0f);
         }
         IsInitProcessFinish = true;
-        KojeomLogger.DebugLog(string.Format("[Finish]LateRegisterGamePlayerToUserList Finish."), LOG_TYPE.NETWORK_CLIENT_INFO);
+        KojeomLogger.DebugLog(string.Format("[Finish]LateRegisterGamePlayerToUserList Finish."), LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
     }
 }

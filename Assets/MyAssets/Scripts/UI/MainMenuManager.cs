@@ -39,7 +39,7 @@ public class MainMenuManager : MonoBehaviour {
     /// </summary>
     private void CreateNetWorkManager()
     {
-        GameObject netMgr = Resources.Load<GameObject>(ConstFilePath.GAME_NET_MGR_PREFAB);
+        GameObject netMgr = Resources.Load<GameObject>(ConstFilePath.GAME_NET_MGR_PREFAB_RESOURCE_PATH);
         if (netMgr == null)
         {
             KojeomLogger.DebugLog("GameNetworkManager creation is Failed.", LOG_TYPE.ERROR);
@@ -59,7 +59,6 @@ public class MainMenuManager : MonoBehaviour {
     {
         //멀티플레이로 값 설정.
         GameStatus.gameMode = GameMode.MULTI_P2P;
-        //
         GameStartProcess();
     }
 
@@ -72,7 +71,6 @@ public class MainMenuManager : MonoBehaviour {
 	{
         // 싱글플레이-> sing host 플레이로 설정.
         GameStatus.gameMode = GameMode.SINGLE;
-        //
         GameStartProcess();
     }
 
@@ -83,9 +81,11 @@ public class MainMenuManager : MonoBehaviour {
     private void GameStartProcess()
     {
         EnableButtons(false);
-        P2PNetworkManager.PostHttpRequest += PostLoginRequest;
-        P2PNetworkManager.ConnectLoginServer();
+        //P2PNetworkManager.PostHttpRequest += PostLoginRequest;
+        //P2PNetworkManager.ConnectLoginServer();
         if (isSuccessProcessRun == false) StartCoroutine(LoginProcess());
+        // socket 테스트.
+        SocketNetworkManager.GetInstance().ConnectToServer(TCPServerType.Login);
     }
 
     private void EnableButtons(bool enable)
