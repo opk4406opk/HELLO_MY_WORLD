@@ -24,6 +24,7 @@ namespace ActorGeneratorTool.Sources
         {
             #region classification
             public string TYPE;
+            public string UNIQUE_ID;
             #endregion
 
             #region stat
@@ -52,6 +53,7 @@ namespace ActorGeneratorTool.Sources
                     data.AP = RandomInstance.Next(1, 10).ToString();
                     data.NAME = string.Format("Default_NPC_{0}", idx.ToString());
                     data.TYPE = ((NPC_TYPE)RandomInstance.Next(0, 1)).ToString();
+                    data.UNIQUE_ID = idx.ToString();
                     NpcDatas.SpawnDatas.Add(data);
                 }
             }

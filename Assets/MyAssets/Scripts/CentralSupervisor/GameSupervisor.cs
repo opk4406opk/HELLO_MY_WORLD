@@ -1,12 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public interface IManager
-{
-    void Init();
-    void ResetManager();
-}
-
 public enum GameMode
 {
     NONE,
@@ -81,9 +75,9 @@ public class GameSupervisor : MonoBehaviour
     private InGameUISupervisor ingameUISupervisor;
 
     [SerializeField]
-    private NPCManager npcManager;
-    [SerializeField]
     private ActorCollideManager actorCollideManager;
+    [SerializeField]
+    private ActorManager ActorManagerInstance;
     #endregion
 
     public static GameSupervisor Instance = null;
@@ -170,14 +164,14 @@ public class GameSupervisor : MonoBehaviour
         worldManager.Init();
         //player Init
         playerManager.Init();
+        // Actor Manager init..
+        ActorManagerInstance.Init();
         // looting init.
         lootingSystem.Init();
         //InGameUI Init
         beltItemSelector.Init();
         //saveAndLoad Init
         saveAndLoadManager.Init();
-        //
-        npcManager.Init();
         //
         actorCollideManager.Init();
         //

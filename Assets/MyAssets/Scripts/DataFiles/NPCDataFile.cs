@@ -9,7 +9,7 @@ public class NPCDataFile {
  
     public static NPCDataFile Instance = null;
     //
-    public Dictionary<NPC_TYPE, NPCSpawnData> NpcSpawnDatas { get; private set; } = new Dictionary<NPC_TYPE, NPCSpawnData>();
+    public Dictionary<int, NPCSpawnData> NpcSpawnDatas { get; private set; } = new Dictionary<int, NPCSpawnData>();
 
 	public void Init()
     {
@@ -43,7 +43,10 @@ public class NPCDataFile {
             data.TryGetValue("TYPE", out outValue);
             spawnData.NpcType = KojeomUtility.StringToEnum<NPC_TYPE>(outValue);
             //
-            NpcSpawnDatas.Add(spawnData.NpcType, spawnData);
+            data.TryGetValue("UNIQUE_ID", out outValue);
+            spawnData.UniqueID = int.Parse(outValue);
+            //
+            NpcSpawnDatas.Add(spawnData.UniqueID, spawnData);
         }
     }
 

@@ -55,11 +55,11 @@ public enum WorldRealTimeStatus
 public class WorldManager : MonoBehaviour
 {
     [SerializeField]
-    private Transform worldGroupTrans;
-    public static WorldManager instance;
+    private Transform WorldGroupTrans;
+    public static WorldManager Instance;
 
-    public Dictionary<SubWorldNormalizedOffset, string> worldOffsetToIndex { get; } = new Dictionary<SubWorldNormalizedOffset, string>();
-    public Dictionary<string, WorldState> wholeWorldStates { get; } = new Dictionary<string, WorldState>();
+    public Dictionary<SubWorldNormalizedOffset, string> WorldOffsetToIndex { get; } = new Dictionary<SubWorldNormalizedOffset, string>();
+    public Dictionary<string, WorldState> WholeWorldStates { get; } = new Dictionary<string, WorldState>();
 
     public void Init()
     {
@@ -76,7 +76,7 @@ public class WorldManager : MonoBehaviour
         KojeomLogger.DebugLog(string.Format("seed_val : {0}", P2PNetworkManager.GetGameRandomSeed()), LOG_TYPE.DEBUG_TEST);
         KojeomLogger.DebugLog(string.Format("rand_val : {0}", KojeomUtility.RandomInteger(1, 5)), LOG_TYPE.DEBUG_TEST);
         //
-        instance = this;
+        Instance = this;
     }
     /// <summary>
     /// C# sereialization 기능을 이용한
@@ -86,7 +86,7 @@ public class WorldManager : MonoBehaviour
     {
         Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
         int idx = 0;
-        foreach(var element in wholeWorldStates)
+        foreach(var element in WholeWorldStates)
         {
             string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", element.Value.subWorldInstance.WorldName);
             // 파일 생성.
@@ -112,7 +112,7 @@ public class WorldManager : MonoBehaviour
     private async Task<WorldDataFile> LoadSubWorldFile(string uniqueID)
     {
         WorldState worldState;
-        wholeWorldStates.TryGetValue(uniqueID, out worldState);
+        WholeWorldStates.TryGetValue(uniqueID, out worldState);
         string fileName = worldState.subWorldInstance.WorldName;
         string filePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", fileName);
         // 파일 열기.
@@ -129,8 +129,8 @@ public class WorldManager : MonoBehaviour
 
     private void ReleaseSubWorldInstance(string uniqueID)
     {
-        wholeWorldStates[uniqueID].subWorldInstance = null;
-        wholeWorldStates[uniqueID].realTimeStatus = WorldRealTimeStatus.Released;
+        WholeWorldStates[uniqueID].subWorldInstance = null;
+        WholeWorldStates[uniqueID].realTimeStatus = WorldRealTimeStatus.Released;
     }
 
     private void CreateWholeWorld()
@@ -140,7 +140,7 @@ public class WorldManager : MonoBehaviour
         {
             GameObject newSubWorld = Instantiate(PrefabStorage.Instance.WorldPrefab.LoadSynchro(), new Vector3(0, 0, 0),
                new Quaternion(0, 0, 0, 0)) as GameObject;
-            newSubWorld.transform.parent = worldGroupTrans;
+            newSubWorld.transform.parent = WorldGroupTrans;
             //
             World subWorld = newSubWorld.GetComponent<World>();
             subWorld.OnFinishLoadChunks += OnSubWorldFinishLoadChunks;
@@ -155,19 +155,36 @@ public class WorldManager : MonoBehaviour
             worldState.normalizedOffset = normalizedSubOffset;
             worldState.genInfo = WorldGenerateInfo.NotYet;
             worldState.realTimeStatus = WorldRealTimeStatus.NeedInGameReLoad;
-            wholeWorldStates.Add(subWorldData.UniqueID, worldState);
+            WholeWorldStates.Add(subWorldData.UniqueID, worldState);
 
             // offset to index 
-            worldOffsetToIndex.Add(normalizedSubOffset, subWorldData.UniqueID);
+            WorldOffsetToIndex.Add(normalizedSubOffset, subWorldData.UniqueID);
         }
     }
 
     public void OnSubWorldFinishLoadChunks(string uniqueID)
     {
         WorldState worldState;
-        wholeWorldStates.TryGetValue(uniqueID, out worldState);
+        WholeWorldStates.TryGetValue(uniqueID, out worldState);
         worldState.genInfo = WorldGenerateInfo.Done;
         //
+    }
+
+    /// <summary>
+    /// 현재 생성 완료된 월드들의 인스턴스를 리턴.
+    /// </summary>
+    /// <returns></returns>
+    public List<World> GetCurrentCreatedWorlds()
+    {
+        List<World> datas = new List<World>();
+        foreach(var state in WholeWorldStates)
+        {
+            if(state.Value.genInfo == WorldGenerateInfo.Done)
+            {
+                datas.Add(state.Value.subWorldInstance);
+            }
+        }
+        return datas;
     }
 
     /// <summary>
@@ -177,7 +194,7 @@ public class WorldManager : MonoBehaviour
     /// <returns></returns>
     public World ContainedWorld(Vector3 pos)
     {
-        var state = wholeWorldStates[GetSubWorldUniqueID(pos)];
+        var state = WholeWorldStates[GetSubWorldUniqueID(pos)];
         if(state == null)
         {
             return null;
@@ -200,11 +217,11 @@ public class WorldManager : MonoBehaviour
             if(GamePlayerManager.instance != null && GamePlayerManager.instance.isInitializeFinish == true)
             {
                 playerPos = GamePlayerManager.instance.myGamePlayer.Controller.GetPosition();
-                offset = wholeWorldStates[GetSubWorldUniqueID(playerPos)].normalizedOffset;
+                offset = WholeWorldStates[GetSubWorldUniqueID(playerPos)].normalizedOffset;
             }
             else
             {
-                foreach(var state in wholeWorldStates)
+                foreach(var state in WholeWorldStates)
                 {
                     if(state.Value.subWorldInstance != null && state.Value.subWorldInstance.IsSurfaceWorld == true)
                     {
@@ -229,16 +246,16 @@ public class WorldManager : MonoBehaviour
                         subWorldOffset.x = x;
                         subWorldOffset.y = y;
                         subWorldOffset.z = z;
-                        if (worldOffsetToIndex.TryGetValue(subWorldOffset, out uniqueID) == true)
+                        if (WorldOffsetToIndex.TryGetValue(subWorldOffset, out uniqueID) == true)
                         {
-                            switch (wholeWorldStates[uniqueID].realTimeStatus)
+                            switch (WholeWorldStates[uniqueID].realTimeStatus)
                             {
                                 case WorldRealTimeStatus.None:
                                     // nothing to do.
                                     break;
                                 case WorldRealTimeStatus.NeedInGameReLoad:
-                                    wholeWorldStates[uniqueID].realTimeStatus = WorldRealTimeStatus.InGameReLoaded;
-                                    wholeWorldStates[uniqueID].subWorldInstance.LoadSyncro(
+                                    WholeWorldStates[uniqueID].realTimeStatus = WorldRealTimeStatus.InGameReLoaded;
+                                    WholeWorldStates[uniqueID].subWorldInstance.LoadSyncro(
                                         new Vector3(x * gameWorldConfig.sub_world_x_size,
                                         y * gameWorldConfig.sub_world_y_size,
                                         z * gameWorldConfig.sub_world_z_size));

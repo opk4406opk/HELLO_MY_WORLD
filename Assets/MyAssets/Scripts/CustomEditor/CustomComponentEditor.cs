@@ -67,17 +67,31 @@ public class CustomComponentEditor : EditorWindow
         GameObject[] npcPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.NPC_PREFABS_RESOURCE_PATH);
         foreach (var element in npcPrefabs)
         {
-            if (element.GetComponent<BoxCollider>() == null)
+            var collider = element.GetComponent<BoxCollider>();
+            if (collider != null)
             {
-                var coll = element.AddComponent<BoxCollider>();
-                coll.size = new Vector3(0.3f, 1.0f, 0.3f);
-                coll.center = new Vector3(0.0f, 0.5f, 0.0f);
+                DestroyImmediate(collider, true);
             }
+            var coll = element.AddComponent<BoxCollider>();
+            coll.size = new Vector3(0.3f, 1.0f, 0.3f);
+            coll.center = new Vector3(0.0f, 0.5f, 0.0f);
             //
-            if(element.GetComponent<NPCController>() == null)
+            var controller = element.GetComponent<NPCController>();
+            if (controller != null)
             {
-                element.AddComponent<NPCController>();
+                DestroyImmediate(controller, true);
             }
+            element.AddComponent<NPCController>();
+            //
+            var comp = element.GetComponent<Rigidbody>();
+            if (comp != null)
+            {
+                DestroyImmediate(comp, true);
+            }
+            var rigidBody = element.AddComponent<Rigidbody>();
+            rigidBody.mass = 1.0f;
+            rigidBody.useGravity = true;
+            rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
             //
             //ref : https://docs.unity3d.com/ScriptReference/PrefabUtility.InstantiatePrefab.html
             if (element.GetComponentInChildren<TMPro.TextMeshPro>() == null)

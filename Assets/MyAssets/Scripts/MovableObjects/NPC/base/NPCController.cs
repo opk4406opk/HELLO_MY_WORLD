@@ -43,6 +43,7 @@ public class NPCController : ActorController
     public override void Init(World world)
     {
         ContainWorld = world;
+        Animator = gameObject.GetComponent<Animator>();
         BoxCollider = gameObject.GetComponent<BoxCollider>();
     }
 

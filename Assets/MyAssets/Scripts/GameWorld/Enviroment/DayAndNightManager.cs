@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DayAndNightManager : MonoBehaviour, IManager
+public class DayAndNightManager : MonoBehaviour
 {
     [SerializeField]
     private Transform sun;

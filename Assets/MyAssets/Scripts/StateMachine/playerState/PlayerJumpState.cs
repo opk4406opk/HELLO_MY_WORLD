@@ -38,7 +38,7 @@ public class PlayerJumpState : IState
         Vector3 destPos = startPos + (GamePlayer.transform.up * JumpScale);
         while (t <= 1.0f)
         {
-            World containWorld = WorldManager.instance.ContainedWorld(GamePlayer.transform.position);
+            World containWorld = WorldManager.Instance.ContainedWorld(GamePlayer.transform.position);
             Vector3 topOffsetedPos = GamePlayer.transform.position;
             topOffsetedPos += new Vector3(0.0f, 0.1f, 0.0f);
 

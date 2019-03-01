@@ -5,7 +5,7 @@ using UnityEngine;
 
 // bug issue # 1 : http://answers.unity3d.com/questions/745685/nullreferenceexception-on-startcoroutine.html
 
-public class RoamingMerchant : NPCActor, IMerchantNPC
+public class MerchantNPC : NPCActor, IMerchantNPC
 {
     public override event del_OnClickActor OnClickedActor;
 

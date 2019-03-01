@@ -27,6 +27,7 @@ public abstract class ActorSpawnData
     public int AP;
     public string NAME;
     public ACTOR_TYPE ActorType;
+    public int UniqueID;
 }
 
 public class NPCSpawnData : ActorSpawnData

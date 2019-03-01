@@ -168,7 +168,7 @@ public class GamePlayerController : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        if (CharacterInstance == null || WorldManager.instance == null || PlayerCamera == null)
+        if (CharacterInstance == null || WorldManager.Instance == null || PlayerCamera == null)
         {
             return;
         }
@@ -177,7 +177,7 @@ public class GamePlayerController : MonoBehaviour {
         playerPos.y += 2.0f;
         PlayerCamera.transform.position = playerPos;
 
-        World containWorld = WorldManager.instance.ContainedWorld(CharacterInstance.transform.position);
+        World containWorld = WorldManager.Instance.ContainedWorld(CharacterInstance.transform.position);
         if (containWorld == null)
         {
             return;

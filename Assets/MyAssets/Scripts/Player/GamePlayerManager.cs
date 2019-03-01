@@ -22,9 +22,9 @@ public class GamePlayerManager : MonoBehaviour {
         KojeomLogger.DebugLog(string.Format("[GamePlayerManager] Start InitProcess"), LOG_TYPE.INFO);
         while(true)
         {
-            if(WorldManager.instance != null)
+            if(WorldManager.Instance != null)
             {
-                foreach(var state in WorldManager.instance.wholeWorldStates)
+                foreach(var state in WorldManager.Instance.WholeWorldStates)
                 {
                     if(state.Value.genInfo == WorldGenerateInfo.Done &&
                         P2PNetworkManager.GetInstance().GetMyGamePlayer() != null)

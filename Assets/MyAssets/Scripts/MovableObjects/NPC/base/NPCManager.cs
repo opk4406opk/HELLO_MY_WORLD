@@ -7,19 +7,9 @@ public class NPCManager : NPCSpawner
     public List<Actor> NPCGroup { get; private set; } = new List<Actor>();
     private Actor LastestClickedActor;
 
-    private static NPCManager _Singleton = null;
-    public static NPCManager Singleton
-    {
-        get
-        {
-            if (_Singleton == null) KojeomLogger.DebugLog("NPCManager 제대로 초기화 되지 않았습니다", LOG_TYPE.ERROR);
-            return _Singleton;
-        }
-    }
     public override void Init()
     {
         // to do
-        _Singleton = this;
     }
 
     /// <summary>
@@ -33,31 +23,37 @@ public class NPCManager : NPCSpawner
 
     private void OnClickedActor(Actor actor)
     {
-        KojeomLogger.DebugLog(string.Format("OnCliked Actor name : {0}, type : {1}", actor.name, actor.GetActorType()));
+        KojeomLogger.DebugLog(string.Format("OnClicked Actor name : {0}, type : {1}", actor.name, actor.GetActorType()));
         LastestClickedActor = actor;
     }
 
+    /// <summary>
+    /// 무작위로 NPC들을 월드에 생성합니다.
+    /// </summary>
     public override void RandomSpawn()
     { 
         var gameConfig = GameConfigDataFile.singleton.GetGameConfigData();
-        foreach (var data in NPCDataFile.Instance.NpcSpawnDatas)
+        for(int loopCount = 0; loopCount < 10; loopCount++)
         {
             
         }
     }
 
-    public override void Spawn(NPC_TYPE npcType, World world, int num, bool initShow = false)
+    public override void Spawn(int uniqueID, World world, int num, bool initShow = false)
     {
-        Actor instance = Instantiate(PrefabStorage.Instance.ActorPrefabs[(int)ACTOR_TYPE.NPC].Group[(int)npcType].LoadSynchro(), Vector3.zero, Quaternion.identity).GetComponent<Actor>();
-        //
-        NPCSpawnData spawnData;
-        NPCDataFile.Instance.NpcSpawnDatas.TryGetValue(npcType, out spawnData);
-        switch(npcType)
+        for(int spawnNum = 0; spawnNum < num; spawnNum++)
         {
-            case NPC_TYPE.MERCHANT:
-            case NPC_TYPE.GUARD:
-                instance.Init(spawnData, world);
-                break;
+            NPCDataFile.Instance.NpcSpawnDatas.TryGetValue(uniqueID, out NPCSpawnData spawnData);
+            Actor instance = Instantiate(PrefabStorage.Instance.ActorPrefabs[(int)ACTOR_TYPE.NPC].Group[(int)spawnData.NpcType].LoadSynchro(), Vector3.zero, Quaternion.identity).GetComponent<Actor>();
+            world.RegisterActor(instance);
+            //
+            switch (spawnData.NpcType)
+            {
+                case NPC_TYPE.MERCHANT:
+                case NPC_TYPE.GUARD:
+                    instance.Init(spawnData, world);
+                    break;
+            }
         }
     }
 }

@@ -94,7 +94,7 @@ public class ShopUIManager : APopupUI {
 
     private void SettingShopItem()
     {
-        var shopSellingItemIds = ((RoamingMerchant)NPCManager.Singleton.GetLastestClickedActor()).GetSellingItemIDList();
+        var shopSellingItemIds = ((MerchantNPC)ActorManager.Instance.NPCManagerInstance.GetLastestClickedActor()).GetSellingItemIDList();
         List <ItemInfo> shopItems = new List<ItemInfo>();
         foreach(var id in shopSellingItemIds)
         {
