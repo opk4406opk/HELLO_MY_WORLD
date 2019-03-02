@@ -4,22 +4,6 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-public enum NPCResourceID
-{
-    N0,
-    N1,
-    //...
-    COUNT
-}
-
-public enum MonsterResourceID
-{
-    M0,
-    M1,
-    //...
-    COUNT
-}
-
 /*   게임에서 사용되는 프리팹 이름 규칙. ( = Naming Rule)
  * 
  *   NPC, Monster preafb -> [ActorTypc]_[DetailType]_[ResourceID]_[Name]
@@ -57,12 +41,15 @@ public class GameResourceSupervisor : MonoBehaviour {
             ActorPrefabs[idx] = new SoftObjectPtrGroup();
         }
 
+      
+
         ActorPrefabs[(int)ACTOR_TYPE.NPC].Group = new SoftObjectPtr[(int)NPC_TYPE.COUNT];
         var npcGuids = AssetDatabase.FindAssets("NPC", new[] { ConstFilePath.NPC_PREFABS_ASSET_PATH });
         foreach (var guid in npcGuids)
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
-            ActorPrefabs[(int)ACTOR_TYPE.NPC].Group[(int)KojeomUtility.GetResourceIDFromAssetPath<NPCResourceID>(path)] = new SoftObjectPtr(path);
+            ActorPrefabs[(int)ACTOR_TYPE.NPC].Group[KojeomUtility.GetResourceNumberFromAssetPath(path)] = new SoftObjectPtr(path);
+            KojeomUtility.GetResourceNumberFromAssetPath(path);
         }
 
         ActorPrefabs[(int)ACTOR_TYPE.MONSTER].Group = new SoftObjectPtr[(int)MONSTER_TYPE.COUNT];
@@ -70,7 +57,7 @@ public class GameResourceSupervisor : MonoBehaviour {
         foreach(var guid in monsterGuids)
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
-            ActorPrefabs[(int)ACTOR_TYPE.MONSTER].Group[(int)KojeomUtility.GetResourceIDFromAssetPath<MonsterResourceID>(path)] = new SoftObjectPtr(path);
+            ActorPrefabs[(int)ACTOR_TYPE.MONSTER].Group[KojeomUtility.GetResourceNumberFromAssetPath(path)] = new SoftObjectPtr(path);
         }
     }
 

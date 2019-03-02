@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class KojeomUtility
@@ -49,12 +50,27 @@ public class KojeomUtility
         return StringToEnum<T>(tokens[1]);
     }
 
-    public static T GetResourceIDFromAssetPath<T>(string assetPath)
+    public static int GetResourceNumberFromAssetPath(string assetPath)
     {
         string prefabName = assetPath.Substring(assetPath.LastIndexOf('/') + 1);
         var splits = prefabName.Split('.');
         var tokens = splits[0].Split('_');
-        return StringToEnum<T>(tokens[2]);
+        var data = Regex.Match(tokens[2], "[0-9]").ToString();
+        return int.Parse(data);
+    }
+
+    public static int GetResourceIDFromAssetPath(string assetPath)
+    {
+        string prefabName = assetPath.Substring(assetPath.LastIndexOf('/') + 1);
+        var splits = prefabName.Split('.');
+        var tokens = splits[0].Split('_');
+        return int.Parse(tokens[2]);
+    }
+
+    public static int GetResourceNumberFromID(string resourceID)
+    {
+        var data = Regex.Match(resourceID, "[0-9]").ToString();
+        return int.Parse(data);
     }
 
     public static string GetActorNameFromAssetPath(string assetPath)
