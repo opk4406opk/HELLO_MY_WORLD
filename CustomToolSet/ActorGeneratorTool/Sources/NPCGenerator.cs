@@ -14,6 +14,21 @@ namespace ActorGeneratorTool.Sources
         GUARD
     }
 
+    public enum NPCResourceID
+    {
+        N0,
+        N1,
+        //...
+        COUNT
+    }
+
+    public enum MonsterResourceID
+    {
+        M0,
+        M1,
+        //...
+        COUNT
+    }
     class NPCGenerator : AGenerator
     {
         private class NPCJsonData
@@ -22,8 +37,9 @@ namespace ActorGeneratorTool.Sources
         }
         private struct GenerateData
         {
-            #region classification
+            #region classification and Identification
             public string TYPE;
+            public string RESOURCE_ID;
             public string UNIQUE_ID;
             #endregion
 
@@ -53,6 +69,7 @@ namespace ActorGeneratorTool.Sources
                     data.AP = RandomInstance.Next(1, 10).ToString();
                     data.NAME = string.Format("Default_NPC_{0}", idx.ToString());
                     data.TYPE = ((NPC_TYPE)RandomInstance.Next(0, 1)).ToString();
+                    data.RESOURCE_ID = NPCResourceID.N0.ToString();
                     data.UNIQUE_ID = idx.ToString();
                     NpcDatas.SpawnDatas.Add(data);
                 }
@@ -72,6 +89,13 @@ namespace ActorGeneratorTool.Sources
             {
                 return false;
             }
+        }
+
+        // ref : https://stackoverflow.com/questions/16100/how-should-i-convert-a-string-to-an-enum-in-c
+        // ref : https://docs.microsoft.com/en-us/dotnet/api/system.enum.tryparse?redirectedfrom=MSDN&view=netframework-4.7.2#overloads
+        public T StringToEnum<T>(string value, bool ignoreCase = true)
+        {
+            return (T)Enum.Parse(typeof(T), value, ignoreCase);
         }
 
         public override void Init()

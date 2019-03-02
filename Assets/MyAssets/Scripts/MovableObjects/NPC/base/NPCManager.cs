@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class NPCManager : NPCSpawner
 {
-    public List<Actor> NPCGroup { get; private set; } = new List<Actor>();
     private Actor LastestClickedActor;
 
     public override void Init()
@@ -39,21 +38,26 @@ public class NPCManager : NPCSpawner
         }
     }
 
-    public override void Spawn(int uniqueID, World world, int num, bool initShow = false)
+    public override void SpawnActor(int uniqueID, World world, int num, bool initShow = false)
     {
         for(int spawnNum = 0; spawnNum < num; spawnNum++)
         {
             NPCDataFile.Instance.NpcSpawnDatas.TryGetValue(uniqueID, out NPCSpawnData spawnData);
-            Actor instance = Instantiate(PrefabStorage.Instance.ActorPrefabs[(int)ACTOR_TYPE.NPC].Group[(int)spawnData.NpcType].LoadSynchro(), Vector3.zero, Quaternion.identity).GetComponent<Actor>();
+            Actor instance = Instantiate(GameResourceSupervisor.Instance.ActorPrefabs[(int)ACTOR_TYPE.NPC]
+                .Group[(int)KojeomUtility.StringToEnum<NPCResourceID>(spawnData.ResourceID)]
+                .LoadSynchro(), Vector3.zero, Quaternion.identity)
+                .GetComponent<Actor>();
             world.RegisterActor(instance);
+            int spanwID = instance.GetHashCode();
             //
             switch (spawnData.NpcType)
             {
                 case NPC_TYPE.MERCHANT:
                 case NPC_TYPE.GUARD:
-                    instance.Init(spawnData, world);
+                    instance.Init(spawnData, world, spanwID);
                     break;
             }
+            ActorGroup.Add(spanwID, instance);
         }
     }
 }

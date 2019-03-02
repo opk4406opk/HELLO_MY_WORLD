@@ -29,7 +29,7 @@ public class MainMenuManager : MonoBehaviour {
         {
             GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_mainMenu);
         }
-        PrefabStorage.GetInstance();
+        GameResourceSupervisor.GetInstance();
         CreateNetWorkManager();
     }
 

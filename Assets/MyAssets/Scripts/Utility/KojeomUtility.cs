@@ -49,6 +49,14 @@ public class KojeomUtility
         return StringToEnum<T>(tokens[1]);
     }
 
+    public static T GetResourceIDFromAssetPath<T>(string assetPath)
+    {
+        string prefabName = assetPath.Substring(assetPath.LastIndexOf('/') + 1);
+        var splits = prefabName.Split('.');
+        var tokens = splits[0].Split('_');
+        return StringToEnum<T>(tokens[2]);
+    }
+
     public static string GetActorNameFromAssetPath(string assetPath)
     {
         string prefabName = assetPath.Substring(assetPath.LastIndexOf('/') + 1);

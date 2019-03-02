@@ -41,7 +41,7 @@ public class GamePlayer : NetworkBehaviour
         KojeomLogger.DebugLog("게임플레이어 PostInit 시작", LOG_TYPE.INFO);
         CharacterName = charName;
         CharacterType = charType;
-        CharInstance = MakeGameChararacter(PrefabStorage.GetInstance().GetCharacterPrefab(charType));
+        CharInstance = MakeGameChararacter(GameResourceSupervisor.GetInstance().GetCharacterPrefab(charType));
         // 캐릭터 인스턴스는 게임플레이어 하위종속으로 설정.
         CharInstance.transform.parent = gameObject.transform;
         CharInstance.transform.localPosition = new Vector3(0, 0, 0);

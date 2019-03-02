@@ -4,10 +4,31 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
+public enum NPCResourceID
+{
+    N0,
+    N1,
+    //...
+    COUNT
+}
+
+public enum MonsterResourceID
+{
+    M0,
+    M1,
+    //...
+    COUNT
+}
+
+/*   게임에서 사용되는 프리팹 이름 규칙. ( = Naming Rule)
+ * 
+ *   NPC, Monster preafb -> [ActorTypc]_[DetailType]_[ResourceID]_[Name]
+*/
+
 /// <summary>
 /// 게임내에 사용되는 프리팹들을 저장하고 있는 클래스.
 /// </summary>
-public class PrefabStorage : MonoBehaviour {
+public class GameResourceSupervisor : MonoBehaviour {
 
     #region world
     public SoftObjectPtr WorldPrefab { get; private set; }
@@ -22,8 +43,8 @@ public class PrefabStorage : MonoBehaviour {
     //
     private readonly GameObject[] CharacterPrefabs;
 
-    public static PrefabStorage Instance = null;
-    private PrefabStorage()
+    public static GameResourceSupervisor Instance = null;
+    private GameResourceSupervisor()
     {
         CharacterPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER_RESOURCE_PATH);
         //
@@ -41,7 +62,7 @@ public class PrefabStorage : MonoBehaviour {
         foreach (var guid in npcGuids)
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
-            ActorPrefabs[(int)ACTOR_TYPE.NPC].Group[(int)KojeomUtility.GetActorDetailTypeFromAssetPath<NPC_TYPE>(path)] = new SoftObjectPtr(path);
+            ActorPrefabs[(int)ACTOR_TYPE.NPC].Group[(int)KojeomUtility.GetResourceIDFromAssetPath<NPCResourceID>(path)] = new SoftObjectPtr(path);
         }
 
         ActorPrefabs[(int)ACTOR_TYPE.MONSTER].Group = new SoftObjectPtr[(int)MONSTER_TYPE.COUNT];
@@ -49,13 +70,13 @@ public class PrefabStorage : MonoBehaviour {
         foreach(var guid in monsterGuids)
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
-            ActorPrefabs[(int)ACTOR_TYPE.MONSTER].Group[(int)KojeomUtility.GetActorDetailTypeFromAssetPath<MONSTER_TYPE>(path)] = new SoftObjectPtr(path);
+            ActorPrefabs[(int)ACTOR_TYPE.MONSTER].Group[(int)KojeomUtility.GetResourceIDFromAssetPath<MonsterResourceID>(path)] = new SoftObjectPtr(path);
         }
     }
 
-    public static PrefabStorage GetInstance()
+    public static GameResourceSupervisor GetInstance()
     {
-        if (Instance == null) Instance = new PrefabStorage();
+        if (Instance == null) Instance = new GameResourceSupervisor();
         return Instance;
     }
 

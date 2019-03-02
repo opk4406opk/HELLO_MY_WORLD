@@ -43,6 +43,9 @@ public class NPCDataFile {
             data.TryGetValue("TYPE", out outValue);
             spawnData.NpcType = KojeomUtility.StringToEnum<NPC_TYPE>(outValue);
             //
+            data.TryGetValue("RESOURCE_ID", out outValue);
+            spawnData.ResourceID = outValue;
+
             data.TryGetValue("UNIQUE_ID", out outValue);
             spawnData.UniqueID = int.Parse(outValue);
             //

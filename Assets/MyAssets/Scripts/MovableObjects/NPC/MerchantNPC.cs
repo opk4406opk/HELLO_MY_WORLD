@@ -21,7 +21,7 @@ public class MerchantNPC : NPCActor, IMerchantNPC
         SellingItemIds = ids;
     }
 
-    public override void Init(ActorSpawnData spawnData, World world)
+    public override void Init(ActorSpawnData spawnData, World world, int spawnID)
     {
         ActorType = spawnData.ActorType;
         HealthPoint = spawnData.HP;
@@ -29,6 +29,9 @@ public class MerchantNPC : NPCActor, IMerchantNPC
         AttackPoint = spawnData.AP;
         Name = spawnData.NAME;
         NpcType = ((NPCSpawnData)spawnData).NpcType;
+        ResourceID = spawnData.ResourceID;
+        SpawnID = spawnID;
+        UniqueID = spawnData.UniqueID;
         //
         Controller = gameObject.AddComponent<NPCController>();
         Controller.Init(world);
@@ -43,11 +46,6 @@ public class MerchantNPC : NPCActor, IMerchantNPC
         // to do.
         OnClickedActor(this);
         UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.shop);
-    }
-
-    public override ACTOR_TYPE GetActorType()
-    {
-        return ActorType;
     }
 
     public override void Tick(float deltaTime)
