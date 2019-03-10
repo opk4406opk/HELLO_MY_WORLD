@@ -20,7 +20,7 @@ public class CommonChunk : AChunk
     public override void Init()
     {
         ChunkType = ChunkType.COMMON;
-        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         ChunkSize = gameWorldConfig.chunk_size;
         TileUnit = gameWorldConfig.one_tile_unit;
         Mesh = GetComponent<MeshFilter>().mesh;

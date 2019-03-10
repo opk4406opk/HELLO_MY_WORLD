@@ -12,7 +12,7 @@ public class WorldMapData
 public struct SubWorldData
 {
     public string UniqueID;
-    public int X, Y, Z;
+    public int OffsetX, OffsetY, OffsetZ;
     public string WorldName;
     public bool IsSurface;
 }
@@ -82,12 +82,12 @@ public class WorldMapDataFile
             data.TryGetValue("WORLD_NAME", out val);
             subWorldData.WorldName = val;
             //
-            data.TryGetValue("X", out val);
-            subWorldData.X = int.Parse(val);
-            data.TryGetValue("Y", out val);
-            subWorldData.Y = int.Parse(val);
-            data.TryGetValue("Z", out val);
-            subWorldData.Z = int.Parse(val);
+            data.TryGetValue("OFFSET_X", out val);
+            subWorldData.OffsetX = int.Parse(val);
+            data.TryGetValue("OFFSET_Y", out val);
+            subWorldData.OffsetY = int.Parse(val);
+            data.TryGetValue("OFFSET_Z", out val);
+            subWorldData.OffsetZ = int.Parse(val);
             //
             data.TryGetValue("UNIQUE_ID", out val);
             subWorldData.UniqueID = val;

@@ -26,7 +26,10 @@ public class World : MonoBehaviour
     #region world infomation.
     public string WorldName { get; private set; }
     public string UniqueID { get; private set; }
-    public Vector3 Position { get; private set; }
+    // 월드맵 위치값( == 오프셋값).
+    public Vector3 WorldCoordinate { get; private set; }
+    // 실제 게임오브젝트로서 존재하는 위치값.
+    public Vector3 RealCoordinate { get; private set; }
     public bool IsSurfaceWorld { get; private set; }
     #endregion
 
@@ -39,11 +42,16 @@ public class World : MonoBehaviour
 
     public void Init(SubWorldData worldData)
     {
+        // setting to World
         WorldName = worldData.WorldName;
         UniqueID = worldData.UniqueID;
-        Position = new Vector3(worldData.X, worldData.Y, worldData.Z);
+        WorldCoordinate = new Vector3(worldData.OffsetX, worldData.OffsetY, worldData.OffsetZ);
+        var configData = WorldConfigFile.Instance.GetConfig();
+        RealCoordinate = new Vector3(WorldCoordinate.x * configData.sub_world_x_size,
+            WorldCoordinate.y * configData.sub_world_y_size,
+            WorldCoordinate.z * configData.sub_world_z_size);
         IsSurfaceWorld = worldData.IsSurface;
-        //
+        // setting to GameObject
         gameObject.name = WorldName;
     }
 
@@ -52,13 +60,13 @@ public class World : MonoBehaviour
         InGameObjRegister = new InGameObjectRegister();
         InGameObjRegister.Initialize();
         //
-        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         CustomOctree.Init(pos, new Vector3(gameWorldConfig.sub_world_x_size + pos.x, 
             gameWorldConfig.sub_world_y_size + pos.y,
             gameWorldConfig.sub_world_z_size + pos.z));
         ChunkSize = gameWorldConfig.chunk_size;
         //
-        Position = pos;
+        WorldCoordinate = pos;
 
         // init world data.
         WorldBlockData = new Block[gameWorldConfig.sub_world_x_size,
@@ -163,21 +171,16 @@ public class World : MonoBehaviour
                         ChunkSlots[x, y, z].Chunks[type].WorldDataIdxX = x * ChunkSize;
                         ChunkSlots[x, y, z].Chunks[type].WorldDataIdxY = y * ChunkSize;
                         ChunkSlots[x, y, z].Chunks[type].WorldDataIdxZ = z * ChunkSize;
-                        ChunkSlots[x, y, z].Chunks[type].RealCoordX = chunkRealCoordX + Position.x;
-                        ChunkSlots[x, y, z].Chunks[type].RealCoordY = chunkRealCoordY + Position.y;
-                        ChunkSlots[x, y, z].Chunks[type].RealCoordZ = chunkRealCoordZ + Position.z;
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordX = chunkRealCoordX + WorldCoordinate.x;
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordY = chunkRealCoordY + WorldCoordinate.y;
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordZ = chunkRealCoordZ + WorldCoordinate.z;
                         ChunkSlots[x, y, z].Chunks[type].Init();
-                        yield return new WaitForSeconds(WorldConfigFile.instance.GetConfig().chunkLoadIntervalSeconds);
+                        yield return new WaitForSeconds(WorldConfigFile.Instance.GetConfig().chunkLoadIntervalSeconds);
                     }
 
                 }
             }
         KojeomLogger.DebugLog(string.Format("World name : {0} Chunk 로드를 완료했습니다.", WorldName), LOG_TYPE.DEBUG_TEST);
-        // 월드 로딩이 끝나면 속해있는 Actor들은 모두 Show.
-        foreach (var actor in InGameObjRegister.RegisteredActors)
-        {
-            actor.Show();
-        }
         IsLoadFinish = true;
         OnFinishLoadChunks(UniqueID);
     }
@@ -216,5 +219,33 @@ public class World : MonoBehaviour
     public void UnRegister(InGameObjectType type, GameObject obj)
     {
         InGameObjRegister.UnRegister(type, obj);
+    }
+
+    public Vector3 RandomPosAtSurface()
+    {
+        Vector3 ret;
+        var worldConfig = WorldConfigFile.Instance.GetConfig();
+        if(RealCoordinate.x == 0)
+        {
+            ret.x = KojeomUtility.RandomInteger(0, (int)RealCoordinate.x);
+        }
+        else
+        {
+            ret.x = KojeomUtility.RandomInteger((int)RealCoordinate.x - worldConfig.sub_world_x_size, (int)RealCoordinate.x);
+        }
+        // 월드 표면위로 y값을 설정하고싶은데.. 어떻게 할까?
+        // 일단 임시값으로 200을 설정.
+        ret.y = 200.0f;
+
+        if (RealCoordinate.z == 0)
+        {
+            ret.z = KojeomUtility.RandomInteger(0, (int)RealCoordinate.z);
+        }
+        else
+        {
+            ret.z = KojeomUtility.RandomInteger((int)RealCoordinate.z - worldConfig.sub_world_z_size, (int)RealCoordinate.z);
+        }
+
+        return ret;
     }
 }

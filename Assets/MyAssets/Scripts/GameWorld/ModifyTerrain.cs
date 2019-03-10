@@ -21,7 +21,7 @@ public class ModifyTerrain : MonoBehaviour
     private int chunkSize = 0;
     public void Init()
     {
-        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         chunkSize = gameWorldConfig.chunk_size;
     }
 
@@ -67,9 +67,9 @@ public class ModifyTerrain : MonoBehaviour
             blockX = (int)(collideInfo.hitBlockCenter.x);
             blockY = (int)(collideInfo.hitBlockCenter.y);
             blockZ = (int)(collideInfo.hitBlockCenter.z);
-            blockX -= (int)world.Position.x;
-            blockY -= (int)world.Position.y;
-            blockZ -= (int)world.Position.z;
+            blockX -= (int)world.WorldCoordinate.x;
+            blockY -= (int)world.WorldCoordinate.y;
+            blockZ -= (int)world.WorldCoordinate.z;
             //-------------------------------------------------------------------------------
             if (isCreate)
             {
@@ -92,7 +92,7 @@ public class ModifyTerrain : MonoBehaviour
 
     private void SetBlockForAdd(int x, int y, int z, byte block)
     {
-        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         if ((x < gameWorldConfig.sub_world_x_size) &&
            (y < gameWorldConfig.sub_world_y_size) &&
            (z < gameWorldConfig.sub_world_z_size) &&
@@ -166,7 +166,7 @@ public class ModifyTerrain : MonoBehaviour
             }
         };
 
-        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         if ((x < gameWorldConfig.sub_world_x_size) &&
            (y < gameWorldConfig.sub_world_y_size) &&
            (z < gameWorldConfig.sub_world_z_size) &&
@@ -188,7 +188,7 @@ public class ModifyTerrain : MonoBehaviour
 
     private void UpdateChunkAt(int x, int y, int z, byte block)
     {
-        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         // world data 인덱스를 chunkGroup 인덱스로 변환한다. 
         int updateX, updateY, updateZ;
         updateX = Mathf.FloorToInt(x / chunkSize);

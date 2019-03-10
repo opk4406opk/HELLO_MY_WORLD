@@ -8,7 +8,9 @@ public class NPCDataFile {
     private TextAsset JsonFile;
  
     public static NPCDataFile Instance = null;
-    //
+    /// <summary>
+    /// Key : UniqueID, Value : SpawnData
+    /// </summary>
     public Dictionary<int, NPCSpawnData> NpcSpawnDatas { get; private set; } = new Dictionary<int, NPCSpawnData>();
 
 	public void Init()

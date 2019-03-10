@@ -9,7 +9,7 @@ public class WorldGenAlgorithms {
 
     public static bool CheckBoundary(int x, int y, int z)
     {
-        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         if (x >= gameWorldConfig.sub_world_x_size || x < 0) return false;
         if (y >= gameWorldConfig.sub_world_y_size || y < 0) return false;
         if (z >= gameWorldConfig.sub_world_z_size || z < 0) return false;
@@ -33,7 +33,7 @@ public class WorldGenAlgorithms {
     public static void DefaultGenWorld(Block[,,] worldBlockData, MakeWorldParam param)
     {
         int highestBlockHeight = 0;
-        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         // perlin 알고리즘을 이용해 지형을 생성한다.
         for (int x = 0; x < gameWorldConfig.sub_world_x_size; x++)
         {
@@ -92,7 +92,7 @@ public class WorldGenAlgorithms {
     /// <param name="worldBlockData"></param>
     private static void GenerateSphereCaves(Block[,,] worldBlockData)
     {
-        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         int startX = KojeomUtility.RandomInteger(3, gameWorldConfig.sub_world_x_size - 16);
         int maxX = KojeomUtility.RandomInteger(startX, gameWorldConfig.sub_world_x_size);
         //

@@ -77,7 +77,7 @@ public class GameSupervisor : MonoBehaviour
     [SerializeField]
     private ActorCollideManager actorCollideManager;
     [SerializeField]
-    private ActorManager ActorManagerInstance;
+    private ActorSuperviosr ActorSupervisorInstance;
     #endregion
 
     public static GameSupervisor Instance = null;
@@ -165,7 +165,7 @@ public class GameSupervisor : MonoBehaviour
         //player Init
         playerManager.Init();
         // Actor Manager init..
-        ActorManagerInstance.Init();
+        ActorSupervisorInstance.Init();
         // looting init.
         lootingSystem.Init();
         //InGameUI Init

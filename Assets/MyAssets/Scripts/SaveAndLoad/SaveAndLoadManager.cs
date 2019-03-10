@@ -78,7 +78,7 @@ public class SaveAndLoadManager : MonoBehaviour {
   
     private void SubWorldToTotalWorld(string uniqueID)
     {
-        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         for (int x = 0; x < gameWorldConfig.sub_world_x_size; ++x)
             for (int y = 0; y < gameWorldConfig.sub_world_y_size; ++y)
                 for (int z = 0; z < gameWorldConfig.sub_world_z_size; ++z)
@@ -186,7 +186,7 @@ public class SaveAndLoadManager : MonoBehaviour {
     private delegate void del_InSertMergeWorldSize();
     private void CalcWorldDataSize()
     {
-        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         int subWorldSize = gameWorldConfig.sub_world_x_size * gameWorldConfig.sub_world_y_size * gameWorldConfig.sub_world_z_size;
         mergeWorldSize = (subWorldSize * GameWorldStates.Count) + GameWorldStates.Count;
 

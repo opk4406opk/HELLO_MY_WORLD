@@ -35,9 +35,9 @@ namespace MapTool.Source
         private struct SubWorldData
         {
             public string UNIQUE_ID;
-            public string X;
-            public string Y;
-            public string Z;
+            public string OFFSET_X;
+            public string OFFSET_Y;
+            public string OFFSET_Z;
             public string WORLD_NAME;
             public string IS_SURFACE;
         }
@@ -72,9 +72,9 @@ namespace MapTool.Source
                         SubWorldData subWorldData = new SubWorldData
                         {
                             UNIQUE_ID = string.Format("unique_{0}:{1}:{2}", x.ToString(), y.ToString(), z.ToString()),
-                            X = x.ToString(),
-                            Y = y.ToString(),
-                            Z = z.ToString(),
+                            OFFSET_X = x.ToString(),
+                            OFFSET_Y = y.ToString(),
+                            OFFSET_Z = z.ToString(),
                             WORLD_NAME = string.Format("SUB_WORLD_{0}", worldIndex)
                         };
                         if(y == (GenData.Layer - 1))

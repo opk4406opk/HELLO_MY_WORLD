@@ -30,19 +30,19 @@ public class WorldConfigFile {
     private JSONObject jsonObject;
     private TextAsset jsonFile;
 
-    private WorldConfig config;
-    public static WorldConfigFile instance = null;
+    private WorldConfig Config;
+    public static WorldConfigFile Instance = null;
     // Use this for initialization
     public void Init ()
     {
-        instance = this;
+        Instance = this;
         jsonFile = Resources.Load(ConstFilePath.TXT_WORLD_CONFIG_DATA) as TextAsset;
         jsonObject = new JSONObject(jsonFile.text);
         AccessData(jsonObject);
     }
     public WorldConfig GetConfig()
     {
-        return config;
+        return Config;
     }
     private void AccessData(JSONObject jsonObj)
     {
@@ -53,22 +53,22 @@ public class WorldConfigFile {
                 var data = jsonObject.ToDictionary();
                 string extractedValue;
                 data.TryGetValue("chunkLoadIntervalSeconds", out extractedValue);
-                config.chunkLoadIntervalSeconds = float.Parse(extractedValue);
+                Config.chunkLoadIntervalSeconds = float.Parse(extractedValue);
                 //
                 data.TryGetValue("sub_world_x_size", out extractedValue);
-                config.sub_world_x_size = int.Parse(extractedValue);
+                Config.sub_world_x_size = int.Parse(extractedValue);
                 //
                 data.TryGetValue("sub_world_y_size", out extractedValue);
-                config.sub_world_y_size = int.Parse(extractedValue);
+                Config.sub_world_y_size = int.Parse(extractedValue);
                 //
                 data.TryGetValue("sub_world_z_size", out extractedValue);
-                config.sub_world_z_size = int.Parse(extractedValue);
+                Config.sub_world_z_size = int.Parse(extractedValue);
                 //
                 data.TryGetValue("one_tile_unit", out extractedValue);
-                config.one_tile_unit = float.Parse(extractedValue);
+                Config.one_tile_unit = float.Parse(extractedValue);
                 //
                 data.TryGetValue("chunk_size", out extractedValue);
-                config.chunk_size = int.Parse(extractedValue);
+                Config.chunk_size = int.Parse(extractedValue);
                 break;
             case JSONObject.Type.ARRAY:
                 break;

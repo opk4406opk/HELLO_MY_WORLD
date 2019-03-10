@@ -15,7 +15,7 @@ public class WaterChunk : AChunk
     public override void Init()
     {
         ChunkType = ChunkType.WATER;
-        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         ChunkSize = gameWorldConfig.chunk_size;
         TileUnit = gameWorldConfig.one_tile_unit;
         Mesh = GetComponent<MeshFilter>().mesh;

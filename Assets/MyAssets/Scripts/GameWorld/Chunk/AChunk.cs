@@ -80,7 +80,7 @@ public abstract class AChunk : MonoBehaviour {
 
     protected BlockTileType GetBlockType(int x, int y, int z)
     {
-        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         if (x >= gameWorldConfig.sub_world_x_size ||
                x < 0 ||
                y >= gameWorldConfig.sub_world_y_size ||

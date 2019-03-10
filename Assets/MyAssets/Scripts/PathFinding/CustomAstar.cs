@@ -157,7 +157,7 @@ public class CustomAstar
 	public void Init(PathFinderInitData data)
     {
         //
-        var gameWorldConfig = WorldConfigFile.instance.GetConfig();
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         //
         offsetX = data.offsetX;
 		offsetZ = data.offsetZ;
