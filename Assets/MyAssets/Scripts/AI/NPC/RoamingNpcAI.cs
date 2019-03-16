@@ -11,7 +11,7 @@ public sealed class RoamingNpcAI : BehaviorTree
 
     private MoveForTarget moveForTarget = new MoveForTarget();
     private DeadProcess deadProcess = new DeadProcess();
-    private ChkDead chkDead = new ChkDead();
+    private CheckDead chkDead = new CheckDead();
 
     public override void Init(ActorController actorController, PathFinderInitData pathData)
     {

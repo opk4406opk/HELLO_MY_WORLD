@@ -126,5 +126,4 @@ public class ActorSuperviosr : MonoBehaviour
         }
         KojeomLogger.DebugLog("ActorSuperviosr::Tick End.", LOG_TYPE.NORMAL);
     }
-
 }

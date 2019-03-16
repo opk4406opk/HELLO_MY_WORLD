@@ -21,8 +21,8 @@ public enum DetailSingleMode
 public class GameStatus
 {
     // 빠른 테스트를 위한 디폴트값으로 인게임에디터로 설정.
-    public static GameMode gameMode = GameMode.INGAME_EDITOR;
-    public static DetailSingleMode detailSingleMode = DetailSingleMode.NONE;
+    public static GameMode GameModeFlag = GameMode.INGAME_EDITOR;
+    public static DetailSingleMode DetailSingleModeFlag = DetailSingleMode.NONE;
 }
 
 /// <summary>
@@ -33,13 +33,13 @@ public class GameSupervisor : MonoBehaviour
 {
     #region data file.
     // data file parser.
-    private WorldConfigFile worldConfigDataFile = new WorldConfigFile();
-    private WorldMapDataFile subWorldDataFile = new WorldMapDataFile();
-    private BlockTileDataFile tileDataFile = new BlockTileDataFile();
-    private ItemDataFile itemDataFile = new ItemDataFile();
-    private CraftItemListDataFile craftItemListDataFile = new CraftItemListDataFile();
-    private NPCDataFile npcDataFile = new NPCDataFile();
-    private GameConfigDataFile gameConfigDataFile = new GameConfigDataFile();
+    private WorldConfigFile WorldConfigDataFileInstance = new WorldConfigFile();
+    private WorldMapDataFile SubWorldDataFileInstance = new WorldMapDataFile();
+    private BlockTileDataFile TileDataFileInstance = new BlockTileDataFile();
+    private ItemDataFile ItemDataFileInstance = new ItemDataFile();
+    private CraftItemListDataFile CraftItemListDataFileInstance = new CraftItemListDataFile();
+    private NPCDataFile NpcDataFileInstance = new NPCDataFile();
+    private GameConfigDataFile GameConfigDataFileInstance = new GameConfigDataFile();
     //
     #endregion
 
@@ -80,15 +80,16 @@ public class GameSupervisor : MonoBehaviour
     private ActorSuperviosr ActorSupervisorInstance;
     #endregion
 
+
     public static GameSupervisor Instance = null;
 
     void Start ()
     {
-        KojeomLogger.DebugLog(string.Format("GameMode : {0}, DataMode : {1}", GameStatus.gameMode, GameStatus.detailSingleMode), LOG_TYPE.SYSTEM);
+        KojeomLogger.DebugLog(string.Format("GameMode : {0}, DataMode : {1}", GameStatus.GameModeFlag, GameStatus.DetailSingleModeFlag), LOG_TYPE.SYSTEM);
         Instance = this;
         // single or multi play 게임이 아니라면
         // InGame Scene에서 바로 시작하는 경우 ( in editor mode )
-        if (GameStatus.gameMode == GameMode.INGAME_EDITOR)
+        if (GameStatus.GameModeFlag == GameMode.INGAME_EDITOR)
         {
             InitInGameSceneStart();
         }
@@ -134,13 +135,13 @@ public class GameSupervisor : MonoBehaviour
         KojeomLogger.DebugLog("게임 데이터 파일 초기화 시작.");
         //GameDataFiles Init
         // 제작아이템 데이타파일은 아이템데이타 파일을 읽어들인 후에 읽어야함.
-        worldConfigDataFile.Init();
-        gameConfigDataFile.Init();
-        itemDataFile.Init();
-        tileDataFile.Init();
-        subWorldDataFile.Init();
-        craftItemListDataFile.Init();
-        npcDataFile.Init();
+        WorldConfigDataFileInstance.Init();
+        GameConfigDataFileInstance.Init();
+        ItemDataFileInstance.Init();
+        TileDataFileInstance.Init();
+        SubWorldDataFileInstance.Init();
+        CraftItemListDataFileInstance.Init();
+        NpcDataFileInstance.Init();
         KojeomLogger.DebugLog("게임 데이터 파일 초기화 완료.");
     }
     /// <summary>
@@ -166,6 +167,7 @@ public class GameSupervisor : MonoBehaviour
         playerManager.Init();
         // Actor Manager init..
         ActorSupervisorInstance.Init();
+        ActorSupervisorInstance.Begin();
         // looting init.
         lootingSystem.Init();
         //InGameUI Init
@@ -181,7 +183,7 @@ public class GameSupervisor : MonoBehaviour
         // 프로토타입의 수준으로 기능이 매우 미흡한 수준임.
         weatherManager.Init();
 
-        if (GameStatus.detailSingleMode == DetailSingleMode.LOAD_GAME)
+        if (GameStatus.DetailSingleModeFlag == DetailSingleMode.LOAD_GAME)
         {
             saveAndLoadManager.Load();
         }
@@ -190,7 +192,7 @@ public class GameSupervisor : MonoBehaviour
 
     private IEnumerator WaitingLogin()
     {
-        if(GameStatus.gameMode == GameMode.MULTI_INTERNET || GameStatus.gameMode == GameMode.MULTI_P2P)
+        if(GameStatus.GameModeFlag == GameMode.MULTI_INTERNET || GameStatus.GameModeFlag == GameMode.MULTI_P2P)
         {
             P2PNetworkManager.GetInstance().ReqInGameUserList();
         }

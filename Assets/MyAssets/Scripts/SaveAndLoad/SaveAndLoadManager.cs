@@ -12,7 +12,7 @@ using System;
 /// <summary>
 /// 게임내 세이브&로드를 관리하는 클래스.
 /// </summary>
-[Obsolete("Save and Load Manager Deprecated. Don't Use.")]
+[Obsolete("Save and Load Manager Deprecated. will be deleted soon.")]
 public class SaveAndLoadManager : MonoBehaviour {
 
     private Dictionary<string, WorldState> GameWorldStates;

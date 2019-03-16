@@ -1,7 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// deprecated.
+[Obsolete("ActorCollideManager Deprecated. will be deleted soon.")]
 public class ActorCollideManager : MonoBehaviour
 {
     private static ActorCollideManager _singleton = null;

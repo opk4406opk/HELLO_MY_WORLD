@@ -96,6 +96,7 @@ public class CustomComponentEditor : EditorWindow
             //ref : https://docs.unity3d.com/ScriptReference/PrefabUtility.InstantiatePrefab.html
             if (element.GetComponentInChildren<TMPro.TextMeshPro>() == null)
             {
+                // 텍스처매쉬를 인스턴싱---> 계층구조를 설정하면 에러발생.
                 var meshInstance = Instantiate(Resources.Load<TMPro.TextMeshPro>(ConstFilePath.ACTOR_COMMONS_NAME_RESOURCE_PATH), Vector3.zero, Quaternion.identity);
                 meshInstance.transform.SetParent(element.transform);
                 DestroyImmediate(meshInstance);

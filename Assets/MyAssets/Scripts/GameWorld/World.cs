@@ -16,8 +16,10 @@ public struct MakeWorldParam
 /// </summary>
 public class World : MonoBehaviour
 {
-    public delegate void del_OnFinishLoadChunks(string uniqueID);
-    public event del_OnFinishLoadChunks OnFinishLoadChunks;
+    #region event
+    public delegate void Del_OnFinishLoadChunks(string uniqueID);
+    public event Del_OnFinishLoadChunks OnFinishLoadChunks;
+    #endregion
 
     public ChunkSlot[,,] ChunkSlots { get; private set; }
 
@@ -100,7 +102,7 @@ public class World : MonoBehaviour
             }
         }
 
-        if (GameStatus.detailSingleMode != DetailSingleMode.LOAD_GAME)
+        if (GameStatus.DetailSingleModeFlag != DetailSingleMode.LOAD_GAME)
         {
             MakeWorldParam param;
             param.BaseOffset = KojeomUtility.RandomInteger(2, 29);
