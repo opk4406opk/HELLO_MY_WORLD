@@ -224,4 +224,12 @@ public abstract class AChunk : MonoBehaviour {
         NewTriangles.Clear();
         FaceCount = 0;
     }
+
+    public void Release()
+    {
+        Mesh.Clear();
+        NewVertices.Clear();
+        NewUV.Clear();
+        NewTriangles.Clear();
+    }
 }

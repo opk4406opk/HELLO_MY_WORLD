@@ -5,16 +5,16 @@ using UnityEngine;
 /// </summary>
 public class GamePlayerManager : MonoBehaviour {
 
-    public GamePlayer myGamePlayer { get; private set; }
-    public static GamePlayerManager instance { get; private set; }
+    public GamePlayer MyGamePlayer { get; private set; }
+    public static GamePlayerManager Instance { get; private set; }
     private GameObject gamePlayerPrefab;
-    public bool isInitializeFinish { get; private set; }
+    public bool IsInitializeFinish { get; private set; }
 
     public void Init()
     {
-        isInitializeFinish = false;
+        IsInitializeFinish = false;
         StartCoroutine(InitProcess());
-        instance = this;
+        Instance = this;
     }
 
     private IEnumerator InitProcess()
@@ -30,21 +30,21 @@ public class GamePlayerManager : MonoBehaviour {
                         P2PNetworkManager.GetInstance().GetMyGamePlayer() != null)
                     {
                         gamePlayerPrefab = P2PNetworkManager.GetInstance().playerPrefab;
-                        myGamePlayer = P2PNetworkManager.GetInstance().GetMyGamePlayer();
-                        myGamePlayer.Controller.Init(Camera.main, myGamePlayer);
-                        myGamePlayer.Controller.StartControllProcess();
+                        MyGamePlayer = P2PNetworkManager.GetInstance().GetMyGamePlayer();
+                        MyGamePlayer.Controller.Init(Camera.main, MyGamePlayer);
+                        MyGamePlayer.Controller.StartControllProcess();
 
                         Vector3 worldInstPos = state.Value.subWorldInstance.WorldCoordinate;
-                        myGamePlayer.Controller.SetPosition(new Vector3(worldInstPos.x, 60.0f, worldInstPos.z));
+                        MyGamePlayer.Controller.SetPosition(new Vector3(worldInstPos.x, 60.0f, worldInstPos.z));
                         //Player Manager 하위 종속으로 변경.
-                        myGamePlayer.transform.parent = gameObject.transform;
+                        MyGamePlayer.transform.parent = gameObject.transform;
                         //
-                        isInitializeFinish = true;
+                        IsInitializeFinish = true;
                         break;
                     }
                     yield return null;
                 }
-                if(isInitializeFinish == true)
+                if(IsInitializeFinish == true)
                 {
                     break;
                 }

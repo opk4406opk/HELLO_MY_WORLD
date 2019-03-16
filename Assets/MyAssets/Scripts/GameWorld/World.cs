@@ -19,6 +19,9 @@ public class World : MonoBehaviour
     #region event
     public delegate void Del_OnFinishLoadChunks(string uniqueID);
     public event Del_OnFinishLoadChunks OnFinishLoadChunks;
+
+    public delegate void Del_OnReadyToUnload(string uniqueID);
+    public event Del_OnReadyToUnload OnReadyToUnload;
     #endregion
 
     public ChunkSlot[,,] ChunkSlots { get; private set; }
@@ -55,6 +58,42 @@ public class World : MonoBehaviour
         IsSurfaceWorld = worldData.IsSurface;
         // setting to GameObject
         gameObject.name = WorldName;
+        //
+        StartCoroutine(Tick());
+    }
+
+    private IEnumerator Tick()
+    {
+        KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} is Tick Start.", UniqueID));
+        while(true)
+        {
+            if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.IsInitializeFinish == true)
+            {
+                var curPlayerWorld = WorldManager.Instance.
+                           ContainedWorld(GamePlayerManager.Instance.MyGamePlayer.Controller.GetPosition());
+                if (curPlayerWorld != null)
+                {
+                    var dist = Vector3.Distance(curPlayerWorld.WorldCoordinate, WorldCoordinate);
+                    KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} away from {1} distance Player contained World",
+                        UniqueID, dist));
+                }
+            }
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    public void Release()
+    {
+        StopCoroutine(Tick());
+        //
+        foreach(var slot in ChunkSlots)
+        {
+            for (int type = 0; type < (int)ChunkType.COUNT; type++)
+            {
+                slot.Chunks[type].Release();
+            }
+        }
+        ChunkSlots = null;
     }
 
     public void LoadSyncro(Vector3 pos)
@@ -67,9 +106,6 @@ public class World : MonoBehaviour
             gameWorldConfig.sub_world_y_size + pos.y,
             gameWorldConfig.sub_world_z_size + pos.z));
         ChunkSize = gameWorldConfig.chunk_size;
-        //
-        WorldCoordinate = pos;
-
         // init world data.
         WorldBlockData = new Block[gameWorldConfig.sub_world_x_size,
             gameWorldConfig.sub_world_y_size,
@@ -173,9 +209,10 @@ public class World : MonoBehaviour
                         ChunkSlots[x, y, z].Chunks[type].WorldDataIdxX = x * ChunkSize;
                         ChunkSlots[x, y, z].Chunks[type].WorldDataIdxY = y * ChunkSize;
                         ChunkSlots[x, y, z].Chunks[type].WorldDataIdxZ = z * ChunkSize;
-                        ChunkSlots[x, y, z].Chunks[type].RealCoordX = chunkRealCoordX + WorldCoordinate.x;
-                        ChunkSlots[x, y, z].Chunks[type].RealCoordY = chunkRealCoordY + WorldCoordinate.y;
-                        ChunkSlots[x, y, z].Chunks[type].RealCoordZ = chunkRealCoordZ + WorldCoordinate.z;
+                        var WorldConfig = WorldConfigFile.Instance.GetConfig();
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordX = chunkRealCoordX + WorldCoordinate.x * WorldConfig.sub_world_x_size;
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordY = chunkRealCoordY + WorldCoordinate.y * WorldConfig.sub_world_y_size;
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordZ = chunkRealCoordZ + WorldCoordinate.z * WorldConfig.sub_world_z_size;
                         ChunkSlots[x, y, z].Chunks[type].Init();
                         yield return new WaitForSeconds(WorldConfigFile.Instance.GetConfig().chunkLoadIntervalSeconds);
                     }

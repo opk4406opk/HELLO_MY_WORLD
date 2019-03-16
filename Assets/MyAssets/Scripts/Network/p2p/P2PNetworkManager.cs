@@ -508,9 +508,9 @@ public class P2PNetworkManager : NetworkManager {
     {
         bool isSuccess = false;
         P2PMessageGameCharState pushStateMsg = new P2PMessageGameCharState();
-        if(GamePlayerManager.instance != null)
+        if(GamePlayerManager.Instance != null)
         {
-            pushStateMsg.ownerCharState = GamePlayerManager.instance.myGamePlayer.Controller.GetPlayerState();
+            pushStateMsg.ownerCharState = GamePlayerManager.Instance.MyGamePlayer.Controller.GetPlayerState();
             pushStateMsg.ownerConnID = clientNetworkConnection.connectionId;
             isSuccess = clientNetworkConnection.Send((short)P2P_NETWORK_PROTOCOL.push_charStateToServer, pushStateMsg);
 

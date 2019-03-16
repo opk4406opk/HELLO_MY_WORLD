@@ -46,8 +46,8 @@ public enum WorldGenerateInfo
 public enum WorldRealTimeStatus
 {
     None = 0,
-    InGameReLoaded = 1,
-    NeedInGameReLoad = 2,
+    InGameLoaded = 1,
+    NeedInGameLoad = 2,
     Released = 3
 }
 
@@ -55,7 +55,7 @@ public class WorldManager : MonoBehaviour
 {
     [SerializeField]
     private Transform WorldGroupTrans;
-    public static WorldManager Instance;
+    public static WorldManager Instance { get; private set; }
 
     public Dictionary<string, WorldState> WholeWorldStates { get; } = new Dictionary<string, WorldState>();
 
@@ -127,6 +127,7 @@ public class WorldManager : MonoBehaviour
 
     private void ReleaseSubWorldInstance(string uniqueID)
     {
+        WholeWorldStates[uniqueID].subWorldInstance.Release();
         WholeWorldStates[uniqueID].subWorldInstance = null;
         WholeWorldStates[uniqueID].realTimeStatus = WorldRealTimeStatus.Released;
     }
@@ -147,7 +148,7 @@ public class WorldManager : MonoBehaviour
             WorldState worldState = new WorldState();
             worldState.subWorldInstance = subWorld;
             worldState.genInfo = WorldGenerateInfo.NotYet;
-            worldState.realTimeStatus = WorldRealTimeStatus.NeedInGameReLoad;
+            worldState.realTimeStatus = WorldRealTimeStatus.NeedInGameLoad;
             WholeWorldStates.Add(subWorldData.UniqueID, worldState);
         }
     }
@@ -200,9 +201,9 @@ public class WorldManager : MonoBehaviour
             // to do
             Vector3 playerPos = Vector3.zero;
             Vector3 offsetPos = Vector3.zero;
-            if(GamePlayerManager.instance != null && GamePlayerManager.instance.isInitializeFinish == true)
+            if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.IsInitializeFinish == true)
             {
-                playerPos = GamePlayerManager.instance.myGamePlayer.Controller.GetPosition();
+                playerPos = GamePlayerManager.Instance.MyGamePlayer.Controller.GetPosition();
                 offsetPos = WholeWorldStates[GetSubWorldUniqueID(playerPos)].subWorldInstance.WorldCoordinate;
             }
             else
@@ -235,8 +236,8 @@ public class WorldManager : MonoBehaviour
                                 case WorldRealTimeStatus.None:
                                     // nothing to do.
                                     break;
-                                case WorldRealTimeStatus.NeedInGameReLoad:
-                                    WholeWorldStates[uniqueID].realTimeStatus = WorldRealTimeStatus.InGameReLoaded;
+                                case WorldRealTimeStatus.NeedInGameLoad:
+                                    WholeWorldStates[uniqueID].realTimeStatus = WorldRealTimeStatus.InGameLoaded;
                                     WholeWorldStates[uniqueID].subWorldInstance.LoadSyncro(
                                         new Vector3(x * gameWorldConfig.sub_world_x_size,
                                         y * gameWorldConfig.sub_world_y_size,
