@@ -76,6 +76,8 @@ public class World : MonoBehaviour
                     var dist = Vector3.Distance(curPlayerWorld.WorldCoordinate, WorldCoordinate);
                     KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} away from {1} distance Player contained World",
                         UniqueID, dist));
+                    // 거리값이 N 이상이 되면..Release.
+                    //OnReadyToUnload(UniqueID);
                 }
             }
             yield return new WaitForSeconds(0.5f);

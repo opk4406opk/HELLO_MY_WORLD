@@ -125,8 +125,9 @@ public class WorldManager : MonoBehaviour
          await LoadSubWorldFile(uniqueID);
     }
 
-    private void ReleaseSubWorldInstance(string uniqueID)
+    private void OnReleaseSubWorldInstance(string uniqueID)
     {
+        KojeomLogger.DebugLog(string.Format("Subworld ID : {0} is Released. ", uniqueID));
         WholeWorldStates[uniqueID].subWorldInstance.Release();
         WholeWorldStates[uniqueID].subWorldInstance = null;
         WholeWorldStates[uniqueID].realTimeStatus = WorldRealTimeStatus.Released;
@@ -143,6 +144,7 @@ public class WorldManager : MonoBehaviour
             //
             World subWorld = newSubWorld.GetComponent<World>();
             subWorld.OnFinishLoadChunks += OnSubWorldFinishLoadChunks;
+            subWorld.OnReadyToUnload += OnReleaseSubWorldInstance;
             subWorld.Init(subWorldData);
             //add world.
             WorldState worldState = new WorldState();
