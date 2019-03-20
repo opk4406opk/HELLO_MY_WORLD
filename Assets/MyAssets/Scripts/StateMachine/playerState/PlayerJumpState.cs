@@ -15,7 +15,7 @@ public class PlayerJumpState : IState
         JumpSpeed = 2.5f;
         JumpScale = 1.8f;
         t = 0.0f;
-        AniController = GamePlayer.Controller.CharacterInstance.queryMecanimController;
+        AniController = GamePlayer.Controller.CharacterInstance.QueryMecanimController;
     }
     public void InitState()
     {
@@ -43,7 +43,7 @@ public class PlayerJumpState : IState
             topOffsetedPos += new Vector3(0.0f, 0.1f, 0.0f);
 
             CollideInfo collideInfo = containWorld.CustomOctree.Collide(topOffsetedPos);
-            if (collideInfo.isCollide == false)
+            if (collideInfo.IsCollide == false)
             {
                 startPos = GamePlayer.transform.position;
                 destPos.x = startPos.x;

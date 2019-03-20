@@ -63,6 +63,7 @@ public class GamePlayerController : MonoBehaviour {
         jumpStateController = new PlayerStateController();
         poseStateController = new PlayerStateController();
         curPlayerState = GAMEPLAYER_CHAR_STATE.IDLE;
+        //
     }
 
     public void RegisterCharacter(GameCharacterInstance character)

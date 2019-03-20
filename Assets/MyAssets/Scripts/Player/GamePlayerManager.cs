@@ -26,7 +26,7 @@ public class GamePlayerManager : MonoBehaviour {
             {
                 foreach(var state in WorldManager.Instance.WholeWorldStates)
                 {
-                    if(state.Value.genInfo == WorldGenerateInfo.Done &&
+                    if(state.Value.realTimeStatus == WorldRealTimeStatus.LoadSuccess &&
                         P2PNetworkManager.GetInstance().GetMyGamePlayer() != null)
                     {
                         gamePlayerPrefab = P2PNetworkManager.GetInstance().playerPrefab;

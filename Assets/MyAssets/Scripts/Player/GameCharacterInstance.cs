@@ -1,44 +1,40 @@
 ﻿using UnityEngine;
 
-public class GameCharacterInstance : MonoBehaviour {
-    [SerializeField]
-    private Animator characterAnimator;
-    [SerializeField]
-    public QuerySDMecanimController queryMecanimController { get; private set; }
-    [SerializeField]
-    private BoxCollider boxCollider;
+public class GameCharacterInstance : MonoBehaviour
+{
+
+    public Animator AnimatorInstance { get; private set; }
+    public QuerySDMecanimController QueryMecanimController { get; private set; }
+    public BoxCollider BoxColliderInstance { get; private set; }
+    public Rigidbody RigidBodyInstance { get; private set; }
+
     public void Init()
     {
-        queryMecanimController = gameObject.GetComponent<QuerySDMecanimController>();
-        boxCollider = gameObject.GetComponent<BoxCollider>();
-        characterAnimator = gameObject.GetComponentInChildren<Animator>();
+        QueryMecanimController = gameObject.GetComponent<QuerySDMecanimController>();
+        BoxColliderInstance = gameObject.GetComponent<BoxCollider>();
+        AnimatorInstance = gameObject.GetComponentInChildren<Animator>();
+        RigidBodyInstance = gameObject.GetComponent<Rigidbody>();
 
-        if (queryMecanimController == null) KojeomLogger.DebugLog(string.Format("queryMecanimController nullptr!"), LOG_TYPE.ERROR);
-        if (boxCollider == null) KojeomLogger.DebugLog(string.Format("boxCollider nullptr!"), LOG_TYPE.ERROR);
-        if (characterAnimator == null) KojeomLogger.DebugLog(string.Format("characterAnimator nullptr!"), LOG_TYPE.ERROR);
-    }
+        if (QueryMecanimController == null) KojeomLogger.DebugLog(string.Format("QueryMecanimController nullptr!"), LOG_TYPE.ERROR);
+        if (BoxColliderInstance == null) KojeomLogger.DebugLog(string.Format("BoxColliderInstance nullptr!"), LOG_TYPE.ERROR);
+        if (AnimatorInstance == null) KojeomLogger.DebugLog(string.Format("AnimatorInstance nullptr!"), LOG_TYPE.ERROR);
+        if(RigidBodyInstance == null) KojeomLogger.DebugLog(string.Format("RigidBodyInstance nullptr!"), LOG_TYPE.ERROR);
 
-    public Animator GetAnimator()
-    {
-        return characterAnimator;
-    }
-
-    public BoxCollider GetBoxCollider()
-    {
-        return boxCollider;
+        //
+        RigidBodyInstance.useGravity = false;
     }
 
     public CustomAABB GetCustomAABB(Vector3 moveSpeed)
     {
         CustomAABB aabb = new CustomAABB();
-        aabb.MakeAABB(boxCollider, moveSpeed.x, moveSpeed.y, moveSpeed.z);
+        aabb.MakeAABB(BoxColliderInstance, moveSpeed.x, moveSpeed.y, moveSpeed.z);
         return aabb;
     }
 
     public CustomAABB GetCustomAABB()
     {
         CustomAABB aabb = new CustomAABB();
-        aabb.MakeAABB(boxCollider);
+        aabb.MakeAABB(BoxColliderInstance);
         return aabb;
     }
 

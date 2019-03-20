@@ -49,8 +49,8 @@ public class ModifyTerrain : MonoBehaviour
     {
         foreach (var element in WorldManager.Instance.WholeWorldStates)
         {
-            if (CustomAABB.IsInterSectPoint(element.Value.subWorldInstance.CustomOctree.rootMinBound,
-                element.Value.subWorldInstance.CustomOctree.rootMaxBound, clickWorldPos))
+            if (CustomAABB.IsInterSectPoint(element.Value.subWorldInstance.CustomOctree.RootMinBound,
+                element.Value.subWorldInstance.CustomOctree.RootMaxBound, clickWorldPos))
             {
                 world = element.Value.subWorldInstance;
                 break;
@@ -61,12 +61,12 @@ public class ModifyTerrain : MonoBehaviour
     private void RayCastingProcess(Ray ray, byte blockType, bool isCreate)
     {
         CollideInfo collideInfo = world.CustomOctree.Collide(ray);
-        if (collideInfo.isCollide)
+        if (collideInfo.IsCollide)
         {
             int blockX, blockY, blockZ;
-            blockX = (int)(collideInfo.hitBlockCenter.x);
-            blockY = (int)(collideInfo.hitBlockCenter.y);
-            blockZ = (int)(collideInfo.hitBlockCenter.z);
+            blockX = (int)(collideInfo.HitBlockCenter.x);
+            blockY = (int)(collideInfo.HitBlockCenter.y);
+            blockZ = (int)(collideInfo.HitBlockCenter.z);
             var gameConfig = WorldConfigFile.Instance.GetConfig();
             blockX -= (int)world.WorldCoordinate.x * gameConfig.sub_world_x_size;
             blockY -= (int)world.WorldCoordinate.y * gameConfig.sub_world_y_size;
@@ -78,13 +78,13 @@ public class ModifyTerrain : MonoBehaviour
                 //    Mathf.Ceil(collideInfo.collisionPoint.y),
                 //    Mathf.Ceil(collideInfo.collisionPoint.z));
                 // 임시코드
-                world.CustomOctree.Add(collideInfo.hitBlockCenter + new Vector3(0, 1.0f, 0));
+                world.CustomOctree.Add(collideInfo.HitBlockCenter + new Vector3(0, 1.0f, 0));
                 SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
                 world.WorldBlockData[blockX, blockY + 1, blockZ].isRendered = true;
             }
             else
             {
-                world.CustomOctree.Delete(collideInfo.hitBlockCenter);
+                world.CustomOctree.Delete(collideInfo.HitBlockCenter);
                 SetBlockForDelete(blockX, blockY, blockZ, blockType);
                 world.WorldBlockData[blockX, blockY, blockZ].isRendered = false;
             }
