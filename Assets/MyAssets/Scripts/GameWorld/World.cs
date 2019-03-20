@@ -189,68 +189,61 @@ public class World : MonoBehaviour
     
     private IEnumerator LoadChunks()
     {
-        if(ChunkSlots == null)
+        for (int x = 0; x < ChunkSlots.GetLength(0); x++)
         {
-            KojeomLogger.DebugLog(string.Format("World name : {0} ChunkSlots is null, So LoadChunks is Failed.", WorldName));
-        }
-        else
-        {
-            for (int x = 0; x < ChunkSlots.GetLength(0); x++)
+            for (int z = 0; z < ChunkSlots.GetLength(2); z++)
             {
-                for (int z = 0; z < ChunkSlots.GetLength(2); z++)
+                for (int y = 0; y < ChunkSlots.GetLength(1); y++)
                 {
-                    for (int y = 0; y < ChunkSlots.GetLength(1); y++)
+                    for (int type = 0; type < (int)ChunkType.COUNT; type++)
                     {
-                        for (int type = 0; type < (int)ChunkType.COUNT; type++)
+
+                        // 유니티엔진에서 제공되는 게임 오브젝트들의 중점(=월드좌표에서의 위치)은
+                        // 실제 게임 오브젝트의 정중앙이 된다. 
+                        // 따라서, 유니티엔진에 맞춰서 오브젝트의 중점을 정중앙으로 블록들을 생성하려면(= 1개의 블록은 6개의 면을 생성한다),
+                        // 아래와 같은 0.5f(offset)값을 추가한다. ( worldCoordX,Y,Z 값은 개별 블록을 생성할 때 사용된다. )
+                        // p.s. 이 프로젝트에서 1개의 block의 기준점(block을 생성할 때 쓰이는)은 최상단면의 좌측하단의 포인트가 된다.(디폴트)
+                        float chunkRealCoordX = x * ChunkSize - 0.5f;
+                        float chunkRealCoordY = y * ChunkSize + 0.5f;
+                        float chunkRealCoordZ = z * ChunkSize - 0.5f;
+
+                        GameObject newChunk = null;
+                        switch ((ChunkType)type)
                         {
-
-                            // 유니티엔진에서 제공되는 게임 오브젝트들의 중점(=월드좌표에서의 위치)은
-                            // 실제 게임 오브젝트의 정중앙이 된다. 
-                            // 따라서, 유니티엔진에 맞춰서 오브젝트의 중점을 정중앙으로 블록들을 생성하려면(= 1개의 블록은 6개의 면을 생성한다),
-                            // 아래와 같은 0.5f(offset)값을 추가한다. ( worldCoordX,Y,Z 값은 개별 블록을 생성할 때 사용된다. )
-                            // p.s. 이 프로젝트에서 1개의 block의 기준점(block을 생성할 때 쓰이는)은 최상단면의 좌측하단의 포인트가 된다.(디폴트)
-                            float chunkRealCoordX = x * ChunkSize - 0.5f;
-                            float chunkRealCoordY = y * ChunkSize + 0.5f;
-                            float chunkRealCoordZ = z * ChunkSize - 0.5f;
-
-                            GameObject newChunk = null;
-                            switch ((ChunkType)type)
-                            {
-                                case ChunkType.COMMON:
-                                    newChunk = Instantiate(GameResourceSupervisor.Instance.CommonChunkPrefab.LoadSynchro(), new Vector3(0, 0, 0),
-                                                               new Quaternion(0, 0, 0, 0)) as GameObject;
-                                    newChunk.transform.parent = gameObject.transform;
-                                    newChunk.transform.name = string.Format("CommonChunk_{0}", ChunkNumber++);
-                                    ChunkSlots[x, y, z].Chunks[type] = newChunk.GetComponent<CommonChunk>();
-                                    break;
-                                case ChunkType.WATER:
-                                    newChunk = Instantiate(GameResourceSupervisor.Instance.WaterChunkPrefab.LoadSynchro(), new Vector3(0, 0, 0),
-                                                               new Quaternion(0, 0, 0, 0)) as GameObject;
-                                    newChunk.transform.parent = gameObject.transform;
-                                    newChunk.transform.name = string.Format("WaterChunk_{0}", ChunkNumber++);
-                                    ChunkSlots[x, y, z].Chunks[type] = newChunk.GetComponent<WaterChunk>();
-                                    break;
-                            }
-                            ChunkSlots[x, y, z].Chunks[type].World = this;
-                            ChunkSlots[x, y, z].Chunks[type].WorldDataIdxX = x * ChunkSize;
-                            ChunkSlots[x, y, z].Chunks[type].WorldDataIdxY = y * ChunkSize;
-                            ChunkSlots[x, y, z].Chunks[type].WorldDataIdxZ = z * ChunkSize;
-                            var WorldConfig = WorldConfigFile.Instance.GetConfig();
-                            ChunkSlots[x, y, z].Chunks[type].RealCoordX = chunkRealCoordX + WorldCoordinate.x * WorldConfig.sub_world_x_size;
-                            ChunkSlots[x, y, z].Chunks[type].RealCoordY = chunkRealCoordY + WorldCoordinate.y * WorldConfig.sub_world_y_size;
-                            ChunkSlots[x, y, z].Chunks[type].RealCoordZ = chunkRealCoordZ + WorldCoordinate.z * WorldConfig.sub_world_z_size;
-                            ChunkSlots[x, y, z].Chunks[type].Init();
-                            yield return new WaitForSeconds(WorldConfigFile.Instance.GetConfig().chunkLoadIntervalSeconds);
+                            case ChunkType.COMMON:
+                                newChunk = Instantiate(GameResourceSupervisor.Instance.CommonChunkPrefab.LoadSynchro(), new Vector3(0, 0, 0),
+                                                           new Quaternion(0, 0, 0, 0)) as GameObject;
+                                newChunk.transform.parent = gameObject.transform;
+                                newChunk.transform.name = string.Format("CommonChunk_{0}", ChunkNumber++);
+                                ChunkSlots[x, y, z].Chunks[type] = newChunk.GetComponent<CommonChunk>();
+                                break;
+                            case ChunkType.WATER:
+                                newChunk = Instantiate(GameResourceSupervisor.Instance.WaterChunkPrefab.LoadSynchro(), new Vector3(0, 0, 0),
+                                                           new Quaternion(0, 0, 0, 0)) as GameObject;
+                                newChunk.transform.parent = gameObject.transform;
+                                newChunk.transform.name = string.Format("WaterChunk_{0}", ChunkNumber++);
+                                ChunkSlots[x, y, z].Chunks[type] = newChunk.GetComponent<WaterChunk>();
+                                break;
                         }
-
+                        ChunkSlots[x, y, z].Chunks[type].World = this;
+                        ChunkSlots[x, y, z].Chunks[type].WorldDataIdxX = x * ChunkSize;
+                        ChunkSlots[x, y, z].Chunks[type].WorldDataIdxY = y * ChunkSize;
+                        ChunkSlots[x, y, z].Chunks[type].WorldDataIdxZ = z * ChunkSize;
+                        var WorldConfig = WorldConfigFile.Instance.GetConfig();
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordX = chunkRealCoordX + WorldCoordinate.x * WorldConfig.sub_world_x_size;
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordY = chunkRealCoordY + WorldCoordinate.y * WorldConfig.sub_world_y_size;
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordZ = chunkRealCoordZ + WorldCoordinate.z * WorldConfig.sub_world_z_size;
+                        ChunkSlots[x, y, z].Chunks[type].Init();
+                        yield return new WaitForSeconds(WorldConfigFile.Instance.GetConfig().chunkLoadIntervalSeconds);
                     }
+
                 }
             }
-            //
-            KojeomLogger.DebugLog(string.Format("World name : {0} Chunk 로드를 완료했습니다.", WorldName), LOG_TYPE.DEBUG_TEST);
-            IsLoadFinish = true;
-            OnFinishLoadChunks(UniqueID);
         }
+        //
+        KojeomLogger.DebugLog(string.Format("World name : {0} Chunk 로드를 완료했습니다.", WorldName), LOG_TYPE.DEBUG_TEST);
+        IsLoadFinish = true;
+        OnFinishLoadChunks(UniqueID);
     }
 
     private int PerlinNoise (int x, int y, int z, float scale, float height, float power)

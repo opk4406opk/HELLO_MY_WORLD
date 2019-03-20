@@ -260,6 +260,7 @@ public class WorldManager : MonoBehaviour
                                     WholeWorldStates[uniqueID].subWorldInstance.LoadSyncro();
                                     break;
                                 case WorldRealTimeStatus.Released:
+                                    LoadSubWorldFileAsync(uniqueID);
                                     break;
                             }
                         }
