@@ -49,8 +49,8 @@ public class ModifyTerrain : MonoBehaviour
     {
         foreach (var element in WorldManager.Instance.WholeWorldStates)
         {
-            if (CustomAABB.IsInterSectPoint(element.Value.subWorldInstance.CustomOctree.RootMinBound,
-                element.Value.subWorldInstance.CustomOctree.RootMaxBound, clickWorldPos))
+            if (CustomAABB.IsInterSectPoint(element.Value.subWorldInstance.CustomOctreeInstance.RootMinBound,
+                element.Value.subWorldInstance.CustomOctreeInstance.RootMaxBound, clickWorldPos))
             {
                 world = element.Value.subWorldInstance;
                 break;
@@ -60,7 +60,7 @@ public class ModifyTerrain : MonoBehaviour
 
     private void RayCastingProcess(Ray ray, byte blockType, bool isCreate)
     {
-        CollideInfo collideInfo = world.CustomOctree.Collide(ray);
+        CollideInfo collideInfo = world.CustomOctreeInstance.Collide(ray);
         if (collideInfo.IsCollide)
         {
             int blockX, blockY, blockZ;
@@ -78,13 +78,13 @@ public class ModifyTerrain : MonoBehaviour
                 //    Mathf.Ceil(collideInfo.collisionPoint.y),
                 //    Mathf.Ceil(collideInfo.collisionPoint.z));
                 // 임시코드
-                world.CustomOctree.Add(collideInfo.HitBlockCenter + new Vector3(0, 1.0f, 0));
+                world.CustomOctreeInstance.Add(collideInfo.HitBlockCenter + new Vector3(0, 1.0f, 0));
                 SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
                 world.WorldBlockData[blockX, blockY + 1, blockZ].isRendered = true;
             }
             else
             {
-                world.CustomOctree.Delete(collideInfo.HitBlockCenter);
+                world.CustomOctreeInstance.Delete(collideInfo.HitBlockCenter);
                 SetBlockForDelete(blockX, blockY, blockZ, blockType);
                 world.WorldBlockData[blockX, blockY, blockZ].isRendered = false;
             }

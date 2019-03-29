@@ -73,6 +73,15 @@ public class KojeomUtility
         return int.Parse(data);
     }
 
+    public static string ConvertAssetPathToResourcePath(string assetPath)
+    {
+        // ex)
+        //"Assets/MyAssets/Resources/GamePrefabs/Actor/NPC/NPC_GUARD_N1_Utc.prefab"
+        assetPath = assetPath.Replace("Assets/MyAssets/Resources/", "");
+        var splits = assetPath.Split('.');
+        return splits[0];
+    }
+
     public static string GetActorNameFromAssetPath(string assetPath)
     {
         string prefabName = assetPath.Substring(assetPath.LastIndexOf('/') + 1);

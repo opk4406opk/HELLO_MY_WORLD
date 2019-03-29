@@ -41,7 +41,7 @@ public class World : MonoBehaviour
     public Block[,,] WorldBlockData { get; private set; }
     private int ChunkSize = 0;
     private int ChunkNumber = 0;
-    public CustomOctree CustomOctree { get; private set; } = new CustomOctree();
+    public CustomOctree CustomOctreeInstance { get; private set; } = new CustomOctree();
 
     private InGameObjectRegister InGameObjRegister;
 
@@ -62,7 +62,7 @@ public class World : MonoBehaviour
         // setting to GameObject
         gameObject.name = WorldName;
         // Octree init.
-        CustomOctree.Init(RealCoordinate, new Vector3(configData.sub_world_x_size + RealCoordinate.x,
+        CustomOctreeInstance.Init(RealCoordinate, new Vector3(configData.sub_world_x_size + RealCoordinate.x,
             configData.sub_world_y_size + RealCoordinate.y,
             configData.sub_world_z_size + RealCoordinate.z));
         //
@@ -116,6 +116,11 @@ public class World : MonoBehaviour
         }
         ChunkSlots = null;
         WorldBlockData = null;
+
+        foreach (var actor in InGameObjRegister.RegisteredActors)
+        {
+            actor.Hide();
+        }
     }
 
     public void LoadSyncro(Block[,,] newBlockData = null)

@@ -41,14 +41,12 @@ public class GameResourceSupervisor : MonoBehaviour {
             ActorPrefabs[idx] = new SoftObjectPtrGroup();
         }
 
-      
-
         ActorPrefabs[(int)ACTOR_TYPE.NPC].Group = new SoftObjectPtr[(int)NPC_TYPE.COUNT];
         var npcGuids = AssetDatabase.FindAssets("NPC", new[] { ConstFilePath.NPC_PREFABS_ASSET_PATH });
         foreach (var guid in npcGuids)
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
-            ActorPrefabs[(int)ACTOR_TYPE.NPC].Group[KojeomUtility.GetResourceNumberFromAssetPath(path)] = new SoftObjectPtr(path);
+            ActorPrefabs[(int)ACTOR_TYPE.NPC].Group[KojeomUtility.GetResourceNumberFromAssetPath(path)] = new SoftObjectPtr(KojeomUtility.ConvertAssetPathToResourcePath(path));
             KojeomUtility.GetResourceNumberFromAssetPath(path);
         }
 
@@ -57,7 +55,7 @@ public class GameResourceSupervisor : MonoBehaviour {
         foreach(var guid in monsterGuids)
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
-            ActorPrefabs[(int)ACTOR_TYPE.MONSTER].Group[KojeomUtility.GetResourceNumberFromAssetPath(path)] = new SoftObjectPtr(path);
+            ActorPrefabs[(int)ACTOR_TYPE.MONSTER].Group[KojeomUtility.GetResourceNumberFromAssetPath(path)] = new SoftObjectPtr(KojeomUtility.ConvertAssetPathToResourcePath(path));
         }
     }
 

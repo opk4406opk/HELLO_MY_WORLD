@@ -42,23 +42,40 @@ public class NPCManager : NPCSpawner
     {
         for(int spawnNum = 0; spawnNum < num; spawnNum++)
         {
+            
             NPCDataFile.Instance.NpcSpawnDatas.TryGetValue(uniqueID, out NPCSpawnData spawnData);
             Actor instance = Instantiate(GameResourceSupervisor.Instance.ActorPrefabs[(int)ACTOR_TYPE.NPC]
                 .Group[KojeomUtility.GetResourceNumberFromID(spawnData.ResourceID)]
                 .LoadSynchro(), Vector3.zero, Quaternion.identity)
                 .GetComponent<Actor>();
             WorldManager.Instance.WholeWorldStates.TryGetValue(worldUniqueID, out WorldState worldState);
-            worldState.subWorldInstance.RegisterActor(instance);
-            int spanwID = instance.GetHashCode();
-            //
-            switch (spawnData.NpcType)
+            if(worldState.realTimeStatus == WorldRealTimeStatus.Loading ||
+               worldState.realTimeStatus == WorldRealTimeStatus.LoadSuccess)
             {
-                case NPC_TYPE.MERCHANT:
-                case NPC_TYPE.GUARD:
-                    instance.Init(spawnData, worldState.subWorldInstance, spanwID);
-                    break;
+                worldState.subWorldInstance.RegisterActor(instance);
+                int spanwID = instance.GetHashCode();
+                //
+                switch (spawnData.NpcType)
+                {
+                    case NPC_TYPE.MERCHANT:
+                    case NPC_TYPE.GUARD:
+                        instance.Init(spawnData, worldState.subWorldInstance, spanwID);
+                        if(initShow == false)
+                        {
+                            instance.Hide();
+                        }
+                        else
+                        {
+                            instance.Show();
+                        }
+                        break;
+                }
+                ActorGroup.Add(spanwID, instance);
             }
-            ActorGroup.Add(spanwID, instance);
+            else
+            {
+                KojeomLogger.DebugLog(string.Format("World Id : {0} is Not Loaded..So, Actor Spawn Failed.", worldUniqueID), LOG_TYPE.ERROR);
+            }
         }
     }
 

@@ -84,7 +84,7 @@ public class CommonChunk : AChunk
                         World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].centerZ = blockCenterZ;
                         World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].isRendered = true;
                         // 월드맵에 생성된 블록의 중앙점을 이용해 Octree의 노드를 생성합니다.
-                        World.CustomOctree.Add(new Vector3(blockCenterX, blockCenterY, blockCenterZ));
+                        World.CustomOctreeInstance.Add(new Vector3(blockCenterX, blockCenterY, blockCenterZ));
                     }
 
                 }
