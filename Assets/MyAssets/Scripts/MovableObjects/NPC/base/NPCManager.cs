@@ -46,7 +46,7 @@ public class NPCManager : NPCSpawner
             NPCDataFile.Instance.NpcSpawnDatas.TryGetValue(uniqueID, out NPCSpawnData spawnData);
             Actor instance = Instantiate(GameResourceSupervisor.Instance.ActorPrefabs[(int)ACTOR_TYPE.NPC]
                 .Group[KojeomUtility.GetResourceNumberFromID(spawnData.ResourceID)]
-                .LoadSynchro(), Vector3.zero, Quaternion.identity)
+                .LoadSynchro(), spawnPos, Quaternion.identity)
                 .GetComponent<Actor>();
             WorldManager.Instance.WholeWorldStates.TryGetValue(worldUniqueID, out WorldState worldState);
             if(worldState.realTimeStatus == WorldRealTimeStatus.Loading ||
@@ -79,9 +79,4 @@ public class NPCManager : NPCSpawner
         }
     }
 
-    public override void SpawnActorRandomPos(int uniqueID, string worldUniqueID, int num, bool initShow = false)
-    {
-        // 스폰 위치를 월드 영역을 기준으로 랜덤으로 계산해야함.
-        SpawnActor(uniqueID, worldUniqueID, Vector3.zero, num);
-    }
 }
