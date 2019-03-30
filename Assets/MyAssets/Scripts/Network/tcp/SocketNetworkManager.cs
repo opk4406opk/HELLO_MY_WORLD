@@ -54,14 +54,33 @@ public class SocketNetworkManager
         }
     }
 
-    public void SendToServer(TCPServerType type)
+    public void SendToServer(TCPServerType serverType, PacketType packetType)
     {
-        switch (type)
+        if(ClientSocket.Connected == false)
+        {
+            KojeomLogger.DebugLog("ClientSocket is Not Conneted. ", LOG_TYPE.SOCKET_NETWORK_ERROR);
+            return;
+        }
+        switch (serverType)
         {
             case TCPServerType.Login:
-                ClientSocket.Send(new byte[]{ byte.Parse("TEST_DUMMY_DATA")});
+                switch(packetType)
+                {
+                    case PacketType.LoginPacket:
+                        LoginPacket loginPacket = new LoginPacket("TEST_ID", "TEST_PW");
+                        ClientSocket.Send(loginPacket.ToBytes());
+                        break;
+                }
                 break;
             case TCPServerType.Game:
+                switch(packetType)
+                {
+                    case PacketType.PingPacket:
+                    case PacketType.GamePacket:
+                        PingPacket pingPacket = new PingPacket();
+                        ClientSocket.Send(pingPacket.ToBytes());
+                        break;
+                }
                 break;
         }
     }
@@ -69,13 +88,18 @@ public class SocketNetworkManager
     private void OnConnectToServer(IAsyncResult ar)
     {
         Socket client = (Socket)ar.AsyncState;
+        if(client.Connected == false)
+        {
+            KojeomLogger.DebugLog(string.Format("OnConnectToServer ERROR"), LOG_TYPE.SOCKET_NETWORK_ERROR);
+            client.EndConnect(ar);
+            return;
+        }
         // call back.
         // Retrieve the socket from the state object.  
-        KojeomLogger.DebugLog(string.Format("OnConnectToServer"), LOG_TYPE.SOCKET_NETWORK_INFO);
-        SendToServer(TCPServerType.Login);
+       
+        SendToServer(TCPServerType.Login, PacketType.LoginPacket);
         // Complete the connection.  
         client.EndConnect(ar);
-
         UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.waitingConnect);
         GameSoundManager.GetInstnace().StopSound(GAME_SOUND_TYPE.BGM_mainMenu);
         GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.SELECT_CHARACTERS);

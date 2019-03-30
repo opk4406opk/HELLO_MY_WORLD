@@ -21,7 +21,8 @@ public enum LOG_TYPE
     P2P_NETWORK_SERVER_ERROR,
     P2P_NETWORK_SERVER_WARNNING,
     //
-    SOCKET_NETWORK_INFO
+    SOCKET_NETWORK_INFO,
+    SOCKET_NETWORK_ERROR
 }
 public class KojeomLogger {
     public static string GetGUIDebugLogs()
@@ -112,6 +113,10 @@ public class KojeomLogger {
                 break;
             case LOG_TYPE.SOCKET_NETWORK_INFO:
                 consoleLog.AppendFormat("<color=#99FF33><b>[SOCKET_NETWORK_INFO]</b></color> {0}", log);
+                guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
+                break;
+            case LOG_TYPE.SOCKET_NETWORK_ERROR:
+                consoleLog.AppendFormat("<color=red><b>[SOCKET_NETWORK_ERROR]</b></color> {0}", log);
                 guiDebugLog.AppendFormat("<color=white>[Time]:{0}, [log]:{1}</color>\n", SimpleTimeStamp(), consoleLog.ToString());
                 break;
             default:
