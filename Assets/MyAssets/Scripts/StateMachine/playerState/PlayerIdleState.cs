@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerIdleState : IState
+public class PlayerIdleState : APlayerState, IState
 {
-    private GamePlayer GamePlayer;
     private QuerySDMecanimController aniController;
 
     public PlayerIdleState(GamePlayer player)

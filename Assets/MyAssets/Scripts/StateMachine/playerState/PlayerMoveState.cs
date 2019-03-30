@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public class PlayerMoveState : IState
+public class PlayerMoveState : APlayerState, IState
 {
     private float moveSpeed;
-    private GamePlayer GamePlayer;
     private QuerySDMecanimController aniController;
     private BoxCollider boxCollider;
     private InputData curPressedInput;
@@ -41,7 +40,7 @@ public class PlayerMoveState : IState
         if(virtualJoystick != null)
         {
             // 스크린좌표에서 얻은 2차원 방향값을 3차원 좌표계로 변환.
-            dir = GamePlayer.transform.TransformDirection(virtualJoystick.GetMoveDirection());
+            dir = GamePlayer.Controller.CharacterInstance.transform.TransformDirection(virtualJoystick.GetMoveDirection());
         }
         return dir;
     }
@@ -49,19 +48,19 @@ public class PlayerMoveState : IState
     {
         if (curPressedInput.keyCode == KeyCode.W)
         {
-            return GamePlayer.transform.forward;
+            return GamePlayer.Controller.CharacterInstance.transform.forward;
         }
         else if (curPressedInput.keyCode == KeyCode.S)
         {
-            return -GamePlayer.transform.forward;
+            return -GamePlayer.Controller.CharacterInstance.transform.forward;
         }
         else if (curPressedInput.keyCode == KeyCode.D)
         {
-            return GamePlayer.transform.right;
+            return GamePlayer.Controller.CharacterInstance.transform.right;
         }
         else if (curPressedInput.keyCode == KeyCode.A)
         {
-            return -GamePlayer.transform.right;
+            return -GamePlayer.Controller.CharacterInstance.transform.right;
         }
         else
         {

@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-public class PlayerJumpState : IState
+public class PlayerJumpState : APlayerState, IState
 {
     private float JumpScale;
     private float JumpSpeed;
-    private GamePlayer GamePlayer;
+   
     private QuerySDMecanimController AniController;
 
     private float t;
@@ -34,23 +34,23 @@ public class PlayerJumpState : IState
     private System.Collections.IEnumerator Jump()
     {
         //
-        Vector3 startPos = GamePlayer.transform.position;
-        Vector3 destPos = startPos + (GamePlayer.transform.up * JumpScale);
+        Vector3 startPos = GamePlayer.Controller.CharacterInstance.transform.position;
+        Vector3 destPos = startPos + (GamePlayer.Controller.CharacterInstance.transform.up * JumpScale);
         while (t <= 1.0f)
         {
-            World containWorld = WorldManager.Instance.ContainedWorld(GamePlayer.transform.position);
-            Vector3 topOffsetedPos = GamePlayer.transform.position;
+            World containWorld = WorldManager.Instance.ContainedWorld(GamePlayer.Controller.CharacterInstance.transform.position);
+            Vector3 topOffsetedPos = GamePlayer.Controller.CharacterInstance.transform.position;
             topOffsetedPos += new Vector3(0.0f, 0.1f, 0.0f);
 
             CollideInfo collideInfo = containWorld.CustomOctreeInstance.Collide(topOffsetedPos);
             if (collideInfo.IsCollide == false)
             {
-                startPos = GamePlayer.transform.position;
+                startPos = GamePlayer.Controller.CharacterInstance.transform.position;
                 destPos.x = startPos.x;
                 destPos.z = startPos.z;
 
                 Vector3 newPos = Vector3.Lerp(startPos, destPos, t);
-                GamePlayer.transform.position = newPos;
+                GamePlayer.Controller.CharacterInstance.transform.position = newPos;
                 t += (Time.deltaTime * JumpSpeed);
             }
             yield return null;
