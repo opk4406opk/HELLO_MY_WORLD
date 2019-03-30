@@ -48,6 +48,8 @@ public class RequestSpawnMonsterMessage : RequestSpawnActorMessage
 /// </summary>
 public class ActorSuperviosr : MonoBehaviour
 {
+    [SerializeField]
+    private Transform SpawnedGroupTransform;
     public bool IsRunningTick { get; private set; }
     public NPCManager NPCManagerInstance { get; private set; }
     //
@@ -62,6 +64,12 @@ public class ActorSuperviosr : MonoBehaviour
             return _Instance;
         }
     }
+
+    public Transform GetSpawnedGroupTransform()
+    {
+        return SpawnedGroupTransform;
+    }
+
     public void Init()
     {
         // to do
