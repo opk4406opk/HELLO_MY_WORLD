@@ -15,26 +15,21 @@ public class MoveForTarget : Node
 
     public CustomAstar pathFinder { get; } = new CustomAstar();
 
-    public ActorController controller
-    {
-        set { _controller = value; }
-    }
-    private ActorController _controller;
     public override bool Invoke()
     {
         if (path.Count > 0)
         {
-            src.x = _controller.GetActorTransform().position.x;
-            src.y = _controller.GetActorTransform().position.z;
+            src.x = Controller.GetActorTransform().position.x;
+            src.y = Controller.GetActorTransform().position.z;
             dest.x = p.worldCoordX;
             dest.y = p.worldCoordZ;
             Vector2 dir = dest - src;
             if (Vector2.Distance(src, dest) <= dist)
             {
                 p = path.Pop();
-                _controller.LookAt(new Vector3(dir.x, 0.0f, dir.y));
+                Controller.LookAt(new Vector3(dir.x, 0.0f, dir.y));
             }
-            else _controller.Move(new Vector3(dir.x, 0.0f, dir.y), 1.5f);
+            else Controller.Move(new Vector3(dir.x, 0.0f, dir.y), 1.5f);
             return false;
         }
         else return true;
@@ -53,11 +48,6 @@ public class MoveForTarget : Node
 
 public class StartAttack : Node
 {
-    public ActorController controller
-    {
-        set { _controller = value; }
-    }
-    private ActorController _controller;
     public override bool Invoke()
     {
         return true;
@@ -65,11 +55,6 @@ public class StartAttack : Node
 }
 public class StopAttack : Node
 {
-    public ActorController controller
-    {
-        set { _controller = value; }
-    }
-    private ActorController _controller;
     public override bool Invoke()
     {
         return true;
@@ -78,11 +63,6 @@ public class StopAttack : Node
 
 public class DeadProcess : Node
 {
-    public ActorController controller
-    {
-        set { _controller = value; }
-    }
-    private ActorController _controller;
     public override bool Invoke()
     {
         return true;
@@ -91,11 +71,6 @@ public class DeadProcess : Node
 
 public class CheckDead : Node
 {
-    public ActorController controller
-    {
-        set { _controller = value; }
-    }
-    private ActorController _controller;
     public override bool Invoke()
     {
         return false;

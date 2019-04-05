@@ -16,7 +16,7 @@ public sealed class RoamingNpcAI : BehaviorTree
     public override void Init(ActorController actorController, PathFinderInitData pathData)
     {
         root.AddChild(selector);
-        moveForTarget.controller = actorController;
+        moveForTarget.SetController(actorController);
         moveForTarget.InitPathFinder(pathData);
         moveForTarget.pathFinder.SetGoalPathNode(22, 25);
         moveForTarget.PathFinding();
@@ -31,9 +31,9 @@ public sealed class RoamingNpcAI : BehaviorTree
     private IEnumerator behaviorProcess;
     public override IEnumerator BehaviorProcess()
     {
-        Debug.Log("BehaviorProcess Start!!");
+        KojeomLogger.DebugLog("BehaviorProcess Start!!");
         while (!root.Invoke()) yield return null;
-        Debug.Log("behavior process exit");
+        KojeomLogger.DebugLog("Behavior process exit");
     }
 
     public override void StartBT()

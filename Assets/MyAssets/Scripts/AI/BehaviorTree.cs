@@ -6,6 +6,11 @@ using System.Collections.Generic;
 public abstract class Node
 {
     public abstract bool Invoke();
+    protected ActorController Controller;
+    public void SetController(ActorController controller)
+    {
+        Controller = controller;
+    }
 }
 
 public class CompositeNode : Node
