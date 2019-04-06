@@ -58,8 +58,8 @@ public class NPCManager : NPCSpawner
                 //
                 switch (spawnData.NpcType)
                 {
-                    case NPC_TYPE.MERCHANT:
-                    case NPC_TYPE.GUARD:
+                    case NPC_TYPE.Merchant:
+                    case NPC_TYPE.Guard:
                         instance.Init(spawnData, worldState.subWorldInstance, spanwID);
                         if(initShow == false)
                         {

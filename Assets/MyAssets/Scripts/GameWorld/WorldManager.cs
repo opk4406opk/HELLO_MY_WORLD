@@ -179,7 +179,7 @@ public class WorldManager : MonoBehaviour
         worldState.realTimeStatus = WorldRealTimeStatus.LoadSuccess;
         //
         //test 
-        ActorSuperviosr.Instance.RequestSpawnRandomNPC(NPC_TYPE.MERCHANT, uniqueID, 1);
+        ActorSuperviosr.Instance.RequestSpawnRandomNPC(NPC_TYPE.Merchant, uniqueID, 1);
     }
 
     private void OnReleaseSubWorldInstance(string uniqueID)

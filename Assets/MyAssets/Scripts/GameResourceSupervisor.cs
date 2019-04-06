@@ -6,7 +6,7 @@ using UnityEngine;
 
 /*   게임에서 사용되는 프리팹 이름 규칙. ( = Naming Rule)
  * 
- *   NPC, Monster preafb -> [ActorTypc]_[DetailType]_[ResourceID]_[Name]
+ *   NPC, Monster..etc preafb -> [ActorTypc]_[DetailType]_[ResourceID]_[Name]
 */
 
 /// <summary>

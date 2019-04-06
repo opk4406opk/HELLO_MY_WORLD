@@ -1,16 +1,24 @@
 ﻿using UnityEngine;
 
+/*
+ * 
+ * 대분류 타입은 대문자로, 소분류 타입은 소문자로
+ * // 동물의 경우 카테고리별로 세부적인 구분을 한다.
+ * 
+     */
+
 public enum ACTOR_TYPE
 {
     NPC,
     MONSTER,
+    ANIMAL,
     COUNT
 }
 
 public enum NPC_TYPE
 {
-    MERCHANT,
-    GUARD,
+    Merchant,
+    Guard,
     COUNT
 }
 
@@ -18,6 +26,22 @@ public enum MONSTER_TYPE
 {
     // to do
     COUNT
+}
+
+public enum ANIMAL_CATEGORY
+{
+    Herbivore, // 초식 동물.
+    FleshEating // 육식 동물.
+}
+
+public enum ANIMAL_TYPE
+{
+    Pig,
+    Cow,
+    Chiken,
+    Fox,
+    Lion,
+    Dog
 }
 
 public abstract class ActorSpawnData

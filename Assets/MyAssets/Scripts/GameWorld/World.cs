@@ -287,9 +287,8 @@ public class World : MonoBehaviour
         {
             ret.x = KojeomUtility.RandomInteger((int)RealCoordinate.x - worldConfig.sub_world_x_size, (int)RealCoordinate.x);
         }
-        // 월드 표면위로 y값을 설정하고싶은데.. 어떻게 할까?
-        // 일단 임시값으로 200을 설정.
-        ret.y = 200.0f;
+        //
+        ret.y = HighestHeightInWorld();
 
         if (RealCoordinate.z == 0)
         {
@@ -301,5 +300,29 @@ public class World : MonoBehaviour
         }
 
         return ret;
+    }
+
+    private float HighestHeightInWorld()
+    {
+        float highest = 0.0f;
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
+        // perlin 알고리즘을 이용해 지형을 생성한다.
+        for (int x = 0; x < gameWorldConfig.sub_world_x_size; x++)
+        {
+            for (int z = 0; z < gameWorldConfig.sub_world_z_size; z++)
+            {
+                for (int y = 1; y < gameWorldConfig.sub_world_y_size; y++)
+                {
+                    if ((BlockTileType)WorldBlockData[x, y - 1, z].type != BlockTileType.EMPTY)
+                    {
+                        if(highest < y)
+                        {
+                            highest = y;
+                        }
+                    }
+                }
+            }
+        }
+        return highest;
     }
 }
