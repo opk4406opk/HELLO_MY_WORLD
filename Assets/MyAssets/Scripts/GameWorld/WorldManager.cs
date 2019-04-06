@@ -135,7 +135,7 @@ public class WorldManager : MonoBehaviour
         return await Task.FromResult(bf.Deserialize(fileStream) as WorldDataFile);
     }
 
-    public async void LoadSubWorldFileAsync(string uniqueID)
+    public async void LoadAsyncSubWorldFile(string uniqueID)
     {
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} Start and Waiting Async Load from file.", uniqueID));
         var loadedWorldData = await LoadSubWorldFile(uniqueID);
@@ -178,8 +178,8 @@ public class WorldManager : MonoBehaviour
         WholeWorldStates.TryGetValue(uniqueID, out WorldState worldState);
         worldState.realTimeStatus = WorldRealTimeStatus.LoadSuccess;
         //
-        //test 
-        ActorSuperviosr.Instance.RequestSpawnRandomNPC(NPC_TYPE.Merchant, uniqueID, 1);
+        //NCP 생성 테스트. 
+        ActorSuperviosr.Instance.RequestSpawnRandomNPC(NPC_TYPE.Merchant, uniqueID, 1, true);
     }
 
     private void OnReleaseSubWorldInstance(string uniqueID)
@@ -262,7 +262,7 @@ public class WorldManager : MonoBehaviour
                                     WholeWorldStates[uniqueID].subWorldInstance.LoadSyncro();
                                     break;
                                 case WorldRealTimeStatus.Released:
-                                    LoadSubWorldFileAsync(uniqueID);
+                                    LoadAsyncSubWorldFile(uniqueID);
                                     break;
                             }
                         }

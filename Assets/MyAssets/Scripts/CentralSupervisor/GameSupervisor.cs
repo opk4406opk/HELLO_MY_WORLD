@@ -12,6 +12,7 @@ public enum GameMode
 public enum DetailSingleMode
 {
     NONE,
+    EDITOR_TEST_PLAY,
     SAVE_GAME,
     LOAD_GAME
 }
@@ -22,7 +23,7 @@ public class GameStatus
 {
     // 빠른 테스트를 위한 디폴트값으로 인게임에디터로 설정.
     public static GameMode GameModeFlag = GameMode.INGAME_EDITOR;
-    public static DetailSingleMode DetailSingleModeFlag = DetailSingleMode.NONE;
+    public static DetailSingleMode DetailSingleModeFlag = DetailSingleMode.EDITOR_TEST_PLAY;
 }
 
 /// <summary>

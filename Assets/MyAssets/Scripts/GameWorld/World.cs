@@ -34,7 +34,7 @@ public class World : MonoBehaviour
     // 월드맵 위치값( == 오프셋값).
     public Vector3 WorldCoordinate { get; private set; }
     // 실제 게임오브젝트로서 존재하는 위치값.
-    public Vector3 RealCoordinate { get; private set; }
+    public Vector3 RealCoordinate{ get; private set; }
     public bool IsSurfaceWorld { get; private set; }
     #endregion
 
@@ -116,7 +116,7 @@ public class World : MonoBehaviour
         }
         ChunkSlots = null;
         WorldBlockData = null;
-
+        // 월드 릴리즈--> 등록된 모든 Actor Hide.
         foreach (var actor in InGameObjRegister.RegisteredActors)
         {
             actor.Hide();
@@ -125,6 +125,12 @@ public class World : MonoBehaviour
 
     public void LoadSyncro(Block[,,] newBlockData = null)
     {
+        bool isReLoaded = false;
+        if(newBlockData != null)
+        {
+            isReLoaded = true;
+        }
+
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         ChunkSize = gameWorldConfig.chunk_size;
         // init world data.
@@ -167,18 +173,21 @@ public class World : MonoBehaviour
             }
         }
 
-        if (GameStatus.DetailSingleModeFlag != DetailSingleMode.LOAD_GAME)
+        switch (GameStatus.DetailSingleModeFlag)
         {
-            MakeWorldParam param;
-            param.BaseOffset = KojeomUtility.RandomInteger(2, 29);
-            WorldGenAlgorithms.DefaultGenWorld(WorldBlockData, param);
-            //
-            LoadChunkProcess();
+            case DetailSingleMode.SAVE_GAME:
+                break;
+            case DetailSingleMode.EDITOR_TEST_PLAY:
+            case DetailSingleMode.LOAD_GAME:
+                if(isReLoaded == false)
+                {
+                    MakeWorldParam param;
+                    param.BaseOffset = KojeomUtility.RandomInteger(2, 29);
+                    WorldGenAlgorithms.DefaultGenWorld(WorldBlockData, param);
+                }
+                break;
         }
-        else
-        {
-            LoadChunkProcess();
-        }
+        LoadChunkProcess();
     }
 
     //void OnDrawGizmos()
@@ -249,6 +258,12 @@ public class World : MonoBehaviour
         KojeomLogger.DebugLog(string.Format("World name : {0} Chunk 로드를 완료했습니다.", WorldName), LOG_TYPE.DEBUG_TEST);
         IsLoadFinish = true;
         OnFinishLoadChunks(UniqueID);
+
+        // 월드에 등록된 모든 Actor를 Show.
+        foreach (var actor in InGameObjRegister.RegisteredActors)
+        {
+            actor.Show();
+        }
     }
 
     private int PerlinNoise (int x, int y, int z, float scale, float height, float power)

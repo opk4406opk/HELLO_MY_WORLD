@@ -9,14 +9,16 @@ public struct RequestSpawnActorData
     public Vector3 SpawnPosition;
     public ACTOR_TYPE ActorType;
     public int Num;
+    public bool SpawnAndShow;
 
-    public RequestSpawnActorData(string worldUniqueID, int actorUniqueID, Vector3 spawnPosition, ACTOR_TYPE actorType, int num)
+    public RequestSpawnActorData(string worldUniqueID, int actorUniqueID, Vector3 spawnPosition, ACTOR_TYPE actorType, int num, bool spawnAndShow)
     {
         WorldUniqueID = worldUniqueID;
         ActorUniqueID = actorUniqueID;
         SpawnPosition = spawnPosition;
         ActorType = actorType;
         Num = num;
+        SpawnAndShow = spawnAndShow;
     }
 }
 
@@ -95,12 +97,12 @@ public class ActorSuperviosr : MonoBehaviour
         RequestSpawnMessages.Enqueue(message);
     }
 
-    public void RequestSpawnRandomNPC(NPC_TYPE npcType, string worldUniqueID, int num)
+    public void RequestSpawnRandomNPC(NPC_TYPE npcType, string worldUniqueID, int num, bool spawnAndShow)
     {
         WorldManager.Instance.WholeWorldStates.TryGetValue(worldUniqueID, out WorldState worldState);
         var data = new RequestSpawnActorData(worldUniqueID,
             KojeomUtility.RandomInteger(0, NPCDataFile.Instance.NpcSpawnDatas.Count - 1),
-            worldState.subWorldInstance.RandomPosAtSurface(), ACTOR_TYPE.NPC, num);
+            worldState.subWorldInstance.RandomPosAtSurface(), ACTOR_TYPE.NPC, num, spawnAndShow);
         RequestSpawnNPCMessage msg = new RequestSpawnNPCMessage(data, npcType);
         RequestSpawnMessages.Enqueue(msg);
     }
@@ -127,7 +129,8 @@ public class ActorSuperviosr : MonoBehaviour
                         NPCManagerInstance.SpawnActor(message.SpawnData.ActorUniqueID,
                             message.SpawnData.WorldUniqueID,
                             message.SpawnData.SpawnPosition,
-                            message.SpawnData.Num);
+                            message.SpawnData.Num,
+                            message.SpawnData.SpawnAndShow);
                         break;
                 }
             }
