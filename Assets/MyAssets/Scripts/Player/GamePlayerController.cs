@@ -35,34 +35,35 @@ public class GamePlayerController : MonoBehaviour {
     private Quaternion playerOrigRotation;
     #endregion
     [Range(3.5f, 15.5f)]
-    public float moveSpeed;
-    private bool isControllProcessOn = false;
+    public float MoveSpeed;
+    private bool IsControllProcessOn = false;
 
-    private PlayerMoveState moveState;
-    private PlayerIdleState idleState;
-    private PlayerJumpState jumpState;
-    private PlayerStateController moveStateController;
-    private PlayerStateController jumpStateController;
-    private PlayerStateController poseStateController;
-    private GAMEPLAYER_CHAR_STATE curPlayerState;
+    private PlayerMoveState MoveState;
+    private PlayerIdleState IdleState;
+    private PlayerJumpState JumpState;
+    private StateMachineController MoveStateController;
+    private StateMachineController JumpStateController;
+    private StateMachineController PoseStateController;
+    private GAMEPLAYER_CHAR_STATE CurPlayerState;
 
     public GameCharacterInstance CharacterInstance { get; private set; }
 
     public void Init(Camera mainCam, GamePlayer gamePlayer)
     {
         PlayerCamera = mainCam;
+        PlayerCamera.transform.parent = CharacterInstance.transform;
         //
         camOrigRotation = PlayerCamera.transform.localRotation;
         // 게임 플레이어가 아닌, 하위 오브젝트인 캐릭터 인스턴스 방향을 변경해야한다.
         playerOrigRotation = CharacterInstance.transform.localRotation;
         //
-        moveState = new PlayerMoveState(gamePlayer);
-        idleState = new PlayerIdleState(gamePlayer);
-        jumpState = new PlayerJumpState(gamePlayer);
-        moveStateController = new PlayerStateController();
-        jumpStateController = new PlayerStateController();
-        poseStateController = new PlayerStateController();
-        curPlayerState = GAMEPLAYER_CHAR_STATE.IDLE;
+        MoveState = new PlayerMoveState(gamePlayer);
+        IdleState = new PlayerIdleState(gamePlayer);
+        JumpState = new PlayerJumpState(gamePlayer);
+        MoveStateController = new StateMachineController();
+        JumpStateController = new StateMachineController();
+        PoseStateController = new StateMachineController();
+        CurPlayerState = GAMEPLAYER_CHAR_STATE.IDLE;
         //
     }
 
@@ -99,16 +100,16 @@ public class GamePlayerController : MonoBehaviour {
 
     public void StartControllProcess()
     {
-        isControllProcessOn = true;
+        IsControllProcessOn = true;
     }
     public void StopControllProcess()
     {
-        isControllProcessOn = false;
+        IsControllProcessOn = false;
     }
 
     public GAMEPLAYER_CHAR_STATE GetPlayerState()
     {
-        return curPlayerState;
+        return CurPlayerState;
     }
 
     private void RotationCamAndPlayer()
@@ -161,9 +162,9 @@ public class GamePlayerController : MonoBehaviour {
         Quaternion yQuaternion = Quaternion.AngleAxis(camRotAverageY, Vector3.left);
         Quaternion xQuaternion = Quaternion.AngleAxis(camRotAverageX, Vector3.up);
 
-        // rot cam
-        PlayerCamera.transform.localRotation = camOrigRotation * xQuaternion * yQuaternion;
-        // rot player
+        // rot cam (상하)
+        PlayerCamera.transform.localRotation = camOrigRotation * yQuaternion;
+        // rot player (좌우)
         CharacterInstance.transform.localRotation = playerOrigRotation * xQuaternion;
     }
 
@@ -191,7 +192,7 @@ public class GamePlayerController : MonoBehaviour {
         KojeomLogger.DebugLog(string.Format("Player's contain world : {0}, position : {1}", 
             containWorld.name, containWorld.WorldCoordinate), LOG_TYPE.DEBUG_TEST);
         //
-        if (isControllProcessOn == false)
+        if (IsControllProcessOn == false)
         {
             return;
         }
@@ -204,47 +205,47 @@ public class GamePlayerController : MonoBehaviour {
                 var inputData = InputManager.singleton.GetInputData();
                 if (inputData.state == INPUT_STATE.CHARACTER_MOVE)
                 {
-                    curPlayerState = GAMEPLAYER_CHAR_STATE.MOVE;
+                    CurPlayerState = GAMEPLAYER_CHAR_STATE.MOVE;
                 }
                 else if (inputData.state == INPUT_STATE.NONE)
                 {
-                    curPlayerState = GAMEPLAYER_CHAR_STATE.IDLE;
+                    CurPlayerState = GAMEPLAYER_CHAR_STATE.IDLE;
                 }
 
                 var overlappedInputs = InputManager.singleton.GetOverlappedInputData();
                 if (overlappedInputs.Count > 0)
                 {
                     var input = overlappedInputs.Dequeue();
-                    if (input.state == INPUT_STATE.CHARACTER_JUMP && curPlayerState == GAMEPLAYER_CHAR_STATE.MOVE)
+                    if (input.state == INPUT_STATE.CHARACTER_JUMP && CurPlayerState == GAMEPLAYER_CHAR_STATE.MOVE)
                     {
-                        curPlayerState = GAMEPLAYER_CHAR_STATE.MOVING_JUMP;
+                        CurPlayerState = GAMEPLAYER_CHAR_STATE.MOVING_JUMP;
                     }
-                    else if (input.state == INPUT_STATE.CHARACTER_JUMP && curPlayerState != GAMEPLAYER_CHAR_STATE.MOVE)
+                    else if (input.state == INPUT_STATE.CHARACTER_JUMP && CurPlayerState != GAMEPLAYER_CHAR_STATE.MOVE)
                     {
-                        curPlayerState = GAMEPLAYER_CHAR_STATE.JUMP;
+                        CurPlayerState = GAMEPLAYER_CHAR_STATE.JUMP;
                     }
                 }
-                KojeomLogger.DebugLog(string.Format("current PlayerState : {0}", curPlayerState), LOG_TYPE.USER_INPUT);
+                KojeomLogger.DebugLog(string.Format("current PlayerState : {0}", CurPlayerState), LOG_TYPE.USER_INPUT);
 
-                switch (curPlayerState)
+                switch (CurPlayerState)
                 {
                     case GAMEPLAYER_CHAR_STATE.MOVE:
-                        moveStateController.SetState(moveState);
-                        moveStateController.Tick();
+                        MoveStateController.SetState(MoveState);
+                        MoveStateController.Tick(Time.deltaTime);
                         break;
                     case GAMEPLAYER_CHAR_STATE.JUMP:
-                        jumpStateController.SetState(jumpState);
-                        jumpStateController.Tick();
+                        JumpStateController.SetState(JumpState);
+                        JumpStateController.Tick(Time.deltaTime);
                         break;
                     case GAMEPLAYER_CHAR_STATE.IDLE:
-                        poseStateController.SetState(idleState);
-                        poseStateController.Tick();
+                        PoseStateController.SetState(IdleState);
+                        PoseStateController.Tick(Time.deltaTime);
                         break;
                     case GAMEPLAYER_CHAR_STATE.MOVING_JUMP:
-                        jumpStateController.SetState(jumpState);
-                        jumpStateController.Tick();
-                        moveStateController.SetState(moveState);
-                        moveStateController.Tick();
+                        JumpStateController.SetState(JumpState);
+                        JumpStateController.Tick(Time.deltaTime);
+                        MoveStateController.SetState(MoveState);
+                        MoveStateController.Tick(Time.deltaTime);
                         break;
                 }
                 RotationCamAndPlayer();

@@ -3,32 +3,32 @@ using UnityEngine.Networking;
 
 public class PlayerMoveState : APlayerState, IState
 {
-    private float moveSpeed;
-    private QuerySDMecanimController aniController;
-    private BoxCollider boxCollider;
-    private InputData curPressedInput;
+    private float MoveSpeed;
+    private QuerySDMecanimController AniController;
+    private BoxCollider BoxColliderInstance;
+    private InputData CurPressedInput;
 
     public PlayerMoveState(GamePlayer gamePlayer)
     {
         GamePlayer = gamePlayer;
         //
-        aniController = GamePlayer.Controller.CharacterInstance.QueryMecanimController;
-        boxCollider = GamePlayer.Controller.CharacterInstance.BoxColliderInstance;
+        AniController = GamePlayer.Controller.CharacterInstance.QueryMecanimController;
+        BoxColliderInstance = GamePlayer.Controller.CharacterInstance.BoxColliderInstance;
         //
-        moveSpeed = 3.5f;
+        MoveSpeed = 3.5f;
     }
     public void InitState()
     {
-        aniController.ChangeAnimation(QuerySDMecanimController.QueryChanSDAnimationType.NORMAL_RUN);
+        AniController.ChangeAnimation(QuerySDMecanimController.QueryChanSDAnimationType.NORMAL_RUN);
     }
 
     public void ReleaseState()
     {
-        curPressedInput.keyCode = KeyCode.None;
-        curPressedInput.mobileInputType = MOBILE_INPUT_TYPE.NONE;
+        CurPressedInput.keyCode = KeyCode.None;
+        CurPressedInput.mobileInputType = MOBILE_INPUT_TYPE.NONE;
     }
 
-    public void UpdateState()
+    public void UpdateState(float deltaTime)
     {
         Move();
     }
@@ -46,19 +46,19 @@ public class PlayerMoveState : APlayerState, IState
     }
     private Vector3 CalcWindowMoveDir()
     {
-        if (curPressedInput.keyCode == KeyCode.W)
+        if (CurPressedInput.keyCode == KeyCode.W)
         {
             return GamePlayer.Controller.CharacterInstance.transform.forward;
         }
-        else if (curPressedInput.keyCode == KeyCode.S)
+        else if (CurPressedInput.keyCode == KeyCode.S)
         {
             return -GamePlayer.Controller.CharacterInstance.transform.forward;
         }
-        else if (curPressedInput.keyCode == KeyCode.D)
+        else if (CurPressedInput.keyCode == KeyCode.D)
         {
             return GamePlayer.Controller.CharacterInstance.transform.right;
         }
-        else if (curPressedInput.keyCode == KeyCode.A)
+        else if (CurPressedInput.keyCode == KeyCode.A)
         {
             return -GamePlayer.Controller.CharacterInstance.transform.right;
         }
@@ -72,8 +72,8 @@ public class PlayerMoveState : APlayerState, IState
     {
         if(InputManager.singleton != null)
         {
-            curPressedInput = InputManager.singleton.GetInputData();
-            KojeomLogger.DebugLog(string.Format("curPressedKey : {0}", curPressedInput.keyCode), LOG_TYPE.USER_INPUT);
+            CurPressedInput = InputManager.singleton.GetInputData();
+            KojeomLogger.DebugLog(string.Format("curPressedKey : {0}", CurPressedInput.keyCode), LOG_TYPE.USER_INPUT);
         }
         Vector3 dir = Vector3.zero;
 
@@ -93,7 +93,7 @@ public class PlayerMoveState : APlayerState, IState
         }
         //
         P2PNetworkManager.GetInstance().PushCharStateMessage(GAMEPLAYER_CHAR_STATE.MOVE);
-        Vector3 move = dir.normalized * moveSpeed;
+        Vector3 move = dir.normalized * MoveSpeed;
         GamePlayer.Controller.LerpPosition(move);
     }
 }

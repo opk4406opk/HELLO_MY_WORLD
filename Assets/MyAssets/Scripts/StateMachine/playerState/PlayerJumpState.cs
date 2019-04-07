@@ -27,7 +27,7 @@ public class PlayerJumpState : APlayerState, IState
     {
     }
 
-    public void UpdateState()
+    public void UpdateState(float deltaTime)
     {
     }
 

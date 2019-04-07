@@ -1,4 +1,4 @@
-﻿public class PlayerStateController {
+﻿public class StateMachineController {
 
     private IState curState;
     public void SetState(IState state)
@@ -11,11 +11,11 @@
         curState.InitState();
     }
 
-    public void Tick()
+    public void Tick(float deltaTime)
     {
         if(curState != null)
         {
-            curState.UpdateState();
+            curState.UpdateState(deltaTime);
         }
     }
 }

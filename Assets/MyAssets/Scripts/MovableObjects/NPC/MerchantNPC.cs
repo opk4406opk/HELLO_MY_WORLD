@@ -34,8 +34,15 @@ public class MerchantNPC : NPCActor, IMerchantNPC
         UniqueID = spawnData.UniqueID;
         //
         Controller = gameObject.AddComponent<NPCController>();
-        Controller.Init(world);
+        Controller.Init(world, this);
     }
+
+
+    public override void Update()
+    {
+        Controller.Tick(Time.deltaTime);
+    }
+
     public override ActorController GetController()
     {
         return Controller;
@@ -48,10 +55,6 @@ public class MerchantNPC : NPCActor, IMerchantNPC
         UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.shop);
     }
 
-    public override void Tick(float deltaTime)
-    {
-        // to do
-    }
 
     public override void Show()
     {
@@ -62,5 +65,4 @@ public class MerchantNPC : NPCActor, IMerchantNPC
     {
         gameObject.SetActive(false);
     }
-
 }

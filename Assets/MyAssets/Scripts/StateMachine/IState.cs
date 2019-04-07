@@ -2,6 +2,6 @@
 public interface IState
 {
     void InitState();
-    void UpdateState();
+    void UpdateState(float deltaTime);
     void ReleaseState();
 }

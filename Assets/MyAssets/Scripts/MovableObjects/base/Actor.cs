@@ -86,7 +86,6 @@ abstract public class Actor : MonoBehaviour
     /// (같은 리소스이면서 다른 이름을 가진 객체를 구분하기 위해 사용)
     /// </summary>
     protected int UniqueID;
-
     protected ActorController Controller;
 
 
@@ -96,7 +95,8 @@ abstract public class Actor : MonoBehaviour
     abstract public void Show();
     abstract public void Hide();
     abstract public ActorController GetController();
-    abstract public void Tick(float deltaTime);
+    //
+    abstract public void Update();
 
     public ACTOR_TYPE GetActorType()
     {
