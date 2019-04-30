@@ -95,7 +95,6 @@ public class InGameUISupervisor : MonoBehaviour {
     public void OnSubmitChatMessage()
     {
         KojeomLogger.DebugLog(string.Format("메세지 : {0} 을(를) 입력하였습니다.", uiInput_chatting.value));
-        P2PNetworkManager.GetInstance().PushChatMessage(uiInput_chatting.value);
         uiInput_chatting.value = "";
     }
 

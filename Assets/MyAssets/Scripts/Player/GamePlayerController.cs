@@ -48,8 +48,9 @@ public class GamePlayerController : MonoBehaviour {
 
     public GameCharacterInstance CharacterInstance { get; private set; }
 
-    public void Init(Camera mainCam, GamePlayer gamePlayer)
+    public void Init(Camera mainCam, GamePlayer gamePlayer, GameCharacterInstance characterInstance)
     {
+        CharacterInstance = characterInstance;
         PlayerCamera = mainCam;
         PlayerCamera.transform.parent = CharacterInstance.transform;
         //
@@ -65,11 +66,6 @@ public class GamePlayerController : MonoBehaviour {
         PoseStateController = new StateMachineController();
         CurPlayerState = GAMEPLAYER_CHAR_STATE.IDLE;
         //
-    }
-
-    public void RegisterCharacter(GameCharacterInstance character)
-    {
-        CharacterInstance = character;
     }
 
     public Vector3 GetPosition()

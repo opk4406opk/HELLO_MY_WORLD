@@ -47,11 +47,6 @@ public class ConstFilePath
     public readonly static string RAW_SUB_WORLD_DATA_PATH = ".\\SubWorldDatas\\";
 
     /// <summary>
-    /// 게임네트워크매니저 프리팹 path.
-    /// </summary>
-    public readonly static string GAME_NET_MGR_PREFAB_RESOURCE_PATH = "GamePrefabs/Network/P2PNetworkManager";
-
-    /// <summary>
     /// 네트워크 게임에서 사용될 플레이어 프리팹 path.
     /// </summary>
     public readonly static string GAME_NET_PLAYER_PREFAB_RESOURCE_PATH = "GamePrefabs/Network/GamePlayer";

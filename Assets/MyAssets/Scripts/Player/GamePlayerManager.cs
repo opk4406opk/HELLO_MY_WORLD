@@ -7,7 +7,6 @@ public class GamePlayerManager : MonoBehaviour {
 
     public GamePlayer MyGamePlayer { get; private set; }
     public static GamePlayerManager Instance { get; private set; }
-    private GameObject gamePlayerPrefab;
     public bool IsInitializeFinish { get; private set; }
 
     public void Init()
@@ -26,16 +25,15 @@ public class GamePlayerManager : MonoBehaviour {
             {
                 foreach(var state in WorldManager.Instance.WholeWorldStates)
                 {
-                    if(state.Value.realTimeStatus == WorldRealTimeStatus.LoadSuccess &&
-                        P2PNetworkManager.GetInstance().GetMyGamePlayer() != null)
+                    if(state.Value.realTimeStatus == WorldRealTimeStatus.LoadSuccess)
                     {
-                        gamePlayerPrefab = P2PNetworkManager.GetInstance().playerPrefab;
-                        MyGamePlayer = P2PNetworkManager.GetInstance().GetMyGamePlayer();
-                        MyGamePlayer.Controller.Init(Camera.main, MyGamePlayer);
-                        MyGamePlayer.Controller.StartControllProcess();
-
                         Vector3 worldInstPos = state.Value.subWorldInstance.WorldCoordinate;
-                        MyGamePlayer.Controller.SetPosition(new Vector3(worldInstPos.x, 60.0f, worldInstPos.z));
+                        //
+                        var instance = Instantiate(GameResourceSupervisor.GetInstance().GamePlayerPrefab.LoadSynchro(), Vector3.zero, Quaternion.identity);
+                        MyGamePlayer = instance.GetComponent<GamePlayer>();
+                        MyGamePlayer.Initialize(GameLocalDataManager.GetInstance().CharacterType,
+                            GameLocalDataManager.GetInstance().CharacterName,
+                            new Vector3(worldInstPos.x, 60.0f, worldInstPos.z));
                         //Player Manager 하위 종속으로 변경.
                         MyGamePlayer.transform.parent = gameObject.transform;
                         //

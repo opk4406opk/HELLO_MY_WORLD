@@ -11,16 +11,13 @@ public class NPCIdleState : AActorState, IState
 
     public void InitState()
     {
-        throw new System.NotImplementedException();
     }
 
     public void ReleaseState()
     {
-        throw new System.NotImplementedException();
     }
 
     public void UpdateState(float deltaTime)
     {
-        throw new System.NotImplementedException();
     }
 }

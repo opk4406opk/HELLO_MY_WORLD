@@ -26,6 +26,23 @@ public class GameStatus
     public static DetailSingleMode DetailSingleModeFlag = DetailSingleMode.EDITOR_TEST_PLAY;
 }
 
+public class GameLocalDataManager
+{
+    private static GameLocalDataManager Instance = null;
+    public static GameLocalDataManager GetInstance()
+    {
+        if(Instance == null)
+        {
+            Instance = new GameLocalDataManager();
+        }
+        return Instance;
+    }
+    public int CharacterType = 0;
+    public string CharacterName = "EditorTest";
+
+    private GameLocalDataManager() { }
+}
+
 /// <summary>
 /// 게임에 전반적인 관리를 하는 클래스.
 /// ( 게임의 시작점 )
@@ -96,7 +113,7 @@ public class GameSupervisor : MonoBehaviour
         }
         InitSettings();
         InitDataFiles();
-        StartCoroutine(WaitingLogin());
+        InitManagers();
     }
 
     private void InitSettings()
@@ -113,19 +130,7 @@ public class GameSupervisor : MonoBehaviour
     private void InitInGameSceneStart()
     {
         KojeomLogger.DebugLog("InGameScene Start.", LOG_TYPE.INFO);
-        //
-        GameObject netMgr = Resources.Load<GameObject>(ConstFilePath.GAME_NET_MGR_PREFAB_RESOURCE_PATH);
-        Instantiate(netMgr, new Vector3(0, 0, 0), Quaternion.identity);
-        //
         KojeomLogger.DebugLog("StartHost", LOG_TYPE.INFO);
-        P2PNetworkManager.GetInstance().onlineScene = "InGame";
-        var netClient = P2PNetworkManager.GetInstance().StartHost();
-        P2PNetworkManager.GetInstance().isHost = true;
-        P2PNetworkManager.GetInstance().LateInit();
-        // InGame씬에서 바로 시작하는 경우에는 해당 flag를 true로 설정.
-        P2PNetworkStateFlagBoard.isReceivedRandomSeedFormServer = true;
-        P2PNetworkStateFlagBoard.isReceiveGameUserList = true;
-        P2PNetworkManager.InitGameRandomSeed(System.DateTime.Now.Second);
     }
 
     /// <summary>
@@ -189,27 +194,5 @@ public class GameSupervisor : MonoBehaviour
             saveAndLoadManager.Load();
         }
         KojeomLogger.DebugLog("게임매니저 클래스 초기화 완료.");
-    }
-
-    private IEnumerator WaitingLogin()
-    {
-        if(GameStatus.GameModeFlag == GameMode.MULTI_INTERNET || GameStatus.GameModeFlag == GameMode.MULTI_P2P)
-        {
-            P2PNetworkManager.GetInstance().ReqInGameUserList();
-        }
-        KojeomLogger.DebugLog("네트워크 접속이 완료될 때 까지 대기합니다.", LOG_TYPE.SYSTEM);
-        while (true)
-        {
-            if(P2PNetworkStateFlagBoard.isReceivedRandomSeedFormServer == true &&
-                P2PNetworkStateFlagBoard.isReceiveGameUserList == true &&
-                P2PNetworkStateFlagBoard.isCreatedMyGamePlayer == true)
-            {
-                break;
-            }
-          
-            yield return null;
-        }
-        KojeomLogger.DebugLog("네트워크 접속 -> 플레이어 생성까지 완료되었습니다. Manager Class 초기화 시작합니다.", LOG_TYPE.SYSTEM);
-        InitManagers();
     }
 }

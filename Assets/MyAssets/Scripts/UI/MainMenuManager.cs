@@ -30,26 +30,6 @@ public class MainMenuManager : MonoBehaviour {
             GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_mainMenu);
         }
         GameResourceSupervisor.GetInstance();
-        CreateNetWorkManager();
-    }
-
-    /// <summary>
-    /// 네트워크 매니저를 생성.
-    /// (single, multi 게임에 상관없이 생성한다.)
-    /// </summary>
-    private void CreateNetWorkManager()
-    {
-        GameObject netMgr = Resources.Load<GameObject>(ConstFilePath.GAME_NET_MGR_PREFAB_RESOURCE_PATH);
-        if (netMgr == null)
-        {
-            KojeomLogger.DebugLog("GameNetworkManager creation is Failed.", LOG_TYPE.ERROR);
-        }
-        else
-        {
-            //init create netmgr.
-            Instantiate(netMgr, new Vector3(0, 0, 0), Quaternion.identity);
-            KojeomLogger.DebugLog("Success Create GameNetworkManager, and then select Characters scene.");
-        }
     }
 
     /// <summary>

@@ -225,14 +225,14 @@ public class World : MonoBehaviour
                         switch ((ChunkType)type)
                         {
                             case ChunkType.COMMON:
-                                newChunk = Instantiate(GameResourceSupervisor.Instance.CommonChunkPrefab.LoadSynchro(), new Vector3(0, 0, 0),
+                                newChunk = Instantiate(GameResourceSupervisor.GetInstance().CommonChunkPrefab.LoadSynchro(), new Vector3(0, 0, 0),
                                                            new Quaternion(0, 0, 0, 0)) as GameObject;
                                 newChunk.transform.parent = gameObject.transform;
                                 newChunk.transform.name = string.Format("CommonChunk_{0}", ChunkNumber++);
                                 ChunkSlots[x, y, z].Chunks[type] = newChunk.GetComponent<CommonChunk>();
                                 break;
                             case ChunkType.WATER:
-                                newChunk = Instantiate(GameResourceSupervisor.Instance.WaterChunkPrefab.LoadSynchro(), new Vector3(0, 0, 0),
+                                newChunk = Instantiate(GameResourceSupervisor.GetInstance().WaterChunkPrefab.LoadSynchro(), new Vector3(0, 0, 0),
                                                            new Quaternion(0, 0, 0, 0)) as GameObject;
                                 newChunk.transform.parent = gameObject.transform;
                                 newChunk.transform.name = string.Format("WaterChunk_{0}", ChunkNumber++);

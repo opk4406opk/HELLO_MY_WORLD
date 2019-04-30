@@ -136,7 +136,6 @@ public class KojeomLogger {
         if (Application.platform == RuntimePlatform.WindowsEditor)
 		{
             Debug.Log(consoleLog);
-            P2PNetworkManager.LogPushToLoggerServer(savedLog);
         }
     }
     private static string TimeStamp(bool isUseFileName = false)

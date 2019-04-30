@@ -91,8 +91,6 @@ public class PlayerMoveState : APlayerState, IState
         {
             return;
         }
-        //
-        P2PNetworkManager.GetInstance().PushCharStateMessage(GAMEPLAYER_CHAR_STATE.MOVE);
         Vector3 move = dir.normalized * MoveSpeed;
         GamePlayer.Controller.LerpPosition(move);
     }

@@ -23,13 +23,19 @@ public class GameResourceSupervisor : MonoBehaviour {
     #region Actor
     public SoftObjectPtrGroup[] ActorPrefabs { get; private set; } = new SoftObjectPtrGroup[(int)ACTOR_TYPE.COUNT];
     #endregion
+
+    #region Player
+    public SoftObjectPtr GamePlayerPrefab { get; private set; }
+    #endregion
     //
     //
     private readonly GameObject[] CharacterPrefabs;
 
-    public static GameResourceSupervisor Instance = null;
+    private static GameResourceSupervisor Instance = null;
     private GameResourceSupervisor()
     {
+        GamePlayerPrefab = new SoftObjectPtr(ConstFilePath.GAME_NET_PLAYER_PREFAB_RESOURCE_PATH);
+        //
         CharacterPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER_RESOURCE_PATH);
         //
         CommonChunkPrefab = new SoftObjectPtr(ConstFilePath.COMMON_CHUNK_PREFAB_RESOURCE_PATH);

@@ -25,13 +25,6 @@ public class PopupPromptServerIP : APopupUI {
 
     public void OnClickConnect()
     {
-        KojeomLogger.DebugLog("Connect To Host With IP", LOG_TYPE.INFO);
-        var netClient = P2PNetworkManager.GetInstance().StartClient();
-        P2PNetworkManager.GetInstance().LateInit();
-        //
-        P2PNetworkManager.GetInstance().isHost = false;
-        netClient.Connect(serverIP, 8080);
-
         ScaleDownEffect("CallBackPopupClose");
     }
 

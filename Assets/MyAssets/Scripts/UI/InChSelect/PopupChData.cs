@@ -24,7 +24,7 @@ public class PopupChData : APopupUI
 
     public void OnClickClose()
     {
-        PopupExitProcess();
+        ScaleDownEffect("CallBackPopupClose");
     }
 
     public void OnClickSelect()
@@ -48,12 +48,26 @@ public class PopupChData : APopupUI
         InsertInfo();
         if (GameStatus.GameModeFlag == GameMode.MULTI_P2P || GameStatus.GameModeFlag == GameMode.MULTI_INTERNET)
         {
-            MultiPlayLobbyProcess();
+            ScaleDownEffect("CallBackGoToLobby");
         }
         else
         {
-            SingleGameProcess();
+            ScaleDownEffect("CallBackSingleGameProcess");
         }
+    }
+
+    private void CallBackGoToLobby()
+    {
+        GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.MULTIPLAY_GAME_LOBBY);
+    }
+
+    /// <summary>
+    /// ScaleDown 애니메이션이 종료된 후, 호출되어지는 singleGame Process.
+    /// </summary>
+    private void CallBackSingleGameProcess()
+    {
+        GameLocalDataManager.GetInstance().CharacterName = ChSelectManager.singleton.GetSelectCharData().chName;
+        GameLocalDataManager.GetInstance().CharacterType = int.Parse(ChSelectManager.singleton.GetSelectCharData().chType);
     }
 
     private void SQL_SelectCharInfoToHistory(SqliteCommand dbcmd)
@@ -104,33 +118,6 @@ public class PopupChData : APopupUI
         }
     }
 
-    private void MultiPlayLobbyProcess()
-    {
-        ScaleDownEffect("CallBackGoToLobby");
-    }
-    private void CallBackGoToLobby()
-    {
-        GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.MULTIPLAY_GAME_LOBBY);
-    }
-
-    private void SingleGameProcess()
-    {
-        ScaleDownEffect("CallBackSingleGameProcess");
-    }
-    /// <summary>
-    /// ScaleDown 애니메이션이 종료된 후, 호출되어지는 singleGame Process.
-    /// </summary>
-    private void CallBackSingleGameProcess()
-    {
-        var netClient = P2PNetworkManager.GetInstance().StartHost();
-        P2PNetworkManager.GetInstance().LateInit();
-        P2PNetworkManager.GetInstance().isHost = true;
-    }
-
-    private void PopupExitProcess()
-    {
-        ScaleDownEffect("CallBackPopupClose");
-    }
 
     private void SetData()
     {
