@@ -8,7 +8,8 @@ public enum TreeType
     SQAURE = 1,
     COUNT
 }
-public class EnviromentGenAlgorithms : MonoBehaviour {
+public class EnviromentGenAlgorithms
+{
     /// <summary>
     /// 
     /// </summary>

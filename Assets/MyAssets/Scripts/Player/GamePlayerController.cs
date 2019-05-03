@@ -18,15 +18,15 @@ public class GamePlayerController : MonoBehaviour {
     private Camera PlayerCamera;
     //
     #region cam_option
-    private List<float> camRotArrayX = new List<float>();
-    private List<float> camRotArrayY = new List<float>();
-    private float camRotationX = 0F;
-    private float camRotationY = 0F;
+    private List<float> CamRotArrayX = new List<float>();
+    private List<float> CamRotArrayY = new List<float>();
+    private float CamRotationX = 0F;
+    private float CamRotationY = 0F;
     public float minimumX = -360F;
     public float maximumX = 360F;
     public float minimumY = -60F;
     public float maximumY = 60F;
-    private int frameCounter = 20;
+    private int FrameCounter = 20;
     [Range(1.0f, 100.0f)]
     public float camSensitivityY = 1.0f;
     [Range(1.0f, 100.0f)]
@@ -115,8 +115,8 @@ public class GamePlayerController : MonoBehaviour {
         if (Application.platform == RuntimePlatform.WindowsEditor ||
             Application.platform == RuntimePlatform.WindowsPlayer)
         {
-            camRotationY += Input.GetAxis("Mouse Y") * camSensitivityY;
-            camRotationX += Input.GetAxis("Mouse X") * camSensitivityX;
+            CamRotationY += Input.GetAxis("Mouse Y") * camSensitivityY;
+            CamRotationX += Input.GetAxis("Mouse X") * camSensitivityX;
         }
         else if(Application.platform == RuntimePlatform.Android ||
             Application.platform == RuntimePlatform.IPhonePlayer)
@@ -124,36 +124,39 @@ public class GamePlayerController : MonoBehaviour {
             var virtualJoystick = VirtualJoystickManager.singleton;
             if(virtualJoystick != null)
             {
-                camRotationY += virtualJoystick.GetLookDirection().y * camSensitivityY;
-                camRotationX += virtualJoystick.GetLookDirection().x * camSensitivityX;
+                CamRotationY += virtualJoystick.GetLookDirection().y * camSensitivityY;
+                CamRotationX += virtualJoystick.GetLookDirection().x * camSensitivityX;
             }
         }
-        camRotArrayY.Add(camRotationY);
-        camRotArrayX.Add(camRotationX);
+        CamRotArrayY.Add(CamRotationY);
+        CamRotArrayX.Add(CamRotationX);
 
-        if (camRotArrayY.Count >= frameCounter)
+        if (CamRotArrayY.Count >= FrameCounter)
         {
-            camRotArrayY.RemoveAt(0);
+            CamRotArrayY.RemoveAt(0);
         }
-        if (camRotArrayX.Count >= frameCounter)
+        if (CamRotArrayX.Count >= FrameCounter)
         {
-            camRotArrayX.RemoveAt(0);
-        }
-
-        for (int j = 0; j < camRotArrayY.Count; j++)
-        {
-            camRotAverageY += camRotArrayY[j];
-        }
-        for (int i = 0; i < camRotArrayX.Count; i++)
-        {
-            camRotAverageX += camRotArrayX[i];
+            CamRotArrayX.RemoveAt(0);
         }
 
-        camRotAverageY /= camRotArrayY.Count;
-        camRotAverageX /= camRotArrayX.Count;
+        for (int j = 0; j < CamRotArrayY.Count; j++)
+        {
+            camRotAverageY += CamRotArrayY[j];
+        }
+        for (int i = 0; i < CamRotArrayX.Count; i++)
+        {
+            camRotAverageX += CamRotArrayX[i];
+        }
+
+        camRotAverageY /= CamRotArrayY.Count;
+        camRotAverageX /= CamRotArrayX.Count;
 
         camRotAverageY = Mathf.Clamp(camRotAverageY, minimumY, maximumY);
-        camRotAverageX = Mathf.Clamp(camRotAverageX, minimumX, maximumX);
+        // 좌우 움직임은 최대값/최소값 제한두지 않고 적용.
+        //camRotAverageX = Mathf.Clamp(camRotAverageX, minimumX, maximumX);
+
+        //KojeomLogger.DebugLog(string.Format("CamRotAvgX : {0}, CamRotAvgY : {1}", camRotAverageX, camRotAverageY), LOG_TYPE.DEBUG_TEST );
 
         Quaternion yQuaternion = Quaternion.AngleAxis(camRotAverageY, Vector3.left);
         Quaternion xQuaternion = Quaternion.AngleAxis(camRotAverageX, Vector3.up);

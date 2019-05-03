@@ -14,8 +14,6 @@ public class ModifyTerrain : MonoBehaviour
 {
     [SerializeField]
     private LootingSystem lootingSystem;
-    [SerializeField]
-    private GameSupervisor gameManager;
 
     private World world;
     private int chunkSize = 0;

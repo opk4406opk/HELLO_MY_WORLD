@@ -62,9 +62,9 @@ public class GameSupervisor : MonoBehaviour
     #endregion
 
     #region simple config.
-    public bool isSoundOn = false;
-    public bool isSubWorldDataSave = false;
-    public bool isLockCursor = false;
+    public bool IsSoundOn = false;
+    public bool IsSubWorldDataSave = false;
+    public bool IsLockCursor = false;
     #endregion
     //
     #region Inspector variables.
@@ -81,13 +81,11 @@ public class GameSupervisor : MonoBehaviour
     [SerializeField]
     private GameSoundManager soundManager;
     [SerializeField]
-    private WeatherManager weatherManager;
+    private EnviromentWeatherManager WeatherManager;
     [SerializeField]
     private InputManager inputManager;
     [SerializeField]
     private KojeomCoroutineHelper kojeomCoroutineHelper;
-    [SerializeField]
-    private DayAndNightManager dayAndNightManager;
     //
     [SerializeField]
     private InGameUISupervisor ingameUISupervisor;
@@ -118,7 +116,7 @@ public class GameSupervisor : MonoBehaviour
 
     private void InitSettings()
     {
-        if(isLockCursor == true)
+        if(IsLockCursor == true)
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -157,13 +155,10 @@ public class GameSupervisor : MonoBehaviour
     {
         KojeomLogger.DebugLog("게임매니저 클래스들을 초기화 합니다.");
         // sound init.
-        if(isSoundOn == true)
+        if(IsSoundOn == true)
         {
             GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_InGame);
         }
-        //
-        dayAndNightManager.Init();
-        dayAndNightManager.StartDayAndNight();
         //
         kojeomCoroutineHelper.Init();
         inputManager.Init();
@@ -187,7 +182,7 @@ public class GameSupervisor : MonoBehaviour
         //
         // 날씨 매니저의 경우, 향후 4계절/눈/비 등을 관리한다.
         // 프로토타입의 수준으로 기능이 매우 미흡한 수준임.
-        weatherManager.Init();
+        WeatherManager.Init();
 
         if (GameStatus.DetailSingleModeFlag == DetailSingleMode.LOAD_GAME)
         {
