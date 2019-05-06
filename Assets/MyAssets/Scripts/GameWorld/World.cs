@@ -100,19 +100,25 @@ public class World : MonoBehaviour
     {
         StopCoroutine(Tick());
         StopCoroutine(LoadChunks());
+        StartCoroutine(ReleaseProcess());
+    }
+
+    private IEnumerator ReleaseProcess()
+    {
         //
-        foreach(var slot in ChunkSlots)
+        foreach (var slot in ChunkSlots)
         {
-            if(slot != null)
+            if (slot != null)
             {
                 for (int type = 0; type < (int)ChunkType.COUNT; type++)
                 {
-                    if(slot.Chunks[type] != null)
+                    if (slot.Chunks[type] != null)
                     {
                         slot.Chunks[type].Release();
                     }
                 }
             }
+            yield return new WaitForSeconds(0.5f);
         }
         ChunkSlots = null;
         WorldBlockData = null;

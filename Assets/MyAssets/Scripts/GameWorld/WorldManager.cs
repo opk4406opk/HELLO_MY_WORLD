@@ -93,24 +93,34 @@ public class WorldManager : MonoBehaviour
         }
     }
 
-    private void SaveSpecificSubWorld(string uniqueID)
+    private async Task<bool> SaveSpecificSubWorld(string uniqueID)
     {
-        Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
+        return await Task.Run(() => {
+            Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
 
-        WholeWorldStates.TryGetValue(uniqueID, out WorldState state);
-        string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", state.subWorldInstance.WorldName);
-        // 파일 생성.
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream fileStream = File.Open(savePath, FileMode.OpenOrCreate);
+            WholeWorldStates.TryGetValue(uniqueID, out WorldState state);
+            string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", state.subWorldInstance.WorldName);
+            // 파일 생성.
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream fileStream = File.Open(savePath, FileMode.OpenOrCreate);
 
-        WorldDataFile dataFile = new WorldDataFile
-        {
-            blockData = state.subWorldInstance.WorldBlockData,
-            uniqueID = state.subWorldInstance.UniqueID
-        };
-        // 시리얼라이징.
-        bf.Serialize(fileStream, dataFile);
-        fileStream.Close();
+            WorldDataFile dataFile = new WorldDataFile
+            {
+                blockData = state.subWorldInstance.WorldBlockData,
+                uniqueID = state.subWorldInstance.UniqueID
+            };
+            // 시리얼라이징.
+            bf.Serialize(fileStream, dataFile);
+            fileStream.Close();
+            return true;
+        });
+    }
+
+    public async void SaveAsyncSubWorldFile(string uniqueID)
+    {
+        KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} Start and Waiting Async Save.", uniqueID));
+        var isSaveSuccess = await SaveSpecificSubWorld(uniqueID);
+        KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} End Waiting Async Save.", uniqueID));
     }
 
     /// <summary>
@@ -120,14 +130,18 @@ public class WorldManager : MonoBehaviour
     /// <returns></returns>
     private async Task<WorldDataFile> LoadSubWorldFile(string uniqueID)
     {
-        WholeWorldStates.TryGetValue(uniqueID, out WorldState worldState);
-        string fileName = worldState.subWorldInstance.WorldName;
-        string filePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", fileName);
-        // 파일 열기.
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream fileStream = File.Open(filePath, FileMode.OpenOrCreate);
         // deserializing.
-        return await Task.FromResult(bf.Deserialize(fileStream) as WorldDataFile);
+        return await Task.Run(()=> {
+            WholeWorldStates.TryGetValue(uniqueID, out WorldState worldState);
+            string fileName = worldState.subWorldInstance.WorldName;
+            string filePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", fileName);
+            // 파일 열기.
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream fileStream = File.Open(filePath, FileMode.OpenOrCreate);
+            var worldData = bf.Deserialize(fileStream) as WorldDataFile;
+            fileStream.Close();
+            return worldData;
+        });
     }
 
     public async void LoadAsyncSubWorldFile(string uniqueID)
@@ -184,7 +198,7 @@ public class WorldManager : MonoBehaviour
             case WorldRealTimeStatus.Loading:
             case WorldRealTimeStatus.LoadSuccess:
                 // 메모리 해제 직전, Sub WorldData를 외부 파일로 저장.
-                SaveSpecificSubWorld(uniqueID);
+                SaveAsyncSubWorldFile(uniqueID);
                 // 메모리 해제 시작.
                 WholeWorldStates[uniqueID].subWorldInstance.Release();
                 WholeWorldStates[uniqueID].realTimeStatus = WorldRealTimeStatus.Released;
