@@ -20,8 +20,11 @@ public class World : MonoBehaviour
     public delegate void Del_OnFinishLoadChunks(string uniqueID);
     public event Del_OnFinishLoadChunks OnFinishLoadChunks;
 
-    public delegate void Del_OnReadyToUnload(string uniqueID);
-    public event Del_OnReadyToUnload OnReadyToUnload;
+    public delegate void Del_OnReadyToRelease(string uniqueID);
+    public event Del_OnReadyToRelease OnReadyToRelease;
+
+    public delegate void Del_OnFinishRelease(string uniqueID);
+    public event Del_OnFinishRelease OnFinishRelease;
     #endregion
 
     public ChunkSlot[,,] ChunkSlots { get; private set; }
@@ -86,7 +89,7 @@ public class World : MonoBehaviour
                     // 거리값이 3(테스트용 값) 이상이 되면..Release.
                     if(dist >= 3)
                     {
-                        OnReadyToUnload(UniqueID);
+                        OnReadyToRelease(UniqueID);
                         break;
                     }
                 }
@@ -127,6 +130,8 @@ public class World : MonoBehaviour
         {
             actor.Hide();
         }
+        // 릴리즈 작업이 완료 되었다.
+        OnFinishRelease(UniqueID);
     }
 
     public void LoadSyncro(Block[,,] newBlockData = null)

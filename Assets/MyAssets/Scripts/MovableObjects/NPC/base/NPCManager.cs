@@ -51,7 +51,7 @@ public class NPCManager : NPCSpawner
             //
             WorldManager.Instance.WholeWorldStates.TryGetValue(worldUniqueID, out WorldState worldState);
             if(worldState.realTimeStatus == WorldRealTimeStatus.Loading ||
-               worldState.realTimeStatus == WorldRealTimeStatus.LoadSuccess)
+               worldState.realTimeStatus == WorldRealTimeStatus.LoadFinish)
             {
                 worldState.subWorldInstance.RegisterActor(instance);
                 int spanwID = instance.GetHashCode();

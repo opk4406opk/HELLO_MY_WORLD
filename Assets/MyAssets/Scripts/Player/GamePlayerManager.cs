@@ -25,7 +25,7 @@ public class GamePlayerManager : MonoBehaviour {
             {
                 foreach(var state in WorldManager.Instance.WholeWorldStates)
                 {
-                    if(state.Value.realTimeStatus == WorldRealTimeStatus.LoadSuccess)
+                    if(state.Value.realTimeStatus == WorldRealTimeStatus.LoadFinish)
                     {
                         Vector3 worldInstPos = state.Value.subWorldInstance.WorldCoordinate;
                         //
