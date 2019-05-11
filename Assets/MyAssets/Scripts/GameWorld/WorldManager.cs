@@ -147,11 +147,14 @@ public class WorldManager : MonoBehaviour
 
     public async void LoadAsyncSubWorldFile(string uniqueID)
     {
+        // 로딩 상태로 전환.
+        WholeWorldStates.TryGetValue(uniqueID, out WorldState worldState);
+        worldState.realTimeStatus = WorldRealTimeStatus.Loading;
+        // 실제 파일을 로딩.
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} Start and Waiting Async Load from file.", uniqueID));
         var loadedWorldData = await LoadSubWorldFile(uniqueID);
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} End Waiting Async Load from file.", uniqueID));
-        WholeWorldStates.TryGetValue(uniqueID, out WorldState worldState);
-        worldState.realTimeStatus = WorldRealTimeStatus.Loading;
+        // 읽어들인 파일을 이용해 게임에서 로딩.
         worldState.subWorldInstance.LoadSyncro(loadedWorldData.blockData);
     }
 
@@ -199,11 +202,12 @@ public class WorldManager : MonoBehaviour
         {
             //case WorldRealTimeStatus.Loading:
             case WorldRealTimeStatus.LoadFinish:
+                // 릴리즈 상태로 전환.
+                WholeWorldStates[uniqueID].realTimeStatus = WorldRealTimeStatus.Release;
                 // 메모리 해제 직전, Sub WorldData를 외부 파일로 저장.
                 SaveAsyncSubWorldFile(uniqueID);
                 // 메모리 해제 시작.
                 WholeWorldStates[uniqueID].subWorldInstance.Release();
-                WholeWorldStates[uniqueID].realTimeStatus = WorldRealTimeStatus.Release;
                 KojeomLogger.DebugLog(string.Format("Subworld ID : {0} is Start Release. ", uniqueID));
                 break;
         }
@@ -247,7 +251,7 @@ public class WorldManager : MonoBehaviour
             {
                 foreach(var state in WholeWorldStates)
                 {
-                    if(state.Value.subWorldInstance != null && state.Value.subWorldInstance.IsSurfaceWorld == true)
+                    if(state.Value.subWorldInstance != null && state.Value.subWorldInstance.bSurfaceWorld == true)
                     {
                         offsetPos = state.Value.subWorldInstance.WorldCoordinate;
                         break;

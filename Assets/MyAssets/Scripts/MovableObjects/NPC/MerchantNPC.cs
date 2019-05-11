@@ -40,7 +40,10 @@ public class MerchantNPC : NPCActor, IMerchantNPC
 
     public override void Update()
     {
-        Controller.Tick(Time.deltaTime);
+        if(Controller != null)
+        {
+            Controller.Tick(Time.deltaTime);
+        }
     }
 
     public override ActorController GetController()

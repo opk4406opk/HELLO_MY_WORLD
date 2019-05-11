@@ -29,7 +29,8 @@ public class World : MonoBehaviour
 
     public ChunkSlot[,,] ChunkSlots { get; private set; }
 
-    public bool IsLoadFinish { get; private set; } = false;
+    public bool bLoadFinish { get; private set; } = false;
+    public bool bTicking { get; private set; } = false;
 
     #region world infomation.
     public string WorldName { get; private set; }
@@ -38,7 +39,7 @@ public class World : MonoBehaviour
     public Vector3 WorldCoordinate { get; private set; }
     // 실제 게임오브젝트로서 존재하는 위치값.
     public Vector3 RealCoordinate{ get; private set; }
-    public bool IsSurfaceWorld { get; private set; }
+    public bool bSurfaceWorld { get; private set; }
     #endregion
 
     public Block[,,] WorldBlockData { get; private set; }
@@ -50,7 +51,7 @@ public class World : MonoBehaviour
 
     public void Init(SubWorldData worldData)
     {
-        IsLoadFinish = false;
+        bLoadFinish = false;
         InGameObjRegister = new InGameObjectRegister();
         InGameObjRegister.Initialize();
         // setting to World
@@ -61,7 +62,7 @@ public class World : MonoBehaviour
         RealCoordinate = new Vector3(WorldCoordinate.x * configData.sub_world_x_size,
             WorldCoordinate.y * configData.sub_world_y_size,
             WorldCoordinate.z * configData.sub_world_z_size);
-        IsSurfaceWorld = worldData.IsSurface;
+        bSurfaceWorld = worldData.IsSurface;
         // setting to GameObject
         gameObject.name = WorldName;
         // Octree init.
@@ -69,13 +70,14 @@ public class World : MonoBehaviour
             configData.sub_world_y_size + RealCoordinate.y,
             configData.sub_world_z_size + RealCoordinate.z));
         //
+        bTicking = true;
         StartCoroutine(Tick());
     }
 
     private IEnumerator Tick()
     {
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} is Tick Start.", UniqueID));
-        while(true)
+        while(bTicking)
         {
             if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.IsInitializeFinish == true)
             {
@@ -84,13 +86,12 @@ public class World : MonoBehaviour
                 if (curPlayerWorld != null)
                 {
                     var dist = Mathf.RoundToInt(Vector3.Distance(curPlayerWorld.WorldCoordinate, WorldCoordinate));
-                    KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} away from {1} distance Player contained World",
-                        UniqueID, dist));
+                    //KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} away from {1} distance Player contained World",
+                    //    UniqueID, dist));
                     // 거리값이 3(테스트용 값) 이상이 되면..Release.
                     if(dist >= 3)
                     {
                         OnReadyToRelease(UniqueID);
-                        break;
                     }
                 }
             }
@@ -101,6 +102,7 @@ public class World : MonoBehaviour
 
     public void Release()
     {
+        bLoadFinish = false;
         StopCoroutine(Tick());
         StopCoroutine(LoadChunks());
         StartCoroutine(ReleaseProcess());
@@ -267,7 +269,7 @@ public class World : MonoBehaviour
         }
         //
         KojeomLogger.DebugLog(string.Format("World name : {0} Chunk 로드를 완료했습니다.", WorldName), LOG_TYPE.DEBUG_TEST);
-        IsLoadFinish = true;
+        bLoadFinish = true;
         OnFinishLoadChunks(UniqueID);
 
         // 월드에 등록된 모든 Actor를 Show.

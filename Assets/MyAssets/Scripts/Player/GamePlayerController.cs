@@ -183,7 +183,7 @@ public class GamePlayerController : MonoBehaviour {
         {
             return;
         }
-        else if(containWorld != null && containWorld.IsLoadFinish == false)
+        else if(containWorld != null && containWorld.bLoadFinish == false)
         {
             return;
         }
