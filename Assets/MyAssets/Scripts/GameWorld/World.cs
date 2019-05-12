@@ -334,7 +334,6 @@ public class World : MonoBehaviour
     {
         float highest = 0.0f;
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        // perlin 알고리즘을 이용해 지형을 생성한다.
         for (int x = 0; x < gameWorldConfig.sub_world_x_size; x++)
         {
             for (int z = 0; z < gameWorldConfig.sub_world_z_size; z++)

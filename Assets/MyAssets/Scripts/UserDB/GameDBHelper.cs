@@ -23,22 +23,17 @@ public struct USER_ITEM
 /// https://answers.unity.com/questions/872068/dllnotfoundexception-sqlite3.html
 public class GameDBHelper
 {
-    private static GameDBHelper instance;
+    private static GameDBHelper Instance;
     public static GameDBHelper GetInstance()
     {
-        if (instance == null) instance = new GameDBHelper();
-        return instance;
+        if (Instance == null) Instance = new GameDBHelper();
+        return Instance;
     }
     /// <summary>
     /// 게임 DB파일이 있는 path.
     /// </summary>
-    private string dbConnectionPath;
+    private string DBConnectionPath;
     private GameDBHelper()
-    {
-        InitProcess();
-    }
-
-    private void InitProcess()
     {
         var platform = Application.platform;
         if (platform == RuntimePlatform.Android)
@@ -54,24 +49,24 @@ public class GameDBHelper
                 KojeomLogger.DebugLog("DB file is Not Exist", LOG_TYPE.ERROR);
                 WWW www = new WWW(dbFilePath);
                 var downloaded = www.bytesDownloaded;
-                while (!www.isDone);
+                while (!www.isDone) ;
                 KojeomLogger.DebugLog(string.Format("downloaded bytes cnt : {0}", www.bytes.Length), LOG_TYPE.DATABASE);
                 dbFilePath = string.Format("{0}{1}", Application.persistentDataPath, "/userDB.db");
                 KojeomLogger.DebugLog(string.Format("New DB file Path : {0}", dbFilePath), LOG_TYPE.DATABASE);
                 File.WriteAllBytes(dbFilePath, www.bytes);
             }
-            dbConnectionPath = string.Format("URI=file:{0}", dbFilePath);
+            DBConnectionPath = string.Format("URI=file:{0}", dbFilePath);
         }
         else if (platform == RuntimePlatform.WindowsEditor || platform == RuntimePlatform.WindowsPlayer)
         {
-            dbConnectionPath = string.Format("URI=file:{0}{1}", Application.streamingAssetsPath, "/userDB.db");
-            KojeomLogger.DebugLog(string.Format("Windows DB file Path : {0}", dbConnectionPath), LOG_TYPE.DATABASE);
+            DBConnectionPath = string.Format("URI=file:{0}{1}", Application.streamingAssetsPath, "/userDB.db");
+            KojeomLogger.DebugLog(string.Format("Windows DB file Path : {0}", DBConnectionPath), LOG_TYPE.DATABASE);
         }
     }
 
     public string GetDBConnectionPath()
     {
-        return dbConnectionPath;
+        return DBConnectionPath;
     }
     /// <summary>
     /// 선택한 게임 캐릭터의 타입 정보를 DB에서 가져온다.
@@ -83,7 +78,7 @@ public class GameDBHelper
         Action GetUserInfo = () =>
         {
             StringBuilder conn = new StringBuilder();
-            conn.AppendFormat(dbConnectionPath, Application.dataPath);
+            conn.AppendFormat(DBConnectionPath, Application.dataPath);
             IDbConnection dbconn;
             IDbCommand dbcmd;
             using (dbconn = (IDbConnection)new SqliteConnection(conn.ToString()))

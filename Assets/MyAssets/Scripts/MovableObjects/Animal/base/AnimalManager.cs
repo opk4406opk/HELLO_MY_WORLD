@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimalManager : MonoBehaviour
+public class AnimalManager : AnimalSpawner
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void Init()
     {
-        
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void RandomSpawn()
     {
-        
+    }
+
+    public override void SpawnActor(int uniqueID, string worldUniqueID, Vector3 spawnPos, int num, bool initShow = false)
+    {
     }
 }

@@ -123,6 +123,8 @@ public class ActorSuperviosr : MonoBehaviour
                 var message = RequestSpawnMessages.Dequeue();
                 switch (message.SpawnData.ActorType)
                 {
+                    case ACTOR_TYPE.ANIMAL:
+                        break;
                     case ACTOR_TYPE.MONSTER:
                         break;
                     case ACTOR_TYPE.NPC:

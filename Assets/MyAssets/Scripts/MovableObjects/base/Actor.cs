@@ -41,7 +41,8 @@ public enum ANIMAL_TYPE
     Chiken,
     Fox,
     Lion,
-    Dog
+    Dog,
+    COUNT
 }
 
 public abstract class ActorSpawnData
@@ -63,6 +64,12 @@ public class NPCSpawnData : ActorSpawnData
 public class MonsterSpawnData : ActorSpawnData
 {
     public MONSTER_TYPE MonsterType;
+}
+
+public class AnimalSpawnData : ActorSpawnData
+{
+    public ANIMAL_TYPE AnimalType;
+    public ANIMAL_CATEGORY AnimalCategory;
 }
 
 
@@ -124,4 +131,10 @@ abstract public class NPCActor : Actor
 abstract public class MonsterActor : Actor
 {
     protected MONSTER_TYPE MonsterType;
+}
+
+abstract public class AnimalActor : Actor
+{
+    protected ANIMAL_TYPE AnimalType;
+    protected ANIMAL_CATEGORY AnimalCategory;
 }

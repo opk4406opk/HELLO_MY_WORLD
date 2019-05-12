@@ -32,3 +32,8 @@ public abstract class NPCSpawner : MovableObjectSpawner
 public abstract class MonsterSpawner : MovableObjectSpawner
 {
 }
+
+public abstract class AnimalSpawner : MovableObjectSpawner
+{
+
+}

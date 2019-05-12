@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 /*   게임에서 사용되는 프리팹 이름 규칙. ( = Naming Rule)
@@ -57,11 +54,19 @@ public class GameResourceSupervisor : MonoBehaviour {
         }
 
         ActorPrefabs[(int)ACTOR_TYPE.MONSTER].Group = new SoftObjectPtr[(int)MONSTER_TYPE.COUNT];
-        var monsterGuids = AssetDatabase.FindAssets("MONSTER", new[] { ConstFilePath.NPC_PREFABS_ASSET_PATH });
+        var monsterGuids = AssetDatabase.FindAssets("MONSTER", new[] { ConstFilePath.MONSTER_PREFABS_ASSET_PATH });
         foreach(var guid in monsterGuids)
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
             ActorPrefabs[(int)ACTOR_TYPE.MONSTER].Group[KojeomUtility.GetResourceNumberFromAssetPath(path)] = new SoftObjectPtr(KojeomUtility.ConvertAssetPathToResourcePath(path));
+        }
+
+        ActorPrefabs[(int)ACTOR_TYPE.ANIMAL].Group = new SoftObjectPtr[(int)ANIMAL_TYPE.COUNT];
+        var animalGuids = AssetDatabase.FindAssets("ANIMAL", new[] { ConstFilePath.ANIMAL_PREFABS_ASSET_PATH });
+        foreach (var guid in animalGuids)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            ActorPrefabs[(int)ACTOR_TYPE.ANIMAL].Group[KojeomUtility.GetResourceNumberFromAssetPath(path)] = new SoftObjectPtr(KojeomUtility.ConvertAssetPathToResourcePath(path));
         }
     }
 

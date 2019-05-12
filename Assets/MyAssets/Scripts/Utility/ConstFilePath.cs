@@ -84,6 +84,9 @@ public class ConstFilePath
     //
     public readonly static string MONSTER_PREFABS_ASSET_PATH = "Assets/MyAssets/Resources/GamePrefabs/Actor/MONSTER";
     public readonly static string MONSTER_PREFABS_RESOURCE_PATH = "GamePrefabs/Actor/MONSTER";
+    //
+    public readonly static string ANIMAL_PREFABS_ASSET_PATH = "Assets/MyAssets/Resources/GamePrefabs/Actor/ANIMAL";
+    public readonly static string ANIMAL_PREFABS_RESOURCE_PATH = "GamePrefabs/Actor/ANIMAL";
     /// <summary>
     /// Actor 공용 프리팹.
     /// </summary>
