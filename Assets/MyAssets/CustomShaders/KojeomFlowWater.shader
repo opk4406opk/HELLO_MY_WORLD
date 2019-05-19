@@ -1,12 +1,15 @@
-﻿Shader "Custom/KojeomWater" {
+﻿
+Shader "Custom/KojeomWater" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
-		_ScrollSpeed("ScrollSpeed", Range(0, 10)) = 1.5
-		_AlphaValue("AlphaValue", Range(0, 1)) = 0.5
+	    //[NoScaleOffset] _FlowMap("Flow (RG)", 2D) = "black" {}
+		[NoScaleOffset] _FlowMap("Flow (RG, A noise)", 2D) = "black" {}
+		_Glossiness("Smoothness", Range(0,1)) = 0.5
+		_Metallic("Metallic", Range(0,1)) = 0.0
 	}
 	SubShader {
-		Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
+		Tags {"RenderType" = "Opaque" }
 		LOD 200
 
 		CGPROGRAM
@@ -16,15 +19,15 @@
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
 
-		sampler2D _MainTex;
+		sampler2D _MainTex, _FlowMap;
 
 		struct Input {
 			float2 uv_MainTex;
 		};
 
-		float _ScrollSpeed;
-		float _AlphaValue;
 		fixed4 _Color;
+		half _Glossiness;
+		half _Metallic;
 
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -34,21 +37,18 @@
 		UNITY_INSTANCING_BUFFER_END(Props)
 
 		void surf (Input IN, inout SurfaceOutput o) {
-			// 메인텍스처의 UV 좌표값을 계속 변화시킨다.
-			//IN.uv_MainTex.y += _Time * _ScrollSpeed;
-			if (IN.uv_MainTex.x > 10.0f)
-			{
-				IN.uv_MainTex.x = 0.0f;
-			}
-			else
-			{
-				IN.uv_MainTex.x += _Time * _ScrollSpeed;
-			}
-
-			fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
-
+			float2 flowVector = tex2D(_FlowMap, IN.uv_MainTex).rg * 2 - 1;
+			float noise = tex2D(_FlowMap, IN.uv_MainTex).a;
+			float time = _Time.y + noise;
+			float progress = frac(time);
+			//uv weight.
+			float3 uvw;
+			uvw.xy = IN.uv_MainTex - flowVector * progress;
+			uvw.z = 1 - abs(1-2 * progress);
+			//
+			fixed4 c = tex2D(_MainTex, uvw.xy) * uvw.z * _Color;
 			o.Albedo = c.rgb;
-			o.Alpha = c.a * _AlphaValue;
+			o.Alpha = c.a;
 		}
 		ENDCG
 	}
