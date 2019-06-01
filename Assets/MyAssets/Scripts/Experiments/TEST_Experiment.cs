@@ -16,9 +16,12 @@ public class TEST_Experiment : MonoBehaviour
     public Vector3 DeltaCamPosition;
     public Vector3 DeltaCamRotation;
 
+    public GameObject InverseNormalTarget;
+
     void Start()
     {
         InitMainCamera();
+        InverseNormal();
     }
 
     // Update is called once per frame
@@ -40,5 +43,31 @@ public class TEST_Experiment : MonoBehaviour
         MainCameraInstance.transform.rotation.SetLookRotation(dir + DeltaCamRotation);
         MainCameraInstance.transform.SetPositionAndRotation(MainCameraInstance.transform.position, Quaternion.FromToRotation(GamePlayer.forward, dir) * Quaternion.Euler(DeltaCamRotation));
         MainCameraInstance.GetComponent<Camera>().fieldOfView = CamFOV;
+    }
+
+    private void InverseNormal()
+    {
+        MeshFilter filter = InverseNormalTarget.GetComponent(typeof(MeshFilter)) as MeshFilter;
+        if (filter != null)
+        {
+            Mesh mesh = filter.mesh;
+
+            Vector3[] normals = mesh.normals;
+            for (int i = 0; i < normals.Length; i++)
+                normals[i] = -normals[i];
+            mesh.normals = normals;
+
+            for (int m = 0; m < mesh.subMeshCount; m++)
+            {
+                int[] triangles = mesh.GetTriangles(m);
+                for (int i = 0; i < triangles.Length; i += 3)
+                {
+                    int temp = triangles[i + 0];
+                    triangles[i + 0] = triangles[i + 1];
+                    triangles[i + 1] = temp;
+                }
+                mesh.SetTriangles(triangles, m);
+            }
+        }
     }
 }
