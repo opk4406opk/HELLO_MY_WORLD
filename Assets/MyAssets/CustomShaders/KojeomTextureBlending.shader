@@ -3,10 +3,11 @@
     Properties
     {
         _Color ("Color", Color) = (1,1,1,1)
-        _MainTexture ("Albedo (RGB)", 2D) = "white" {}
-		_ToTexture("Albedo (RGB)", 2D) = "white" {}
+        _MainTexture ("MainTexture (RGB)", 2D) = "white" {}
+		_ToTexture("ToTexture (RGB)", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
+		_LerpValue("LerpValue", Range(0,1)) = 0.0
     }
     SubShader
     {
@@ -44,7 +45,7 @@
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             // Albedo comes from a texture tinted by color
-            fixed4 c = lerp(tex2D(_MainTexture, IN.uv_MainTexture), tex2D(_ToTexture, IN.uv_ToTexture), _Time * _LerpValue) * _Color;
+            fixed4 c = lerp(tex2D(_MainTexture, IN.uv_MainTexture), tex2D(_ToTexture, IN.uv_ToTexture), _LerpValue) * _Color;
             o.Albedo = c.rgb;
             // Metallic and smoothness come from slider variables
             o.Metallic = _Metallic;
