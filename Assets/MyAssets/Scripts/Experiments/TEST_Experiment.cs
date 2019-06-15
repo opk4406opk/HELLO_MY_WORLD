@@ -16,6 +16,8 @@ public class TEST_Experiment : MonoBehaviour
     public Vector3 DeltaCamPosition;
     public Vector3 DeltaCamRotation;
 
+    public float SkySpinSpeed = 3.0f;
+
     public GameObject InverseNormalTarget;
 
     void Start()
@@ -28,11 +30,17 @@ public class TEST_Experiment : MonoBehaviour
     void Update()
     {
         RotationMainCamera();
+        SpiningSky();
     }
 
     private void InitMainCamera()
     {
         MainCameraInstance.transform.position = GamePlayer.position + DeltaCamPosition;
+    }
+
+    private void SpiningSky()
+    {
+        InverseNormalTarget.transform.Rotate(Vector3.up, SkySpinSpeed * Time.deltaTime);
     }
 
     private void RotationMainCamera()
