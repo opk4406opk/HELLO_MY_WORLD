@@ -4,6 +4,8 @@ using UnityEngine;
 /*   게임에서 사용되는 프리팹 이름 규칙. ( = Naming Rule)
  * 
  *   NPC, Monster..etc preafb -> [ActorTypc]_[DetailType]_[ResourceID]_[Name]
+ *   
+ *   1) Actor type에 따라 리소스 이름 규칙도 다르다.
 */
 
 /// <summary>

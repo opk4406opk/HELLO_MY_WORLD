@@ -1,0 +1,94 @@
+{
+  "SpawnDatas": [
+    {
+      "TYPE": "Pig",
+      "RESOURCE_ID": "ANIMAL0",
+      "UNIQUE_ID": "0",
+      "AP": "5",
+      "HP": "9",
+      "MP": "1",
+      "NAME": "Default_Animal_0"
+    },
+    {
+      "TYPE": "Dog",
+      "RESOURCE_ID": "ANIMAL5",
+      "UNIQUE_ID": "1",
+      "AP": "4",
+      "HP": "9",
+      "MP": "4",
+      "NAME": "Default_Animal_1"
+    },
+    {
+      "TYPE": "Dog",
+      "RESOURCE_ID": "ANIMAL5",
+      "UNIQUE_ID": "2",
+      "AP": "3",
+      "HP": "1",
+      "MP": "6",
+      "NAME": "Default_Animal_2"
+    },
+    {
+      "TYPE": "Pig",
+      "RESOURCE_ID": "ANIMAL0",
+      "UNIQUE_ID": "3",
+      "AP": "7",
+      "HP": "8",
+      "MP": "5",
+      "NAME": "Default_Animal_3"
+    },
+    {
+      "TYPE": "Dog",
+      "RESOURCE_ID": "ANIMAL5",
+      "UNIQUE_ID": "4",
+      "AP": "1",
+      "HP": "9",
+      "MP": "7",
+      "NAME": "Default_Animal_4"
+    },
+    {
+      "TYPE": "Dog",
+      "RESOURCE_ID": "ANIMAL5",
+      "UNIQUE_ID": "5",
+      "AP": "8",
+      "HP": "7",
+      "MP": "4",
+      "NAME": "Default_Animal_5"
+    },
+    {
+      "TYPE": "Chiken",
+      "RESOURCE_ID": "ANIMAL2",
+      "UNIQUE_ID": "6",
+      "AP": "5",
+      "HP": "5",
+      "MP": "2",
+      "NAME": "Default_Animal_6"
+    },
+    {
+      "TYPE": "Cow",
+      "RESOURCE_ID": "ANIMAL1",
+      "UNIQUE_ID": "7",
+      "AP": "4",
+      "HP": "4",
+      "MP": "5",
+      "NAME": "Default_Animal_7"
+    },
+    {
+      "TYPE": "Chiken",
+      "RESOURCE_ID": "ANIMAL2",
+      "UNIQUE_ID": "8",
+      "AP": "7",
+      "HP": "8",
+      "MP": "8",
+      "NAME": "Default_Animal_8"
+    },
+    {
+      "TYPE": "Chiken",
+      "RESOURCE_ID": "ANIMAL2",
+      "UNIQUE_ID": "9",
+      "AP": "1",
+      "HP": "5",
+      "MP": "4",
+      "NAME": "Default_Animal_9"
+    }
+  ]
+}

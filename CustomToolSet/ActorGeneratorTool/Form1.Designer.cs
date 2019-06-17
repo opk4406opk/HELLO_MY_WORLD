@@ -33,11 +33,12 @@
             this.cbx_IsDefaultGenerate = new System.Windows.Forms.CheckBox();
             this.dig_SelectSavePath = new System.Windows.Forms.FolderBrowserDialog();
             this.btn_SelectPath = new System.Windows.Forms.Button();
+            this.btn_GenerateAnimalData = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btn_GenerateMonsterData
             // 
-            this.btn_GenerateMonsterData.Location = new System.Drawing.Point(46, 600);
+            this.btn_GenerateMonsterData.Location = new System.Drawing.Point(12, 600);
             this.btn_GenerateMonsterData.Name = "btn_GenerateMonsterData";
             this.btn_GenerateMonsterData.Size = new System.Drawing.Size(178, 59);
             this.btn_GenerateMonsterData.TabIndex = 1;
@@ -47,7 +48,7 @@
             // 
             // btn_GenerateNPCData
             // 
-            this.btn_GenerateNPCData.Location = new System.Drawing.Point(335, 600);
+            this.btn_GenerateNPCData.Location = new System.Drawing.Point(375, 600);
             this.btn_GenerateNPCData.Name = "btn_GenerateNPCData";
             this.btn_GenerateNPCData.Size = new System.Drawing.Size(182, 59);
             this.btn_GenerateNPCData.TabIndex = 0;
@@ -59,7 +60,7 @@
             // 
             this.cbx_IsDefaultGenerate.AutoSize = true;
             this.cbx_IsDefaultGenerate.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.cbx_IsDefaultGenerate.Location = new System.Drawing.Point(335, 466);
+            this.cbx_IsDefaultGenerate.Location = new System.Drawing.Point(401, 423);
             this.cbx_IsDefaultGenerate.Name = "cbx_IsDefaultGenerate";
             this.cbx_IsDefaultGenerate.Size = new System.Drawing.Size(146, 16);
             this.cbx_IsDefaultGenerate.TabIndex = 2;
@@ -77,11 +78,22 @@
             this.btn_SelectPath.UseVisualStyleBackColor = true;
             this.btn_SelectPath.Click += new System.EventHandler(this.btn_SelectPath_Click);
             // 
+            // btn_GenerateAnimalData
+            // 
+            this.btn_GenerateAnimalData.Location = new System.Drawing.Point(194, 526);
+            this.btn_GenerateAnimalData.Name = "btn_GenerateAnimalData";
+            this.btn_GenerateAnimalData.Size = new System.Drawing.Size(182, 59);
+            this.btn_GenerateAnimalData.TabIndex = 4;
+            this.btn_GenerateAnimalData.Text = "Generate AnimalData";
+            this.btn_GenerateAnimalData.UseVisualStyleBackColor = true;
+            this.btn_GenerateAnimalData.Click += new System.EventHandler(this.Btn_GenerateAnimalData_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(569, 701);
+            this.Controls.Add(this.btn_GenerateAnimalData);
             this.Controls.Add(this.btn_SelectPath);
             this.Controls.Add(this.cbx_IsDefaultGenerate);
             this.Controls.Add(this.btn_GenerateMonsterData);
@@ -89,6 +101,7 @@
             this.Name = "MainForm";
             this.Text = "ActorGenerator";
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Closed += new System.EventHandler(this.OnClosedMainForm);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -100,6 +113,7 @@
         private System.Windows.Forms.CheckBox cbx_IsDefaultGenerate;
         private System.Windows.Forms.FolderBrowserDialog dig_SelectSavePath;
         private System.Windows.Forms.Button btn_SelectPath;
+        private System.Windows.Forms.Button btn_GenerateAnimalData;
     }
 }
 

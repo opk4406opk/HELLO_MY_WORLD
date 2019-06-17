@@ -9,35 +9,34 @@ using System.Threading.Tasks;
 
 namespace ActorGeneratorTool.Sources
 {
-    class NPCGenerator : AGenerator
+    class AnimalGenerator : AGenerator
     {
-        private class NPCJsonData
+        private AnimalJsonData AnimalDatas = new AnimalJsonData();
+        private class AnimalJsonData
         {
             public List<BaseGenerateData> SpawnDatas = new List<BaseGenerateData>();
         }
 
-        private class NPCGenerateData : BaseGenerateData
+        private class AnimalGenerateData : BaseGenerateData
         {
-            // some add traits..
+            // some add traits.
         }
-        private NPCJsonData NpcDatas = new NPCJsonData();
-      
         public override bool Generate(bool isDefaultGenerate, string savePath)
         {
             if (isDefaultGenerate == true)
             {
-                for(int idx = 0; idx < 10; idx++)
+                for (int idx = 0; idx < 10; idx++)
                 {
-                    NPCGenerateData data = new NPCGenerateData();
+                    AnimalGenerateData data = new AnimalGenerateData();
                     data.HP = KojeomUtils.GetInstance().GetRandomInstance().Next(1, 10).ToString();
                     data.MP = KojeomUtils.GetInstance().GetRandomInstance().Next(1, 10).ToString();
                     data.AP = KojeomUtils.GetInstance().GetRandomInstance().Next(1, 10).ToString();
-                    data.NAME = string.Format("Default_NPC_{0}", idx.ToString());
-                    int randVal = KojeomUtils.GetInstance().GetRandomInstance().Next(0, 1);
-                    data.TYPE = ((NPC_TYPE)randVal).ToString();
-                    data.RESOURCE_ID = ((NPCResourceID)randVal).ToString();
+                    data.NAME = string.Format("Default_Animal_{0}", idx.ToString());
+                    int randVal = KojeomUtils.GetInstance().GetRandomInstance().Next((int)ANIMAL_TYPE.Pig, (int)ANIMAL_TYPE.COUNT);
+                    data.TYPE = ((ANIMAL_TYPE)randVal).ToString();
+                    data.RESOURCE_ID = ((AnimalResourceID)randVal).ToString();
                     data.UNIQUE_ID = idx.ToString();
-                    NpcDatas.SpawnDatas.Add(data);
+                    AnimalDatas.SpawnDatas.Add(data);
                 }
             }
             else
@@ -48,7 +47,7 @@ namespace ActorGeneratorTool.Sources
             try
             {
                 // make json file.
-                File.WriteAllText(savePath, JsonConvert.SerializeObject(NpcDatas, Formatting.Indented));
+                File.WriteAllText(savePath, JsonConvert.SerializeObject(AnimalDatas, Formatting.Indented));
                 return true;
             }
             catch (IOException ex)
@@ -57,14 +56,13 @@ namespace ActorGeneratorTool.Sources
             }
         }
 
-
         public override void Init()
         {
         }
 
         public override void Release()
         {
-            NpcDatas.SpawnDatas.Clear();
+            AnimalDatas.SpawnDatas.Clear();
         }
     }
 }

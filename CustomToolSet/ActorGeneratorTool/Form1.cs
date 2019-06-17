@@ -20,6 +20,7 @@ namespace ActorGeneratorTool
         private IFormatter BinFormatter = new BinaryFormatter();
 
         private NPCGenerator NpcGenerator;
+        private AnimalGenerator AnimalGenerator;
 
         public MainForm()
         {
@@ -28,40 +29,31 @@ namespace ActorGeneratorTool
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            InitGenerators();
+        }
+
+        private void OnClosedMainForm(object sender, EventArgs e)
+        {
+            ReleaseGenerators();
+        }
+
+        private void InitGenerators()
+        {
             NpcGenerator = new NPCGenerator();
             NpcGenerator.Init();
+
+            AnimalGenerator = new AnimalGenerator();
+            AnimalGenerator.Init();
+        }
+        private void ReleaseGenerators()
+        {
+            NpcGenerator.Release();
+            AnimalGenerator.Release();
         }
 
         private void btn_GenerateNPCData_Click(object sender, EventArgs e)
         {
-            string selectPath = string.Empty;
-            if (File.Exists(SaveSlotFile.SaveFilePath) == true &&
-               string.Equals(dig_SelectSavePath.SelectedPath, string.Empty) == true)
-            {
-                using (var SaveFileStream = new FileStream(SaveSlotFile.SaveFilePath, FileMode.Open))
-                {
-                    SaveSlotFile = BinFormatter.Deserialize(SaveFileStream) as SaveSlotFile;
-                    selectPath = SaveSlotFile.LastestSavePath;
-                }
-            }
-            else if (string.Equals(dig_SelectSavePath.SelectedPath, string.Empty) == false)
-            {
-                selectPath = string.Format("{0}//NPCDatas.json", dig_SelectSavePath.SelectedPath);
-            }
-            else
-            {
-                selectPath = ".//NPCDatas.json";
-            }
-            //
-            if (NpcGenerator.Generate(cbx_IsDefaultGenerate.Checked, selectPath))
-            {          
-                using (var SaveFileStream = new FileStream(SaveSlotFile.SaveFilePath, FileMode.OpenOrCreate))
-                {
-                    SaveSlotFile = new SaveSlotFile();
-                    SaveSlotFile.LastestSavePath = selectPath;
-                    BinFormatter.Serialize(SaveFileStream, SaveSlotFile);
-                }
-            }
+            SaveDataFile("NPCDatas.json", GenerateActorType.NPC);
         }
 
         private void btn_GenerateMonsterData_Click(object sender, EventArgs e)
@@ -78,6 +70,58 @@ namespace ActorGeneratorTool
         {
             dig_SelectSavePath.ShowDialog();
         }
+
+        private void Btn_GenerateAnimalData_Click(object sender, EventArgs e)
+        {
+            SaveDataFile("AnimalDatas.json", GenerateActorType.ANIMAL);
+        }
+
+        private void SaveDataFile(string fileNameWithExt, GenerateActorType genActorType)
+        {
+            string savePath = string.Empty;
+            if (File.Exists(SaveSlotFile.SaveFilePath) == true &&
+               string.Equals(dig_SelectSavePath.SelectedPath, string.Empty) == true)
+            {
+                using (var SaveFileStream = new FileStream(SaveSlotFile.SaveFilePath, FileMode.Open))
+                {
+                    SaveSlotFile = BinFormatter.Deserialize(SaveFileStream) as SaveSlotFile;
+                    savePath = string.Format("{0}//{1}",SaveSlotFile.LastestSaveRootDirectory, fileNameWithExt);
+                }
+            }
+            else if (string.Equals(dig_SelectSavePath.SelectedPath, string.Empty) == false)
+            {
+                savePath = string.Format("{0}//{1}", dig_SelectSavePath.SelectedPath, fileNameWithExt);
+            }
+            else
+            {
+                savePath = string.Format(".//{0}", fileNameWithExt);
+            }
+            //
+            bool isGenSuccess = false;
+            switch(genActorType)
+            {
+                case GenerateActorType.NPC:
+                    isGenSuccess = NpcGenerator.Generate(cbx_IsDefaultGenerate.Checked, savePath);
+                    NpcGenerator.Release();
+                    break;
+                case GenerateActorType.ANIMAL:
+                    isGenSuccess = AnimalGenerator.Generate(cbx_IsDefaultGenerate.Checked, savePath);
+                    AnimalGenerator.Release();
+                    break;
+                case GenerateActorType.MONSTER:
+                    break;
+            }
+            if (isGenSuccess == true)
+            {
+                using (var SaveFileStream = new FileStream(SaveSlotFile.SaveFilePath, FileMode.OpenOrCreate))
+                {
+                    SaveSlotFile = new SaveSlotFile();
+                    SaveSlotFile.LastestSaveRootDirectory = Path.GetDirectoryName(savePath);
+                    BinFormatter.Serialize(SaveFileStream, SaveSlotFile);
+                }
+            }
+        }
+
     }
 
     //https://www.guru99.com/c-sharp-serialization.html
@@ -86,6 +130,7 @@ namespace ActorGeneratorTool
     public class SaveSlotFile
     {
         public static readonly string SaveFilePath = ".//SaveData.bin";
-        public string LastestSavePath;
+        public string LastestSaveRootDirectory;
     }
+
 }

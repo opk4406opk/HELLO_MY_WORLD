@@ -18,6 +18,7 @@ public class CustomComponentEditor : EditorWindow
         if (GUILayout.Button("Add CharacterController to CharPrefabs")) AddCharControllerToCharPrefabs();
         if (GUILayout.Button("Add RigidBody to CharPrefabs")) AddRigidBodyToCharPrefabs();
         if (GUILayout.Button("Add Components to NPCPrefabs")) AddComponentsToNPCPrefabs();
+        if (GUILayout.Button("Add Components to AnimalPrefabs")) AddComponentsToAnimalPrefabs();
         EditorGUILayout.EndToggleGroup();
     }
 
@@ -60,28 +61,60 @@ public class CustomComponentEditor : EditorWindow
         }
         KojeomLogger.DebugLog("GameCharacter 컴포넌트 할당 작업 완료.");
     }
-    
+
+    private void AddComponentsToAnimalPrefabs()
+    {
+        AddComponentsToActor(false, new Vector3(0.3f, 1.0f, 0.3f), new Vector3(0.0f, 0.5f, 0.0f), 1.0f,
+           true, RigidbodyConstraints.FreezeRotation, ACTOR_TYPE.ANIMAL, ConstFilePath.ANIMAL_PREFABS_RESOURCE_PATH);
+    }
+
     private void AddComponentsToNPCPrefabs()
     {
-        KojeomLogger.DebugLog("NPC 프리팹에 필수적인 컴포넌트 추가 작업 시작.");
-        GameObject[] npcPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.NPC_PREFABS_RESOURCE_PATH);
-        foreach (var element in npcPrefabs)
+        AddComponentsToActor(true, new Vector3(0.3f, 1.0f, 0.3f), new Vector3(0.0f, 0.5f, 0.0f), 1.0f,
+            true, RigidbodyConstraints.FreezeRotation, ACTOR_TYPE.NPC, ConstFilePath.NPC_PREFABS_RESOURCE_PATH);
+    }
+
+    private void AddComponentsToActor(bool addCollider, Vector3 collSize, Vector3 collCenter, float rigidBodyMass, bool useGravity, RigidbodyConstraints rigidBodyConstraints, ACTOR_TYPE actorType, string prefabsPath)
+    {
+        KojeomLogger.DebugLog("Actor 프리팹에 필수적인 컴포넌트 추가 작업 시작.");
+        GameObject[] actorPrefabs = Resources.LoadAll<GameObject>(prefabsPath);
+        foreach (var element in actorPrefabs)
         {
-            var collider = element.GetComponent<BoxCollider>();
-            if (collider != null)
+            if(addCollider == true)
             {
-                DestroyImmediate(collider, true);
+                var collider = element.GetComponent<BoxCollider>();
+                if (collider != null)
+                {
+                    DestroyImmediate(collider, true);
+                }
+                var coll = element.AddComponent<BoxCollider>();
+                coll.size = collSize;
+                coll.center = collCenter;
             }
-            var coll = element.AddComponent<BoxCollider>();
-            coll.size = new Vector3(0.3f, 1.0f, 0.3f);
-            coll.center = new Vector3(0.0f, 0.5f, 0.0f);
             //
-            var controller = element.GetComponent<NPCController>();
-            if (controller != null)
+            ActorController controller = null;
+            switch (actorType)
             {
-                DestroyImmediate(controller, true);
+                case ACTOR_TYPE.NPC:
+                    controller = element.GetComponent<NPCController>();
+                    if (controller != null)
+                    {
+                        DestroyImmediate(controller, true);
+                    }
+                    element.AddComponent<NPCController>();
+                    break;
+                case ACTOR_TYPE.ANIMAL:
+                    controller = element.GetComponent<AnimalController>();
+                    if (controller != null)
+                    {
+                        DestroyImmediate(controller, true);
+                    }
+                    element.AddComponent<AnimalController>();
+                    break;
+                case ACTOR_TYPE.MONSTER:
+                    break;
             }
-            element.AddComponent<NPCController>();
+            
             //
             var comp = element.GetComponent<Rigidbody>();
             if (comp != null)
@@ -89,21 +122,21 @@ public class CustomComponentEditor : EditorWindow
                 DestroyImmediate(comp, true);
             }
             var rigidBody = element.AddComponent<Rigidbody>();
-            rigidBody.mass = 1.0f;
-            rigidBody.useGravity = true;
-            rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+            rigidBody.mass = rigidBodyMass;
+            rigidBody.useGravity = useGravity;
+            rigidBody.constraints = rigidBodyConstraints;
             //
             //ref : https://docs.unity3d.com/ScriptReference/PrefabUtility.InstantiatePrefab.html
-            if (element.GetComponentInChildren<TMPro.TextMeshPro>() == null)
-            {
-                // 텍스처매쉬를 인스턴싱---> 계층구조를 설정하면 에러발생.
-                var meshInstance = Instantiate(Resources.Load<TMPro.TextMeshPro>(ConstFilePath.ACTOR_COMMONS_NAME_RESOURCE_PATH), Vector3.zero, Quaternion.identity);
-                meshInstance.transform.SetParent(element.transform);
-                DestroyImmediate(meshInstance);
-            }
+            //if (element.GetComponentInChildren<TMPro.TextMeshPro>() == null)
+            //{
+            //    // 텍스처매쉬를 인스턴싱---> 계층구조를 설정하면 에러발생.
+            //    var meshInstance = Instantiate(Resources.Load<TMPro.TextMeshPro>(ConstFilePath.ACTOR_COMMONS_NAME_RESOURCE_PATH), Vector3.zero, Quaternion.identity);
+            //    meshInstance.transform.SetParent(element.transform);
+            //    DestroyImmediate(meshInstance);
+            //}
             PrefabUtility.SavePrefabAsset(element);
         }
-        KojeomLogger.DebugLog("NPC 프리팹에 필수적인 컴포넌트 추가 작업 완료.");
+        KojeomLogger.DebugLog("Actor 프리팹에 필수적인 컴포넌트 추가 작업 완료.");
     }
 
     private void AddCharControllerToCharPrefabs()
