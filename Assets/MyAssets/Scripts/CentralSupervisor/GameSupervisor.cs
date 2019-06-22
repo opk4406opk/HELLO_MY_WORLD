@@ -57,6 +57,7 @@ public class GameSupervisor : MonoBehaviour
     private ItemDataFile ItemDataFileInstance = new ItemDataFile();
     private CraftItemListDataFile CraftItemListDataFileInstance = new CraftItemListDataFile();
     private NPCDataFile NpcDataFileInstance = new NPCDataFile();
+    private AnimalDataFile AnimalDataFileInstance = new AnimalDataFile();
     private GameConfigDataFile GameConfigDataFileInstance = new GameConfigDataFile();
     //
     #endregion
@@ -146,6 +147,7 @@ public class GameSupervisor : MonoBehaviour
         SubWorldDataFileInstance.Init();
         CraftItemListDataFileInstance.Init();
         NpcDataFileInstance.Init();
+        AnimalDataFileInstance.Init();
         KojeomLogger.DebugLog("게임 데이터 파일 초기화 완료.");
     }
     /// <summary>

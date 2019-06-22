@@ -20,6 +20,7 @@ namespace ActorGeneratorTool.Sources
         private class AnimalGenerateData : BaseGenerateData
         {
             // some add traits.
+            public string CATEGORY;
         }
         public override bool Generate(bool isDefaultGenerate, string savePath)
         {
@@ -36,6 +37,7 @@ namespace ActorGeneratorTool.Sources
                     data.TYPE = ((ANIMAL_TYPE)randVal).ToString();
                     data.RESOURCE_ID = ((AnimalResourceID)randVal).ToString();
                     data.UNIQUE_ID = idx.ToString();
+                    data.CATEGORY = GetCategory((ANIMAL_TYPE)randVal).ToString();
                     AnimalDatas.SpawnDatas.Add(data);
                 }
             }
@@ -63,6 +65,24 @@ namespace ActorGeneratorTool.Sources
         public override void Release()
         {
             AnimalDatas.SpawnDatas.Clear();
+        }
+
+        private ANIMAL_CATEGORY GetCategory(ANIMAL_TYPE type)
+        {
+            switch(type)
+            {
+                case ANIMAL_TYPE.Chiken:
+                case ANIMAL_TYPE.Cow:
+                case ANIMAL_TYPE.Pig:
+                    return ANIMAL_CATEGORY.Herbivore;
+                case ANIMAL_TYPE.Fox:
+                case ANIMAL_TYPE.Lion:
+                    return ANIMAL_CATEGORY.FleshEating;
+                case ANIMAL_TYPE.Dog:
+                    return ANIMAL_CATEGORY.Polyphagia;
+                default:
+                    return ANIMAL_CATEGORY.None;
+            }
         }
     }
 }

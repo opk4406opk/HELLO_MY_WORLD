@@ -48,7 +48,13 @@ namespace ActorGeneratorTool.Sources
         Dog,
         COUNT
     }
-
+    public enum ANIMAL_CATEGORY
+    {
+        None,
+        Herbivore, // 초식 동물.
+        FleshEating, // 육식 동물.
+        Polyphagia // 잡식 동물.
+    }
 
     public enum GenerateActorType
     {
