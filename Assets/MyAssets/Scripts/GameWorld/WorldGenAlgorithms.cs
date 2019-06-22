@@ -5,31 +5,8 @@ using UnityEngine;
 
 public class WorldGenAlgorithms {
 
-    private static List<Vector3> treeSpawnCandidates = new List<Vector3>();
+    private static List<Vector3> TreeSpawnCandidates = new List<Vector3>();
 
-    public static bool CheckBoundary(int x, int y, int z)
-    {
-        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        if (x >= gameWorldConfig.sub_world_x_size || x < 0) return false;
-        if (y >= gameWorldConfig.sub_world_y_size || y < 0) return false;
-        if (z >= gameWorldConfig.sub_world_z_size || z < 0) return false;
-        return true;
-    }
-
-    private struct FloodFillNode
-    {
-        public int x, y, z;
-        public FloodFillNode(int x, int y, int z)
-        {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-        public bool IsInBoundary()
-        {
-            return CheckBoundary(x, y, z);
-        }
-    }
     public static void DefaultGenWorld(Block[,,] worldBlockData, MakeWorldParam param)
     {
         int highestBlockHeight = 0;
@@ -39,9 +16,9 @@ public class WorldGenAlgorithms {
         {
             for (int z = 0; z < gameWorldConfig.sub_world_z_size; z++)
             {
-                int stone = PerlinNoise(x, 20, z, 3, KojeomUtility.RandomInteger(1, 3), 2);
+                int stone = WorldGenerateUtils.PerlinNoise(x, 20, z, 3, KojeomUtility.RandomInteger(1, 3), 2);
                 stone += param.BaseOffset;
-                int grass = PerlinNoise(x, 21, z, 1, KojeomUtility.RandomInteger(1, 2), 1) + 1;
+                int grass = WorldGenerateUtils.PerlinNoise(x, 21, z, 1, KojeomUtility.RandomInteger(1, 2), 1) + 1;
 
                 for (int y = 0; y < gameWorldConfig.sub_world_y_size; y++)
                 {
@@ -59,7 +36,7 @@ public class WorldGenAlgorithms {
                     }
                     else if (y >= grass + stone && worldBlockData[x, y - 1, z].type != (byte)BlockTileType.EMPTY)
                     {
-                        treeSpawnCandidates.Add(new Vector3(x, y, z));
+                        TreeSpawnCandidates.Add(new Vector3(x, y, z));
                     }
                     
                 }
@@ -75,15 +52,15 @@ public class WorldGenAlgorithms {
             switch(randTreeType)
             {
                 case TreeType.NORMAL:
-                    EnviromentGenAlgorithms.GenerateDefaultTree(worldBlockData, treeSpawnCandidates[KojeomUtility.RandomInteger(0, treeSpawnCandidates.Count)]);
+                    EnviromentGenAlgorithms.GenerateDefaultTree(worldBlockData, TreeSpawnCandidates[KojeomUtility.RandomInteger(0, TreeSpawnCandidates.Count)]);
                     break;
                 case TreeType.SQAURE:
-                    EnviromentGenAlgorithms.GenerateSqaureTree(worldBlockData, treeSpawnCandidates[KojeomUtility.RandomInteger(0, treeSpawnCandidates.Count)]);
+                    EnviromentGenAlgorithms.GenerateSqaureTree(worldBlockData, TreeSpawnCandidates[KojeomUtility.RandomInteger(0, TreeSpawnCandidates.Count)]);
                     break;
             }
         }
         // Water area.
-        EnviromentGenAlgorithms.MakeWaterArea(highestBlockHeight, worldBlockData);
+        //EnviromentGenAlgorithms.MakeWaterArea(highestBlockHeight, worldBlockData);
     }
 
     /// <summary>
@@ -107,74 +84,17 @@ public class WorldGenAlgorithms {
             {
                 for (int y = startY; y < maxY; y++)
                 {
-                    int cave = PerlinNoise(x, y * 3, z, 2, 18, 1);
+                    int cave = WorldGenerateUtils.PerlinNoise(x, y * 3, z, 2, 18, 1);
                     if (cave > y)
                     {
                         worldBlockData[x, y, z].type = (byte)BlockTileDataFile.instance.
                             GetBlockTileInfo(BlockTileType.EMPTY).type;
-                        FloodFill(new FloodFillNode(x, y, z), BlockTileType.SAND, BlockTileType.EMPTY,
+                        WorldGenerateUtils.FloodFill(new FloodFillNode(x, y, z), BlockTileType.SAND, BlockTileType.EMPTY,
                                     worldBlockData, 4);
                     }
                 }
             }
         }
     }
-
-    private static void FloodFill(FloodFillNode node, BlockTileType targetType,
-        BlockTileType replaceType, Block[,,] worldBlockData, int depth)
-    {
-        if (depth == 0) return;
-        depth--;
-
-        FloodFillNode leftNode = new FloodFillNode(node.x - 1, node.y, node.z);
-        FloodFillNode rightNode = new FloodFillNode(node.x + 1, node.y, node.z);
-        FloodFillNode topNode = new FloodFillNode(node.x, node.y + 1, node.z);
-        FloodFillNode bottomNode = new FloodFillNode(node.x, node.y - 1, node.z);
-        FloodFillNode frontNode = new FloodFillNode(node.x, node.y, node.z + 1);
-        FloodFillNode backNode = new FloodFillNode(node.x, node.y, node.z -1);
-
-        if (worldBlockData[node.x, node.y, node.z].type == (byte)targetType)
-        {
-            return;
-        }
-        else
-        {
-            worldBlockData[node.x, node.y, node.z].type = (byte)replaceType;
-            if (leftNode.IsInBoundary())
-            {
-                FloodFill(leftNode, targetType, replaceType, worldBlockData, depth);
-            }
-            if (rightNode.IsInBoundary())
-            {
-                FloodFill(rightNode, targetType, replaceType, worldBlockData, depth);
-            }
-            if (topNode.IsInBoundary())
-            {
-                FloodFill(topNode, targetType, replaceType, worldBlockData, depth);
-            }
-            if (bottomNode.IsInBoundary())
-            {
-                FloodFill(bottomNode, targetType, replaceType, worldBlockData, depth);
-            }
-            if (frontNode.IsInBoundary())
-            {
-                FloodFill(frontNode, targetType, replaceType, worldBlockData, depth);
-            }
-            if (backNode.IsInBoundary())
-            {
-                FloodFill(backNode, targetType, replaceType, worldBlockData, depth);
-            }
-        }
-    }
-
-    private static int PerlinNoise(int x, int y, int z, float scale, float height, float power)
-    {
-        // noise value 0 to 1
-        float rValue;
-        rValue = Noise.GetNoise(((double)x) / scale, ((double)y) / scale, ((double)z) / scale);
-        rValue *= height;
-
-        if (power != 0) rValue = Mathf.Pow(rValue, power);
-        return (int)rValue;
-    }
+    
 }

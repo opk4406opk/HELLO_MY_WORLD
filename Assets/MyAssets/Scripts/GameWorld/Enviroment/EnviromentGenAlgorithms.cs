@@ -20,7 +20,7 @@ public class EnviromentGenAlgorithms
         int treeBodyLength = KojeomUtility.RandomInteger(4, 6);
         for (int idx = 0; idx < treeBodyLength; idx++)
         {
-            if (WorldGenAlgorithms.CheckBoundary((int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z) == true)
+            if (WorldGenerateUtils.CheckBoundary((int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z) == true)
             {
                 worldBlockData[(int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z].type = (byte)BlockTileType.WOOD;
             }
@@ -41,7 +41,7 @@ public class EnviromentGenAlgorithms
             {
                 for (int z = -1; z < 2; z++)
                 {
-                    if (WorldGenAlgorithms.CheckBoundary((int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z) == true)
+                    if (WorldGenerateUtils.CheckBoundary((int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z) == true)
                     {
                         worldBlockData[(int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z].type = (byte)leafType;
                     }
@@ -51,11 +51,11 @@ public class EnviromentGenAlgorithms
 
         // make more branches.
         MakeDefaultBranch(worldBlockData, branchPos, depth - 1, leafType);
-        if (WorldGenAlgorithms.CheckBoundary((int)branchPos.x, (int)branchPos.y + 1, (int)branchPos.z) == true) MakeDefaultBranch(worldBlockData, new Vector3(branchPos.x, branchPos.y + 1, branchPos.z), depth - 1, leafType);
-        if (WorldGenAlgorithms.CheckBoundary((int)branchPos.x + 1, (int)branchPos.y + 1, (int)branchPos.z) == true) MakeDefaultBranch(worldBlockData, new Vector3(branchPos.x + 1, branchPos.y + 1, branchPos.z), depth - 1, leafType);
-        if (WorldGenAlgorithms.CheckBoundary((int)branchPos.x - 1, (int)branchPos.y + 1, (int)branchPos.z) == true) MakeDefaultBranch(worldBlockData, new Vector3(branchPos.x - 1, branchPos.y + 1, branchPos.z), depth - 1, leafType);
-        if (WorldGenAlgorithms.CheckBoundary((int)branchPos.x, (int)branchPos.y + 1, (int)branchPos.z + 1) == true) MakeDefaultBranch(worldBlockData, new Vector3(branchPos.x, branchPos.y + 1, branchPos.z + 1), depth - 1, leafType);
-        if (WorldGenAlgorithms.CheckBoundary((int)branchPos.x, (int)branchPos.y + 1, (int)branchPos.z - 1) == true) MakeDefaultBranch(worldBlockData, new Vector3(branchPos.x, branchPos.y + 1, branchPos.z - 1), depth - 1, leafType);
+        if (WorldGenerateUtils.CheckBoundary((int)branchPos.x, (int)branchPos.y + 1, (int)branchPos.z) == true) MakeDefaultBranch(worldBlockData, new Vector3(branchPos.x, branchPos.y + 1, branchPos.z), depth - 1, leafType);
+        if (WorldGenerateUtils.CheckBoundary((int)branchPos.x + 1, (int)branchPos.y + 1, (int)branchPos.z) == true) MakeDefaultBranch(worldBlockData, new Vector3(branchPos.x + 1, branchPos.y + 1, branchPos.z), depth - 1, leafType);
+        if (WorldGenerateUtils.CheckBoundary((int)branchPos.x - 1, (int)branchPos.y + 1, (int)branchPos.z) == true) MakeDefaultBranch(worldBlockData, new Vector3(branchPos.x - 1, branchPos.y + 1, branchPos.z), depth - 1, leafType);
+        if (WorldGenerateUtils.CheckBoundary((int)branchPos.x, (int)branchPos.y + 1, (int)branchPos.z + 1) == true) MakeDefaultBranch(worldBlockData, new Vector3(branchPos.x, branchPos.y + 1, branchPos.z + 1), depth - 1, leafType);
+        if (WorldGenerateUtils.CheckBoundary((int)branchPos.x, (int)branchPos.y + 1, (int)branchPos.z - 1) == true) MakeDefaultBranch(worldBlockData, new Vector3(branchPos.x, branchPos.y + 1, branchPos.z - 1), depth - 1, leafType);
     }
 
     public static void GenerateSqaureTree(Block[,,] worldBlockData, Vector3 rootPosition)
@@ -63,7 +63,7 @@ public class EnviromentGenAlgorithms
         int treeBodyLength = KojeomUtility.RandomInteger(4, 6);
         for (int idx = 0; idx < treeBodyLength; idx++)
         {
-            if (WorldGenAlgorithms.CheckBoundary((int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z) == true)
+            if (WorldGenerateUtils.CheckBoundary((int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z) == true)
             {
                 worldBlockData[(int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z].type = (byte)BlockTileType.WOOD;
             }
@@ -80,7 +80,7 @@ public class EnviromentGenAlgorithms
             {
                 for (int z = -1; z < sqaureFactor; z++)
                 {
-                    if (WorldGenAlgorithms.CheckBoundary((int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z) == true)
+                    if (WorldGenerateUtils.CheckBoundary((int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z) == true)
                     {
                         worldBlockData[(int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z].type = (byte)leafType;
                     }
@@ -105,5 +105,6 @@ public class EnviromentGenAlgorithms
             }
         }
     }
+
 }
 
