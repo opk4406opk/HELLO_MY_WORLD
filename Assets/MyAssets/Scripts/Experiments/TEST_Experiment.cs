@@ -23,7 +23,10 @@ public class TEST_Experiment : MonoBehaviour
     void Start()
     {
         InitMainCamera();
-        InverseNormal();
+        if(InverseNormalTarget != null)
+        {
+            InverseNormal();
+        }
     }
 
     // Update is called once per frame
