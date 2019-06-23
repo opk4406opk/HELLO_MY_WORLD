@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ConstFilePath
 {
-    // 상대주소. Json 형식의 파일 path 모음.
+    // 상대경로. Json 형식의 파일 path 모음.
     public readonly static string TXT_NPC_DATAS = "TextAsset/ActorData/NPCDatas";
     public readonly static string TXT_ANIMAL_DATAS = "TextAsset/ActorData/AnimalDatas";
     public readonly static string TXT_CHARACTER_DATAS = "TextAsset/ChDatas/characterDatas";

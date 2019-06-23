@@ -160,6 +160,7 @@ public class World : MonoBehaviour
                     {
                         WorldBlockData[x, y, z] = new Block
                         {
+                            type = (byte)BlockTileType.EMPTY,
                             isRendered = false
                         };
                     }

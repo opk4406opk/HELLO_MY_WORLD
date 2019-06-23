@@ -89,21 +89,12 @@ public class EnviromentGenAlgorithms
         }
     }
 
-    public static void MakeWaterArea(int seaLevel, Block[,,] worldBlockData)
+    public static void MakeDefaultWaterArea(Vector3 centerPoint, Block[,,] worldBlockData)
     {
-        for(int x = 0; x < worldBlockData.GetLength(0); x++)
-        {
-            for(int z = 0; z < worldBlockData.GetLength(2); z++)
-            {
-                for(int y = seaLevel - KojeomUtility.RandomInteger(1, 3); y >= 0; y--)
-                {
-                    if(worldBlockData[x, y, z].type == (byte)BlockTileType.EMPTY)
-                    {
-                        worldBlockData[x, y, z].type = (byte)BlockTileType.WATER;
-                    }
-                }
-            }
-        }
+        WorldGenerateUtils.FloodFill(new FloodFillNode(centerPoint),
+            BlockTileType.NONE,
+            BlockTileType.WATER,
+            worldBlockData, 3, FloodFillDirection.TOP);
     }
 
 }

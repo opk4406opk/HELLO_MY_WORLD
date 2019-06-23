@@ -1,65 +1,65 @@
 {
-  "0": {
+  "1": {
     "posX": "0",
     "posY": "0",
-    "type_name": "NONE"
+    "type_name": "EMPTY"
   },
-  "1": {
+  "2": {
     "posX": "0",
     "posY": "15",
     "type_name": "GRASS"
   },
-  "2": {
+  "3": {
     "posX": "0",
     "posY": "14",
     "type_name": "STONE_BIG"
   },
-  "3": {
+  "4": {
     "posX": "1",
     "posY": "14",
     "type_name": "STONE_SMALL"
   },
-  "4": {
+  "5": {
     "posX": "0",
     "posY": "4",
     "type_name": "SAND"
   },
-  "5": {
+  "6": {
     "posX": "0",
     "posY": "1",
     "type_name": "RED_STONE"
   },
-  "6": {
+  "7": {
     "posX": "2",
     "posY": "15",
     "type_name": "WOOD"
   },
-  "7": {
+  "8": {
     "posX": "0",
     "posY": "13",
     "type_name": "STONE_GOLD"
   },
-  "8": {
+  "9": {
     "posX": "2",
     "posY": "13",
     "type_name": "STONE_IRON"
   },
-  "9": {
+  "10": {
     "posX": "0",
     "posY": "11",
     "type_name": "STONE_SILVER"
   },
-  "10": {
+  "11": {
     "posX": "4",
     "posY": "12",
     "type_name": "NORMAL_TREE_LEAF"
   },
-  "11": {
+  "12": {
     "posX": "4",
     "posY": "7",
     "type_name": "SQAURE_TREE_LEAF"
   },
-  "12": {
+  "13": {
     "posX": "0",
     "posY": "0",
     "type_name": "WATER"

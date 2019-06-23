@@ -7,20 +7,20 @@ using System.Collections.Generic;
 /// </summary>
 public enum BlockTileType
 {
-    EMPTY = 0,
-    GRASS = 1,
-    STONE_BIG = 2,
-    STONE_SMALL = 3,
-    SAND = 4,
-    RED_STONE = 5,
-    WOOD = 6,
-    STONE_GOLD = 7,
-    STONE_IRON = 8,
-    STONE_SILVER = 9,
-    NORMAL_TREE_LEAF = 10,
-    SQAURE_TREE_LEAF = 11,
-    WATER = 12,
-    TILE_TOTAL_COUNT
+    NONE = 0,
+    EMPTY = 1,
+    GRASS = 2,
+    STONE_BIG = 3,
+    STONE_SMALL = 4,
+    SAND = 5,
+    RED_STONE = 6,
+    WOOD = 7,
+    STONE_GOLD = 8,
+    STONE_IRON = 9,
+    STONE_SILVER = 10,
+    NORMAL_TREE_LEAF = 11,
+    SQAURE_TREE_LEAF = 12,
+    WATER = 13
 }
 /// <summary>
 /// Tile 데이터를 주고받기 위한 내부 통신용 구조체.
@@ -75,17 +75,17 @@ public class BlockTileDataFile {
                 for(int idx = 0; idx < datas.Count; idx++)
                 {
                     BlockTileInfo tileInfo;
-                    tileInfo.type = (BlockTileType)idx;
                     var data = datas[idx].ToDictionary();
                     string extractedInfo;
                     data.TryGetValue("type_name", out extractedInfo);
                     tileInfo.name = extractedInfo;
+                    tileInfo.type = KojeomUtility.StringToEnum<BlockTileType>(extractedInfo);
                     data.TryGetValue("posX", out extractedInfo);
                     tileInfo.posX = int.Parse(extractedInfo);
                     data.TryGetValue("posY", out extractedInfo);
                     tileInfo.posY = int.Parse(extractedInfo);
                     //
-                    tileDatas.Add((BlockTileType)idx, tileInfo);
+                    tileDatas.Add(tileInfo.type, tileInfo);
                 }
                 break;
             default:

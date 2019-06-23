@@ -21,6 +21,12 @@ public struct FloodFillNode
         Y = y;
         Z = z;
     }
+    public FloodFillNode(Vector3 point)
+    {
+        X = (int)point.x;
+        Y = (int)point.y;
+        Z = (int)point.z;
+    }
     public bool IsInBoundary()
     {
         return WorldGenerateUtils.CheckBoundary(X, Y, Z);
@@ -41,49 +47,49 @@ public class WorldGenerateUtils
         return true;
     }
 
-    public static void FloodFill(FloodFillNode node, BlockTileType targetType,
+    public static void FloodFill(FloodFillNode centerNode, BlockTileType exceptType,
         BlockTileType replaceType, Block[,,] worldBlockData, int depth, FloodFillDirection maskDirection = FloodFillDirection.NONE)
     {
         if (depth == 0) return;
         depth--;
 
-        FloodFillNode leftNode = new FloodFillNode(node.X - 1, node.Y, node.Z);
-        FloodFillNode rightNode = new FloodFillNode(node.X + 1, node.Y, node.Z);
-        FloodFillNode topNode = new FloodFillNode(node.X, node.Y + 1, node.Z);
-        FloodFillNode bottomNode = new FloodFillNode(node.X, node.Y - 1, node.Z);
-        FloodFillNode frontNode = new FloodFillNode(node.X, node.Y, node.Z + 1);
-        FloodFillNode backNode = new FloodFillNode(node.X, node.Y, node.Z - 1);
+        FloodFillNode leftNode = new FloodFillNode(centerNode.X - 1, centerNode.Y, centerNode.Z);
+        FloodFillNode rightNode = new FloodFillNode(centerNode.X + 1, centerNode.Y, centerNode.Z);
+        FloodFillNode topNode = new FloodFillNode(centerNode.X, centerNode.Y + 1, centerNode.Z);
+        FloodFillNode bottomNode = new FloodFillNode(centerNode.X, centerNode.Y - 1, centerNode.Z);
+        FloodFillNode frontNode = new FloodFillNode(centerNode.X, centerNode.Y, centerNode.Z + 1);
+        FloodFillNode backNode = new FloodFillNode(centerNode.X, centerNode.Y, centerNode.Z - 1);
 
-        if (worldBlockData[node.X, node.Y, node.Z].type == (byte)targetType)
+        if (worldBlockData[centerNode.X, centerNode.Y, centerNode.Z].type == (byte)exceptType)
         {
             return;
         }
         else
         {
-            worldBlockData[node.X, node.Y, node.Z].type = (byte)replaceType;
+            worldBlockData[centerNode.X, centerNode.Y, centerNode.Z].type = (byte)replaceType;
             if (leftNode.IsInBoundary() && ((maskDirection & FloodFillDirection.LEFT) != FloodFillDirection.LEFT))
             {
-                FloodFill(leftNode, targetType, replaceType, worldBlockData, depth, maskDirection);
+                FloodFill(leftNode, exceptType, replaceType, worldBlockData, depth, maskDirection);
             }
             if (rightNode.IsInBoundary() && ((maskDirection & FloodFillDirection.RIGHT) != FloodFillDirection.RIGHT))
             {
-                FloodFill(rightNode, targetType, replaceType, worldBlockData, depth, maskDirection);
+                FloodFill(rightNode, exceptType, replaceType, worldBlockData, depth, maskDirection);
             }
             if (topNode.IsInBoundary() && ((maskDirection & FloodFillDirection.TOP) != FloodFillDirection.TOP))
             {
-                FloodFill(topNode, targetType, replaceType, worldBlockData, depth, maskDirection);
+                FloodFill(topNode, exceptType, replaceType, worldBlockData, depth, maskDirection);
             }
             if (bottomNode.IsInBoundary() && ((maskDirection & FloodFillDirection.BOTTOM) != FloodFillDirection.BOTTOM))
             {
-                FloodFill(bottomNode, targetType, replaceType, worldBlockData, depth, maskDirection);
+                FloodFill(bottomNode, exceptType, replaceType, worldBlockData, depth, maskDirection);
             }
             if (frontNode.IsInBoundary() && ((maskDirection & FloodFillDirection.FRONT) != FloodFillDirection.FRONT))
             {
-                FloodFill(frontNode, targetType, replaceType, worldBlockData, depth, maskDirection);
+                FloodFill(frontNode, exceptType, replaceType, worldBlockData, depth, maskDirection);
             }
             if (backNode.IsInBoundary() && ((maskDirection & FloodFillDirection.BACK) != FloodFillDirection.BACK))
             {
-                FloodFill(backNode, targetType, replaceType, worldBlockData, depth, maskDirection);
+                FloodFill(backNode, exceptType, replaceType, worldBlockData, depth, maskDirection);
             }
         }
     }
