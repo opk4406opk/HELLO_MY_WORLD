@@ -7,13 +7,15 @@ public class ConstFilePath
     // 상대경로. Json 형식의 파일 path 모음.
     public readonly static string TXT_NPC_DATAS = "TextAsset/ActorData/NPCDatas";
     public readonly static string TXT_ANIMAL_DATAS = "TextAsset/ActorData/AnimalDatas";
-    public readonly static string TXT_CHARACTER_DATAS = "TextAsset/ChDatas/characterDatas";
-    public readonly static string TXT_CRAFT_ITEM_LIST_DATAS = "TextAsset/ItemDatas/craftItemListDatas";
-    public readonly static string TXT_ITEM_DATAS = "TextAsset/ItemDatas/itemDatas";
-    public readonly static string TXT_TYPE_TO_ITEM_DATAS = "TextAsset/ItemDatas/typeToItemID";
+    public readonly static string TXT_CHARACTER_DATAS = "TextAsset/ChDatas/CharacterDatas";
+    public readonly static string TXT_CRAFT_ITEM_LIST_DATAS = "TextAsset/ItemDatas/CraftItemListDatas";
+    public readonly static string TXT_ITEM_DATAS = "TextAsset/ItemDatas/ItemDatas";
+    public readonly static string TXT_TYPE_TO_ITEM_DATAS = "TextAsset/ItemDatas/TypeToItemID";
     public readonly static string TXT_WORLD_MAP_DATAS = "TextAsset/GameWorld/WorldMapData";
     public readonly static string TXT_WORLD_CONFIG_DATA = "TextAsset/GameWorld/WorldConfigData";
-    public readonly static string TXT_BLOCK_TILE_DATAS = "TextAsset/TileDatas/blockTileDatas";
+    public readonly static string TXT_BLOCK_TILE_DATAS = "TextAsset/TileDatas/BlockTileDatas";
+    public readonly static string TXT_GAME_CONFIG_DATA = "TextAsset/GameConfigData";
+    public readonly static string TXT_GAME_SERVER_DATA = "TextAsset/GameServerData";
 
     //캐릭터 렌더링 텍스처 베이스 파일이 있는 상대경로 directory.
     public readonly static string CH_RT_BASE_FILE_WITH_EXT = "Assets/MyAssets/Resources/Texture(RT)/userCharacters/CharRTBase.renderTexture";

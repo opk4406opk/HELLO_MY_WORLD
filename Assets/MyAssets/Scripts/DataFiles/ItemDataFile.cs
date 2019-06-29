@@ -16,21 +16,18 @@ public struct ItemInfo
 /// <summary>
 /// 게임 Item 데이터를 가지고 있는 클래스. (json)
 /// </summary>
-public class ItemDataFile
+public class ItemDataFile : BaseDataFile
 {
-
-    private JSONObject itemDataJsonObj;
-    private TextAsset jsonFile;
     private Dictionary<string, Dictionary<string, string>> jsonDataSheet;
 
     public static ItemDataFile instance = null;
 
-    public void Init()
+    public override void Init()
     {
         jsonDataSheet = new Dictionary<string, Dictionary<string, string>>();
-        jsonFile = Resources.Load(ConstFilePath.TXT_ITEM_DATAS) as TextAsset;
-        itemDataJsonObj = new JSONObject(jsonFile.text);
-        AccessData(itemDataJsonObj);
+        JsonFile = Resources.Load(ConstFilePath.TXT_ITEM_DATAS) as TextAsset;
+        JsonObject = new JSONObject(JsonFile.text);
+        AccessData(JsonObject);
 
         if (instance == null) instance = this;
     }
@@ -53,7 +50,7 @@ public class ItemDataFile
         return itemInfo;
     }
 
-    private void AccessData(JSONObject jsonObj)
+    protected override void AccessData(JSONObject jsonObj)
     {
         switch (jsonObj.type)
         {

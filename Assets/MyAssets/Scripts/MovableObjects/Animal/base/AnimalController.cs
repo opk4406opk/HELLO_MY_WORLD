@@ -21,14 +21,6 @@ public class AnimalController : ActorController
         RunState = new AnimalRunState(instance);
     }
 
-    public override void LookAt(Vector3 dir)
-    {
-    }
-
-    public override void Move(Vector3 dir, float speed)
-    {
-    }
-
     public override void StartController()
     {
     }

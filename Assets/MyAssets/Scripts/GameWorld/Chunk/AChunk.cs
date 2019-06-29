@@ -90,7 +90,7 @@ public abstract class AChunk : MonoBehaviour {
 		{
 			return BlockTileType.EMPTY;
 		}
-		return (BlockTileType)World.WorldBlockData[x, y, z].type;
+		return (BlockTileType)World.WorldBlockData[x, y, z].Type;
 	}
 
 	protected void CubeTopFace(float x, float y, float z, BlockTileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)

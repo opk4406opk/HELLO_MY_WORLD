@@ -8,42 +8,38 @@ using UnityEngine;
 
 public class MoveForTarget : Node
 {
-    private readonly float dist = 0.12f;
-    private Stack<PathNode2D> path;
-    private Vector2 src, dest;
-    private PathNode2D p = null;
-
-    public CustomAstar2D pathFinder { get; } = new CustomAstar2D();
+    private readonly float Distance = 0.12f;
+    private Stack<PathNode3D> PathList;
+    private Vector3 StartPosition, GoalPosition;
+    
+    public CustomAstar3D PathFinderInstance { get; private set; } = new CustomAstar3D();
 
     public override bool Invoke()
     {
-        if (path.Count > 0)
+        if (PathList.Count > 0)
         {
-            src.x = Controller.GetActorTransform().position.x;
-            src.y = Controller.GetActorTransform().position.z;
-            dest.x = p.WorldCoordX;
-            dest.y = p.WorldCoordZ;
-            Vector2 dir = dest - src;
-            if (Vector2.Distance(src, dest) <= dist)
+            PathNode3D node = null;
+            StartPosition = Controller.GetActorTransform().position;
+            GoalPosition = node.GetWorldPosition();
+            Vector3 dir = GoalPosition - StartPosition;
+            if (Vector3.Distance(StartPosition, GoalPosition) <= Distance)
             {
-                p = path.Pop();
-                Controller.LookAt(new Vector3(dir.x, 0.0f, dir.y));
+                node = PathList.Pop();
+                Controller.LookAt(dir);
             }
-            else Controller.Move(new Vector3(dir.x, 0.0f, dir.y), 1.5f);
+            else Controller.Move(dir, 1.5f);
             return false;
         }
         else return true;
     }
     public void InitPathFinder(PathFinderInitData data)
     {
-        pathFinder.Init(data);
+        PathFinderInstance.Init(data);
     }
-    public void PathFinding()
+    public void PathFinding(Vector3 goalWorldPosition)
     {
-        path = pathFinder.PathFinding();
-        p = path.Pop();
+        PathList = PathFinderInstance.PathFinding(goalWorldPosition);
     }
-
 }
 
 public class StartAttack : Node

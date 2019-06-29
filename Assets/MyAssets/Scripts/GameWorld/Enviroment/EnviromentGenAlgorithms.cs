@@ -22,7 +22,7 @@ public class EnviromentGenAlgorithms
         {
             if (WorldGenerateUtils.CheckBoundary((int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z) == true)
             {
-                worldBlockData[(int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z].type = (byte)BlockTileType.WOOD;
+                worldBlockData[(int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z].Type = (byte)BlockTileType.WOOD;
             }
         }
         MakeDefaultBranch(worldBlockData,
@@ -43,7 +43,7 @@ public class EnviromentGenAlgorithms
                 {
                     if (WorldGenerateUtils.CheckBoundary((int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z) == true)
                     {
-                        worldBlockData[(int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z].type = (byte)leafType;
+                        worldBlockData[(int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z].Type = (byte)leafType;
                     }
                 }
             }
@@ -65,7 +65,7 @@ public class EnviromentGenAlgorithms
         {
             if (WorldGenerateUtils.CheckBoundary((int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z) == true)
             {
-                worldBlockData[(int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z].type = (byte)BlockTileType.WOOD;
+                worldBlockData[(int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z].Type = (byte)BlockTileType.WOOD;
             }
         }
         MakeSqaureBranch(worldBlockData, new Vector3(rootPosition.x, rootPosition.y + treeBodyLength, rootPosition.z), 2, BlockTileType.SQAURE_TREE_LEAF);
@@ -82,7 +82,7 @@ public class EnviromentGenAlgorithms
                 {
                     if (WorldGenerateUtils.CheckBoundary((int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z) == true)
                     {
-                        worldBlockData[(int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z].type = (byte)leafType;
+                        worldBlockData[(int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z].Type = (byte)leafType;
                     }
                 }
             }

@@ -22,14 +22,14 @@ public class CompositeNode : Node
 
     public void AddChild(Node node)
     {
-        childrens.Push(node);
+        ChildrenNodes.Push(node);
     }
 
     public Stack<Node> GetChildrens()
     {
-        return childrens;
+        return ChildrenNodes;
     }
-    private Stack<Node> childrens = new Stack<Node>();
+    private Stack<Node> ChildrenNodes = new Stack<Node>();
 }
 
 public class Selector : CompositeNode
@@ -64,8 +64,23 @@ public class Sequence : CompositeNode
 
 public abstract class BehaviorTree : MonoBehaviour
 {
-    public abstract void Init(ActorController actorController, PathFinderInitData pathData);
-    public abstract void StartBT();
-    public abstract void StopBT();
-    public abstract IEnumerator BehaviorProcess();
+    protected Sequence RootNode = new Sequence();
+    protected IEnumerator BehaviorProcessInstance;
+
+    public abstract void Initialize(ActorController actorController, PathFinderInitData pathData);
+    protected IEnumerator BehaviorProcess()
+    {
+        KojeomLogger.DebugLog("BehaviorProcess Start!!");
+        while (!RootNode.Invoke()) yield return null;
+        KojeomLogger.DebugLog("Behavior process exit");
+    }
+    public void StartBT()
+    {
+        BehaviorProcessInstance = BehaviorProcess();
+        StartCoroutine(BehaviorProcessInstance);
+    }
+    public void StopBT()
+    {
+        StopCoroutine(BehaviorProcessInstance);
+    }
 }

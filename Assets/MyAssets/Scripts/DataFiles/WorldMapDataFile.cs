@@ -41,26 +41,24 @@ public struct SubWorldData
 /// <summary>
 /// World 생성에 쓰이는 DataFile.
 /// </summary>
-public class WorldMapDataFile
+public class WorldMapDataFile : BaseDataFile
 {
-    private JSONObject SubWorldJsonObj;
-    private TextAsset JsonFile;
     private List<Dictionary<string, string>> JsonDataSheet;
     public WorldMapData WorldMapData { get; private set; } = new WorldMapData();
     //
     public static WorldMapDataFile instance = null;
 
-    public void Init()
+    public override void Init()
     {
         JsonDataSheet = new List<Dictionary<string, string>>();
         JsonFile = Resources.Load(ConstFilePath.TXT_WORLD_MAP_DATAS) as TextAsset;
-        SubWorldJsonObj = new JSONObject(JsonFile.text);
-        AccessData(SubWorldJsonObj);
+        JsonObject = new JSONObject(JsonFile.text);
+        AccessData(JsonObject);
 
         if (instance == null) instance = this;
     }
 
-    private void AccessData(JSONObject jsonObj)
+    protected override void AccessData(JSONObject jsonObj)
     {
         var properties = jsonObj.list[0].ToDictionary();
         var subWorldDatas = jsonObj.list[1].list;

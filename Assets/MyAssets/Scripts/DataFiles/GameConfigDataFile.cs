@@ -5,7 +5,8 @@ public struct GameConfigData
     public int ingame_font_size;
 }
 
-public class GameConfigDataFile {
+public class GameConfigDataFile : BaseDataFile
+{
     private static GameConfigDataFile _Instance = null;
     public static GameConfigDataFile Instance
     {
@@ -16,16 +17,14 @@ public class GameConfigDataFile {
         }
     }
 
-    private JSONObject ConfigFileJosnObj;
-    private TextAsset ConfigFile;
     private GameConfigData GameConfigData;
 
-    public void Init()
+    public override void Init()
     {
         _Instance = this;
-        ConfigFile = Resources.Load<TextAsset>("TextAsset/game_config");
-        ConfigFileJosnObj = new JSONObject(ConfigFile.text);
-        ExtractGameConfigData(ConfigFileJosnObj);
+        JsonFile = Resources.Load<TextAsset>(ConstFilePath.TXT_GAME_CONFIG_DATA);
+        JsonObject = new JSONObject(JsonFile.text);
+        AccessData(JsonObject);
     }
 
     public void ResetManager()
@@ -37,7 +36,7 @@ public class GameConfigDataFile {
         return GameConfigData;
     }
 
-    private void ExtractGameConfigData(JSONObject jsonObj)
+    protected override void AccessData(JSONObject jsonObj)
     {
         switch (jsonObj.type)
         {

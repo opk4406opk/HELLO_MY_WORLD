@@ -26,31 +26,29 @@ public struct WorldEnviromentsConfig
     //
 }
 
-public class WorldConfigFile {
-    private JSONObject jsonObject;
-    private TextAsset jsonFile;
-
+public class WorldConfigFile : BaseDataFile
+{
     private WorldConfig Config;
     public static WorldConfigFile Instance = null;
     // Use this for initialization
-    public void Init ()
+    public override void Init ()
     {
         Instance = this;
-        jsonFile = Resources.Load(ConstFilePath.TXT_WORLD_CONFIG_DATA) as TextAsset;
-        jsonObject = new JSONObject(jsonFile.text);
-        AccessData(jsonObject);
+        JsonFile = Resources.Load(ConstFilePath.TXT_WORLD_CONFIG_DATA) as TextAsset;
+        JsonObject = new JSONObject(JsonFile.text);
+        AccessData(JsonObject);
     }
     public WorldConfig GetConfig()
     {
         return Config;
     }
-    private void AccessData(JSONObject jsonObj)
+    protected override void AccessData(JSONObject jsonObj)
     {
         switch (jsonObj.type)
         {
             case JSONObject.Type.OBJECT:
                 //to do
-                var data = jsonObject.ToDictionary();
+                var data = JsonObject.ToDictionary();
                 string extractedValue;
                 data.TryGetValue("chunkLoadIntervalSeconds", out extractedValue);
                 Config.chunkLoadIntervalSeconds = float.Parse(extractedValue);

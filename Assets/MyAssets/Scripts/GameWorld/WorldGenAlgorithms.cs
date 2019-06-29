@@ -24,17 +24,17 @@ public class WorldGenAlgorithms {
                 {
                     if (y <= stone)
                     {
-                        worldBlockData[x, y, z].type = (byte)BlockTileDataFile.instance.GetBlockTileInfo(BlockTileType.STONE_BIG).type;
+                        worldBlockData[x, y, z].Type = (byte)BlockTileDataFile.instance.GetBlockTileInfo(BlockTileType.STONE_BIG).type;
                     }
                     else if (y <= grass + stone)
                     {
-                        worldBlockData[x, y, z].type = (byte)BlockTileDataFile.instance.GetBlockTileInfo(BlockTileType.GRASS).type;
+                        worldBlockData[x, y, z].Type = (byte)BlockTileDataFile.instance.GetBlockTileInfo(BlockTileType.GRASS).type;
                         if(y > highestPoint.y)
                         {
                             highestPoint = new Vector3(x, y, z);
                         }
                     }
-                    else if (y >= grass + stone && worldBlockData[x, y - 1, z].type != (byte)BlockTileType.EMPTY)
+                    else if (y >= grass + stone && worldBlockData[x, y - 1, z].Type != (byte)BlockTileType.EMPTY)
                     {
                         TreeSpawnCandidates.Add(new Vector3(x, y, z));
                     }
@@ -87,7 +87,7 @@ public class WorldGenAlgorithms {
                     int cave = WorldGenerateUtils.PerlinNoise(x, y * 3, z, 2, 18, 1);
                     if (cave > y)
                     {
-                        worldBlockData[x, y, z].type = (byte)BlockTileDataFile.instance.
+                        worldBlockData[x, y, z].Type = (byte)BlockTileDataFile.instance.
                             GetBlockTileInfo(BlockTileType.EMPTY).type;
                         WorldGenerateUtils.FloodFill(new FloodFillNode(x, y, z), BlockTileType.SAND, BlockTileType.EMPTY,
                                     worldBlockData, 4);

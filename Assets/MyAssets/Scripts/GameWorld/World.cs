@@ -160,8 +160,8 @@ public class World : MonoBehaviour
                     {
                         WorldBlockData[x, y, z] = new Block
                         {
-                            type = (byte)BlockTileType.EMPTY,
-                            isRendered = false
+                            Type = (byte)BlockTileType.EMPTY,
+                            bRendered = false
                         };
                     }
                 }
@@ -341,7 +341,7 @@ public class World : MonoBehaviour
             {
                 for (int y = 1; y < gameWorldConfig.sub_world_y_size; y++)
                 {
-                    if ((BlockTileType)WorldBlockData[x, y - 1, z].type != BlockTileType.EMPTY)
+                    if ((BlockTileType)WorldBlockData[x, y - 1, z].Type != BlockTileType.EMPTY)
                     {
                         if(highest < y)
                         {

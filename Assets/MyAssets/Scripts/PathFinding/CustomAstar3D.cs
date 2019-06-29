@@ -21,6 +21,16 @@ public class PathNode3D
     #endregion
     #region method
 
+    public Vector3 GetWorldPosition()
+    {
+        return new Vector3(WorldCoordX, WorldCoordY, WorldCoordZ);
+    }
+
+    public Vector3 GetPathMapPosition()
+    {
+        return new Vector3(PathMapDataX, PathMapDataY, PathMapDataZ);
+    }
+
     public void CalcGValue()
     {
         if (ParentNode == null)
@@ -132,10 +142,11 @@ public class CustomAstar3D : MonoBehaviour
     /// 길찾기에 앞서 목표 노드를 반드시 설정해야합니다.
     /// </summary>
     /// <returns>길 노드 목록을 Stack으로 반환합니다.</returns>
-    public Stack<PathNode3D> PathFinding()
+    public Stack<PathNode3D> PathFinding(Vector3 goalWorldPosition)
     {
         InitPathFinding();
         SetStartPathNode();
+        SetGoalPathNode(goalWorldPosition);
         while ((OpenList.Count != 0) && (!IsGoalInOpenList()))
         {
             SetOpenList();
@@ -161,14 +172,18 @@ public class CustomAstar3D : MonoBehaviour
         CurrentNode.CalcGValue();
         OpenList.Add(CurrentNode);
     }
-    /// <summary>
-    /// 길찾기 시작전에 반드시 호출되어야 하는 함수. 
-    ///  목표위치 노드를 지정해야 합니다.
-    /// </summary>
+
     public void SetGoalPathNode(int worldCoordX, int worldCoordY, int worldCoordZ)
     {
         // 각 sub World 마다 간격이 있으므로 해당 간격에 맞추어 offset 값을 추가.
         GoalNode = PathFindMapData[worldCoordX - OffsetX, worldCoordY - OffsetY, worldCoordZ - OffsetZ];
+        GoalNode.bGoalNode = true;
+    }
+
+    public void SetGoalPathNode(Vector3 worldPosition)
+    {
+        // 각 sub World 마다 간격이 있으므로 해당 간격에 맞추어 offset 값을 추가.
+        GoalNode = PathFindMapData[(int)worldPosition.x - OffsetX, (int)worldPosition.y - OffsetY, (int)worldPosition.z - OffsetZ];
         GoalNode.bGoalNode = true;
     }
 
@@ -198,7 +213,6 @@ public class CustomAstar3D : MonoBehaviour
     {
         //길을 찾아 움직이려는 오브젝트의 현재 높이.
         //실제 밟고 서있는 WorldBlock 배열의 Y값을 구한다.
-        // p.s. 게임 내 월드블록 배열에서 XZ 평면에서의 데이터만 있으면 된다.
         int curHeight = Mathf.RoundToInt(MoveObjectTrasnform.position.y);
         for (int x = 0; x < GameWorldConfing.sub_world_x_size; x++)
             for(int y = 0; y < GameWorldConfing.sub_world_y_size; y++)
@@ -207,7 +221,7 @@ public class CustomAstar3D : MonoBehaviour
                     int jumpedHeight = curHeight + 1;
                     if (jumpedHeight < WorldBlockData.GetLength(2))
                     {
-                        if (WorldBlockData[x, jumpedHeight, z].isRendered)
+                        if (WorldBlockData[x, jumpedHeight, z].bRendered)
                         {
                             PathFindMapData[x, y, z].bJumped = true;
                             PathFindMapData[x, y, z].WorldCoordY = jumpedHeight;
@@ -222,7 +236,7 @@ public class CustomAstar3D : MonoBehaviour
         int height = 0;
         for (int y = curHeight; y > 0; y--)
         {
-            if (WorldBlockData[x, y, z].isRendered)
+            if (WorldBlockData[x, y, z].bRendered)
             {
                 height = y;
                 break;

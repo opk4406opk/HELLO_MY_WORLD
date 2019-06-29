@@ -60,13 +60,13 @@ public class WorldGenerateUtils
         FloodFillNode frontNode = new FloodFillNode(centerNode.X, centerNode.Y, centerNode.Z + 1);
         FloodFillNode backNode = new FloodFillNode(centerNode.X, centerNode.Y, centerNode.Z - 1);
 
-        if (worldBlockData[centerNode.X, centerNode.Y, centerNode.Z].type == (byte)exceptType)
+        if (worldBlockData[centerNode.X, centerNode.Y, centerNode.Z].Type == (byte)exceptType)
         {
             return;
         }
         else
         {
-            worldBlockData[centerNode.X, centerNode.Y, centerNode.Z].type = (byte)replaceType;
+            worldBlockData[centerNode.X, centerNode.Y, centerNode.Z].Type = (byte)replaceType;
             if (leftNode.IsInBoundary() && ((maskDirection & FloodFillDirection.LEFT) != FloodFillDirection.LEFT))
             {
                 FloodFill(leftNode, exceptType, replaceType, worldBlockData, depth, maskDirection);

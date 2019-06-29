@@ -4,7 +4,6 @@ using UnityEngine;
 
 public sealed class RoamingNpcAI : BehaviorTree
 {
-    private Sequence root = new Sequence();
     private Selector selector = new Selector();
     private Sequence seqMoveForTarget = new Sequence();
     private Sequence seqDead = new Sequence();
@@ -13,13 +12,12 @@ public sealed class RoamingNpcAI : BehaviorTree
     private DeadProcess deadProcess = new DeadProcess();
     private CheckDead chkDead = new CheckDead();
 
-    public override void Init(ActorController actorController, PathFinderInitData pathData)
+    public override void Initialize(ActorController actorController, PathFinderInitData pathData)
     {
-        root.AddChild(selector);
+        RootNode.AddChild(selector);
         moveForTarget.SetController(actorController);
         moveForTarget.InitPathFinder(pathData);
-        moveForTarget.pathFinder.SetGoalPathNode(22, 25);
-        moveForTarget.PathFinding();
+        moveForTarget.PathFinding(Vector3.zero);
         selector.AddChild(seqMoveForTarget);
         selector.AddChild(seqDead);
 
@@ -27,24 +25,4 @@ public sealed class RoamingNpcAI : BehaviorTree
         seqDead.AddChild(deadProcess);
         seqDead.AddChild(chkDead);
     }
-
-    private IEnumerator behaviorProcess;
-    public override IEnumerator BehaviorProcess()
-    {
-        KojeomLogger.DebugLog("BehaviorProcess Start!!");
-        while (!root.Invoke()) yield return null;
-        KojeomLogger.DebugLog("Behavior process exit");
-    }
-
-    public override void StartBT()
-    {
-        behaviorProcess = BehaviorProcess();
-        StartCoroutine(behaviorProcess);
-    }
-
-    public override void StopBT()
-    {
-        StopCoroutine(behaviorProcess);
-    }
-
 }

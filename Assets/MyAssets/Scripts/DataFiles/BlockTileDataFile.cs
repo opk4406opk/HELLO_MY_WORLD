@@ -36,22 +36,20 @@ public struct BlockTileInfo
 /// <summary>
 /// 블록 수정 또는 삭제, 월드 생성시에 쓰이는 TileDataFile.
 /// </summary>
-public class BlockTileDataFile {
-
-    private JSONObject tileDataJsonObj;
-    private TextAsset jsonFile;
+public class BlockTileDataFile : BaseDataFile
+{
     private Dictionary<BlockTileType, BlockTileInfo> tileDatas;
 
     public static BlockTileDataFile instance = null;
-    public void Init ()
+    public override void Init ()
     {
         //
         instance = this;
         //
         tileDatas = new Dictionary<BlockTileType, BlockTileInfo>();
-        jsonFile = Resources.Load(ConstFilePath.TXT_BLOCK_TILE_DATAS) as TextAsset;
-        tileDataJsonObj = new JSONObject(jsonFile.text);
-        AccessData(tileDataJsonObj);
+        JsonFile = Resources.Load(ConstFilePath.TXT_BLOCK_TILE_DATAS) as TextAsset;
+        JsonObject = new JSONObject(JsonFile.text);
+        AccessData(JsonObject);
     }
 
     public BlockTileInfo GetBlockTileInfo(BlockTileType type)
@@ -66,7 +64,7 @@ public class BlockTileDataFile {
         return tileDatas.Count;
     }
 
-    private void AccessData(JSONObject jsonObj)
+    protected override void AccessData(JSONObject jsonObj)
     {
         switch (jsonObj.type)
         {

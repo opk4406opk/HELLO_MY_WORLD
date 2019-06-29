@@ -78,13 +78,13 @@ public class ModifyTerrain : MonoBehaviour
                 // 임시코드
                 world.CustomOctreeInstance.Add(collideInfo.HitBlockCenter + new Vector3(0, 1.0f, 0));
                 SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
-                world.WorldBlockData[blockX, blockY + 1, blockZ].isRendered = true;
+                world.WorldBlockData[blockX, blockY + 1, blockZ].bRendered = true;
             }
             else
             {
                 world.CustomOctreeInstance.Delete(collideInfo.HitBlockCenter);
                 SetBlockForDelete(blockX, blockY, blockZ, blockType);
-                world.WorldBlockData[blockX, blockY, blockZ].isRendered = false;
+                world.WorldBlockData[blockX, blockY, blockZ].bRendered = false;
             }
         }
     }
@@ -97,8 +97,8 @@ public class ModifyTerrain : MonoBehaviour
            (z < gameWorldConfig.sub_world_z_size) &&
            (x >= 0) && (y >= 0) && (z >= 0)) 
         {
-            world.WorldBlockData[x, y, z].type = block;
-            world.WorldBlockData[x, y, z].isRendered = true;
+            world.WorldBlockData[x, y, z].Type = block;
+            world.WorldBlockData[x, y, z].bRendered = true;
             UpdateChunkAt(x, y, z, block);
         }
         else
@@ -171,9 +171,9 @@ public class ModifyTerrain : MonoBehaviour
            (z < gameWorldConfig.sub_world_z_size) &&
            (x >= 0) && (y >= 0) && (z >= 0))
         {
-            UpdateUserItem(world.WorldBlockData[x, y, z].type);
-            world.WorldBlockData[x, y, z].type = block;
-            world.WorldBlockData[x, y, z].isRendered = false;
+            UpdateUserItem(world.WorldBlockData[x, y, z].Type);
+            world.WorldBlockData[x, y, z].Type = block;
+            world.WorldBlockData[x, y, z].bRendered = false;
             UpdateChunkAt(x, y, z, block);
         }
         else

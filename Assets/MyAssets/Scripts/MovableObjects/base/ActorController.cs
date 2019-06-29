@@ -4,8 +4,20 @@ using UnityEngine;
 
 public abstract class ActorController : MonoBehaviour
 {
-    abstract public void Move(Vector3 dir, float speed);
-    abstract public void LookAt(Vector3 dir);
+    public void Move(Vector3 dir, float speed)
+    {
+        Vector3 newPos = gameObject.transform.position;
+        newPos += dir.normalized * Time.deltaTime * speed;
+        gameObject.transform.position = newPos;
+    }
+    public void LookAt(Vector3 dir)
+    {
+        float theta = Vector3.Dot(dir, transform.forward) / (transform.forward.magnitude * dir.magnitude);
+        float angle = Mathf.Acos(theta) * Mathf.Rad2Deg;
+        Vector3 cross = Vector3.Cross(dir, transform.forward);
+        if (cross.z < 0.0f) angle = 360.0f - angle;
+        transform.Rotate(transform.up, angle);
+    }
     abstract public void Init(World world, Actor instance);
     abstract public void StartController();
     abstract public void StopController();

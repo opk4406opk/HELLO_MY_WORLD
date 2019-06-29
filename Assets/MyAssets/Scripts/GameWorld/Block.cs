@@ -5,19 +5,19 @@ using System.Collections.Generic;
 [Serializable]
 public struct Block {
 
-    public byte type;
-    public float centerX;
-    public float centerY;
-    public float centerZ;
-    public bool isRendered;
+    public byte Type;
+    public float CenterX;
+    public float CenterY;
+    public float CenterZ;
+    public bool bRendered;
     // 복사 생성자.
     public Block(Block b)
     {
-        type = b.type;
-        centerX = b.centerX;
-        centerY = b.centerY;
-        centerZ = b.centerZ;
-        isRendered = b.isRendered;
+        Type = b.Type;
+        CenterX = b.CenterX;
+        CenterY = b.CenterY;
+        CenterZ = b.CenterZ;
+        bRendered = b.bRendered;
     }
 }
 

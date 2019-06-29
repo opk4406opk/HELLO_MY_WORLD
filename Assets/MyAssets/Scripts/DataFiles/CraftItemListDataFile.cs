@@ -24,24 +24,22 @@ public struct CraftRawMaterial
 /// <summary>
 /// 제작아이템 리스트 Json데이터 파일을 관리하는 클래스.
 /// </summary>
-public class CraftItemListDataFile
+public class CraftItemListDataFile : BaseDataFile
 {
-    private JSONObject craftItemListJsonObj;
-    private TextAsset jsonFile;
     public Dictionary<string, CraftItem> craftItems { get; private set; } = new Dictionary<string, CraftItem>();
 
     public static CraftItemListDataFile instance = null;
 
-    public void Init()
+    public override void Init()
     {
-        jsonFile = Resources.Load(ConstFilePath.TXT_CRAFT_ITEM_LIST_DATAS) as TextAsset;
-        craftItemListJsonObj = new JSONObject(jsonFile.text);
-        AccessData(craftItemListJsonObj);
+        JsonFile = Resources.Load(ConstFilePath.TXT_CRAFT_ITEM_LIST_DATAS) as TextAsset;
+        JsonObject = new JSONObject(JsonFile.text);
+        AccessData(JsonObject);
 
         if (instance == null) instance = this;
     }
 
-    private void AccessData(JSONObject jsonObj)
+    protected override void AccessData(JSONObject jsonObj)
     {
         switch (jsonObj.type)
         {

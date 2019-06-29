@@ -8,7 +8,8 @@ public struct GameServerData
     public int gamelog_server_port;
 }
 
-public class GameServerDataFile {
+public class GameServerDataFile : BaseDataFile
+{
     private static GameServerDataFile _singleton = null;
     public static GameServerDataFile singleton
     {
@@ -22,15 +23,13 @@ public class GameServerDataFile {
         }
     }
 
-    private JSONObject serverDataFileJosnObj;
-    private TextAsset serverDataFile;
     private GameServerData gameServerData;
 
     private GameServerDataFile()
     {
-        serverDataFile = Resources.Load<TextAsset>("TextAsset/game_server_data");
-        serverDataFileJosnObj = new JSONObject(serverDataFile.text);
-        ExtractServerData(serverDataFileJosnObj);
+        JsonFile = Resources.Load<TextAsset>(ConstFilePath.TXT_GAME_SERVER_DATA);
+        JsonObject = new JSONObject(JsonFile.text);
+        AccessData(JsonObject);
     }
 
     public GameServerData GetGameServerData()
@@ -38,7 +37,7 @@ public class GameServerDataFile {
         return gameServerData;
     }
 
-    private void ExtractServerData(JSONObject jsonObj)
+    protected override void AccessData(JSONObject jsonObj)
     {
         switch (jsonObj.type)
         {
@@ -60,5 +59,10 @@ public class GameServerDataFile {
             default:
                 break;
         }
+    }
+
+    public override void Init()
+    {
+        AccessData(JsonObject);
     }
 }

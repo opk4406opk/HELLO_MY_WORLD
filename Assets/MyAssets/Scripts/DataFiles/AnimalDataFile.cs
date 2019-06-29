@@ -2,18 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimalDataFile
+public class AnimalDataFile : BaseDataFile
 {
-    private JSONObject JsonObject;
-    private TextAsset JsonFile;
-
     public static AnimalDataFile Instance = null;
     /// <summary>
     /// Key : UniqueID, Value : SpawnData
     /// </summary>
     public Dictionary<int, AnimalSpawnData> AnimalSpawnDatas { get; private set; } = new Dictionary<int, AnimalSpawnData>();
 
-    public void Init()
+    public override void Init()
     {
         JsonFile = Resources.Load(ConstFilePath.TXT_ANIMAL_DATAS) as TextAsset;
         JsonObject = new JSONObject(JsonFile.text);
@@ -21,8 +18,7 @@ public class AnimalDataFile
 
         if (Instance == null) Instance = this;
     }
-
-    private void AccessData(JSONObject jsonObj)
+    protected override void AccessData(JSONObject jsonObj)
     {
         foreach (var json in jsonObj.list[0].list)
         {

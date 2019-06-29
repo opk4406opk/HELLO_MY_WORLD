@@ -24,6 +24,17 @@ public class PathNode2D
     #endregion
     #region method
 
+    public Vector2 GetWorldPosition()
+    {
+        return new Vector2(WorldCoordX, WorldCoordZ);
+    }
+
+    public Vector2 GetPathMapPosition()
+    {
+        return new Vector2(PathMapDataX, PathMapDataZ);
+    }
+
+
     public void CalcGValue()
     {
         if (ParentNode == null)
@@ -221,7 +232,7 @@ public class CustomAstar2D
                 int jumpedHeight = curHeight + 1;
                 if (jumpedHeight < WorldBlockData.GetLength(2))
                 {
-                    if (WorldBlockData[x, jumpedHeight, z].isRendered){
+                    if (WorldBlockData[x, jumpedHeight, z].bRendered){
                         PathFindMapData[x, z].bJumped = true;
                         PathFindMapData[x, z].WorldCoordY = jumpedHeight;
                     }
@@ -235,7 +246,7 @@ public class CustomAstar2D
         int height = 0;
         for(int y = curHeight; y > 0; y--)
         {
-            if (WorldBlockData[x, y, z].isRendered)
+            if (WorldBlockData[x, y, z].bRendered)
             {
                 height = y;
                 break;
