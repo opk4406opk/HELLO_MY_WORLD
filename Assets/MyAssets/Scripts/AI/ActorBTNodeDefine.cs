@@ -9,11 +9,11 @@ using UnityEngine;
 public class MoveForTarget : Node
 {
     private readonly float dist = 0.12f;
-    private Stack<PathNode> path;
+    private Stack<PathNode2D> path;
     private Vector2 src, dest;
-    private PathNode p = null;
+    private PathNode2D p = null;
 
-    public CustomAstar pathFinder { get; } = new CustomAstar();
+    public CustomAstar2D pathFinder { get; } = new CustomAstar2D();
 
     public override bool Invoke()
     {
@@ -21,8 +21,8 @@ public class MoveForTarget : Node
         {
             src.x = Controller.GetActorTransform().position.x;
             src.y = Controller.GetActorTransform().position.z;
-            dest.x = p.worldCoordX;
-            dest.y = p.worldCoordZ;
+            dest.x = p.WorldCoordX;
+            dest.y = p.WorldCoordZ;
             Vector2 dir = dest - src;
             if (Vector2.Distance(src, dest) <= dist)
             {

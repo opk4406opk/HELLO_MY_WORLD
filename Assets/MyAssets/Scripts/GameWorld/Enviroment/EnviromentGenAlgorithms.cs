@@ -94,8 +94,7 @@ public class EnviromentGenAlgorithms
         WorldGenerateUtils.FloodFill(new FloodFillNode(centerPoint),
             BlockTileType.NONE,
             BlockTileType.WATER,
-            worldBlockData, 3, FloodFillDirection.TOP);
+            worldBlockData, 10, FloodFillDirection.TOP);
     }
-
 }
 
