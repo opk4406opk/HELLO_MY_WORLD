@@ -11,7 +11,6 @@ public class AnimalController : ActorController
 
     public override void Init(World world, Actor instance)
     {
-        CurStateType = ActorStateType.Idle;
         ContainedWorld = world;
         AnimatorInstance = gameObject.GetComponent<Animator>();
         BoxColliderInstance = gameObject.GetComponent<BoxCollider>();
@@ -31,7 +30,18 @@ public class AnimalController : ActorController
 
     public override void Tick(float deltaTime)
     {
-        switch (CurStateType)
+        StateMachineControllerInstance.Tick(deltaTime);
+    }
+
+    public override Transform GetActorTransform()
+    {
+        return transform;
+    }
+
+    public override void ChangeActorState(ActorStateType state)
+    {
+        CurStateType = state;
+        switch (state)
         {
             case ActorStateType.Idle:
                 StateMachineControllerInstance.SetState(IdleState);
@@ -43,11 +53,5 @@ public class AnimalController : ActorController
                 StateMachineControllerInstance.SetState(RunState);
                 break;
         }
-        StateMachineControllerInstance.Tick(deltaTime);
-    }
-
-    public override Transform GetActorTransform()
-    {
-        return transform;
     }
 }

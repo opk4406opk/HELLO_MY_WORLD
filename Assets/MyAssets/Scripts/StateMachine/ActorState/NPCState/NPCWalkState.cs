@@ -11,7 +11,6 @@ public class NPCWalkState : AActorState, IState
 
     public void InitState()
     {
-        throw new System.NotImplementedException();
     }
 
     public void ReleaseState()

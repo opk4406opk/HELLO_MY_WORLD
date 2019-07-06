@@ -23,6 +23,7 @@ public abstract class ActorController : MonoBehaviour
     abstract public void StopController();
     abstract public Transform GetActorTransform();
     abstract public void Tick(float deltaTime);
+    abstract public void ChangeActorState(ActorStateType state);
 
     protected ActorStateType CurStateType;
     protected BoxCollider BoxColliderInstance;
@@ -31,8 +32,4 @@ public abstract class ActorController : MonoBehaviour
     protected Animator AnimatorInstance;
 
 
-    public void SetActorStateType(ActorStateType state)
-    {
-        CurStateType = state;
-    }
 }

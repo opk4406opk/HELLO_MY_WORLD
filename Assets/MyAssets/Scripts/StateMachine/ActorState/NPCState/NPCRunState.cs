@@ -12,7 +12,6 @@ public class NPCRunState : AActorState, IState
 
     public void InitState()
     {
-        throw new System.NotImplementedException();
     }
 
     public void ReleaseState()

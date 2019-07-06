@@ -6,7 +6,7 @@ using UnityEngine;
  * Actor와 관련된 행동트리 노드들이 정의되어 있는 파일. 
  */
 
-public class MoveForTarget : Node
+public class BTNodeMoveForTarget : Node
 {
     private readonly float Distance = 0.12f;
     private Stack<PathNode3D> PathList;
@@ -34,7 +34,7 @@ public class MoveForTarget : Node
     }
     public void InitPathFinder(PathFinderInitData data)
     {
-        PathFinderInstance.Init(data);
+        PathFinderInstance.Init(data, Controller.GetActorTransform());
     }
     public void PathFinding(Vector3 goalWorldPosition)
     {
@@ -42,22 +42,14 @@ public class MoveForTarget : Node
     }
 }
 
-public class StartAttack : Node
+public class BTNodeStartAttack : Node
 {
     public override bool Invoke()
     {
         return true;
     }
 }
-public class StopAttack : Node
-{
-    public override bool Invoke()
-    {
-        return true;
-    }
-}
-
-public class DeadProcess : Node
+public class BTNodeStopAttack : Node
 {
     public override bool Invoke()
     {
@@ -65,7 +57,15 @@ public class DeadProcess : Node
     }
 }
 
-public class CheckDead : Node
+public class BTNodeDeadProcess : Node
+{
+    public override bool Invoke()
+    {
+        return true;
+    }
+}
+
+public class BTNodeCheckDead : Node
 {
     public override bool Invoke()
     {

@@ -62,6 +62,15 @@ public class Sequence : CompositeNode
     }
 }
 
+/// <summary>
+/// AI 종류.
+/// </summary>
+public enum AITypes
+{
+    Common,
+    COUNT
+}
+
 public abstract class BehaviorTree : MonoBehaviour
 {
     protected Sequence RootNode = new Sequence();

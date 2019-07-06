@@ -81,13 +81,11 @@ public class PathNode2D
 public struct PathFinderInitData
 {
     public Block[,,] WorldBlockData;
-    public Transform MoveObjTrans;
     public int OffsetX, OffsetY, OffsetZ;
 
-    public PathFinderInitData(Block[,,] blockData, Transform trans, int _offsetX, int _offsetY, int _offsetZ)
+    public PathFinderInitData(Block[,,] blockData, int _offsetX, int _offsetY, int _offsetZ)
     {
         WorldBlockData = blockData;
-        MoveObjTrans = trans;
         OffsetX = _offsetX;
         OffsetY = _offsetY;
         OffsetZ = _offsetZ;
@@ -114,7 +112,7 @@ public class CustomAstar2D
 
     public CustomAstar2D() { }
 
-	public void Init(PathFinderInitData data)
+	public void Init(PathFinderInitData data, Transform actorTransform)
     {
         //
         GameWorldConfing = WorldConfigFile.Instance.GetConfig();
@@ -133,7 +131,7 @@ public class CustomAstar2D
                 PathFindMapData[x, z].ParentNode = null;
                 PathFindMapData[x, z].bGoalNode = false;
             }
-        MoveObjectTrasnform = data.MoveObjTrans;
+        MoveObjectTrasnform = actorTransform;
         InitEightDir();
     }
 

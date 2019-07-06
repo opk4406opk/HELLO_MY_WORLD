@@ -12,7 +12,6 @@ public class NPCController : ActorController
 
     public override void Init(World world, Actor instance)
     {
-        CurStateType = ActorStateType.Idle;
         ContainedWorld = world;
         AnimatorInstance = gameObject.GetComponent<Animator>();
         BoxColliderInstance = gameObject.GetComponent<BoxCollider>();
@@ -24,19 +23,6 @@ public class NPCController : ActorController
 
     public override void Tick(float deltaTime)
     {
-        //
-        switch(CurStateType)
-        {
-            case ActorStateType.Idle:
-                StateMachineControllerInstance.SetState(IdleState);
-                break;
-            case ActorStateType.Walk:
-                StateMachineControllerInstance.SetState(WalkState);
-                break;
-            case ActorStateType.Run:
-                StateMachineControllerInstance.SetState(RunState);
-                break;
-        }
         StateMachineControllerInstance.Tick(deltaTime);
     }
 
@@ -52,5 +38,20 @@ public class NPCController : ActorController
     {
         return transform;
     }
-
+    public override void ChangeActorState(ActorStateType state)
+    {
+        CurStateType = state;
+        switch(state)
+        {
+            case ActorStateType.Idle:
+                StateMachineControllerInstance.SetState(IdleState);
+                break;
+            case ActorStateType.Walk:
+                StateMachineControllerInstance.SetState(WalkState);
+                break;
+            case ActorStateType.Run:
+                StateMachineControllerInstance.SetState(RunState);
+                break;
+        }
+    }
 }

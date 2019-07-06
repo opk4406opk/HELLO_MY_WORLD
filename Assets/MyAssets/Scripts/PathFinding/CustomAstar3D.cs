@@ -93,7 +93,7 @@ public class CustomAstar3D : MonoBehaviour
     private int OffsetX = 0, OffsetY = 0, OffsetZ = 0;
     private WorldConfig GameWorldConfing;
 
-    public void Init(PathFinderInitData data)
+    public void Init(PathFinderInitData data, Transform actorTransform)
     {
         //
         GameWorldConfing = WorldConfigFile.Instance.GetConfig();
@@ -114,7 +114,7 @@ public class CustomAstar3D : MonoBehaviour
                     PathFindMapData[x, y, z].ParentNode = null;
                     PathFindMapData[x, y, z].bGoalNode = false;
                 }
-        MoveObjectTrasnform = data.MoveObjTrans;
+        MoveObjectTrasnform = actorTransform;
         InitLoopDirection();
     }
     private void ExtractNavigatePath()
