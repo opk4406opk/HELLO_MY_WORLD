@@ -43,6 +43,10 @@ public class ConstFilePath
     ///  RenderTexture에 사용될 캐릭터 프리팹이 저장될 path.
     /// </summary>
     public readonly static string SAVE_PATH_FOR_SELECT_CHARS_PREFAB = "Assets/MyAssets/Resources/GamePrefabs/SelectChars/{0}.prefab";
+    /// <summary>
+    /// 렌더텍스처 생성에 사용되는 SelectChara 프리팹 리소스 path.
+    /// </summary>
+    public readonly static string SELECT_CHARS_PREFAB_RESOURCE_PATH = "GamePrefabs/SelectChars/SelectCharacters";
 
     /// <summary>
     /// N개의 서브월드 block 데이터가 저장될 path.

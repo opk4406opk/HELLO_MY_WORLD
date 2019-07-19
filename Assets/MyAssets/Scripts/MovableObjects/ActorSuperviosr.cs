@@ -107,9 +107,14 @@ public class ActorSuperviosr : MonoBehaviour
         RequestSpawnMessages.Enqueue(msg);
     }
 
-    public void RequestSpawnRandomMonster(MONSTER_TYPE monsterType, string worldUniqueID, int num)
+    public void RequestSpawnRandomMonster(MONSTER_TYPE monsterType, string worldUniqueID, int num, bool spawnAndShow)
     {
         // to do.
+    }
+
+    public void RequestSpawnRandomAnimal(ANIMAL_TYPE animalType, string worldUniqueID, int num, bool spawnAndShow)
+    {
+
     }
 
     private IEnumerator Tick()

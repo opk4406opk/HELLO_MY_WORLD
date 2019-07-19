@@ -29,7 +29,7 @@ public class CharacterRenderTextureEditor : EditorWindow
     private List<Dictionary<string, string>> jsonDataSheet;
     private int maxChCard = 0;
 
-    [MenuItem("CustomEditor/Character RenderTexture Menu")]
+    [MenuItem("CustomEditor/CharacterPrefab To RenderTexture")]
     static void Init()
     {
         // Get existing open window or if none, make a new one:
@@ -40,9 +40,11 @@ public class CharacterRenderTextureEditor : EditorWindow
     void OnGUI()
     {
         EditorGUILayout.BeginToggleGroup("Func", true);
-		if (GUILayout.Button("CharsPrefabs To CharDataJosnFile")) CreateCharsDataFile();
-        if (GUILayout.Button("Create CharacterPrefabs"))
+        GUILayout.TextArea("(1) 캐릭터 프리팹들의 정면 모습을 렌더링텍스처 파일들로 만들어냅니다.\n " +
+            "(2) 작업이 완료되면, SelectChars 프리팹을 Scene에 배치시킨 후, TextureUtility 툴에서 렌더링텍스처 to 텍스처 작업을 시작합니다.");
+        if (GUILayout.Button("Start Create RenderTextures."))
         {
+            CreateCharsDataFile();
             ClickOpenFile();
             CreateRenderTextureFiles();
         }
@@ -88,8 +90,8 @@ public class CharacterRenderTextureEditor : EditorWindow
 
     private void CreateRenderTextureFiles()
     {
-        GameObject selectChars = new GameObject();
-        selectChars.name = "SelectCharacters";
+        GameObject selectChars = Instantiate<GameObject>(Resources.Load<GameObject>(ConstFilePath.SELECT_CHARS_PREFAB_RESOURCE_PATH));
+        selectChars.name = "SelectCharacters";  
 
         // create renderTexture files.
         for(int i = 0; i < maxChCard; i++)
@@ -102,20 +104,29 @@ public class CharacterRenderTextureEditor : EditorWindow
 
             string sourcePath = ConstFilePath.CH_RT_BASE_FILE_WITH_EXT;
             string destPath = toPath.ToString();
-            if (File.Exists(destPath) == false) FileUtil.CopyFileOrDirectory(sourcePath, destPath);
-            else Debug.Log(string.Format("{0} 파일은 {1} 위치에 이미 존재합니다.", textureFileName, destPath));
+            if (File.Exists(destPath) == false)
+            {
+                FileUtil.CopyFileOrDirectory(sourcePath, destPath);
+            }
+            else
+            {
+                Debug.Log(string.Format("{0} 파일은 {1} 위치에 이미 존재합니다.", textureFileName, destPath));
+            }
             // renderTexture에 사용될 캐릭터 prefab 생성.
             CreateSelectCharPrefab(i, selectChars.transform, textureFileName);
         }
-
-        // create selectChars prefab.
+        //
         StringBuilder selectCharsPrefabPath = new StringBuilder();
-        selectCharsPrefabPath.AppendFormat(ConstFilePath.SAVE_PATH_FOR_SELECT_CHARS_PREFAB, selectChars.name);
-        PrefabUtility.CreatePrefab(selectCharsPrefabPath.ToString(), selectChars);
-        // and then destroy object in Scene.
-        DestroyImmediate(selectChars);
+        selectCharsPrefabPath.AppendFormat(ConstFilePath.SAVE_PATH_FOR_SELECT_CHARS_PREFAB, "SelectCharacters");
+        bool bSuccess = false;
+        PrefabUtility.SaveAsPrefabAsset(selectChars, selectCharsPrefabPath.ToString(), out bSuccess);
+        if (bSuccess == true)
+        {
+            // and then destroy object in Scene.
+            DestroyImmediate(selectChars);
+        }
 
-		KojeomLogger.DebugLog("CreateRenderTextureFiles Done.");
+        KojeomLogger.DebugLog("CreateRenderTextureFiles Done.");
 	}
 
     private void CreateSelectCharPrefab(int idx, Transform group, string rtFileName)
