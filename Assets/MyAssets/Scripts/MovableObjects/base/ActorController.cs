@@ -18,6 +18,17 @@ public abstract class ActorController : MonoBehaviour
         if (cross.z < 0.0f) angle = 360.0f - angle;
         transform.Rotate(transform.up, angle);
     }
+
+    public Block[,,] GetContainedWorldBlockData()
+    {
+        return ContainedWorld.WorldBlockData;
+    }
+
+    public Vector3 GetSubWorldOffset()
+    {
+        return ContainedWorld.WorldCoordinate;
+    }
+
     abstract public void Init(World world, Actor instance);
     abstract public void StartController();
     abstract public void StopController();
@@ -30,6 +41,5 @@ public abstract class ActorController : MonoBehaviour
     protected StateMachineController StateMachineControllerInstance = new StateMachineController();
     protected World ContainedWorld;
     protected Animator AnimatorInstance;
-
-
+    protected BehaviorTree[] AIGroup = new BehaviorTree[(int)AITypes.COUNT];
 }

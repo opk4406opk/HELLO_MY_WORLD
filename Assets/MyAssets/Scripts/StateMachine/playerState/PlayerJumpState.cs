@@ -4,9 +4,6 @@ public class PlayerJumpState : APlayerState, IState
 {
     private float JumpScale;
     private float JumpSpeed;
-   
-    private QuerySDMecanimController AniController;
-
     private float t;
 
     public PlayerJumpState(GamePlayer player)
@@ -15,11 +12,13 @@ public class PlayerJumpState : APlayerState, IState
         JumpSpeed = 2.5f;
         JumpScale = 1.8f;
         t = 0.0f;
-        AniController = GamePlayer.Controller.CharacterInstance.QueryMecanimController;
     }
     public void InitState()
     {
-        AniController.ChangeAnimation(QuerySDMecanimController.QueryChanSDAnimationType.NORMAL_FLY_UP);
+        if(GamePlayer.Controller.CharacterInstance.QueryMecanimController != null)
+        {
+            GamePlayer.Controller.CharacterInstance.QueryMecanimController.ChangeAnimation(QuerySDMecanimController.QueryChanSDAnimationType.NORMAL_FLY_UP);
+        }
         KojeomCoroutineHelper.singleton.StartCoroutineService(Jump(), "Jump");
     }
 

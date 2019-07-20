@@ -172,7 +172,9 @@ public class CustomAstar3D : MonoBehaviour
     /// <returns>길 노드 목록을 Stack으로 반환합니다.</returns>
     public async void AsyncPathFinding(Vector3 goalWorldPosition)
     {
+        KojeomLogger.DebugLog("비동기 길찾기를 시작합니다.");
         var resultPath = await AsyncNavigating(goalWorldPosition);
+        KojeomLogger.DebugLog("비동기 길찾기가 완료되었습니다.");
         OnFinishAsyncPathFinding(resultPath);
     }
 

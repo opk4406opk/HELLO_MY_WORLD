@@ -8,10 +8,6 @@ public abstract class Node
     public abstract bool Invoke(float DeltaTime);
     protected ActorController Controller;
     protected BehaviorTree BehaviorTreeInstance;
-    public void SetController(ActorController controller)
-    {
-        Controller = controller;
-    }
 }
 
 public class CompositeNode : Node
@@ -82,7 +78,7 @@ public abstract class BehaviorTree : MonoBehaviour
     }
     protected IEnumerator BehaviorProcessInstance;
 
-    public abstract void Initialize(ActorController actorController, PathFinderInitData pathData);
+    public abstract void Initialize(ActorController actorController);
     protected IEnumerator BehaviorProcess()
     {
         KojeomLogger.DebugLog("BehaviorProcess Start!!");

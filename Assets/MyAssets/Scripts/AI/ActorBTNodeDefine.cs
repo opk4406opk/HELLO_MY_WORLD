@@ -8,59 +8,96 @@ using UnityEngine;
 
 public class BTNodeMoveForTarget : Node
 {
-    private readonly float Distance = 0.12f;
-    private Stack<PathNode3D> PathList;
+    private bool bAlreadyPathFinding = false;
+    private readonly float IntervalDistance = 0.12f;
     private Vector3 StartPosition, GoalPosition;
-    
-    public BTNodeMoveForTarget(BehaviorTree behaviorTreeInstance)
+    public CustomAstar3D PathFinderInstance { get; private set; } = new CustomAstar3D();
+    public BTNodeMoveForTarget(BehaviorTree behaviorTreeInstance, ActorController actorController)
     {
+        Controller = actorController;
         BehaviorTreeInstance = behaviorTreeInstance;
     }
-    public CustomAstar3D PathFinderInstance { get; private set; } = new CustomAstar3D();
-
+   
     public override bool Invoke(float DeltaTime)
     {
-        if (BehaviorTreeInstance.BlackBoardInstance.NavigateList.Count > 0)
+        if (BehaviorTreeInstance.BlackBoardInstance.PathList.Count > 0)
         {
-            PathNode3D node = null;
+            PathNode3D node = BehaviorTreeInstance.BlackBoardInstance.PathList.Pop();
             StartPosition = Controller.GetActorTransform().position;
             GoalPosition = node.GetWorldPosition();
             Vector3 dir = GoalPosition - StartPosition;
-            if (Vector3.Distance(StartPosition, GoalPosition) <= Distance)
+            if (Vector3.Distance(StartPosition, GoalPosition) <= IntervalDistance)
             {
-                node = BehaviorTreeInstance.BlackBoardInstance.NavigateList.Pop();
+                bAlreadyPathFinding = false;
                 Controller.LookAt(dir);
             }
-            else Controller.Move(dir, 1.5f);
+            else
+            {
+                Controller.Move(dir, 1.5f);
+            }
             return false;
         }
-        else return true;
+        else
+        {
+            if(bAlreadyPathFinding == false)
+            {
+                bAlreadyPathFinding = true;
+                AsyncPathFinding(BehaviorTreeInstance.BlackBoardInstance.PathFidningTargetPoint);
+            }
+            return true;
+        }
     }
-    public void InitPathFinder(PathFinderInitData data)
+    public void InitPathFinder()
     {
-        PathFinderInstance.Init(data, Controller.GetActorTransform());
+        PathFinderInitData initData;
+        initData.WorldBlockData = Controller.GetContainedWorldBlockData();
+        initData.OffsetX = (int)Controller.GetSubWorldOffset().x;
+        initData.OffsetY = (int)Controller.GetSubWorldOffset().y;
+        initData.OffsetZ = (int)Controller.GetSubWorldOffset().z;
+        PathFinderInstance.Init(initData, Controller.GetActorTransform());
         PathFinderInstance.OnFinishAsyncPathFinding += OnFinishAsyncPathFinding;
     }
-    public void PathFinding(Vector3 goalWorldPosition)
-    {
-        BehaviorTreeInstance.BlackBoardInstance.NavigateList = PathFinderInstance.PathFinding(goalWorldPosition);
-    }
-
     public void AsyncPathFinding(Vector3 goalWorldPosition)
     {
         PathFinderInstance.AsyncPathFinding(goalWorldPosition);
     }
-
     private void OnFinishAsyncPathFinding(Stack<PathNode3D> resultPath)
     {
-        BehaviorTreeInstance.BlackBoardInstance.NavigateList = resultPath;
+        BehaviorTreeInstance.BlackBoardInstance.PathList = resultPath;
     }
+}
+
+public class BTNodeTimer : Node
+{
+   
+    private float ElapsedTimeSec = 0.0f;
+    private float WakeUpTimeSec = 2.0f;
+
+    public BTNodeTimer(BehaviorTree behaviorTreeInstance, ActorController actorController)
+    {
+        Controller = actorController;
+        BehaviorTreeInstance = behaviorTreeInstance;
+    }
+    public override bool Invoke(float DeltaTime)
+    {
+        if(ElapsedTimeSec <= WakeUpTimeSec)
+        {
+            ElapsedTimeSec += DeltaTime;
+        }
+        else
+        {
+            ElapsedTimeSec = 0.0f;
+        }
+        return true;
+    }
+   
 }
 
 public class BTNodeStartAttack : Node
 {
-    public BTNodeStartAttack(BehaviorTree behaviorTreeInstance)
+    public BTNodeStartAttack(BehaviorTree behaviorTreeInstance, ActorController actorController)
     {
+        Controller = actorController;
         BehaviorTreeInstance = behaviorTreeInstance;
     }
     public override bool Invoke(float DeltaTime)
@@ -70,8 +107,9 @@ public class BTNodeStartAttack : Node
 }
 public class BTNodeStopAttack : Node
 {
-    public BTNodeStopAttack(BehaviorTree behaviorTreeInstance)
+    public BTNodeStopAttack(BehaviorTree behaviorTreeInstance, ActorController actorController)
     {
+        Controller = actorController;
         BehaviorTreeInstance = behaviorTreeInstance;
     }
     public override bool Invoke(float DeltaTime)
@@ -82,8 +120,9 @@ public class BTNodeStopAttack : Node
 
 public class BTNodeDeadProcess : Node
 {
-    public BTNodeDeadProcess(BehaviorTree behaviorTreeInstance)
+    public BTNodeDeadProcess(BehaviorTree behaviorTreeInstance, ActorController actorController)
     {
+        Controller = actorController;
         BehaviorTreeInstance = behaviorTreeInstance;
     }
     public override bool Invoke(float DeltaTime)
@@ -94,8 +133,9 @@ public class BTNodeDeadProcess : Node
 
 public class BTNodeCheckDead : Node
 {
-    public BTNodeCheckDead(BehaviorTree behaviorTreeInstance)
+    public BTNodeCheckDead(BehaviorTree behaviorTreeInstance, ActorController actorController)
     {
+        Controller = actorController;
         BehaviorTreeInstance = behaviorTreeInstance;
     }
     public override bool Invoke(float DeltaTime)

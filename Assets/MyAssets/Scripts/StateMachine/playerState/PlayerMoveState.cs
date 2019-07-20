@@ -11,15 +11,15 @@ public class PlayerMoveState : APlayerState, IState
     public PlayerMoveState(GamePlayer gamePlayer)
     {
         GamePlayer = gamePlayer;
-        //
-        AniController = GamePlayer.Controller.CharacterInstance.QueryMecanimController;
         BoxColliderInstance = GamePlayer.Controller.CharacterInstance.BoxColliderInstance;
-        //
         MoveSpeed = 3.5f;
     }
     public void InitState()
     {
-        AniController.ChangeAnimation(QuerySDMecanimController.QueryChanSDAnimationType.NORMAL_RUN);
+        if (GamePlayer.Controller.CharacterInstance.QueryMecanimController != null)
+        {
+            GamePlayer.Controller.CharacterInstance.QueryMecanimController.ChangeAnimation(QuerySDMecanimController.QueryChanSDAnimationType.NORMAL_RUN);
+        }
     }
 
     public void ReleaseState()

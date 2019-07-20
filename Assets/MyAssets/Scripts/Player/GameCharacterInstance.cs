@@ -3,7 +3,13 @@
 public class GameCharacterInstance : MonoBehaviour
 {
 
+    /// <summary>
+    /// 캐릭터들이 가지고 있는 애니메이터 인스턴스.
+    /// </summary>
     public Animator AnimatorInstance { get; private set; }
+    /// <summary>
+    /// Query 캐릭터들이 가지고 있는 메카님 컨트롤러. ( 다른 캐릭터들은 없다. )
+    /// </summary>
     public QuerySDMecanimController QueryMecanimController { get; private set; }
     public BoxCollider BoxColliderInstance { get; private set; }
     public Rigidbody RigidBodyInstance { get; private set; }

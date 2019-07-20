@@ -12,16 +12,15 @@ public sealed class CommonNpcAI : BehaviorTree
     private BTNodeDeadProcess DeadProcessNode;
     private BTNodeCheckDead ChkDeadNode;
 
-    public override void Initialize(ActorController actorController, PathFinderInitData pathData)
+    public override void Initialize(ActorController actorController)
     {
         // create instance
-        MoveForTargetNode = new BTNodeMoveForTarget(this);
-        DeadProcessNode = new BTNodeDeadProcess(this);
-        ChkDeadNode = new BTNodeCheckDead(this);
+        MoveForTargetNode = new BTNodeMoveForTarget(this, actorController);
+        DeadProcessNode = new BTNodeDeadProcess(this, actorController);
+        ChkDeadNode = new BTNodeCheckDead(this, actorController);
         //
         RootNode.AddChild(Selector);
-        MoveForTargetNode.SetController(actorController);
-        MoveForTargetNode.InitPathFinder(pathData);
+        MoveForTargetNode.InitPathFinder();
         Selector.AddChild(SeqMoveForTarget);
         Selector.AddChild(SeqDead);
 
