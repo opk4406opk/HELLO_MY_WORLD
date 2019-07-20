@@ -18,7 +18,7 @@ public class BTNodeMoveForTarget : Node
     }
     public CustomAstar3D PathFinderInstance { get; private set; } = new CustomAstar3D();
 
-    public override bool Invoke()
+    public override bool Invoke(float DeltaTime)
     {
         if (BehaviorTreeInstance.BlackBoardInstance.NavigateList.Count > 0)
         {
@@ -63,7 +63,7 @@ public class BTNodeStartAttack : Node
     {
         BehaviorTreeInstance = behaviorTreeInstance;
     }
-    public override bool Invoke()
+    public override bool Invoke(float DeltaTime)
     {
         return true;
     }
@@ -74,7 +74,7 @@ public class BTNodeStopAttack : Node
     {
         BehaviorTreeInstance = behaviorTreeInstance;
     }
-    public override bool Invoke()
+    public override bool Invoke(float DeltaTime)
     {
         return true;
     }
@@ -86,7 +86,7 @@ public class BTNodeDeadProcess : Node
     {
         BehaviorTreeInstance = behaviorTreeInstance;
     }
-    public override bool Invoke()
+    public override bool Invoke(float DeltaTime)
     {
         return true;
     }
@@ -98,7 +98,7 @@ public class BTNodeCheckDead : Node
     {
         BehaviorTreeInstance = behaviorTreeInstance;
     }
-    public override bool Invoke()
+    public override bool Invoke(float DeltaTime)
     {
         return false;
     }

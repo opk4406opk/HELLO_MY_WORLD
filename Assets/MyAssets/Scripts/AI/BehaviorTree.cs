@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public abstract class Node
 {
-    public abstract bool Invoke();
+    public abstract bool Invoke(float DeltaTime);
     protected ActorController Controller;
     protected BehaviorTree BehaviorTreeInstance;
     public void SetController(ActorController controller)
@@ -16,7 +16,7 @@ public abstract class Node
 
 public class CompositeNode : Node
 {
-    public override bool Invoke()
+    public override bool Invoke(float DeltaTime)
     {
         throw new NotImplementedException();
     }
@@ -35,11 +35,11 @@ public class CompositeNode : Node
 
 public class Selector : CompositeNode
 {
-    public override bool Invoke()
+    public override bool Invoke(float DeltaTime)
     {
         foreach (var node in GetChildrens())
         {
-            if (node.Invoke())
+            if (node.Invoke(DeltaTime))
             {
                 return true;
             }
@@ -50,11 +50,11 @@ public class Selector : CompositeNode
 
 public class Sequence : CompositeNode
 {
-    public override bool Invoke()
+    public override bool Invoke(float DeltaTime)
     {
         foreach (var node in GetChildrens())
         {
-            if (!node.Invoke())
+            if (!node.Invoke(DeltaTime))
             {
                 return false;
             }
@@ -86,7 +86,7 @@ public abstract class BehaviorTree : MonoBehaviour
     protected IEnumerator BehaviorProcess()
     {
         KojeomLogger.DebugLog("BehaviorProcess Start!!");
-        while (!RootNode.Invoke()) yield return null;
+        while (!RootNode.Invoke(Time.deltaTime)) yield return null;
         KojeomLogger.DebugLog("Behavior process exit");
     }
     public void StartBT()
