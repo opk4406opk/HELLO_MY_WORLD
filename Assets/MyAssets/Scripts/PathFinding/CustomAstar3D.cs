@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class PathNode3D
@@ -93,6 +94,9 @@ public class CustomAstar3D : MonoBehaviour
     private int OffsetX = 0, OffsetY = 0, OffsetZ = 0;
     private WorldConfig GameWorldConfing;
 
+    public delegate void Del_OnFinishAsyncPathFinding(Stack<PathNode3D> resultPath);
+    public event Del_OnFinishAsyncPathFinding OnFinishAsyncPathFinding;
+
     public void Init(PathFinderInitData data, Transform actorTransform)
     {
         //
@@ -159,6 +163,39 @@ public class CustomAstar3D : MonoBehaviour
         // # 2 : http://stackoverflow.com/questions/7391348/c-sharp-clone-a-stack
         return KojeomUtility.ReverseStack(new Stack<PathNode3D>(NavigatePath));
     }
+
+    /// <summary>
+    /// 길찾기를 비동기로 시작합니다.
+    /// 길찾기에 앞서 목표 노드를 반드시 설정해야합니다.
+    /// </summary>
+    /// <param name="goalWorldPosition"></param>
+    /// <returns>길 노드 목록을 Stack으로 반환합니다.</returns>
+    public async void AsyncPathFinding(Vector3 goalWorldPosition)
+    {
+        var resultPath = await AsyncNavigating(goalWorldPosition);
+        OnFinishAsyncPathFinding(resultPath);
+    }
+
+    private async Task<Stack<PathNode3D>> AsyncNavigating(Vector3 goalWorldPosition)
+    {
+        return await Task.Run(()=> {
+            InitPathFinding();
+            SetStartPathNode();
+            SetGoalPathNode(goalWorldPosition);
+            while ((OpenList.Count != 0) && (!IsGoalInOpenList()))
+            {
+                SetOpenList();
+                PathNode3D selectNode = SelectLowCostPath();
+                if (selectNode != null) SearchAdjacentNodes(selectNode);
+            }
+            ExtractNavigatePath();
+            // Stack<T> 의 복사 생성자는 오리지널의 스택 순서에서 반대로 카피를 한다.
+            // # 1 : https://msdn.microsoft.com/en-us/library/76atxd68(v=vs.110).aspx
+            // # 2 : http://stackoverflow.com/questions/7391348/c-sharp-clone-a-stack
+            return KojeomUtility.ReverseStack(new Stack<PathNode3D>(NavigatePath));
+        });
+    }
+
 
     private void SetStartPathNode()
     {

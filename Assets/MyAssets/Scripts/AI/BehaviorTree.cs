@@ -7,6 +7,7 @@ public abstract class Node
 {
     public abstract bool Invoke();
     protected ActorController Controller;
+    protected BehaviorTree BehaviorTreeInstance;
     public void SetController(ActorController controller)
     {
         Controller = controller;
@@ -74,6 +75,11 @@ public enum AITypes
 public abstract class BehaviorTree : MonoBehaviour
 {
     protected Sequence RootNode = new Sequence();
+    public BlackBoard BlackBoardInstance
+    {
+        get { return BlackBoardInstance; }
+        private set { BlackBoardInstance = new BlackBoard(); }
+    }
     protected IEnumerator BehaviorProcessInstance;
 
     public abstract void Initialize(ActorController actorController, PathFinderInitData pathData);
