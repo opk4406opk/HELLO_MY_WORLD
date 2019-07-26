@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class ChunkSlot
 {
@@ -104,7 +105,7 @@ public class World : MonoBehaviour
     {
         bLoadFinish = false;
         StopCoroutine(Tick());
-        StopCoroutine(LoadChunks());
+        StopCoroutine(LoadTerrainChunks());
         StartCoroutine(ReleaseProcess());
     }
 
@@ -136,7 +137,7 @@ public class World : MonoBehaviour
         OnFinishRelease(UniqueID);
     }
 
-    public void LoadSyncro(Block[,,] newBlockData = null)
+    public void LoadSynchro(Block[,,] newBlockData = null)
     {
         bool isReLoaded = false;
         if(newBlockData != null)
@@ -201,21 +202,16 @@ public class World : MonoBehaviour
                 }
                 break;
         }
-        LoadChunkProcess();
+        KojeomLogger.DebugLog(string.Format("World name : {0}, Chunk 로드를 시작합니다.", WorldName), LOG_TYPE.DEBUG_TEST);
+        StartCoroutine(LoadTerrainChunks());
     }
 
     //void OnDrawGizmos()
     //{
     //    customOctree.DrawFullTree();
     //}
-
-    public void LoadChunkProcess()
-    {
-        KojeomLogger.DebugLog(string.Format("World name : {0}, Chunk 로드를 시작합니다.", WorldName), LOG_TYPE.DEBUG_TEST);
-        StartCoroutine(LoadChunks());
-    }
     
-    private IEnumerator LoadChunks()
+    private IEnumerator LoadTerrainChunks()
     {
         for (int x = 0; x < ChunkSlots.GetLength(0); x++)
         {

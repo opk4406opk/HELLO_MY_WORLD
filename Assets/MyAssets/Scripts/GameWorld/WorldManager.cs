@@ -153,9 +153,9 @@ public class WorldManager : MonoBehaviour
         // 실제 파일을 로딩.
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} Start and Waiting Async Load from file.", uniqueID));
         var loadedWorldData = await LoadSubWorldFile(uniqueID);
-        KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} End Waiting Async Load from file.", uniqueID));
+        KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} Finish Waiting Async Load from file.", uniqueID));
         // 읽어들인 파일을 이용해 게임에서 로딩.
-        worldState.subWorldInstance.LoadSyncro(loadedWorldData.blockData);
+        worldState.subWorldInstance.LoadSynchro(loadedWorldData.blockData);
     }
 
     private void CreateWholeWorld()
@@ -279,7 +279,7 @@ public class WorldManager : MonoBehaviour
                                     break;
                                 case WorldRealTimeStatus.NotLoaded:
                                     WholeWorldStates[uniqueID].realTimeStatus = WorldRealTimeStatus.Loading;
-                                    WholeWorldStates[uniqueID].subWorldInstance.LoadSyncro();
+                                    WholeWorldStates[uniqueID].subWorldInstance.LoadSynchro();
                                     break;
                                 case WorldRealTimeStatus.ReleaseFinish:
                                     LoadAsyncSubWorldFile(uniqueID);

@@ -147,7 +147,7 @@ public class SaveAndLoadManager : MonoBehaviour {
 
         foreach (var element in GameWorldStates)
         {
-            element.Value.subWorldInstance.LoadChunkProcess();
+            //element.Value.subWorldInstance.LoadChunkProcess();
         }
         fileStream.Close();
         return true;
