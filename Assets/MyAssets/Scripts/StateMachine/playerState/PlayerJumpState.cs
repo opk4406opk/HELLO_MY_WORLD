@@ -6,11 +6,12 @@ public class PlayerJumpState : APlayerState, IState
     private float JumpScale;
     private float JumpSpeed;
 
-    public PlayerJumpState(GamePlayer player)
+    public PlayerJumpState(GamePlayer player, InputData inputData)
     {
         GamePlayer = player;
-        JumpSpeed = 2.5f;
-        JumpScale = 1.8f;
+        InputData = inputData;
+        JumpSpeed = 15.0f;
+        JumpScale = 25.0f;
     }
     public void InitState()
     {

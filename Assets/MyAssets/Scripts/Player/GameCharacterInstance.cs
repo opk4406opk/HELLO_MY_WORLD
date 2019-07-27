@@ -33,7 +33,7 @@ public class GameCharacterInstance : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.layer == LayerMask.NameToLayer("CommonChunk") == true)
+        if(collision.gameObject.layer == LayerMask.NameToLayer("TerrainChunk") == true)
         {
             bContactGround = true;
         }
@@ -41,12 +41,15 @@ public class GameCharacterInstance : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-
+        if (collision.gameObject.layer == LayerMask.NameToLayer("TerrainChunk") == true)
+        {
+            bContactGround = false;
+        }
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("CommonChunk") == true)
+        if (collision.gameObject.layer == LayerMask.NameToLayer("TerrainChunk") == true)
         {
             bContactGround = true;
         }

@@ -5,4 +5,5 @@ using UnityEngine;
 public abstract class APlayerState
 {
     protected GamePlayer GamePlayer;
+    protected InputData InputData;
 }

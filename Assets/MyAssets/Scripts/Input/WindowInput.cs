@@ -4,215 +4,101 @@ using UnityEngine;
 
 public class WindowInput : AInput
 {
-    private Vector3 clickPos;
-    private Ray ray;
-
-    public override InputData GetInputData()
-    {
-        return curInputData;
-    }
-
-    public override Queue<InputData> GetOverlappedInputData()
-    {
-        return overlappedInputs;
-    }
+    private Vector3 ClickPosition;
+    private Ray RayInstance;
 
     public override void Init(ModifyTerrain modifyTerrain)
     {
-        this.modifyTerrain = modifyTerrain;
-        curInputData.state = INPUT_STATE.NONE;
-        curInputData.keyCode = KeyCode.None;
-        overlappedInputs = new Queue<InputData>();
+        ModifyTerrainInstance = modifyTerrain;
+        InputDeviceType = INPUT_DEVICE_TYPE.WINDOW;
     }
 
     public override void UpdateProcess()
     {
-        CheckSingleInputState();
-        CheckOverlapInputState();
-        MouseInputProcess();
-        KeyBoardInputProcess();
+        CheckInputState();
     }
 
-    protected override void CheckOverlapInputState()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            InputData input;
-            input.state = INPUT_STATE.CHARACTER_JUMP;
-            input.keyCode = KeyCode.Space;
-            input.mobileInputType = MOBILE_INPUT_TYPE.NONE;
-            overlappedInputs.Enqueue(input);
-        }
-    }
 
-    protected override void CheckSingleInputState()
+    protected override void CheckInputState()
     {
         if (Input.GetMouseButtonDown(0))
         {
             GetMouseInput();
             var actorCollideMgr = ActorCollideManager.singleton;
-            if (actorCollideMgr != null && actorCollideMgr.IsNpcCollide(ray))
+            if (actorCollideMgr != null && actorCollideMgr.IsNpcCollide(RayInstance))
             {
-                curInputData.state = INPUT_STATE.TALK_NPC_MOUSE;
-                curInputData.keyCode = KeyCode.Mouse0;
-                curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
+                UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.shop);
             }
             else
             {
-                curInputData.state = INPUT_STATE.CREATE;
-                curInputData.keyCode = KeyCode.Mouse0;
-                curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
+                //Create block
+                if (UIPopupSupervisor.bInGameAllPopupClose == true)
+                {
+                    ModifyTerrainInstance.AddBlockCursor(RayInstance, ClickPosition, BeltItemSelector.singleton.curSelectBlockType);
+                }
             }
         }
-        else if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1))
         {
             GetMouseInput();
-            curInputData.state = INPUT_STATE.DELETE;
-            curInputData.keyCode = KeyCode.Mouse1;
-            curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
+            //Delete block
+            if (UIPopupSupervisor.bInGameAllPopupClose == true)
+            {
+                ModifyTerrainInstance.ReplaceBlockCursor(RayInstance, ClickPosition, (byte)BlockTileType.EMPTY);
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.I))
+        ///////////////////////////////////////////////////////////////////////////////////////
+        if (Input.GetKeyDown(KeyCode.I))
         {
-            curInputData.state = INPUT_STATE.INVEN_OPEN;
-            curInputData.keyCode = KeyCode.I;
-            curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
+            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.inven);
         }
-        else if (Input.GetKeyDown(KeyCode.F10))
+        if (Input.GetKeyDown(KeyCode.F10))
         {
-            curInputData.state = INPUT_STATE.MENU_OPEN;
-            curInputData.keyCode = KeyCode.F10;
-            curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
+            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMenu);
         }
-        else if (Input.GetKeyDown(KeyCode.U))
+        if (Input.GetKeyDown(KeyCode.U))
         {
-            curInputData.state = INPUT_STATE.CRAFT_ITEM_OPEN;
-            curInputData.keyCode = KeyCode.U;
-            curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
+            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.craftItem);
         }
-        else if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F))
         {
-            curInputData.state = INPUT_STATE.TALK_NPC_KEYBORAD;
-            curInputData.keyCode = KeyCode.F;
-            curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
+            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.shop);
         }
-        else if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.BackQuote))
         {
-            curInputData.state = INPUT_STATE.CHARACTER_MOVE;
-            curInputData.keyCode = KeyCode.W;
-            curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
+            if (InGameUISupervisor.Singleton != null)
+            {
+                InGameUISupervisor.Singleton.ToggleChattingLog();
+            }
         }
-        else if (Input.GetKey(KeyCode.S))
+        ///////////////////////////////////////////////////////////////////////////////////////
+        if (Input.GetKey(KeyCode.W))
         {
-            curInputData.state = INPUT_STATE.CHARACTER_MOVE;
-            curInputData.keyCode = KeyCode.S;
-            curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
+            CreateWindowInputData(INPUT_STATE.CHARACTER_MOVE, KeyCode.W);
         }
-        else if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.S))
         {
-            curInputData.state = INPUT_STATE.CHARACTER_MOVE;
-            curInputData.keyCode = KeyCode.A;
-            curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
+            CreateWindowInputData(INPUT_STATE.CHARACTER_MOVE, KeyCode.S);
         }
-        else if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.A))
         {
-            curInputData.state = INPUT_STATE.CHARACTER_MOVE;
-            curInputData.keyCode = KeyCode.D;
-            curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
+            CreateWindowInputData(INPUT_STATE.CHARACTER_MOVE, KeyCode.A);
         }
-        else if (Input.GetKey(KeyCode.BackQuote))
+        if (Input.GetKey(KeyCode.D))
         {
-            curInputData.state = INPUT_STATE.CHATTING_TOGGLE;
-            curInputData.keyCode = KeyCode.BackQuote;
-            curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
+            CreateWindowInputData(INPUT_STATE.CHARACTER_MOVE, KeyCode.D);
         }
-        else
+       
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            curInputData.state = INPUT_STATE.NONE;
-            curInputData.keyCode = KeyCode.None;
-            curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
+            CreateWindowInputData(INPUT_STATE.CHARACTER_JUMP, KeyCode.Space);
         }
-        KojeomLogger.DebugLog(string.Format("input_data :: state : {0}, keyCode : {1}",
-            curInputData.state, curInputData.keyCode), LOG_TYPE.USER_INPUT);
+        
     }
 
     private void GetMouseInput()
     {
-        clickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-    }
-
-    private void MouseInputProcess()
-    {
-        switch (curInputData.state)
-        {
-            case INPUT_STATE.CREATE:
-                curInputData.state = INPUT_STATE.NONE;
-                curInputData.keyCode = KeyCode.None;
-                curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
-                if (UIPopupSupervisor.bInGameAllPopupClose == true)
-                {
-                    modifyTerrain.AddBlockCursor(ray, clickPos, BeltItemSelector.singleton.curSelectBlockType);
-                }
-                break;
-            case INPUT_STATE.DELETE:
-                curInputData.state = INPUT_STATE.NONE;
-                curInputData.keyCode = KeyCode.None;
-                curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
-                if (UIPopupSupervisor.bInGameAllPopupClose == true)
-                {
-                    modifyTerrain.ReplaceBlockCursor(ray, clickPos, (byte)BlockTileType.EMPTY);
-                }
-                break;
-            case INPUT_STATE.TALK_NPC_MOUSE:
-                curInputData.state = INPUT_STATE.NONE;
-                curInputData.keyCode = KeyCode.None;
-                curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
-                UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.shop);
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void KeyBoardInputProcess()
-    {
-        switch (curInputData.state)
-        {
-            case INPUT_STATE.INVEN_OPEN:
-                curInputData.state = INPUT_STATE.NONE;
-                curInputData.keyCode = KeyCode.None;
-                curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
-                UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.inven);
-                break;
-            case INPUT_STATE.MENU_OPEN:
-                curInputData.state = INPUT_STATE.NONE;
-                curInputData.keyCode = KeyCode.None;
-                curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
-                UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMenu);
-                break;
-            case INPUT_STATE.CRAFT_ITEM_OPEN:
-                curInputData.state = INPUT_STATE.NONE;
-                curInputData.keyCode = KeyCode.None;
-                curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
-                UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.craftItem);
-                break;
-            case INPUT_STATE.TALK_NPC_KEYBORAD:
-                curInputData.state = INPUT_STATE.NONE;
-                curInputData.keyCode = KeyCode.None;
-                curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
-                UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.shop);
-                break;
-            case INPUT_STATE.CHATTING_TOGGLE:
-                curInputData.state = INPUT_STATE.NONE;
-                curInputData.keyCode = KeyCode.None;
-                curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
-                if (InGameUISupervisor.Singleton != null)
-                {
-                    InGameUISupervisor.Singleton.ToggleChattingLog();
-                }
-                break;
-            default:
-                break;
-        }
+        ClickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        RayInstance = Camera.main.ScreenPointToRay(Input.mousePosition);
     }
 }

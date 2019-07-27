@@ -4,9 +4,16 @@ using UnityEngine.SceneManagement;
 
 public struct InputData
 {
-    public INPUT_STATE state;
-    public KeyCode keyCode;
-    public MOBILE_INPUT_TYPE mobileInputType;
+    public INPUT_STATE InputState;
+    public KeyCode KeyCodeValue;
+    public MOBILE_INPUT_TYPE MobileInputType;
+}
+
+public enum INPUT_DEVICE_TYPE
+{
+    WINDOW,
+    MOBILE,
+    NONE
 }
 
 public enum INPUT_STATE
@@ -32,39 +39,39 @@ public class InputManager : MonoBehaviour {
     [SerializeField]
     private ModifyTerrain modifyTerrain;
 
-    private AInput curInputDevice;
-    private WindowInput windowInput;
-    private MobileInput mobileInput;
+    private AInput CurrentInputDevice;
+    private WindowInput WindowInput;
+    private MobileInput MobileInput;
 
-    private static InputManager _singleton = null;
-    public static InputManager singleton
+    private static InputManager _Singleton = null;
+    public static InputManager Singleton
     {
         get
         {
-            if (_singleton == null) KojeomLogger.DebugLog("InputManager 초기화 되지 않았습니다", LOG_TYPE.ERROR);
-            return _singleton;
+            if (_Singleton == null) KojeomLogger.DebugLog("InputManager 초기화 되지 않았습니다", LOG_TYPE.ERROR);
+            return _Singleton;
         }
     }
 
     public void Init()
     {
-        _singleton = this;
+        _Singleton = this;
         modifyTerrain.Init();
-        windowInput = new WindowInput();
-        windowInput.Init(modifyTerrain);
-        mobileInput = new MobileInput();
-        mobileInput.Init(modifyTerrain);
+        WindowInput = new WindowInput();
+        WindowInput.Init(modifyTerrain);
+        MobileInput = new MobileInput();
+        MobileInput.Init(modifyTerrain);
 
-        var curPlatform = Application.platform;
-        if(curPlatform == RuntimePlatform.WindowsEditor ||
-            curPlatform == RuntimePlatform.WindowsPlayer)
+        var currentPlatform = Application.platform;
+        if(currentPlatform == RuntimePlatform.WindowsEditor ||
+            currentPlatform == RuntimePlatform.WindowsPlayer)
         {
-            curInputDevice = windowInput;
+            CurrentInputDevice = WindowInput;
         }
-        else if(curPlatform == RuntimePlatform.Android ||
-            curPlatform == RuntimePlatform.IPhonePlayer)
+        else if(currentPlatform == RuntimePlatform.Android ||
+            currentPlatform == RuntimePlatform.IPhonePlayer)
         {
-            curInputDevice = mobileInput;
+            CurrentInputDevice = MobileInput;
         }
     }
 
@@ -72,9 +79,9 @@ public class InputManager : MonoBehaviour {
     {
        if(IsBeltItemClicked() == false)
        {
-            if(curInputDevice != null)
+            if(CurrentInputDevice != null)
             {
-                curInputDevice.UpdateProcess();
+                CurrentInputDevice.UpdateProcess();
             }
         }
     }
@@ -101,15 +108,16 @@ public class InputManager : MonoBehaviour {
 
     public InputData GetInputData()
     {
-        return curInputDevice.GetInputData();
+        return CurrentInputDevice.GetInputData();
     }
-    public Queue<InputData> GetOverlappedInputData()
+
+    public InputData PeekInputData()
     {
-        return curInputDevice.GetOverlappedInputData();
+        return CurrentInputDevice.PeekInputData();
     }
 
     public AInput GetCurInputDevice()
     {
-        return curInputDevice;
+        return CurrentInputDevice;
     }
 }

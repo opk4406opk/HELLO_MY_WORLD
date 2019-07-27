@@ -5,9 +5,10 @@ using UnityEngine;
 public class PlayerIdleState : APlayerState, IState
 {
 
-    public PlayerIdleState(GamePlayer player)
+    public PlayerIdleState(GamePlayer player, InputData inputData)
     {
         GamePlayer = player;
+        InputData = inputData;
     }
     public void InitState()
     {

@@ -142,4 +142,20 @@ public class KojeomUtility
             }
         }
     }
+
+    public static INPUT_DEVICE_TYPE GetInputDeviceType()
+    {
+        var currentPlatform = Application.platform;
+        if (currentPlatform == RuntimePlatform.Android || currentPlatform == RuntimePlatform.IPhonePlayer)
+        {
+            return INPUT_DEVICE_TYPE.MOBILE;
+        }
+        else if (currentPlatform == RuntimePlatform.WindowsEditor || currentPlatform == RuntimePlatform.WindowsPlayer)
+        {
+            return INPUT_DEVICE_TYPE.WINDOW;
+        }
+
+        //
+        return INPUT_DEVICE_TYPE.NONE;
+    }
 }

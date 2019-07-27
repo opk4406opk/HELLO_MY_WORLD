@@ -6,11 +6,11 @@ public class PlayerMoveState : APlayerState, IState
     private float MoveSpeed;
     private QuerySDMecanimController AniController;
     private BoxCollider BoxColliderInstance;
-    private InputData CurPressedInput;
 
-    public PlayerMoveState(GamePlayer gamePlayer)
+    public PlayerMoveState(GamePlayer gamePlayer, InputData inputData)
     {
         GamePlayer = gamePlayer;
+        InputData = inputData;
         BoxColliderInstance = GamePlayer.Controller.CharacterInstance.BoxColliderInstance;
         MoveSpeed = 3.5f;
     }
@@ -24,8 +24,6 @@ public class PlayerMoveState : APlayerState, IState
 
     public void ReleaseState()
     {
-        CurPressedInput.keyCode = KeyCode.None;
-        CurPressedInput.mobileInputType = MOBILE_INPUT_TYPE.NONE;
     }
 
     public void UpdateState(float deltaTime)
@@ -46,19 +44,19 @@ public class PlayerMoveState : APlayerState, IState
     }
     private Vector3 CalcWindowMoveDir()
     {
-        if (CurPressedInput.keyCode == KeyCode.W)
+        if (InputData.KeyCodeValue == KeyCode.W)
         {
             return GamePlayer.Controller.CharacterInstance.transform.forward;
         }
-        else if (CurPressedInput.keyCode == KeyCode.S)
+        else if (InputData.KeyCodeValue == KeyCode.S)
         {
             return -GamePlayer.Controller.CharacterInstance.transform.forward;
         }
-        else if (CurPressedInput.keyCode == KeyCode.D)
+        else if (InputData.KeyCodeValue == KeyCode.D)
         {
             return GamePlayer.Controller.CharacterInstance.transform.right;
         }
-        else if (CurPressedInput.keyCode == KeyCode.A)
+        else if (InputData.KeyCodeValue == KeyCode.A)
         {
             return -GamePlayer.Controller.CharacterInstance.transform.right;
         }
@@ -70,13 +68,9 @@ public class PlayerMoveState : APlayerState, IState
 
     private void Move()
     {
-        if(InputManager.singleton != null)
-        {
-            CurPressedInput = InputManager.singleton.GetInputData();
-            KojeomLogger.DebugLog(string.Format("curPressedKey : {0}", CurPressedInput.keyCode), LOG_TYPE.USER_INPUT);
-        }
+        KojeomLogger.DebugLog(string.Format("USER InputData : {0}", InputData.KeyCodeValue), LOG_TYPE.USER_INPUT);
+        //
         Vector3 dir = Vector3.zero;
-
         if(Application.platform == RuntimePlatform.WindowsEditor ||
             Application.platform == RuntimePlatform.WindowsPlayer)
         {
