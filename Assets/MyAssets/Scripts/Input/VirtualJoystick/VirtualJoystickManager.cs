@@ -36,7 +36,7 @@ public class VirtualJoystickManager : MonoBehaviour {
 
     private void Update()
     {
-        if (UIPopupSupervisor.isInGameAllPopupClose == false) return;
+        if (UIPopupSupervisor.bInGameAllPopupClose == false) return;
         if(Input.touchCount > 0)
         {
             var touches = Input.touches;
@@ -54,7 +54,7 @@ public class VirtualJoystickManager : MonoBehaviour {
 
     private void TouchProcess(Touch touch)
     {
-        var ingameUISupervisor = InGameUISupervisor.singleton;
+        var ingameUISupervisor = InGameUISupervisor.Singleton;
         if (ingameUISupervisor != null)
         {
             var uiCam = ingameUISupervisor.GetIngameUICamera();

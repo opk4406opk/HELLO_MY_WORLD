@@ -81,9 +81,9 @@ public class InputManager : MonoBehaviour {
 
     private bool IsBeltItemClicked()
     {
-        if (Input.GetMouseButtonDown(0) && InGameUISupervisor.singleton != null)
+        if (Input.GetMouseButtonDown(0) && InGameUISupervisor.Singleton != null)
         {
-            var ingameUICamera = InGameUISupervisor.singleton.GetIngameUICamera();
+            var ingameUICamera = InGameUISupervisor.Singleton.GetIngameUICamera();
             var ray = ingameUICamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitInfo;
             var isCollide = Physics.Raycast(ray, out hitInfo);

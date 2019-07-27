@@ -26,23 +26,23 @@ public class InGameUISupervisor : MonoBehaviour {
     [SerializeField]
     private VirtualJoystickManager virtualJoystickManager;
 
-    public CHATTING_BOARD_STATE chattingBoardState { get; set; }
-    private StringBuilder chatlog;
+    public CHATTING_BOARD_STATE ChattingBoardState { get; set; }
+    private StringBuilder Chatlog;
 
-    private static InGameUISupervisor _singleton = null;
-    public static InGameUISupervisor singleton
+    private static InGameUISupervisor _Singleton = null;
+    public static InGameUISupervisor Singleton
     {
         get
         {
-            if (_singleton == null) KojeomLogger.DebugLog("InGameUISupervisor 초기화 되지 않았습니다", LOG_TYPE.ERROR);
-            return _singleton;
+            if (_Singleton == null) KojeomLogger.DebugLog("InGameUISupervisor 초기화 되지 않았습니다", LOG_TYPE.ERROR);
+            return _Singleton;
         }
     }
     public void Init()
     {
-        _singleton = this;
-        chatlog = new StringBuilder();
-        chattingBoardState = CHATTING_BOARD_STATE.CLOSE;
+        _Singleton = this;
+        Chatlog = new StringBuilder();
+        ChattingBoardState = CHATTING_BOARD_STATE.CLOSE;
         if (Application.platform == RuntimePlatform.WindowsEditor ||
             Application.platform == RuntimePlatform.WindowsPlayer)
         {
@@ -67,7 +67,7 @@ public class InGameUISupervisor : MonoBehaviour {
         if(obj_chattingLog.transform.position == origin_chattingBoard.position)
         {
             OpenChttingLog();
-            chattingBoardState = CHATTING_BOARD_STATE.OPEN;
+            ChattingBoardState = CHATTING_BOARD_STATE.OPEN;
             iTween.MoveTo(obj_chattingLog, iTween.Hash(
             "position", target_chattingBoard.position,
             "speed", 1.1f,
@@ -75,7 +75,7 @@ public class InGameUISupervisor : MonoBehaviour {
         }
         else
         {
-            chattingBoardState = CHATTING_BOARD_STATE.CLOSE;
+            ChattingBoardState = CHATTING_BOARD_STATE.CLOSE;
             iTween.MoveTo(obj_chattingLog, iTween.Hash(
            "position", origin_chattingBoard.position,
            "speed", 1.1f,
@@ -87,8 +87,8 @@ public class InGameUISupervisor : MonoBehaviour {
 
     public void SetMsgToChattingLog(string msg, string userID)
     {
-        chatlog.AppendLine(string.Format("[userID:{0}] :: {1}", userID, msg));
-        lbl_chattingLog.text = chatlog.ToString();
+        Chatlog.AppendLine(string.Format("[userID:{0}] :: {1}", userID, msg));
+        lbl_chattingLog.text = Chatlog.ToString();
         
     }
 

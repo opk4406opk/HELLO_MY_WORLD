@@ -15,8 +15,9 @@ public class GameResourceSupervisor : MonoBehaviour {
 
     #region world
     public SoftObjectPtr WorldPrefab { get; private set; }
-    public SoftObjectPtr CommonChunkPrefab { get; private set; }
+    public SoftObjectPtr TerrainChunkPrefab { get; private set; }
     public SoftObjectPtr WaterChunkPrefab { get; private set; }
+    public SoftObjectPtr EnviromentChunkPrefab { get; private set; }
     #endregion
 
     #region Actor
@@ -37,9 +38,10 @@ public class GameResourceSupervisor : MonoBehaviour {
         //
         CharacterPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER_RESOURCE_PATH);
         //
-        CommonChunkPrefab = new SoftObjectPtr(ConstFilePath.COMMON_CHUNK_PREFAB_RESOURCE_PATH);
+        TerrainChunkPrefab = new SoftObjectPtr(ConstFilePath.TERRAIN_CHUNK_PREFAB_RESOURCE_PATH);
         WorldPrefab = new SoftObjectPtr(ConstFilePath.SUB_WORLD_PREFAB);
         WaterChunkPrefab = new SoftObjectPtr(ConstFilePath.WATER_CHUNK_PREFAB_RESOURCE_PATH);
+        EnviromentChunkPrefab = new SoftObjectPtr(ConstFilePath.ENVIROMENT_CHUNK_PREFAB_RESOURCE_PATH);
         //
         for(int idx = 0; idx < (int)ACTOR_TYPE.COUNT; idx++)
         {

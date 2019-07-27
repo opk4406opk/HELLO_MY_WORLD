@@ -73,13 +73,17 @@ public class ConstFilePath
     public readonly static string LOG_FILE_ROOT_WIN_PATH = ".\\GameLog\\";
 
     /// <summary>
-    /// 공용 청크 프리팹 경로.
+    /// 지형 청크 프리팹 경로.
     /// </summary>
-    public readonly static string COMMON_CHUNK_PREFAB_RESOURCE_PATH = "GamePrefabs/CommonChunk";
+    public readonly static string TERRAIN_CHUNK_PREFAB_RESOURCE_PATH = "GamePrefabs/TerrainChunk";
     /// <summary>
     /// 워터 청크 프리팹 경로.
     /// </summary>
     public readonly static string WATER_CHUNK_PREFAB_RESOURCE_PATH = "GamePrefabs/WaterChunk";
+    /// <summary>
+    /// 환경 청크 프리팹 경로 ( 나무, 풀...)
+    /// </summary>
+    public readonly static string ENVIROMENT_CHUNK_PREFAB_RESOURCE_PATH = "GamePrefabs/EnviromentChunk";
 
     /// <summary>
     /// 서브월드 프리팹 경로.

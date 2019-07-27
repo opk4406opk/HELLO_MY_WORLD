@@ -1,12 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-/// <summary>
-/// 게임내 블록 덩어리를 의미하는 Chunk 클래스.
-/// -> 1개의 Chunk는 N개의 면으로 구성되어 하나의 메쉬로 생성된다.
-/// </summary>
-public class CommonChunk : AChunk
+public class EnviromentChunk : AChunk
 {
     protected override void LateUpdate()
     {
@@ -16,10 +12,9 @@ public class CommonChunk : AChunk
             _Update = false;
         }
     }
-
     public override void Init()
     {
-        ChunkType = ChunkType.COMMON;
+        ChunkType = ChunkType.ENVIROMENT;
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         ChunkSize = gameWorldConfig.chunk_size;
         TileUnit = gameWorldConfig.one_tile_unit;
@@ -27,7 +22,6 @@ public class CommonChunk : AChunk
         MeshColliderComponent = GetComponent<MeshCollider>();
         GenerateMesh();
     }
-
     protected override void GenerateMesh()
     {
         for (int relativeX = 0; relativeX < ChunkSize; relativeX++)
@@ -42,15 +36,10 @@ public class CommonChunk : AChunk
                     blockIdxZ = relativeZ + _WorldDataIdxZ;
                     //This code will run for every block in the chunk
                     var blockType = GetBlockType(blockIdxX, blockIdxY, blockIdxZ);
-                    if (blockType != BlockTileType.EMPTY && blockType != BlockTileType.WATER)
+                    bool isEnviromentBlock = blockType == BlockTileType.NORMAL_TREE_LEAF || blockType == BlockTileType.SQAURE_TREE_LEAF;
+                    bool isNotWaterBlock = blockType != BlockTileType.WATER;
+                    if (isEnviromentBlock && isNotWaterBlock)
                     {
-                        //if (Block(x, y + 1, z) == 0) CubeTop(x, y, z, Block(x, y, z));
-                        //if (Block(x, y - 1, z) == 0) CubeBot(x, y, z, Block(x, y, z));
-                        //if (B lock(x + 1, y, z) == 0) CubeEast(x, y, z, Block(x, y, z));
-                        //if (Block(x - 1, y, z) == 0) CubeWest(x, y, z, Block(x, y, z));
-                        //if (Block(x, y, z + 1) == 0) CubeNorth(x, y, z, Block(x, y, z));
-                        //if (Block(x, y, z - 1) == 0) CubeSouth(x, y, z, Block(x, y, z));
-                        //test codes.
                         float cubeX, cubeY, cubeZ;
                         cubeX = relativeX + _RealCoordX;
                         cubeY = relativeY + _RealCoordY;
@@ -68,7 +57,7 @@ public class CommonChunk : AChunk
                         Vector3[] points = new Vector3[8];
                         points[0] = new Vector3(cubeX, cubeY, cubeZ);
                         points[1] = new Vector3(cubeX + 1, cubeY, cubeZ);
-                        points[2] = new Vector3(cubeX + 1, cubeY, cubeZ + 1 );
+                        points[2] = new Vector3(cubeX + 1, cubeY, cubeZ + 1);
                         points[3] = new Vector3(cubeX, cubeY, cubeZ + 1);
                         points[4] = new Vector3(cubeX, cubeY - 1, cubeZ);
                         points[5] = new Vector3(cubeX + 1, cubeY - 1, cubeZ);

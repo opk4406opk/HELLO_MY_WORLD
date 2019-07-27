@@ -2,7 +2,6 @@
 
 public class GameCharacterInstance : MonoBehaviour
 {
-
     /// <summary>
     /// 캐릭터들이 가지고 있는 애니메이터 인스턴스.
     /// </summary>
@@ -13,6 +12,8 @@ public class GameCharacterInstance : MonoBehaviour
     public QuerySDMecanimController QueryMecanimController { get; private set; }
     public BoxCollider BoxColliderInstance { get; private set; }
     public Rigidbody RigidBodyInstance { get; private set; }
+
+    public bool bContactGround { get; private set; } = false;
 
     public void Init()
     {
@@ -26,8 +27,29 @@ public class GameCharacterInstance : MonoBehaviour
         if (AnimatorInstance == null) KojeomLogger.DebugLog(string.Format("AnimatorInstance nullptr!"), LOG_TYPE.ERROR);
         if(RigidBodyInstance == null) KojeomLogger.DebugLog(string.Format("RigidBodyInstance nullptr!"), LOG_TYPE.ERROR);
 
-        //
-        RigidBodyInstance.useGravity = false;
+        // test mode.
+        //RigidBodyInstance.useGravity = false;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.layer == LayerMask.NameToLayer("CommonChunk") == true)
+        {
+            bContactGround = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("CommonChunk") == true)
+        {
+            bContactGround = true;
+        }
     }
 
     public CustomAABB GetCustomAABB(Vector3 moveSpeed)

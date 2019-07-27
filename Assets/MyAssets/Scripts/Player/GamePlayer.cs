@@ -11,7 +11,7 @@ public class GamePlayer : MonoBehaviour
     [SerializeField]
     private string CharacterName;
     private GameCharacterInstance CharInstance;
-    public bool IsInitProcessFinish { get; private set; } = false;
+    public bool bInitProcessFinish { get; private set; } = false;
 
     public void Initialize(int charType, string charName, Vector3 initPos)
     {

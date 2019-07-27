@@ -4,9 +4,10 @@ using UnityEngine;
 
 public enum ChunkType
 {
-	COMMON = 0,
-	WATER = 1,
-	NONE = 2,
+	TERRAIN = 0, // 지형 ( 동굴, 땅..)
+	WATER = 1, // 물.
+    ENVIROMENT = 2, // 환경 ( 나무, 풀..)
+	NONE = 3,
 	COUNT = NONE
 }
 
@@ -214,7 +215,7 @@ public abstract class AChunk : MonoBehaviour {
 		//
 		switch(ChunkType)
 		{
-			case ChunkType.COMMON:
+			case ChunkType.TERRAIN:
 				MeshColliderComponent.sharedMesh = Mesh;
 				break;
 		}

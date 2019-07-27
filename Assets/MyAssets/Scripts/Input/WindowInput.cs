@@ -149,7 +149,7 @@ public class WindowInput : AInput
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
                 curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
-                if (UIPopupSupervisor.isInGameAllPopupClose == true)
+                if (UIPopupSupervisor.bInGameAllPopupClose == true)
                 {
                     modifyTerrain.AddBlockCursor(ray, clickPos, BeltItemSelector.singleton.curSelectBlockType);
                 }
@@ -158,7 +158,7 @@ public class WindowInput : AInput
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
                 curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
-                if (UIPopupSupervisor.isInGameAllPopupClose == true)
+                if (UIPopupSupervisor.bInGameAllPopupClose == true)
                 {
                     modifyTerrain.ReplaceBlockCursor(ray, clickPos, (byte)BlockTileType.EMPTY);
                 }
@@ -206,9 +206,9 @@ public class WindowInput : AInput
                 curInputData.state = INPUT_STATE.NONE;
                 curInputData.keyCode = KeyCode.None;
                 curInputData.mobileInputType = MOBILE_INPUT_TYPE.NONE;
-                if (InGameUISupervisor.singleton != null)
+                if (InGameUISupervisor.Singleton != null)
                 {
-                    InGameUISupervisor.singleton.ToggleChattingLog();
+                    InGameUISupervisor.Singleton.ToggleChattingLog();
                 }
                 break;
             default:
