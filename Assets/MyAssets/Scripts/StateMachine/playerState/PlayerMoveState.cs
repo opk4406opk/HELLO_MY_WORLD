@@ -37,7 +37,7 @@ public class PlayerMoveState : APlayerState, IState
         var virtualJoystick = VirtualJoystickManager.singleton;
         if(virtualJoystick != null)
         {
-            // 스크린좌표에서 얻은 2차원 방향값을 3차원 좌표계로 변환.
+            // 스크린좌표에서 얻은 2차원 방향값을 3차원 좌표계( = 플레이어가 존재하는 월드 좌표계)로 변환.
             dir = GamePlayer.Controller.CharacterInstance.transform.TransformDirection(virtualJoystick.GetMoveDirection());
         }
         return dir;
@@ -71,17 +71,17 @@ public class PlayerMoveState : APlayerState, IState
         KojeomLogger.DebugLog(string.Format("USER InputData : {0}", InputData.KeyCodeValue), LOG_TYPE.USER_INPUT);
         //
         Vector3 dir = Vector3.zero;
-        if(Application.platform == RuntimePlatform.WindowsEditor ||
-            Application.platform == RuntimePlatform.WindowsPlayer)
+        switch(KojeomUtility.GetInputDeviceType())
         {
-            dir = CalcWindowMoveDir();
+            case INPUT_DEVICE_TYPE.MOBILE:
+                dir = CalcMobileMoveDir();
+                break;
+            case INPUT_DEVICE_TYPE.WINDOW:
+                dir = CalcWindowMoveDir();
+                break;
         }
-        else if(Application.platform == RuntimePlatform.Android ||
-            Application.platform == RuntimePlatform.IPhonePlayer)
-        {
-            dir = CalcMobileMoveDir();
-        }
-        else if(dir == Vector3.zero)
+
+        if(dir == Vector3.zero)
         {
             return;
         }

@@ -15,7 +15,7 @@ public class GamePlayerManager : MonoBehaviour {
         StartCoroutine(InitProcess());
         Instance = this;
     }
-
+  
     private IEnumerator InitProcess()
     {
         KojeomLogger.DebugLog(string.Format("[GamePlayerManager] Start InitProcess"), LOG_TYPE.INFO);
@@ -52,4 +52,6 @@ public class GamePlayerManager : MonoBehaviour {
        
         KojeomLogger.DebugLog(string.Format("[GamePlayerManager] Finish InitProcess"), LOG_TYPE.INFO);
     }
+
+   
 }

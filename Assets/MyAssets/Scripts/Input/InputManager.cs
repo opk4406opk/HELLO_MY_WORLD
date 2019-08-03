@@ -34,7 +34,8 @@ public enum INPUT_STATE
 /// <summary>
 /// 게임내 입력관리를 하는 클래스.
 /// </summary>
-public class InputManager : MonoBehaviour {
+public class InputManager : MonoBehaviour
+{
 
     [SerializeField]
     private ModifyTerrain modifyTerrain;
@@ -75,11 +76,11 @@ public class InputManager : MonoBehaviour {
         }
     }
 
-    void Update ()
+    void Update()
     {
-       if(IsBeltItemClicked() == false)
-       {
-            if(CurrentInputDevice != null)
+        if (IsBeltItemClicked() == false)
+        {
+            if (CurrentInputDevice != null)
             {
                 CurrentInputDevice.UpdateProcess();
             }

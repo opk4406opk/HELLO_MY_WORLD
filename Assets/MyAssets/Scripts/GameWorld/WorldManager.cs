@@ -66,6 +66,7 @@ public class WorldManager : MonoBehaviour
         KojeomLogger.DebugLog("GameWorld 생성을 종료합니다.");
         Instance = this;
     }
+ 
     /// <summary>
     /// C# sereialization 기능을 이용한
     /// subWorld를 외부파일로 저장하는 메소드.
@@ -369,4 +370,5 @@ public class WorldManager : MonoBehaviour
         int z = (Mathf.CeilToInt(worldCoord.z) * gameWorldConfig.sub_world_z_size) * WorldMapDataFile.instance.WorldMapData.Column;
         return new Vector3(x, y, z);
     }
+
 }
