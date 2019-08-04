@@ -188,7 +188,7 @@ public class World : MonoBehaviour
             }
         }
 
-        switch (GameStatus.DetailSingleModeFlag)
+        switch (GameStatus.DetailSingleMode)
         {
             case DetailSingleMode.SAVE_GAME:
                 break;

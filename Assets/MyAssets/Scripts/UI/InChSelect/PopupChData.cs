@@ -46,7 +46,7 @@ public class PopupChData : APopupUI
             }
         };
         InsertInfo();
-        if (GameStatus.GameModeFlag == GameMode.MULTI_P2P || GameStatus.GameModeFlag == GameMode.MULTI_INTERNET)
+        if (GameStatus.CurrentGameModeState == GameModeState.MULTI)
         {
             ScaleDownEffect("CallBackGoToLobby");
         }

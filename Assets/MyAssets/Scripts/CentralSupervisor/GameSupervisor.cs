@@ -1,29 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum GameMode
-{
-    NONE,
-    INGAME_EDITOR,
-    SINGLE,
-    MULTI_P2P,
-    MULTI_INTERNET
-}
-public enum DetailSingleMode
-{
-    NONE,
-    EDITOR_TEST_PLAY,
-    SAVE_GAME,
-    LOAD_GAME
-}
+
 /// <summary>
 /// 게임 상태(single, multi, load, save)를 관리하는 클래스.
 /// </summary>
 public class GameStatus
 {
-    // 빠른 테스트를 위한 디폴트값으로 인게임에디터로 설정.
-    public static GameMode GameModeFlag = GameMode.INGAME_EDITOR;
-    public static DetailSingleMode DetailSingleModeFlag = DetailSingleMode.EDITOR_TEST_PLAY;
+    public static GameModeState CurrentGameModeState = GameModeState.SINGLE;
+    public static DetailSingleMode DetailSingleMode = DetailSingleMode.EDITOR_TEST_PLAY;
 }
 
 public class GameLocalDataManager
@@ -96,23 +81,26 @@ public class GameSupervisor : MonoBehaviour
     [SerializeField]
     private ActorSuperviosr ActorSupervisorInstance;
     #endregion
-
-
-    public static GameSupervisor Instance = null;
-
-    void Start ()
+    public static GameSupervisor Instance { get; private set; }
+    public AGameModeBase[] GameModeGroup = new AGameModeBase[(int)GameModeState.COUNT];
+    private void Start ()
     {
-        KojeomLogger.DebugLog(string.Format("GameMode : {0}, DataMode : {1}", GameStatus.GameModeFlag, GameStatus.DetailSingleModeFlag), LOG_TYPE.SYSTEM);
+        KojeomLogger.DebugLog(string.Format("GameModeState : {0}, DataMode : {1}", GameStatus.CurrentGameModeState, GameStatus.DetailSingleMode), LOG_TYPE.SYSTEM);
         Instance = this;
-        // single or multi play 게임이 아니라면
-        // InGame Scene에서 바로 시작하는 경우 ( in editor mode )
-        if (GameStatus.GameModeFlag == GameMode.INGAME_EDITOR)
-        {
-            InitInGameSceneStart();
-        }
+        GameModeGroup[(int)GameModeState.SINGLE] = new SingleGameMode();
+        GameModeGroup[(int)GameModeState.MULTI] = new SingleGameMode();
+        //
         InitSettings();
         InitDataFiles();
         InitManagers();
+    }
+
+    private void Update()
+    {
+        if(GameModeGroup[(int)GameStatus.CurrentGameModeState] != null)
+        {
+            GameModeGroup[(int)GameStatus.CurrentGameModeState].Tick(Time.deltaTime);
+        }
     }
 
     private void InitSettings()
@@ -121,15 +109,6 @@ public class GameSupervisor : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
-    }
-
-    /// <summary>
-    /// InGameScene에서 바로 시작되는 경우에 호출되는 초기화 메소드.
-    /// </summary>
-    private void InitInGameSceneStart()
-    {
-        KojeomLogger.DebugLog("InGameScene Start.", LOG_TYPE.INFO);
-        KojeomLogger.DebugLog("StartHost", LOG_TYPE.INFO);
     }
 
     /// <summary>
@@ -186,7 +165,7 @@ public class GameSupervisor : MonoBehaviour
         // 프로토타입의 수준으로 기능이 매우 미흡한 수준임.
         WeatherManager.Init();
 
-        if (GameStatus.DetailSingleModeFlag == DetailSingleMode.LOAD_GAME)
+        if (GameStatus.DetailSingleMode == DetailSingleMode.LOAD_GAME)
         {
             saveAndLoadManager.Load();
         }
