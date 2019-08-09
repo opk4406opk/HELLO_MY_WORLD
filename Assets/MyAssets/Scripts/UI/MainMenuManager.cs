@@ -64,8 +64,6 @@ public class MainMenuManager : MonoBehaviour {
         //P2PNetworkManager.PostHttpRequest += PostLoginRequest;
         //P2PNetworkManager.ConnectLoginServer();
         if (isSuccessProcessRun == false) StartCoroutine(LoginProcess());
-        // socket 테스트.
-        SocketNetworkManager.GetInstance().ConnectToServer(TCPServerType.Login);
     }
 
     private void EnableButtons(bool enable)
