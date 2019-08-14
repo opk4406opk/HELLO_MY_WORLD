@@ -102,6 +102,9 @@ public class ConstFilePath
     /// Actor 공용 프리팹.
     /// </summary>
     public readonly static string ACTOR_COMMONS_NAME_RESOURCE_PATH = "GamePrefabs/Actor/Commons/txt_mesh_Name";
+
+    //
+    public readonly static string BLOCK_ELEMENT_TABLE_PATH = "Assets/MyAssets/Resources/TextAsset/Tables/BlockElementTable.csv";
 }
 
 

@@ -44,6 +44,8 @@ public class GameSupervisor : MonoBehaviour
     private NPCDataFile NpcDataFileInstance = new NPCDataFile();
     private AnimalDataFile AnimalDataFileInstance = new AnimalDataFile();
     private GameConfigDataFile GameConfigDataFileInstance = new GameConfigDataFile();
+    // data tables.
+    private BlockElementTableReader BlockElementTableReaderInstance = new BlockElementTableReader();
     //
     #endregion
 
@@ -127,6 +129,8 @@ public class GameSupervisor : MonoBehaviour
         CraftItemListDataFileInstance.Init();
         NpcDataFileInstance.Init();
         AnimalDataFileInstance.Init();
+        // init tables.
+        BlockElementTableReaderInstance.Initialize(ConstFilePath.BLOCK_ELEMENT_TABLE_PATH);
         KojeomLogger.DebugLog("게임 데이터 파일 초기화 완료.");
     }
     /// <summary>
