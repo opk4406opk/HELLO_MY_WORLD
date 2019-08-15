@@ -27,7 +27,7 @@ public class PopupItemData : APopupUI
 
     private void SetData()
     {
-        ItemData selectedItemData = new ItemData();
+        UIItemData selectedItemData = new UIItemData();
         if (UIPopupSupervisor.bInvenOpen)
         {
             selectedItemData = InventoryUIManager.singleton.GetLastestSelectItem();

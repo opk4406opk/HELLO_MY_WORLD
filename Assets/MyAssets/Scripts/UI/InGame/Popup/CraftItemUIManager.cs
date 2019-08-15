@@ -19,9 +19,9 @@ public class CraftItemUIManager : APopupUI {
     private UISprite spr_afterItemImg;
 
     private readonly int defaultItemSlot = 9;
-    private List<ItemData> itemSlotList = new List<ItemData>();
+    private List<UIItemData> itemSlotList = new List<UIItemData>();
 
-    private ItemData lastestSelectItem;
+    private UIItemData lastestSelectItem;
 
     private static CraftItemUIManager _singleton = null;
     public static CraftItemUIManager singleton
@@ -46,7 +46,7 @@ public class CraftItemUIManager : APopupUI {
         ScaleUpEffect();
     }
 
-    public ItemData GetLastestSelectItem()
+    public UIItemData GetLastestSelectItem()
     {
         return lastestSelectItem;
     }
@@ -62,22 +62,19 @@ public class CraftItemUIManager : APopupUI {
         {
             // consume user materials, and user item info update
             CraftItem item;
-            CraftItemListDataFile.instance.craftItems.TryGetValue(selectCraftItemList.value, out item);
-            foreach (CraftRawMaterial raw in item.rawMaterials)
+            CraftItemListDataFile.Instance.CraftItems.TryGetValue(selectCraftItemList.value, out item);
+            foreach (CraftRawMaterial raw in item.RawMaterials)
             {
-                int userMatAmount = GetUserMaterialAmount(raw.id);
-                int amount = userMatAmount - raw.consumeAmount;
+                int userMatAmount = GetUserMaterialAmount(raw.UniqueID);
+                int amount = userMatAmount - raw.ConsumeAmount;
 
-                if (amount == 0) DeleteUserMaterial(raw.id);
-                else SetUserMaterialAmount(raw.id, amount);
+                if (amount == 0) DeleteUserMaterial(raw.UniqueID);
+                else SetUserMaterialAmount(raw.UniqueID, amount);
             }
 
             // Set CraftItem to user
-            ItemInfo itemInfo = ItemDataFile.instance.GetItemData(item.craftItemID);
-            int craftItemType = int.Parse(itemInfo.type);
-            SetCraftItemToUser(item.craftItemID, item.craftItemName,
-                int.Parse(selectQuantityList.value),
-                craftItemType);
+            ItemInfo itemInfo = ItemTableReader.GetInstance().GetItemInfo(item.CraftItemID);
+            SetCraftItemToUser(item.CraftItemID, item.CraftItemName, int.Parse(selectQuantityList.value), itemInfo.Type.ToString());
 
             GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.CRAFT_ITEM_SUCCESS;
             GameMessage.SetMessage("아이템 제작에 성공했습니다.");
@@ -119,7 +116,7 @@ public class CraftItemUIManager : APopupUI {
         return amount;
     }
 
-    private void SetCraftItemToUser(string itemID, string itemName, int itemAmount, int itemType)
+    private void SetCraftItemToUser(string itemID, string itemName, int itemAmount, string itemType)
     {
         StringBuilder conn = new StringBuilder();
         conn.AppendFormat(GameDBHelper.GetInstance().GetDBConnectionPath(), Application.dataPath);
@@ -199,11 +196,11 @@ public class CraftItemUIManager : APopupUI {
         bool isPossibleMakeItem = false;
 
         CraftItem item;
-        CraftItemListDataFile.instance.craftItems.TryGetValue(selectCraftItemList.value, out item);
-        foreach (CraftRawMaterial raw in item.rawMaterials)
+        CraftItemListDataFile.Instance.CraftItems.TryGetValue(selectCraftItemList.value, out item);
+        foreach (CraftRawMaterial raw in item.RawMaterials)
         {
-            isPossibleMakeItem = ChkMaterialAmount(raw.id,
-                raw.consumeAmount * int.Parse(selectQuantityList.value));
+            isPossibleMakeItem = ChkMaterialAmount(raw.UniqueID,
+                raw.ConsumeAmount * int.Parse(selectQuantityList.value));
             if (isPossibleMakeItem == false) return false;
         }
         return true;
@@ -245,9 +242,9 @@ public class CraftItemUIManager : APopupUI {
 
     private void SetDropDownList()
     {
-        foreach(var craftItem in CraftItemListDataFile.instance.craftItems)
+        foreach(var craftItem in CraftItemListDataFile.Instance.CraftItems)
         {
-            selectCraftItemList.AddItem(craftItem.Value.craftItemName);
+            selectCraftItemList.AddItem(craftItem.Value.CraftItemName);
         }
         // set event delegate
         Ed_OnClickCraftItemList = new EventDelegate(this, "OnClickCraftItemList");
@@ -263,11 +260,11 @@ public class CraftItemUIManager : APopupUI {
     private void UpdateConsumeAmount()
     {
         CraftItem item;
-        CraftItemListDataFile.instance.craftItems.TryGetValue(selectCraftItemList.value, out item);
+        CraftItemListDataFile.Instance.CraftItems.TryGetValue(selectCraftItemList.value, out item);
         int slotIdx = 0;
-        foreach (CraftRawMaterial raw in item.rawMaterials)
+        foreach (CraftRawMaterial raw in item.RawMaterials)
         {
-            string calcedAmount = (raw.consumeAmount * int.Parse(selectQuantityList.value)).ToString();
+            string calcedAmount = (raw.ConsumeAmount * int.Parse(selectQuantityList.value)).ToString();
             itemSlotList[slotIdx].amount = calcedAmount;
             itemSlotList[slotIdx].InitAmountData();
             slotIdx++;
@@ -289,17 +286,17 @@ public class CraftItemUIManager : APopupUI {
         spr_afterItemImg.spriteName = selectItemName;
 
         CraftItem item;
-        CraftItemListDataFile.instance.craftItems.TryGetValue(selectItemName, out item);
-        var itemDataFile = ItemDataFile.instance;
+        CraftItemListDataFile.Instance.CraftItems.TryGetValue(selectItemName, out item);
+        var itemTable = ItemTableReader.GetInstance(); ;
         int slotIdx = 0;
-        foreach (CraftRawMaterial raw in item.rawMaterials)
+        foreach (CraftRawMaterial raw in item.RawMaterials)
         {
             if (slotIdx > defaultItemSlot) CreateEmptySlot(5);
           
-            itemSlotList[slotIdx].itemName = raw.rawMaterialName;
-            itemSlotList[slotIdx].type = itemDataFile.GetItemData(raw.id).type;
-            itemSlotList[slotIdx].detailInfo = itemDataFile.GetItemData(raw.id).detailInfo;
-            itemSlotList[slotIdx].amount = raw.consumeAmount.ToString();
+            itemSlotList[slotIdx].itemName = raw.RawMaterialName;
+            itemSlotList[slotIdx].type = itemTable.GetItemInfo(raw.UniqueID).Type.ToString();
+            itemSlotList[slotIdx].detailInfo = itemTable.GetItemInfo(raw.UniqueID).FlavorText;
+            itemSlotList[slotIdx].amount = raw.ConsumeAmount.ToString();
             itemSlotList[slotIdx].InitAllData();
             itemSlotList[slotIdx].OnInfo();
 
@@ -313,7 +310,7 @@ public class CraftItemUIManager : APopupUI {
     }
 
     private EventDelegate Ed_OnClickItem;
-    private void OnClickItem(ItemData itemData)
+    private void OnClickItem(UIItemData itemData)
     {
         lastestSelectItem = itemData;
         UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.itemData);
@@ -321,7 +318,7 @@ public class CraftItemUIManager : APopupUI {
 
     private void ClearItemSlot()
     {
-        foreach(ItemData itemData in itemSlotList)
+        foreach(UIItemData itemData in itemSlotList)
         {
             itemData.itemName = string.Empty;
             itemData.amount = string.Empty;
@@ -338,13 +335,13 @@ public class CraftItemUIManager : APopupUI {
                 new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
 
             newItem.SetActive(true);
-            newItem.GetComponent<ItemData>().OffInfo();
+            newItem.GetComponent<UIItemData>().OffInfo();
             //item parenting
             newItem.transform.parent = uiGridObj.transform;
             newItem.transform.localScale = new Vector3(1, 1, 1);
             newItem.transform.localPosition = new Vector3(0, 0, 0);
 
-            itemSlotList.Add(newItem.GetComponent<ItemData>());
+            itemSlotList.Add(newItem.GetComponent<UIItemData>());
         }
         uiGridObj.GetComponent<UIGrid>().Reposition();
     }

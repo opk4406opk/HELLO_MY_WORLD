@@ -1,10 +1,10 @@
 [
-     {"23" : [
-		{"name" : "element_grass", "amount" : "5", "id" : "9"},
-		{"name" : "element_sand", "amount" : "3", "id" : "6"}
+     {"P0" : [
+		{"name" : "element_grass", "amount" : "5", "id" : "2"},
+		{"name" : "element_sand", "amount" : "3", "id" : "5"}
 		]},
-	 {"24" : [
-		{"name" : "element_silver", "amount" : "3", "id" : "1"},
-		{"name" : "element_small_stone", "amount" : "1", "id" : "3"}
+	 {"P1" : [
+		{"name" : "element_silver", "amount" : "3", "id" : "10"},
+		{"name" : "element_small_stone", "amount" : "1", "id" : "4"}
 		]}
 ]

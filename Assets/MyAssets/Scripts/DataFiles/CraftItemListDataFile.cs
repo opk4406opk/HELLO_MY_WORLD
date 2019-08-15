@@ -6,9 +6,9 @@ using System.Collections.Generic;
 /// </summary>
 public class CraftItem
 {
-    public string craftItemID { get; set; }
-    public string craftItemName { get; set; }
-    public List<CraftRawMaterial> rawMaterials { get; set; } = new List<CraftRawMaterial>();
+    public string CraftItemID { get; set; }
+    public string CraftItemName { get; set; }
+    public List<CraftRawMaterial> RawMaterials { get; set; } = new List<CraftRawMaterial>();
 }
 
 /// <summary>
@@ -16,9 +16,9 @@ public class CraftItem
 /// </summary>
 public struct CraftRawMaterial
 {
-    public string id;
-    public string rawMaterialName;
-    public int consumeAmount;
+    public string UniqueID;
+    public string RawMaterialName;
+    public int ConsumeAmount;
 }
 
 /// <summary>
@@ -26,9 +26,9 @@ public struct CraftRawMaterial
 /// </summary>
 public class CraftItemListDataFile : BaseDataFile
 {
-    public Dictionary<string, CraftItem> craftItems { get; private set; } = new Dictionary<string, CraftItem>();
+    public Dictionary<string, CraftItem> CraftItems { get; private set; } = new Dictionary<string, CraftItem>();
 
-    public static CraftItemListDataFile instance = null;
+    public static CraftItemListDataFile Instance = null;
 
     public override void Init()
     {
@@ -36,7 +36,7 @@ public class CraftItemListDataFile : BaseDataFile
         JsonObject = new JSONObject(JsonFile.text);
         AccessData(JsonObject);
 
-        if (instance == null) instance = this;
+        if (Instance == null) Instance = this;
     }
 
     protected override void AccessData(JSONObject jsonObj)
@@ -50,23 +50,23 @@ public class CraftItemListDataFile : BaseDataFile
                 {
                     CraftItem craftItem = new CraftItem();
                     string id = e.keys[0];
-                    craftItem.craftItemID = id;
-                    craftItem.craftItemName = ItemDataFile.instance.GetItemData(id).name;
+                    craftItem.CraftItemID = id;
+                    craftItem.CraftItemName = ItemTableReader.GetInstance().GetItemInfo(id).Name;
                     List<CraftRawMaterial> rawMats = new List<CraftRawMaterial>();
                     foreach (var raw in e.list[0].list)
                     {
                         CraftRawMaterial rawMat;
                         string value;
                         raw.ToDictionary().TryGetValue("name", out value);
-                        rawMat.rawMaterialName = value;
+                        rawMat.RawMaterialName = value;
                         raw.ToDictionary().TryGetValue("amount", out value);
-                        rawMat.consumeAmount = int.Parse(value);
+                        rawMat.ConsumeAmount = int.Parse(value);
                         raw.ToDictionary().TryGetValue("id", out value);
-                        rawMat.id = value;
+                        rawMat.UniqueID = value;
                         rawMats.Add(rawMat);
                     }
-                    craftItem.rawMaterials = rawMats;
-                    craftItems.Add(craftItem.craftItemName, craftItem);
+                    craftItem.RawMaterials = rawMats;
+                    CraftItems.Add(craftItem.CraftItemName, craftItem);
                 }
                 break;
             default:

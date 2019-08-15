@@ -12,9 +12,6 @@ using System.Text;
 /// 
 public class ModifyTerrain : MonoBehaviour
 {
-    [SerializeField]
-    private LootingSystem lootingSystem;
-
     private World world;
     private int chunkSize = 0;
     public void Init()
@@ -121,18 +118,15 @@ public class ModifyTerrain : MonoBehaviour
             {
                 using (dbcmd = dbconn.CreateCommand())
                 {
-                    string itemID;
-                    itemID = lootingSystem.GetTypeToItemID(blockType.ToString());
-                    string type;
-                    ItemInfo itemInfo = ItemDataFile.instance.GetItemData(itemID);
-                    type = itemInfo.type;
-                   
+                    string itemID = blockType.ToString();
+                    ItemInfo itemInfo = ItemTableReader.GetInstance().GetItemInfo(itemID);
+                    string type = itemInfo.Type.ToString();
                     try
                     {
                         dbconn.Open(); //Open connection to the database.
                         StringBuilder sqlQuery = new StringBuilder();
                         sqlQuery.AppendFormat("INSERT INTO USER_ITEM (name, type, amount, id) VALUES('{0}', '{1}', 1, {2} )",
-                            itemInfo.name, type, itemID);
+                            itemInfo.Name, type, itemID);
                         dbcmd.CommandText = sqlQuery.ToString();
                         dbcmd.ExecuteNonQuery();
 

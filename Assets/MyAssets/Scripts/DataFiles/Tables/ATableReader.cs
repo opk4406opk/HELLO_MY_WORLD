@@ -9,10 +9,6 @@ public abstract class ATableRow
 {
     [Name("UniqueID")]
     public string UniqueID { get; set; }
-    [Name("FlavorText")]
-    public string FlavorText { get; set; }
-    [Name("ResourceName")]
-    public string ResourceName { get; set; }
 }
 
 public abstract class ATableReader<ReaderClass, RowClass>

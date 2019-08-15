@@ -18,8 +18,8 @@ public class ShopUIManager : APopupUI {
     private GameObject uiShopItemGridObj; 
 
     private readonly int defaultItemSlot = 10;
-    private List<ItemData> invenItemSlotList = new List<ItemData>();
-    private List<ItemData> shopItemSlotList = new List<ItemData>();
+    private List<UIItemData> invenItemSlotList = new List<UIItemData>();
+    private List<UIItemData> shopItemSlotList = new List<UIItemData>();
 
     private static ShopUIManager _singleton = null;
     public static ShopUIManager singleton
@@ -31,7 +31,7 @@ public class ShopUIManager : APopupUI {
         }
     }
 
-    private ItemData lastestSelectItem;
+    private UIItemData lastestSelectItem;
 
     void Start()
     {
@@ -43,7 +43,7 @@ public class ShopUIManager : APopupUI {
         ScaleUpEffect();
     }
 
-    public ItemData GetLastestSelectItem()
+    public UIItemData GetLastestSelectItem()
     {
         return lastestSelectItem;
     }
@@ -62,13 +62,13 @@ public class ShopUIManager : APopupUI {
                 new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
 
             newItem.SetActive(true);
-            newItem.GetComponent<ItemData>().OffInfo();
+            newItem.GetComponent<UIItemData>().OffInfo();
             //item parenting
             newItem.transform.parent = uiInvenGridObj.transform;
             newItem.transform.localScale = new Vector3(1, 1, 1);
             newItem.transform.localPosition = new Vector3(0, 0, 0);
 
-            invenItemSlotList.Add(newItem.GetComponent<ItemData>());
+            invenItemSlotList.Add(newItem.GetComponent<UIItemData>());
         }
         uiInvenGridObj.GetComponent<UIGrid>().Reposition();
     }
@@ -81,13 +81,13 @@ public class ShopUIManager : APopupUI {
                 new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
 
             newItem.SetActive(true);
-            newItem.GetComponent<ItemData>().OffInfo();
+            newItem.GetComponent<UIItemData>().OffInfo();
             //item parenting
             newItem.transform.parent = uiShopItemGridObj.transform;
             newItem.transform.localScale = new Vector3(1, 1, 1);
             newItem.transform.localPosition = new Vector3(0, 0, 0);
 
-            shopItemSlotList.Add(newItem.GetComponent<ItemData>());
+            shopItemSlotList.Add(newItem.GetComponent<UIItemData>());
         }
         uiShopItemGridObj.GetComponent<UIGrid>().Reposition();
     }
@@ -98,7 +98,7 @@ public class ShopUIManager : APopupUI {
         List <ItemInfo> shopItems = new List<ItemInfo>();
         foreach(var id in shopSellingItemIds)
         {
-            shopItems.Add(ItemDataFile.instance.GetItemData(id.ToString()));
+            shopItems.Add(ItemTableReader.GetInstance().GetItemInfo(id.ToString()));
         }
 
         int moreEmptySlot = shopItems.Count;
@@ -107,12 +107,12 @@ public class ShopUIManager : APopupUI {
         foreach (ItemInfo item in shopItems)
         {
             // set user item info
-            shopItemSlotList[itemSlotIdx].itemName = item.name;
-            shopItemSlotList[itemSlotIdx].id = item.id;
+            shopItemSlotList[itemSlotIdx].itemName = item.Name;
+            shopItemSlotList[itemSlotIdx].id = item.UniqueID;
             shopItemSlotList[itemSlotIdx].amount = "∞";
-            shopItemSlotList[itemSlotIdx].type = item.type.ToString();
+            shopItemSlotList[itemSlotIdx].type = item.Type.ToString();
             // set item detail info
-            shopItemSlotList[itemSlotIdx].detailInfo = item.detailInfo;
+            shopItemSlotList[itemSlotIdx].detailInfo = item.FlavorText;
 
             shopItemSlotList[itemSlotIdx].InitAllData();
             shopItemSlotList[itemSlotIdx].OnInfo();
@@ -125,7 +125,7 @@ public class ShopUIManager : APopupUI {
     }
 
     private EventDelegate Ed_OnClickShopItem;
-    private void OnClickShopItem(ItemData itemData)
+    private void OnClickShopItem(UIItemData itemData)
     {
         lastestSelectItem = itemData;
         UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.purchaseItem);
@@ -134,7 +134,7 @@ public class ShopUIManager : APopupUI {
     private void SettingUserItem()
     {
         // DB에서 추출한 유저 아이템정보를 담아두는 리스트.
-        List<USER_ITEM> userItemList = new List<USER_ITEM>();
+        List<DBUserItem> userItemList = new List<DBUserItem>();
         Action GetUserItems = () =>
         {
             StringBuilder conn = new StringBuilder();
@@ -151,9 +151,9 @@ public class ShopUIManager : APopupUI {
                     {
                         while (reader.Read())
                         {
-                            USER_ITEM userItem;
+                            DBUserItem userItem;
                             userItem.name = reader.GetString(0);
-                            userItem.type = reader.GetInt32(1);
+                            userItem.type = reader.GetString(1);
                             userItem.amount = reader.GetInt32(2);
                             userItem.id = reader.GetString(3);
                             userItemList.Add(userItem);
@@ -169,7 +169,7 @@ public class ShopUIManager : APopupUI {
         int moreEmptySlot = userItemList.Count;
         if (moreEmptySlot > defaultItemSlot) CreateInvenEmptySlot(moreEmptySlot - defaultItemSlot);
         int itemSlotIdx = 0;
-        foreach (USER_ITEM uitem in userItemList)
+        foreach (DBUserItem uitem in userItemList)
         {
             // set user item info
             invenItemSlotList[itemSlotIdx].itemName = uitem.name;
@@ -177,8 +177,8 @@ public class ShopUIManager : APopupUI {
             invenItemSlotList[itemSlotIdx].amount = uitem.amount.ToString();
             invenItemSlotList[itemSlotIdx].type = uitem.type.ToString();
             // set item detail info
-            ItemInfo itemInfo = ItemDataFile.instance.GetItemData(uitem.id);
-            invenItemSlotList[itemSlotIdx].detailInfo = itemInfo.detailInfo;
+            ItemInfo itemInfo = ItemTableReader.GetInstance().GetItemInfo(uitem.id);
+            invenItemSlotList[itemSlotIdx].detailInfo = itemInfo.FlavorText;
 
             invenItemSlotList[itemSlotIdx].InitAllData();
             invenItemSlotList[itemSlotIdx].OnInfo();
@@ -192,7 +192,7 @@ public class ShopUIManager : APopupUI {
     }
 
     private EventDelegate Ed_OnClickUserItem;
-    private void OnClickUserItem(ItemData itemData)
+    private void OnClickUserItem(UIItemData itemData)
     {
         lastestSelectItem = itemData;
         UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.sellItem);

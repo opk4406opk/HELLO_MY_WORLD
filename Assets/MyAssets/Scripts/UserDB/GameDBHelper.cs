@@ -9,11 +9,11 @@ using System.IO;
 /// <summary>
 /// DB에서 유저 아이템정보를 담을 구조체.
 /// </summary>
-public struct USER_ITEM
+public struct DBUserItem
 {
     public string id;
     public string name;
-    public int type;
+    public string type;
     public int amount;
 }
 /// streamingAssets 경로에 대한 문서.

@@ -39,13 +39,14 @@ public class GameSupervisor : MonoBehaviour
     private WorldConfigFile WorldConfigDataFileInstance = new WorldConfigFile();
     private WorldMapDataFile SubWorldDataFileInstance = new WorldMapDataFile();
     private BlockTileDataFile TileDataFileInstance = new BlockTileDataFile();
-    private ItemDataFile ItemDataFileInstance = new ItemDataFile();
     private CraftItemListDataFile CraftItemListDataFileInstance = new CraftItemListDataFile();
     private NPCDataFile NpcDataFileInstance = new NPCDataFile();
     private AnimalDataFile AnimalDataFileInstance = new AnimalDataFile();
     private GameConfigDataFile GameConfigDataFileInstance = new GameConfigDataFile();
     // data tables.
-    private BlockElementTableReader BlockElementTableReaderInstance = new BlockElementTableReader();
+    private RawElementTableReader RawElementTableReaderInstance = new RawElementTableReader();
+    private BlockProductTableReader BlockProductTableReaderInstance = new BlockProductTableReader();
+    private ItemTableReader ItemTableReaderInstance = new ItemTableReader();
     //
     #endregion
 
@@ -62,8 +63,6 @@ public class GameSupervisor : MonoBehaviour
     private BeltItemSelector beltItemSelector;
     [SerializeField]
     private SaveAndLoadManager saveAndLoadManager;
-    [SerializeField]
-    private LootingSystem lootingSystem;
     [SerializeField]
     private WorldManager worldManager;
     [SerializeField]
@@ -119,18 +118,18 @@ public class GameSupervisor : MonoBehaviour
     private void InitDataFiles()
     {
         KojeomLogger.DebugLog("게임 데이터 파일 초기화 시작.");
+        // init tables.
+        RawElementTableReaderInstance.Initialize(ConstFilePath.RAW_ELEMENT_TABLE_PATH);
+        BlockProductTableReaderInstance.Initialize(ConstFilePath.BLOCK_PRODUCT_TABLE_PATH);
+        ItemTableReaderInstance.Initialize(ConstFilePath.ITEM_TABLE_PATH);
         //GameDataFiles Init
-        // 제작아이템 데이타파일은 아이템데이타 파일을 읽어들인 후에 읽어야함.
         WorldConfigDataFileInstance.Init();
         GameConfigDataFileInstance.Init();
-        ItemDataFileInstance.Init();
         TileDataFileInstance.Init();
         SubWorldDataFileInstance.Init();
         CraftItemListDataFileInstance.Init();
         NpcDataFileInstance.Init();
         AnimalDataFileInstance.Init();
-        // init tables.
-        BlockElementTableReaderInstance.Initialize(ConstFilePath.BLOCK_ELEMENT_TABLE_PATH);
         KojeomLogger.DebugLog("게임 데이터 파일 초기화 완료.");
     }
     /// <summary>
@@ -154,8 +153,6 @@ public class GameSupervisor : MonoBehaviour
         // Actor Manager init..
         ActorSupervisorInstance.Init();
         ActorSupervisorInstance.Begin();
-        // looting init.
-        lootingSystem.Init();
         //InGameUI Init
         beltItemSelector.Init();
         //saveAndLoad Init

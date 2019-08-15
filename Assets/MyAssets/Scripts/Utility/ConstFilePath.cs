@@ -103,8 +103,10 @@ public class ConstFilePath
     /// </summary>
     public readonly static string ACTOR_COMMONS_NAME_RESOURCE_PATH = "GamePrefabs/Actor/Commons/txt_mesh_Name";
 
-    //
-    public readonly static string BLOCK_ELEMENT_TABLE_PATH = "Assets/MyAssets/Resources/TextAsset/Tables/BlockElementTable.csv";
+    // Table path.
+    public readonly static string RAW_ELEMENT_TABLE_PATH = "Assets/MyAssets/Resources/TextAsset/Tables/RawElementTable.csv";
+    public readonly static string BLOCK_PRODUCT_TABLE_PATH = "Assets/MyAssets/Resources/TextAsset/Tables/BlockProductTable.csv";
+    public readonly static string ITEM_TABLE_PATH = "Assets/MyAssets/Resources/TextAsset/Tables/ItemTable.csv";
 }
 
 

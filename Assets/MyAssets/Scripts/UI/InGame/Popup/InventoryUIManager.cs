@@ -17,10 +17,10 @@ public class InventoryUIManager : APopupUI {
     private GameObject uiGridObj;
 
     private readonly int defaultItemSlot = 10;
-    private List<ItemData> itemSlotList = new List<ItemData>();
+    private List<UIItemData> itemSlotList = new List<UIItemData>();
     
     // DB에서 추출한 유저 아이템정보를 담아두는 리스트.
-    private List<USER_ITEM> userItemList = new List<USER_ITEM>();
+    private List<DBUserItem> userItemList = new List<DBUserItem>();
 
     private static InventoryUIManager _singleton = null;
     public static InventoryUIManager singleton
@@ -32,7 +32,7 @@ public class InventoryUIManager : APopupUI {
         }
     }
 
-    private ItemData lastestSelectItem;
+    private UIItemData lastestSelectItem;
 
     void Start ()
     {
@@ -42,7 +42,7 @@ public class InventoryUIManager : APopupUI {
         ScaleUpEffect();
     }
 
-    public ItemData GetLastestSelectItem()
+    public UIItemData GetLastestSelectItem()
     {
         return lastestSelectItem;
     }
@@ -60,13 +60,13 @@ public class InventoryUIManager : APopupUI {
                 new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
 
             newItem.SetActive(true);
-            newItem.GetComponent<ItemData>().OffInfo();
+            newItem.GetComponent<UIItemData>().OffInfo();
             //item parenting
             newItem.transform.parent = uiGridObj.transform;
             newItem.transform.localScale = new Vector3(1, 1, 1);
             newItem.transform.localPosition = new Vector3(0, 0, 0);
            
-            itemSlotList.Add(newItem.GetComponent<ItemData>());
+            itemSlotList.Add(newItem.GetComponent<UIItemData>());
         }
         uiGridObj.GetComponent<UIGrid>().Reposition();
     }
@@ -88,9 +88,9 @@ public class InventoryUIManager : APopupUI {
                     {
                         while (reader.Read())
                         {
-                            USER_ITEM userItem;
+                            DBUserItem userItem;
                             userItem.name = reader.GetString(0);
-                            userItem.type = reader.GetInt32(1);
+                            userItem.type = reader.GetString(1);
                             userItem.amount = reader.GetInt32(2);
                             userItem.id = reader.GetString(3);
                             userItemList.Add(userItem);
@@ -106,7 +106,7 @@ public class InventoryUIManager : APopupUI {
 		int moreEmptySlot = userItemList.Count;
 		if (moreEmptySlot > defaultItemSlot) CreateEmptySlot(moreEmptySlot - defaultItemSlot);
 		int itemSlotIdx = 0;
-        foreach(USER_ITEM uitem in userItemList)
+        foreach(DBUserItem uitem in userItemList)
         {
             // set user item info
             itemSlotList[itemSlotIdx].itemName = uitem.name;
@@ -114,8 +114,8 @@ public class InventoryUIManager : APopupUI {
             itemSlotList[itemSlotIdx].amount = uitem.amount.ToString();
             itemSlotList[itemSlotIdx].type = uitem.type.ToString();
             // set item detail info
-            ItemInfo itemInfo = ItemDataFile.instance.GetItemData(uitem.id);
-            itemSlotList[itemSlotIdx].detailInfo = itemInfo.detailInfo;
+            ItemInfo itemInfo = ItemTableReader.GetInstance().GetItemInfo(uitem.id);
+            itemSlotList[itemSlotIdx].detailInfo = itemInfo.FlavorText;
 
             itemSlotList[itemSlotIdx].InitAllData();
             itemSlotList[itemSlotIdx].OnInfo();
@@ -129,7 +129,7 @@ public class InventoryUIManager : APopupUI {
     }
 
     private EventDelegate Ed_OnClickItem;
-    private void OnClickItem(ItemData itemData)
+    private void OnClickItem(UIItemData itemData)
     {
         lastestSelectItem = itemData;
         UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.itemData);
