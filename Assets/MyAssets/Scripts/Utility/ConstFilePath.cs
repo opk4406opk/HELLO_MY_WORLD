@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class ConstFilePath
 {
-    // 상대경로. Json 형식의 파일 path 모음.
+    // 상대경로. Json 형식의 데이터 파일 path 모음.
     public readonly static string TXT_NPC_DATAS = "TextAsset/ActorData/NPCDatas";
     public readonly static string TXT_ANIMAL_DATAS = "TextAsset/ActorData/AnimalDatas";
     public readonly static string TXT_CHARACTER_DATAS = "TextAsset/ChDatas/CharacterDatas";
     public readonly static string TXT_CRAFT_ITEM_LIST_DATAS = "TextAsset/ItemDatas/CraftItemListDatas";
-    public readonly static string TXT_ITEM_DATAS = "TextAsset/ItemDatas/ItemDatas";
-    public readonly static string TXT_TYPE_TO_ITEM_DATAS = "TextAsset/ItemDatas/TypeToItemID";
     public readonly static string TXT_WORLD_MAP_DATAS = "TextAsset/GameWorld/WorldMapData";
     public readonly static string TXT_WORLD_CONFIG_DATA = "TextAsset/GameWorld/WorldConfigData";
     public readonly static string TXT_BLOCK_TILE_DATAS = "TextAsset/TileDatas/BlockTileDatas";
     public readonly static string TXT_GAME_CONFIG_DATA = "TextAsset/GameConfigData";
     public readonly static string TXT_GAME_SERVER_DATA = "TextAsset/GameServerData";
+    // 데이터 Table path.
+    public readonly static string RAW_ELEMENT_TABLE_PATH = "Assets/MyAssets/Resources/TextAsset/Tables/RawElementTable.csv";
+    public readonly static string BLOCK_PRODUCT_TABLE_PATH = "Assets/MyAssets/Resources/TextAsset/Tables/BlockProductTable.csv";
+    public readonly static string ITEM_TABLE_PATH = "Assets/MyAssets/Resources/TextAsset/Tables/ItemTable.csv";
 
     //캐릭터 렌더링 텍스처 베이스 파일이 있는 상대경로 directory.
     public readonly static string CH_RT_BASE_FILE_WITH_EXT = "Assets/MyAssets/Resources/Texture(RT)/userCharacters/CharRTBase.renderTexture";
@@ -103,10 +105,6 @@ public class ConstFilePath
     /// </summary>
     public readonly static string ACTOR_COMMONS_NAME_RESOURCE_PATH = "GamePrefabs/Actor/Commons/txt_mesh_Name";
 
-    // Table path.
-    public readonly static string RAW_ELEMENT_TABLE_PATH = "Assets/MyAssets/Resources/TextAsset/Tables/RawElementTable.csv";
-    public readonly static string BLOCK_PRODUCT_TABLE_PATH = "Assets/MyAssets/Resources/TextAsset/Tables/BlockProductTable.csv";
-    public readonly static string ITEM_TABLE_PATH = "Assets/MyAssets/Resources/TextAsset/Tables/ItemTable.csv";
 }
 
 
