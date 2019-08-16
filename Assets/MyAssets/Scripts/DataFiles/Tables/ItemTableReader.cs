@@ -43,9 +43,9 @@ public class ItemTableReader : ATableReader<ItemTableReader, ItemTableRow>
     public override void Initialize(string TablePath)
     {
         Instance = this;
-        using (var reader = new StreamReader(TablePath, Encoding.UTF8))
+        using (var reader = new StreamReader(TablePath, Encoding.GetEncoding("euc-kr")))
         {
-            using (var csv = new CsvReader(reader))
+            using (var csv = new CsvReader(reader, DefaultConfiguration))
             {
                 var records = csv.GetRecords<ItemTableRow>();
                 foreach (var row in records)

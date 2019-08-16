@@ -17,9 +17,9 @@ public class RawElementTableReader : ATableReader<RawElementTableReader, RawElem
     public override void Initialize(string TablePath)
     {
         Instance = this;
-        using (var reader = new StreamReader(TablePath, Encoding.UTF8))
+        using (var reader = new StreamReader(TablePath, System.Text.Encoding.GetEncoding("euc-kr")))
         {
-            using (var csv = new CsvReader(reader))
+            using (var csv = new CsvReader(reader, DefaultConfiguration))
             {
                 var records = csv.GetRecords<RawElementTableRow>();
                 foreach (var row in records)
