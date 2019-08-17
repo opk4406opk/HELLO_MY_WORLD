@@ -11,6 +11,7 @@ namespace Assets.MyAssets.Scripts.Network.Framework
         public byte[] Buffer { get; private set; }
         public int Length { get; private set; }
         public int Position { get; private set; }
+        public Int16 ProtocolID { get; private set; }
 
         public CPacket()
         {
@@ -20,9 +21,10 @@ namespace Assets.MyAssets.Scripts.Network.Framework
             Position = NetworkFrameworkDefines.PACKET_HEADER_BYTE_SIZE;
         }
 
-        public static CPacket Create()
+        public static CPacket Create(Int16 protocolID)
         {
             CPacket newPacket = new CPacket();
+            newPacket.SetProtocol(protocolID);
             return newPacket;
         }
 
@@ -54,6 +56,11 @@ namespace Assets.MyAssets.Scripts.Network.Framework
             return data;
         }
 
+        public Int16 PopProtocolID()
+        {
+            return PopInt16();
+        }
+
         public void PushByte(byte data)
         {
             byte[] newData = BitConverter.GetBytes(data);
@@ -78,6 +85,21 @@ namespace Assets.MyAssets.Scripts.Network.Framework
             byte[] newData = BitConverter.GetBytes(data);
             newData.CopyTo(Buffer, Position);
             Position += newData.Length;
+        }
+
+        public void SetProtocol(Int16 protocolID)
+        {
+            ProtocolID = protocolID;
+            // 헤더는 나중에 넣을것이므로 데이터 부터 넣을 수 있도록 위치를 점프시켜놓는다.
+            Position = NetworkFrameworkDefines.PACKET_HEADER_BYTE_SIZE;
+            PushInt16(protocolID);
+        }
+
+        public void RecordSize()
+        {
+            // header + body 를 합한 사이즈를 입력한다.
+            byte[] header = BitConverter.GetBytes(Position);
+            header.CopyTo(Buffer, 0);
         }
     }
 }
