@@ -65,17 +65,15 @@ public class Sequence : CompositeNode
 public enum AITypes
 {
     Common,
-    COUNT
+    NONE,
+    COUNT = NONE
 }
 
-public abstract class BehaviorTree : MonoBehaviour
+public abstract class BehaviorTree
 {
     protected Sequence RootNode = new Sequence();
-    public BlackBoard BlackBoardInstance
-    {
-        get { return BlackBoardInstance; }
-        private set { BlackBoardInstance = new BlackBoard(); }
-    }
+    protected ActorController ActorControllerInstance;
+    protected BlackBoard BlackBoardInstance;
     protected IEnumerator BehaviorProcessInstance;
 
     public abstract void Initialize(ActorController actorController);
@@ -88,10 +86,15 @@ public abstract class BehaviorTree : MonoBehaviour
     public void StartBT()
     {
         BehaviorProcessInstance = BehaviorProcess();
-        StartCoroutine(BehaviorProcessInstance);
+        ActorControllerInstance.StartCoroutine(BehaviorProcessInstance);
     }
     public void StopBT()
     {
-        StopCoroutine(BehaviorProcessInstance);
+        ActorControllerInstance.StopCoroutine(BehaviorProcessInstance);
+    }
+
+    public BlackBoard GetBlackBoard()
+    {
+        return BlackBoardInstance;
     }
 }

@@ -18,14 +18,9 @@ public class AnimalController : ActorController
         IdleState = new AnimalIdleState(instance);
         WalkState = new AnimalWalkState(instance);
         RunState = new AnimalRunState(instance);
-    }
-
-    public override void StartController()
-    {
-    }
-
-    public override void StopController()
-    {
+        // AI 초기화 세팅.
+        AIGroup[(int)AITypes.Common] = new CommonAnimalAI();
+        AIGroup[(int)AITypes.Common].Initialize(this);
     }
 
     public override void Tick(float deltaTime)

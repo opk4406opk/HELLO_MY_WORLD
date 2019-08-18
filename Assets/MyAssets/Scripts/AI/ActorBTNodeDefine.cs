@@ -20,9 +20,9 @@ public class BTNodeMoveForTarget : Node
    
     public override bool Invoke(float DeltaTime)
     {
-        if (BehaviorTreeInstance.BlackBoardInstance.PathList.Count > 0)
+        if (BehaviorTreeInstance.GetBlackBoard().PathList.Count > 0)
         {
-            PathNode3D node = BehaviorTreeInstance.BlackBoardInstance.PathList.Pop();
+            PathNode3D node = BehaviorTreeInstance.GetBlackBoard().PathList.Pop();
             StartPosition = Controller.GetActorTransform().position;
             GoalPosition = node.GetWorldPosition();
             Vector3 dir = GoalPosition - StartPosition;
@@ -42,7 +42,7 @@ public class BTNodeMoveForTarget : Node
             if(bAlreadyPathFinding == false)
             {
                 bAlreadyPathFinding = true;
-                AsyncPathFinding(BehaviorTreeInstance.BlackBoardInstance.PathFidningTargetPoint);
+                AsyncPathFinding(BehaviorTreeInstance.GetBlackBoard().PathFidningTargetPoint);
             }
             return true;
         }
@@ -63,15 +63,16 @@ public class BTNodeMoveForTarget : Node
     }
     private void OnFinishAsyncPathFinding(Stack<PathNode3D> resultPath)
     {
-        BehaviorTreeInstance.BlackBoardInstance.PathList = resultPath;
+        BehaviorTreeInstance.GetBlackBoard().PathList = resultPath;
     }
 }
 
 public class BTNodeTimer : Node
 {
-   
     private float ElapsedTimeSec = 0.0f;
-    private float WakeUpTimeSec = 2.0f;
+    private float WakeupTimeSec = 2.0f;
+    public delegate void CallBackAfterTimer();
+    private CallBackAfterTimer CallBack;
 
     public BTNodeTimer(BehaviorTree behaviorTreeInstance, ActorController actorController)
     {
@@ -80,17 +81,27 @@ public class BTNodeTimer : Node
     }
     public override bool Invoke(float DeltaTime)
     {
-        if(ElapsedTimeSec <= WakeUpTimeSec)
+        if(ElapsedTimeSec <= WakeupTimeSec)
         {
             ElapsedTimeSec += DeltaTime;
         }
         else
         {
             ElapsedTimeSec = 0.0f;
+            CallBack();
         }
         return true;
     }
-   
+
+    public void SetCallbackAfterTimer(CallBackAfterTimer callback)
+    {
+        CallBack = callback;
+    }
+
+    public void SetWakeupTime(float sec)
+    {
+        WakeupTimeSec = sec;
+    }
 }
 
 public class BTNodeStartAttack : Node

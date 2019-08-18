@@ -29,14 +29,38 @@ public abstract class ActorController : MonoBehaviour
         return ContainedWorld.WorldCoordinate;
     }
 
+    public void ChangeAI(AITypes type)
+    {
+        AIGroup[(int)CurAIType].StopBT();
+        if(AIGroup[(int)type] != null)
+        {
+            CurAIType = type;
+            AIGroup[(int)type].StartBT();
+        }
+    }
+    public void StartAI()
+    {
+        AIGroup[(int)CurAIType].StartBT();
+    }
+    public void StopAI()
+    {
+        AIGroup[(int)CurAIType].StopBT();
+    }
+    public void StartController()
+    {
+
+    }
+    public void StopController()
+    {
+
+    }
     abstract public void Init(World world, Actor instance);
-    abstract public void StartController();
-    abstract public void StopController();
     abstract public Transform GetActorTransform();
     abstract public void Tick(float deltaTime);
     abstract public void ChangeActorState(ActorStateType state);
 
     protected ActorStateType CurStateType;
+    protected AITypes CurAIType = AITypes.Common;
     protected BoxCollider BoxColliderInstance;
     protected StateMachineController StateMachineControllerInstance = new StateMachineController();
     protected World ContainedWorld;

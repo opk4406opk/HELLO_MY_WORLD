@@ -15,23 +15,18 @@ public class NPCController : ActorController
         ContainedWorld = world;
         AnimatorInstance = gameObject.GetComponent<Animator>();
         BoxColliderInstance = gameObject.GetComponent<BoxCollider>();
-
+        // State 초기화 세팅.
         IdleState = new NPCIdleState(instance);
         WalkState = new NPCWalkState(instance);
         RunState = new NPCRunState(instance);
+        // AI 초기화 세팅.
+        AIGroup[(int)AITypes.Common] = new CommonNpcAI();
+        AIGroup[(int)AITypes.Common].Initialize(this);
     }
 
     public override void Tick(float deltaTime)
     {
         StateMachineControllerInstance.Tick(deltaTime);
-    }
-
-    public override void StartController()
-    {
-    }
-
-    public override void StopController()
-    {
     }
 
     public override Transform GetActorTransform()

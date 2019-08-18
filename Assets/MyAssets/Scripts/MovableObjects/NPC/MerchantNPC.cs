@@ -35,6 +35,7 @@ public class MerchantNPC : NPCActor, IMerchantNPC
         //
         Controller = gameObject.AddComponent<NPCController>();
         Controller.Init(world, this);
+        Controller.StartAI();
     }
 
 
