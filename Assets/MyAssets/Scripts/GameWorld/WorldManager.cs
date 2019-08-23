@@ -246,7 +246,7 @@ public class WorldManager : MonoBehaviour
             if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.IsInitializeFinish == true)
             {
                 playerPos = GamePlayerManager.Instance.MyGamePlayer.Controller.GetPosition();
-                offsetPos = WholeWorldStates[GetSubWorldUniqueID(playerPos)].subWorldInstance.WorldCoordinate;
+                offsetPos = WholeWorldStates[GetSubWorldUniqueID(playerPos)].subWorldInstance.WorldOffsetCoordinate;
             }
             else
             {
@@ -254,7 +254,7 @@ public class WorldManager : MonoBehaviour
                 {
                     if(state.Value.subWorldInstance != null && state.Value.subWorldInstance.bSurfaceWorld == true)
                     {
-                        offsetPos = state.Value.subWorldInstance.WorldCoordinate;
+                        offsetPos = state.Value.subWorldInstance.WorldOffsetCoordinate;
                         break;
                     }
                 }

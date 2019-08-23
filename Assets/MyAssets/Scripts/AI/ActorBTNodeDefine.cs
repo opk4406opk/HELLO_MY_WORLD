@@ -35,7 +35,6 @@ public class BTNodeMoveForTarget : Node
             {
                 Controller.Move(dir, 1.5f);
             }
-            return false;
         }
         else
         {
@@ -44,8 +43,8 @@ public class BTNodeMoveForTarget : Node
                 bAlreadyPathFinding = true;
                 AsyncPathFinding(BehaviorTreeInstance.GetBlackBoard().PathFidningTargetPoint);
             }
-            return true;
         }
+        return true;
     }
     public void InitPathFinder()
     {
@@ -54,7 +53,7 @@ public class BTNodeMoveForTarget : Node
         initData.OffsetX = (int)Controller.GetSubWorldOffset().x;
         initData.OffsetY = (int)Controller.GetSubWorldOffset().y;
         initData.OffsetZ = (int)Controller.GetSubWorldOffset().z;
-        PathFinderInstance.Init(initData, Controller.GetActorTransform());
+        PathFinderInstance.Init(initData, new SimpleVector3(Controller.GetActorTransform().position));
         PathFinderInstance.OnFinishAsyncPathFinding += OnFinishAsyncPathFinding;
     }
     public void AsyncPathFinding(Vector3 goalWorldPosition)

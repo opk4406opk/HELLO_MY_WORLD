@@ -80,7 +80,12 @@ public abstract class BehaviorTree
     protected IEnumerator BehaviorProcess()
     {
         KojeomLogger.DebugLog("BehaviorProcess Start!!");
-        while (!RootNode.Invoke(Time.deltaTime)) yield return null;
+        //while (!RootNode.Invoke(Time.deltaTime)) yield return null;
+        while(true)
+        {
+            RootNode.Invoke(Time.deltaTime);
+            yield return null;
+        }
         KojeomLogger.DebugLog("Behavior process exit");
     }
     public void StartBT()

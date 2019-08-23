@@ -37,7 +37,7 @@ public class World : MonoBehaviour
     public string WorldName { get; private set; }
     public string UniqueID { get; private set; }
     // 월드맵 위치값( == 오프셋값).
-    public Vector3 WorldCoordinate { get; private set; }
+    public Vector3 WorldOffsetCoordinate { get; private set; }
     // 실제 게임오브젝트로서 존재하는 위치값.
     public Vector3 RealCoordinate{ get; private set; }
     public bool bSurfaceWorld { get; private set; }
@@ -58,11 +58,11 @@ public class World : MonoBehaviour
         // setting to World
         WorldName = worldData.WorldName;
         UniqueID = worldData.UniqueID;
-        WorldCoordinate = new Vector3(worldData.OffsetX, worldData.OffsetY, worldData.OffsetZ);
+        WorldOffsetCoordinate = new Vector3(worldData.OffsetX, worldData.OffsetY, worldData.OffsetZ);
         var configData = WorldConfigFile.Instance.GetConfig();
-        RealCoordinate = new Vector3(WorldCoordinate.x * configData.sub_world_x_size,
-            WorldCoordinate.y * configData.sub_world_y_size,
-            WorldCoordinate.z * configData.sub_world_z_size);
+        RealCoordinate = new Vector3(WorldOffsetCoordinate.x * configData.sub_world_x_size,
+            WorldOffsetCoordinate.y * configData.sub_world_y_size,
+            WorldOffsetCoordinate.z * configData.sub_world_z_size);
         bSurfaceWorld = worldData.IsSurface;
         // setting to GameObject
         gameObject.name = WorldName;
@@ -86,7 +86,7 @@ public class World : MonoBehaviour
                            ContainedWorld(GamePlayerManager.Instance.MyGamePlayer.Controller.GetPosition());
                 if (curPlayerWorld != null)
                 {
-                    var dist = Mathf.RoundToInt(Vector3.Distance(curPlayerWorld.WorldCoordinate, WorldCoordinate));
+                    var dist = Mathf.RoundToInt(Vector3.Distance(curPlayerWorld.WorldOffsetCoordinate, WorldOffsetCoordinate));
                     //KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} away from {1} distance Player contained World",
                     //    UniqueID, dist));
                     // 거리값이 3(테스트용 값) 이상이 되면..Release.
@@ -261,9 +261,9 @@ public class World : MonoBehaviour
                         ChunkSlots[x, y, z].Chunks[type].WorldDataIdxY = y * ChunkSize;
                         ChunkSlots[x, y, z].Chunks[type].WorldDataIdxZ = z * ChunkSize;
                         var WorldConfig = WorldConfigFile.Instance.GetConfig();
-                        ChunkSlots[x, y, z].Chunks[type].RealCoordX = chunkRealCoordX + WorldCoordinate.x * WorldConfig.sub_world_x_size;
-                        ChunkSlots[x, y, z].Chunks[type].RealCoordY = chunkRealCoordY + WorldCoordinate.y * WorldConfig.sub_world_y_size;
-                        ChunkSlots[x, y, z].Chunks[type].RealCoordZ = chunkRealCoordZ + WorldCoordinate.z * WorldConfig.sub_world_z_size;
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordX = chunkRealCoordX + WorldOffsetCoordinate.x * WorldConfig.sub_world_x_size;
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordY = chunkRealCoordY + WorldOffsetCoordinate.y * WorldConfig.sub_world_y_size;
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordZ = chunkRealCoordZ + WorldOffsetCoordinate.z * WorldConfig.sub_world_z_size;
                         ChunkSlots[x, y, z].Chunks[type].Init();
                         yield return new WaitForSeconds(WorldConfigFile.Instance.GetConfig().chunkLoadIntervalSeconds);
                     }

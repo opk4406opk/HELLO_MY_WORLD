@@ -26,7 +26,7 @@ public abstract class ActorController : MonoBehaviour
 
     public Vector3 GetSubWorldOffset()
     {
-        return ContainedWorld.WorldCoordinate;
+        return ContainedWorld.WorldOffsetCoordinate;
     }
 
     public void ChangeAI(AITypes type)
