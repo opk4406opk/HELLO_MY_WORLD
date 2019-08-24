@@ -283,7 +283,7 @@ public class CustomAstar3D : MonoBehaviour
     {
         //길을 찾아 움직이려는 오브젝트의 현재 높이.
         //실제 밟고 서있는 WorldBlock 배열의 Y값을 구한다.
-        int curHeight = Mathf.RoundToInt(ActorPosition.Y);
+        int curHeight = Mathf.Clamp((int)ActorPosition.Y - OffsetY * GameWorldConfing.sub_world_y_size, 0, GameWorldConfing.sub_world_y_size);
         for (int x = 0; x < GameWorldConfing.sub_world_x_size; x++)
             for(int y = 0; y < GameWorldConfing.sub_world_y_size; y++)
                 for (int z = 0; z < GameWorldConfing.sub_world_z_size; z++)

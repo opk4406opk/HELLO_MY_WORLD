@@ -38,7 +38,7 @@ public class BeltItemSelector : MonoBehaviour {
 	public void Init()
     {
         _singleton = this;
-        maxSelectBlocks = BlockTileDataFile.instance.GetBlockTileInfoCount();
+        maxSelectBlocks = BlockTileDataFile.Instance.GetBlockTileInfoCount();
         //default : grass block;
         _curSelectBlockType = (byte)BlockTileType.GRASS;
         //
@@ -64,9 +64,9 @@ public class BeltItemSelector : MonoBehaviour {
             btnComponent.onClick.Add(onSelectBlock);
 
             var blockTileType = (BlockTileType)idx;
-            var tileInfo = BlockTileDataFile.instance.GetBlockTileInfo(blockTileType);
+            var tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo(blockTileType);
             BeltItemBlockData block = newBlock.GetComponent<BeltItemBlockData>();
-            block.Init(tileInfo.name);
+            block.Init(tileInfo.Name);
             block.SetBlockTileType(blockTileType);
         }
         uiGridObj.GetComponent<UIGrid>().Reposition();

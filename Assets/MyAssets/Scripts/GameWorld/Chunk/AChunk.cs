@@ -101,9 +101,9 @@ public abstract class AChunk : MonoBehaviour {
 		NewVertices.Add(new Vector3(x + 1, y, z));
 		NewVertices.Add(new Vector3(x, y, z));
 
-		BlockTileInfo tileInfo = BlockTileDataFile.instance.GetBlockTileInfo(tileType);
-		TexturePos.x = tileInfo.posX;
-		TexturePos.y = tileInfo.posY;
+		BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo(tileType);
+		TexturePos.x = tileInfo.PositionX;
+		TexturePos.y = tileInfo.PositionY;
 
 		CreateFace(TexturePos);
 	}
@@ -116,9 +116,9 @@ public abstract class AChunk : MonoBehaviour {
 		NewVertices.Add(new Vector3(x, y, z + 1));
 		NewVertices.Add(new Vector3(x, y - 1, z + 1));
 
-		BlockTileInfo tileInfo = BlockTileDataFile.instance.GetBlockTileInfo(tileType);
-		TexturePos.x = tileInfo.posX;
-		TexturePos.y = tileInfo.posY;
+		BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo(tileType);
+		TexturePos.x = tileInfo.PositionX;
+		TexturePos.y = tileInfo.PositionY;
 
 		CreateFace(TexturePos);
 
@@ -132,9 +132,9 @@ public abstract class AChunk : MonoBehaviour {
 		NewVertices.Add(new Vector3(x + 1, y, z + 1));
 		NewVertices.Add(new Vector3(x + 1, y - 1, z + 1));
 
-		BlockTileInfo tileInfo = BlockTileDataFile.instance.GetBlockTileInfo(tileType);
-		TexturePos.x = tileInfo.posX;
-		TexturePos.y = tileInfo.posY;
+		BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo(tileType);
+		TexturePos.x = tileInfo.PositionX;
+		TexturePos.y = tileInfo.PositionY;
 
 		CreateFace(TexturePos);
 
@@ -148,9 +148,9 @@ public abstract class AChunk : MonoBehaviour {
 		NewVertices.Add(new Vector3(x + 1, y, z));
 		NewVertices.Add(new Vector3(x + 1, y - 1, z));
 
-		BlockTileInfo tileInfo = BlockTileDataFile.instance.GetBlockTileInfo(tileType);
-		TexturePos.x = tileInfo.posX;
-		TexturePos.y = tileInfo.posY;
+		BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo(tileType);
+		TexturePos.x = tileInfo.PositionX;
+		TexturePos.y = tileInfo.PositionY;
 
 		CreateFace(TexturePos);
 
@@ -164,9 +164,9 @@ public abstract class AChunk : MonoBehaviour {
 		NewVertices.Add(new Vector3(x, y, z));
 		NewVertices.Add(new Vector3(x, y - 1, z));
 
-		BlockTileInfo tileInfo = BlockTileDataFile.instance.GetBlockTileInfo(tileType);
-		TexturePos.x = tileInfo.posX;
-		TexturePos.y = tileInfo.posY;
+		BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo(tileType);
+		TexturePos.x = tileInfo.PositionX;
+		TexturePos.y = tileInfo.PositionY;
 
 		CreateFace(TexturePos);
 
@@ -180,9 +180,9 @@ public abstract class AChunk : MonoBehaviour {
 		NewVertices.Add(new Vector3(x + 1, y - 1, z + 1));
 		NewVertices.Add(new Vector3(x, y - 1, z + 1));
 
-		BlockTileInfo tileInfo = BlockTileDataFile.instance.GetBlockTileInfo(tileType);
-		TexturePos.x = tileInfo.posX;
-		TexturePos.y = tileInfo.posY;
+		BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo(tileType);
+		TexturePos.x = tileInfo.PositionX;
+		TexturePos.y = tileInfo.PositionY;
 
 		CreateFace(TexturePos);
 

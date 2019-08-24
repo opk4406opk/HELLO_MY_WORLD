@@ -33,7 +33,7 @@ public class MerchantNPC : NPCActor, IMerchantNPC
         SpawnID = spawnID;
         UniqueID = spawnData.UniqueID;
         //
-        Controller = gameObject.AddComponent<NPCController>();
+        Controller = gameObject.GetComponent<NPCController>();
         Controller.Init(world, this);
         Controller.StartAI();
     }
@@ -57,16 +57,5 @@ public class MerchantNPC : NPCActor, IMerchantNPC
         // to do.
         OnClickedActor(this);
         UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.shop);
-    }
-
-
-    public override void Show()
-    {
-        gameObject.SetActive(true);
-    }
-
-    public override void Hide()
-    {
-        gameObject.SetActive(false);
     }
 }

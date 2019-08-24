@@ -194,7 +194,10 @@ public class WorldManager : MonoBehaviour
         worldState.realTimeStatus = WorldRealTimeStatus.LoadFinish;
         //
         //NCP 생성 테스트. 
-        ActorSuperviosr.Instance.RequestSpawnRandomNPC(NPC_TYPE.Merchant, uniqueID, 1, true);
+        if(worldState.subWorldInstance.bSurfaceWorld == true)
+        {
+            ActorSuperviosr.Instance.RequestSpawnRandomNPC(NPC_TYPE.Merchant, uniqueID, 1, true);
+        }
     }
 
     private void OnReleaseSubWorldInstance(string uniqueID)

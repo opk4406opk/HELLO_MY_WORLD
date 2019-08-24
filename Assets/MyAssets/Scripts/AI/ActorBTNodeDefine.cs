@@ -8,9 +8,8 @@ using UnityEngine;
 
 public class BTNodeMoveForTarget : Node
 {
-    private bool bAlreadyPathFinding = false;
+    private bool bRunningPathFinding = false;
     private readonly float IntervalDistance = 0.12f;
-    private Vector3 StartPosition, GoalPosition;
     public CustomAstar3D PathFinderInstance { get; private set; } = new CustomAstar3D();
     public BTNodeMoveForTarget(BehaviorTree behaviorTreeInstance, ActorController actorController)
     {
@@ -22,25 +21,30 @@ public class BTNodeMoveForTarget : Node
     {
         if (BehaviorTreeInstance.GetBlackBoard().PathList.Count > 0)
         {
-            PathNode3D node = BehaviorTreeInstance.GetBlackBoard().PathList.Pop();
-            StartPosition = Controller.GetActorTransform().position;
-            GoalPosition = node.GetWorldPosition();
-            Vector3 dir = GoalPosition - StartPosition;
-            if (Vector3.Distance(StartPosition, GoalPosition) <= IntervalDistance)
+            PathNode3D node = BehaviorTreeInstance.GetBlackBoard().PathList.Peek();
+            Vector3 StartPosition = Controller.GetActorTransform().position;
+            Vector3 NextPosition = node.GetWorldPosition();
+            Vector3 dir = NextPosition - StartPosition;
+            if (Vector3.Distance(StartPosition, NextPosition) <= IntervalDistance)
             {
-                bAlreadyPathFinding = false;
-                Controller.LookAt(dir);
+                // 다음노드와 길찾기 목적지 노드와 동일하다면 완료!
+                if(BehaviorTreeInstance.GetBlackBoard().PathFidningTargetPoint == NextPosition)
+                {
+                    bRunningPathFinding = false;
+                }
+                BehaviorTreeInstance.GetBlackBoard().PathList.Pop();
             }
             else
             {
+                Controller.LookAt(dir);
                 Controller.Move(dir, 1.5f);
             }
         }
         else
         {
-            if(bAlreadyPathFinding == false)
+            if(bRunningPathFinding == false)
             {
-                bAlreadyPathFinding = true;
+                bRunningPathFinding = true;
                 AsyncPathFinding(BehaviorTreeInstance.GetBlackBoard().PathFidningTargetPoint);
             }
         }

@@ -4,6 +4,48 @@ using UnityEngine;
 
 public abstract class ActorController : MonoBehaviour
 {
+    abstract public void Init(World world, Actor instance);
+    abstract public Transform GetActorTransform();
+    abstract public void Tick(float deltaTime);
+    abstract public void ChangeActorState(ActorStateType state);
+
+    protected ActorStateType CurStateType;
+    protected AITypes CurAIType = AITypes.Common;
+    protected BoxCollider BoxColliderInstance;
+    protected StateMachineController StateMachineControllerInstance = new StateMachineController();
+    protected World ContainedWorld;
+    protected Animator AnimatorInstance;
+    protected BehaviorTree[] AIGroup = new BehaviorTree[(int)AITypes.COUNT];
+    protected bool bContactGround = false;
+
+    public bool IsContactGround()
+    {
+        return bContactGround;
+    }
+
+    protected void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("TerrainChunk") == true)
+        {
+            bContactGround = true;
+        }
+    }
+
+    protected void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("TerrainChunk") == true)
+        {
+            bContactGround = false;
+        }
+    }
+
+    protected void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("TerrainChunk") == true)
+        {
+            bContactGround = true;
+        }
+    }
     public void Move(Vector3 dir, float speed)
     {
         Vector3 newPos = gameObject.transform.position;
@@ -32,7 +74,7 @@ public abstract class ActorController : MonoBehaviour
     public void ChangeAI(AITypes type)
     {
         AIGroup[(int)CurAIType].StopBT();
-        if(AIGroup[(int)type] != null)
+        if (AIGroup[(int)type] != null)
         {
             CurAIType = type;
             AIGroup[(int)type].StartBT();
@@ -54,16 +96,4 @@ public abstract class ActorController : MonoBehaviour
     {
 
     }
-    abstract public void Init(World world, Actor instance);
-    abstract public Transform GetActorTransform();
-    abstract public void Tick(float deltaTime);
-    abstract public void ChangeActorState(ActorStateType state);
-
-    protected ActorStateType CurStateType;
-    protected AITypes CurAIType = AITypes.Common;
-    protected BoxCollider BoxColliderInstance;
-    protected StateMachineController StateMachineControllerInstance = new StateMachineController();
-    protected World ContainedWorld;
-    protected Animator AnimatorInstance;
-    protected BehaviorTree[] AIGroup = new BehaviorTree[(int)AITypes.COUNT];
 }

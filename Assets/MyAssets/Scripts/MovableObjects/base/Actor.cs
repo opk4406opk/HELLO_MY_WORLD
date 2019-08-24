@@ -97,14 +97,10 @@ abstract public class Actor : MonoBehaviour
     protected int UniqueID;
     protected ActorController Controller;
 
-
     public delegate void del_OnClickActor(Actor actor);
     abstract public event del_OnClickActor OnClickedActor;
     abstract public void Init(ActorSpawnData spawnData, World world, int spawnID);
-    abstract public void Show();
-    abstract public void Hide();
     abstract public ActorController GetController();
-    //
     abstract public void Update();
 
     public ACTOR_TYPE GetActorType()
@@ -122,6 +118,14 @@ abstract public class Actor : MonoBehaviour
     public int GetUniqueID()
     {
         return UniqueID;
+    }
+    public void Show()
+    {
+        gameObject.SetActive(true);
+    }
+    public void Hide()
+    {
+        gameObject.SetActive(false);
     }
 }
 

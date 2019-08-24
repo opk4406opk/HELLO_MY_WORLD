@@ -27,10 +27,10 @@ public enum BlockTileType
 /// </summary>
 public struct BlockTileInfo
 {
-    public string name;
-    public int posX;
-    public int posY;
-    public BlockTileType type;
+    public string Name;
+    public int PositionX;
+    public int PositionY;
+    public BlockTileType Type;
 }
 
 /// <summary>
@@ -38,15 +38,15 @@ public struct BlockTileInfo
 /// </summary>
 public class BlockTileDataFile : BaseDataFile
 {
-    private Dictionary<BlockTileType, BlockTileInfo> tileDatas;
+    private Dictionary<BlockTileType, BlockTileInfo> TileDatas;
 
-    public static BlockTileDataFile instance = null;
+    public static BlockTileDataFile Instance = null;
     public override void Init ()
     {
         //
-        instance = this;
+        Instance = this;
         //
-        tileDatas = new Dictionary<BlockTileType, BlockTileInfo>();
+        TileDatas = new Dictionary<BlockTileType, BlockTileInfo>();
         JsonFile = Resources.Load(ConstFilePath.TXT_BLOCK_TILE_DATAS) as TextAsset;
         JsonObject = new JSONObject(JsonFile.text);
         AccessData(JsonObject);
@@ -55,13 +55,13 @@ public class BlockTileDataFile : BaseDataFile
     public BlockTileInfo GetBlockTileInfo(BlockTileType type)
     {
         BlockTileInfo tileInfo;
-        tileDatas.TryGetValue(type, out tileInfo);
+        TileDatas.TryGetValue(type, out tileInfo);
         return tileInfo;
     }
 
     public int GetBlockTileInfoCount()
     {
-        return tileDatas.Count;
+        return TileDatas.Count;
     }
 
     protected override void AccessData(JSONObject jsonObj)
@@ -76,14 +76,14 @@ public class BlockTileDataFile : BaseDataFile
                     var data = datas[idx].ToDictionary();
                     string extractedInfo;
                     data.TryGetValue("type_name", out extractedInfo);
-                    tileInfo.name = extractedInfo;
-                    tileInfo.type = KojeomUtility.StringToEnum<BlockTileType>(extractedInfo);
+                    tileInfo.Name = extractedInfo;
+                    tileInfo.Type = KojeomUtility.StringToEnum<BlockTileType>(extractedInfo);
                     data.TryGetValue("posX", out extractedInfo);
-                    tileInfo.posX = int.Parse(extractedInfo);
+                    tileInfo.PositionX = int.Parse(extractedInfo);
                     data.TryGetValue("posY", out extractedInfo);
-                    tileInfo.posY = int.Parse(extractedInfo);
+                    tileInfo.PositionY = int.Parse(extractedInfo);
                     //
-                    tileDatas.Add(tileInfo.type, tileInfo);
+                    TileDatas.Add(tileInfo.Type, tileInfo);
                 }
                 break;
             default:

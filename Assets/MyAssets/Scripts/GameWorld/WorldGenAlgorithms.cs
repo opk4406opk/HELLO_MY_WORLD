@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class WorldGenAlgorithms {
-
+public class WorldGenAlgorithms
+{
     private static List<Vector3> TreeSpawnCandidates = new List<Vector3>();
 
-    public static void DefaultGenWorld(Block[,,] worldBlockData, MakeWorldParam param)
+    public static void DefaultGenSurfaceWorld(Block[,,] worldBlockData, MakeWorldParam param)
     {
         Vector3 highestPoint = Vector3.zero;
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
@@ -16,25 +16,25 @@ public class WorldGenAlgorithms {
         {
             for (int z = 0; z < gameWorldConfig.sub_world_z_size; z++)
             {
-                int stone = WorldGenerateUtils.PerlinNoise(x, 20, z, 3, KojeomUtility.RandomInteger(1, 3), 2);
-                stone += param.BaseOffset;
-                int grass = WorldGenerateUtils.PerlinNoise(x, 21, z, 1, KojeomUtility.RandomInteger(1, 2), 1) + 1;
+                int internalTerrain = WorldGenerateUtils.PerlinNoise(x, 20, z, 3, KojeomUtility.RandomInteger(1, 3), 2);
+                internalTerrain += param.BaseOffset;
+                int surface = WorldGenerateUtils.PerlinNoise(x, 21, z, 1, KojeomUtility.RandomInteger(1, 2), 1) + 1;
 
                 for (int y = 0; y < gameWorldConfig.sub_world_y_size; y++)
                 {
-                    if (y <= stone)
+                    if (y <= internalTerrain)
                     {
-                        worldBlockData[x, y, z].Type = (byte)BlockTileDataFile.instance.GetBlockTileInfo(BlockTileType.STONE_BIG).type;
+                        worldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.GetBlockTileInfo(BlockTileType.STONE_BIG).Type;
                     }
-                    else if (y <= grass + stone)
+                    else if (y <= surface + internalTerrain)
                     {
-                        worldBlockData[x, y, z].Type = (byte)BlockTileDataFile.instance.GetBlockTileInfo(BlockTileType.GRASS).type;
-                        if(y > highestPoint.y)
+                        worldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.GetBlockTileInfo(BlockTileType.GRASS).Type;
+                        if (y > highestPoint.y)
                         {
                             highestPoint = new Vector3(x, y, z);
                         }
                     }
-                    else if (y >= grass + stone && worldBlockData[x, y - 1, z].Type != (byte)BlockTileType.EMPTY)
+                    else if (y >= surface + internalTerrain && worldBlockData[x, y - 1, z].Type != (byte)BlockTileType.EMPTY)
                     {
                         TreeSpawnCandidates.Add(new Vector3(x, y, z));
                     }
@@ -49,7 +49,7 @@ public class WorldGenAlgorithms {
         for (int spawnCnt = 0; spawnCnt < treeSpawnCount; spawnCnt++)
         {
             TreeType randTreeType = (TreeType)KojeomUtility.RandomInteger(0, (int)TreeType.COUNT);
-            switch(randTreeType)
+            switch (randTreeType)
             {
                 case TreeType.NORMAL:
                     EnviromentGenAlgorithms.GenerateDefaultTree(worldBlockData, TreeSpawnCandidates[KojeomUtility.RandomInteger(0, TreeSpawnCandidates.Count)]);
@@ -59,8 +59,25 @@ public class WorldGenAlgorithms {
                     break;
             }
         }
-        // (test..) Water area.
         EnviromentGenAlgorithms.MakeDefaultWaterArea(highestPoint, worldBlockData);
+    }
+
+    public static void DefaultGenInternalWorld(Block[,,] worldBlockData)
+    {
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
+        // perlin 알고리즘을 이용해 지형을 생성한다.
+        for (int x = 0; x < gameWorldConfig.sub_world_x_size; x++)
+        {
+            for (int z = 0; z < gameWorldConfig.sub_world_z_size; z++)
+            {
+                for (int y = 0; y < gameWorldConfig.sub_world_y_size; y++)
+                {
+                    worldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.GetBlockTileInfo(BlockTileType.STONE_BIG).Type;
+                }
+            }
+        }
+        // caves
+        GenerateSphereCaves(worldBlockData);
     }
 
     /// <summary>
@@ -87,8 +104,8 @@ public class WorldGenAlgorithms {
                     int cave = WorldGenerateUtils.PerlinNoise(x, y * 3, z, 2, 18, 1);
                     if (cave > y)
                     {
-                        worldBlockData[x, y, z].Type = (byte)BlockTileDataFile.instance.
-                            GetBlockTileInfo(BlockTileType.EMPTY).type;
+                        worldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.
+                            GetBlockTileInfo(BlockTileType.EMPTY).Type;
                         WorldGenerateUtils.FloodFill(new FloodFillNode(x, y, z), BlockTileType.SAND, BlockTileType.EMPTY,
                                     worldBlockData, 4);
                     }

@@ -196,9 +196,17 @@ public class World : MonoBehaviour
             case DetailSingleMode.LOAD_GAME:
                 if(isReLoaded == false)
                 {
-                    MakeWorldParam param;
-                    param.BaseOffset = KojeomUtility.RandomInteger(2, 29);
-                    WorldGenAlgorithms.DefaultGenWorld(WorldBlockData, param);
+                    if(bSurfaceWorld == true)
+                    {
+                        MakeWorldParam param;
+                        param.BaseOffset = KojeomUtility.RandomInteger(2, 29);
+                        WorldGenAlgorithms.DefaultGenSurfaceWorld(WorldBlockData, param);
+                    }
+                    else
+                    {
+                        WorldGenAlgorithms.DefaultGenInternalWorld(WorldBlockData);
+                    }
+                   
                 }
                 break;
         }
@@ -354,6 +362,6 @@ public class World : MonoBehaviour
                 }
             }
         }
-        return highest;
+        return highest + (gameWorldConfig.sub_world_y_size * WorldOffsetCoordinate.y);
     }
 }

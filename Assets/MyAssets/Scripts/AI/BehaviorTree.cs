@@ -75,31 +75,41 @@ public abstract class BehaviorTree
     protected ActorController ActorControllerInstance;
     protected BlackBoard BlackBoardInstance;
     protected IEnumerator BehaviorProcessInstance;
+    protected bool bRunningBT = false;
 
     public abstract void Initialize(ActorController actorController);
     protected IEnumerator BehaviorProcess()
     {
         KojeomLogger.DebugLog("BehaviorProcess Start!!");
-        //while (!RootNode.Invoke(Time.deltaTime)) yield return null;
-        while(true)
+        while(bRunningBT == true)
         {
-            RootNode.Invoke(Time.deltaTime);
+            if(ActorControllerInstance != null && ActorControllerInstance.IsContactGround() == true)
+            {
+                RootNode.Invoke(Time.deltaTime);
+            }
             yield return null;
         }
         KojeomLogger.DebugLog("Behavior process exit");
     }
     public void StartBT()
     {
+        bRunningBT = true;
         BehaviorProcessInstance = BehaviorProcess();
         ActorControllerInstance.StartCoroutine(BehaviorProcessInstance);
     }
     public void StopBT()
     {
+        bRunningBT = false;
         ActorControllerInstance.StopCoroutine(BehaviorProcessInstance);
     }
 
     public BlackBoard GetBlackBoard()
     {
         return BlackBoardInstance;
+    }
+
+    public bool IsRunning()
+    {
+        return bRunningBT;
     }
 }
