@@ -13,9 +13,9 @@ public struct MakeWorldParam
     public int BaseOffset;
 }
 /// <summary>
-/// 게임내 월드를 생성 및 관리하는 클래스.
+/// 게임내 Sub-월드를 생성 및 관리하는 클래스.
 /// </summary>
-public class World : MonoBehaviour
+public class SubWorld : MonoBehaviour
 {
     #region event
     public delegate void Del_OnFinishLoadChunks(string uniqueID);
@@ -200,11 +200,11 @@ public class World : MonoBehaviour
                     {
                         MakeWorldParam param;
                         param.BaseOffset = KojeomUtility.RandomInteger(2, 29);
-                        WorldGenAlgorithms.DefaultGenSurfaceWorld(WorldBlockData, param);
+                        WorldGenAlgorithms.DefaultGenSurfaceSubWorld(WorldBlockData, param);
                     }
                     else
                     {
-                        WorldGenAlgorithms.DefaultGenInternalWorld(WorldBlockData);
+                        WorldGenAlgorithms.DefaultGenInternalSubWorld(WorldBlockData);
                     }
                    
                 }

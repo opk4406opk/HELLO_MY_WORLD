@@ -21,7 +21,7 @@ public class MerchantNPC : NPCActor, IMerchantNPC
         SellingItemIds = ids;
     }
 
-    public override void Init(ActorSpawnData spawnData, World world, int spawnID)
+    public override void Init(ActorSpawnData spawnData, SubWorld world, int spawnID)
     {
         ActorType = spawnData.ActorType;
         HealthPoint = spawnData.HP;

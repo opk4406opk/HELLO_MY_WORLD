@@ -50,17 +50,17 @@ public class NPCManager : NPCSpawner
             instance.transform.parent = ActorSuperviosr.Instance.GetSpawnedGroupTransform();
             //
             WorldManager.Instance.WholeWorldStates.TryGetValue(worldUniqueID, out WorldState worldState);
-            if(worldState.realTimeStatus == WorldRealTimeStatus.Loading ||
-               worldState.realTimeStatus == WorldRealTimeStatus.LoadFinish)
+            if(worldState.RealTimeStatus == WorldRealTimeStatus.Loading ||
+               worldState.RealTimeStatus == WorldRealTimeStatus.LoadFinish)
             {
-                worldState.subWorldInstance.RegisterActor(instance);
+                worldState.SubWorldInstance.RegisterActor(instance);
                 int spanwID = instance.GetHashCode();
                 //
                 switch (spawnData.NpcType)
                 {
                     case NPC_TYPE.Merchant:
                     case NPC_TYPE.Guard:
-                        instance.Init(spawnData, worldState.subWorldInstance, spanwID);
+                        instance.Init(spawnData, worldState.SubWorldInstance, spanwID);
                         if(initShow == false)
                         {
                             instance.Hide();

@@ -24,10 +24,10 @@ public class AnimalManager : AnimalSpawner
             instance.transform.parent = ActorSuperviosr.Instance.GetSpawnedGroupTransform();
             //
             WorldManager.Instance.WholeWorldStates.TryGetValue(worldUniqueID, out WorldState worldState);
-            if (worldState.realTimeStatus == WorldRealTimeStatus.Loading ||
-               worldState.realTimeStatus == WorldRealTimeStatus.LoadFinish)
+            if (worldState.RealTimeStatus == WorldRealTimeStatus.Loading ||
+               worldState.RealTimeStatus == WorldRealTimeStatus.LoadFinish)
             {
-                worldState.subWorldInstance.RegisterActor(instance);
+                worldState.SubWorldInstance.RegisterActor(instance);
                 int spanwID = instance.GetHashCode();
                 //
                 switch (spawnData.AnimalType)
@@ -38,7 +38,7 @@ public class AnimalManager : AnimalSpawner
                     case ANIMAL_TYPE.Lion:
                     case ANIMAL_TYPE.Pig:
                     case ANIMAL_TYPE.Cow:
-                        instance.Init(spawnData, worldState.subWorldInstance, spanwID);
+                        instance.Init(spawnData, worldState.SubWorldInstance, spanwID);
                         if (initShow == false)
                         {
                             instance.Hide();

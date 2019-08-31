@@ -13,7 +13,7 @@ public enum ChunkType
 
 public abstract class AChunk : MonoBehaviour {
 
-	public World World { set; get; }
+	public SubWorld World { set; get; }
 	protected List<Vector3> NewVertices = new List<Vector3>();
 	protected List<int> NewTriangles = new List<int>();
 	protected List<Vector2> NewUV = new List<Vector2>();
@@ -24,7 +24,7 @@ public abstract class AChunk : MonoBehaviour {
 	/// </summary>
 	protected float TileUnit;
 	protected Vector2 TexturePos;
-	protected Mesh Mesh;
+	protected Mesh MeshInstance;
 	protected int FaceCount;
 
 	#region Components
@@ -207,16 +207,16 @@ public abstract class AChunk : MonoBehaviour {
 
 	protected void UpdateMesh()
 	{
-		Mesh.Clear();
-		Mesh.vertices = NewVertices.ToArray();
-		Mesh.uv = NewUV.ToArray();
-		Mesh.triangles = NewTriangles.ToArray();
-		Mesh.RecalculateNormals();
+		MeshInstance.Clear();
+		MeshInstance.vertices = NewVertices.ToArray();
+		MeshInstance.uv = NewUV.ToArray();
+		MeshInstance.triangles = NewTriangles.ToArray();
+		MeshInstance.RecalculateNormals();
 		//
 		switch(ChunkType)
 		{
 			case ChunkType.TERRAIN:
-				MeshColliderComponent.sharedMesh = Mesh;
+				MeshColliderComponent.sharedMesh = MeshInstance;
 				break;
 		}
 		//
@@ -228,7 +228,7 @@ public abstract class AChunk : MonoBehaviour {
 
 	public void Release()
 	{
-		Mesh.Clear();
+		MeshInstance.Clear();
 		NewVertices.Clear();
 		NewUV.Clear();
 		NewTriangles.Clear();

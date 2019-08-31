@@ -99,7 +99,7 @@ abstract public class Actor : MonoBehaviour
 
     public delegate void del_OnClickActor(Actor actor);
     abstract public event del_OnClickActor OnClickedActor;
-    abstract public void Init(ActorSpawnData spawnData, World world, int spawnID);
+    abstract public void Init(ActorSpawnData spawnData, SubWorld world, int spawnID);
     abstract public ActorController GetController();
     abstract public void Update();
 

@@ -7,7 +7,7 @@ public class WorldGenAlgorithms
 {
     private static List<Vector3> TreeSpawnCandidates = new List<Vector3>();
 
-    public static void DefaultGenSurfaceWorld(Block[,,] worldBlockData, MakeWorldParam param)
+    public static void DefaultGenSurfaceSubWorld(Block[,,] subWorldBlockData, MakeWorldParam param)
     {
         Vector3 highestPoint = Vector3.zero;
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
@@ -24,17 +24,17 @@ public class WorldGenAlgorithms
                 {
                     if (y <= internalTerrain)
                     {
-                        worldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.GetBlockTileInfo(BlockTileType.STONE_BIG).Type;
+                        subWorldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.GetBlockTileInfo(BlockTileType.STONE_BIG).Type;
                     }
                     else if (y <= surface + internalTerrain)
                     {
-                        worldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.GetBlockTileInfo(BlockTileType.GRASS).Type;
+                        subWorldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.GetBlockTileInfo(BlockTileType.GRASS).Type;
                         if (y > highestPoint.y)
                         {
                             highestPoint = new Vector3(x, y, z);
                         }
                     }
-                    else if (y >= surface + internalTerrain && worldBlockData[x, y - 1, z].Type != (byte)BlockTileType.EMPTY)
+                    else if (y >= surface + internalTerrain && subWorldBlockData[x, y - 1, z].Type != (byte)BlockTileType.EMPTY)
                     {
                         TreeSpawnCandidates.Add(new Vector3(x, y, z));
                     }
@@ -43,7 +43,7 @@ public class WorldGenAlgorithms
             }
         }
         // caves
-        GenerateSphereCaves(worldBlockData);
+        GenerateSphereCaves(subWorldBlockData);
         // various trees.
         int treeSpawnCount = KojeomUtility.RandomInteger(3, 7);
         for (int spawnCnt = 0; spawnCnt < treeSpawnCount; spawnCnt++)
@@ -52,17 +52,17 @@ public class WorldGenAlgorithms
             switch (randTreeType)
             {
                 case TreeType.NORMAL:
-                    EnviromentGenAlgorithms.GenerateDefaultTree(worldBlockData, TreeSpawnCandidates[KojeomUtility.RandomInteger(0, TreeSpawnCandidates.Count)]);
+                    EnviromentGenAlgorithms.GenerateDefaultTree(subWorldBlockData, TreeSpawnCandidates[KojeomUtility.RandomInteger(0, TreeSpawnCandidates.Count)]);
                     break;
                 case TreeType.SQAURE:
-                    EnviromentGenAlgorithms.GenerateSqaureTree(worldBlockData, TreeSpawnCandidates[KojeomUtility.RandomInteger(0, TreeSpawnCandidates.Count)]);
+                    EnviromentGenAlgorithms.GenerateSqaureTree(subWorldBlockData, TreeSpawnCandidates[KojeomUtility.RandomInteger(0, TreeSpawnCandidates.Count)]);
                     break;
             }
         }
-        EnviromentGenAlgorithms.MakeDefaultWaterArea(highestPoint, worldBlockData);
+        EnviromentGenAlgorithms.MakeDefaultWaterArea(highestPoint, subWorldBlockData);
     }
 
-    public static void DefaultGenInternalWorld(Block[,,] worldBlockData)
+    public static void DefaultGenInternalSubWorld(Block[,,] subWorldBlockData)
     {
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         // perlin 알고리즘을 이용해 지형을 생성한다.
@@ -72,19 +72,19 @@ public class WorldGenAlgorithms
             {
                 for (int y = 0; y < gameWorldConfig.sub_world_y_size; y++)
                 {
-                    worldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.GetBlockTileInfo(BlockTileType.STONE_BIG).Type;
+                    subWorldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.GetBlockTileInfo(BlockTileType.STONE_BIG).Type;
                 }
             }
         }
         // caves
-        GenerateSphereCaves(worldBlockData);
+        GenerateSphereCaves(subWorldBlockData);
     }
 
     /// <summary>
     /// flood fill 알고리즘을 이용한 Sphere 모양의 동굴 생성.
     /// </summary>
-    /// <param name="worldBlockData"></param>
-    private static void GenerateSphereCaves(Block[,,] worldBlockData)
+    /// <param name="subWorldBlockData"></param>
+    private static void GenerateSphereCaves(Block[,,] subWorldBlockData)
     {
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         int startX = KojeomUtility.RandomInteger(3, gameWorldConfig.sub_world_x_size - 16);
@@ -104,10 +104,10 @@ public class WorldGenAlgorithms
                     int cave = WorldGenerateUtils.PerlinNoise(x, y * 3, z, 2, 18, 1);
                     if (cave > y)
                     {
-                        worldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.
+                        subWorldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.
                             GetBlockTileInfo(BlockTileType.EMPTY).Type;
                         WorldGenerateUtils.FloodFill(new FloodFillNode(x, y, z), BlockTileType.SAND, BlockTileType.EMPTY,
-                                    worldBlockData, 4);
+                                    subWorldBlockData, 4);
                     }
                 }
             }

@@ -102,7 +102,7 @@ public class ActorSuperviosr : MonoBehaviour
         WorldManager.Instance.WholeWorldStates.TryGetValue(worldUniqueID, out WorldState worldState);
         var data = new RequestSpawnActorData(worldUniqueID,
             KojeomUtility.RandomInteger(0, NPCDataFile.Instance.NpcSpawnDatas.Count - 1),
-            worldState.subWorldInstance.RandomPosAtSurface(), ACTOR_TYPE.NPC, num, spawnAndShow);
+            worldState.SubWorldInstance.RandomPosAtSurface(), ACTOR_TYPE.NPC, num, spawnAndShow);
         RequestSpawnNPCMessage msg = new RequestSpawnNPCMessage(data, npcType);
         RequestSpawnMessages.Enqueue(msg);
     }

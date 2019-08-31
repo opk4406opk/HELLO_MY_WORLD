@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class ActorController : MonoBehaviour
 {
-    abstract public void Init(World world, Actor instance);
+    abstract public void Init(SubWorld world, Actor instance);
     abstract public Transform GetActorTransform();
     abstract public void Tick(float deltaTime);
     abstract public void ChangeActorState(ActorStateType state);
@@ -13,7 +13,7 @@ public abstract class ActorController : MonoBehaviour
     protected AITypes CurAIType = AITypes.Common;
     protected BoxCollider BoxColliderInstance;
     protected StateMachineController StateMachineControllerInstance = new StateMachineController();
-    protected World ContainedWorld;
+    protected SubWorld ContainedWorld;
     protected Animator AnimatorInstance;
     protected BehaviorTree[] AIGroup = new BehaviorTree[(int)AITypes.COUNT];
     protected bool bContactTerrain = false;

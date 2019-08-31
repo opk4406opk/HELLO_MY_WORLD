@@ -25,9 +25,9 @@ public class GamePlayerManager : MonoBehaviour {
             {
                 foreach(var state in WorldManager.Instance.WholeWorldStates)
                 {
-                    if(state.Value.realTimeStatus == WorldRealTimeStatus.LoadFinish)
+                    if(state.Value.RealTimeStatus == WorldRealTimeStatus.LoadFinish)
                     {
-                        Vector3 worldInstPos = state.Value.subWorldInstance.WorldOffsetCoordinate;
+                        Vector3 worldInstPos = state.Value.SubWorldInstance.WorldOffsetCoordinate;
                         //
                         var instance = Instantiate(GameResourceSupervisor.GetInstance().GamePlayerPrefab.LoadSynchro(), Vector3.zero, Quaternion.identity);
                         MyGamePlayer = instance.GetComponent<GamePlayer>();

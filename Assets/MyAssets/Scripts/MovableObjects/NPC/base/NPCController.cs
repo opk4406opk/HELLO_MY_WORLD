@@ -10,7 +10,7 @@ public class NPCController : ActorController
     private NPCWalkState WalkState;
     private NPCRunState RunState;
 
-    public override void Init(World world, Actor instance)
+    public override void Init(SubWorld world, Actor instance)
     {
         ContainedWorld = world;
         AnimatorInstance = gameObject.GetComponent<Animator>();

@@ -177,7 +177,7 @@ public class GamePlayerController : MonoBehaviour {
         playerPos.y += 2.0f;
         PlayerCamera.transform.position = playerPos;
 
-        World containWorld = WorldManager.Instance.ContainedWorld(CharacterInstance.transform.position);
+        SubWorld containWorld = WorldManager.Instance.ContainedWorld(CharacterInstance.transform.position);
         if (containWorld == null)
         {
             return;

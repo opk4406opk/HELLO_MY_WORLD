@@ -23,7 +23,7 @@ public class TerrainChunk : AChunk
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         ChunkSize = gameWorldConfig.chunk_size;
         TileUnit = gameWorldConfig.one_tile_unit;
-        Mesh = GetComponent<MeshFilter>().mesh;
+        MeshInstance = GetComponent<MeshFilter>().mesh;
         MeshColliderComponent = GetComponent<MeshCollider>();
         GenerateMesh();
     }

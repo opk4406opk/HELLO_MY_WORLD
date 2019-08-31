@@ -12,7 +12,7 @@ using System.Text;
 /// 
 public class ModifyTerrain : MonoBehaviour
 {
-    private World world;
+    private SubWorld world;
     private int chunkSize = 0;
     public void Init()
     {
@@ -44,10 +44,10 @@ public class ModifyTerrain : MonoBehaviour
     {
         foreach (var element in WorldManager.Instance.WholeWorldStates)
         {
-            if (CustomAABB.IsInterSectPoint(element.Value.subWorldInstance.CustomOctreeInstance.RootMinBound,
-                element.Value.subWorldInstance.CustomOctreeInstance.RootMaxBound, clickWorldPos))
+            if (CustomAABB.IsInterSectPoint(element.Value.SubWorldInstance.CustomOctreeInstance.RootMinBound,
+                element.Value.SubWorldInstance.CustomOctreeInstance.RootMaxBound, clickWorldPos))
             {
-                world = element.Value.subWorldInstance;
+                world = element.Value.SubWorldInstance;
                 break;
             }
         }

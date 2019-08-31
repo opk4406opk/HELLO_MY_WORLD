@@ -9,7 +9,7 @@ public class AnimalController : ActorController
     private AnimalWalkState WalkState;
     private AnimalRunState RunState;
 
-    public override void Init(World world, Actor instance)
+    public override void Init(SubWorld world, Actor instance)
     {
         ContainedWorld = world;
         AnimatorInstance = gameObject.GetComponent<Animator>();
