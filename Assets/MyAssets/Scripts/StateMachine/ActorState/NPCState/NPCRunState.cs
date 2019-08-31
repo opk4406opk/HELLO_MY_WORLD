@@ -16,11 +16,9 @@ public class NPCRunState : AActorState, IState
 
     public void ReleaseState()
     {
-        throw new System.NotImplementedException();
     }
 
     public void UpdateState(float deltaTime)
     {
-        throw new System.NotImplementedException();
     }
 }

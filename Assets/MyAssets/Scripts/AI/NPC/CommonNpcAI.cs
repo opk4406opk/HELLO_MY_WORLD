@@ -7,7 +7,7 @@ public sealed class CommonNpcAI : BehaviorTree
     private Sequence SeqMoveForTarget = new Sequence();
 
     private BTNodeMoveForTarget MoveForTargetNode;
-    private BTNodeTimer TimerNode;
+    private BTNodeTimer TargetPosUpdateNode;
 
     public override void Initialize(ActorController actorController)
     {
@@ -15,10 +15,9 @@ public sealed class CommonNpcAI : BehaviorTree
         ActorControllerInstance = actorController;
         // create instance
         MoveForTargetNode = new BTNodeMoveForTarget(this, actorController);
-        MoveForTargetNode.InitPathFinder();
         //
-        TimerNode = new BTNodeTimer(this, actorController);
-        TimerNode.SetCallbackAfterTimer(() => {
+        TargetPosUpdateNode = new BTNodeTimer(this, actorController);
+        TargetPosUpdateNode.SetCallbackAfterTimer(() => {
             if (GamePlayerManager.Instance != null)
             {
                 BlackBoardInstance.PathFidningTargetPoint = GamePlayerManager.Instance.MyGamePlayer.Controller.GetPosition();
@@ -27,7 +26,7 @@ public sealed class CommonNpcAI : BehaviorTree
         //
         RootNode.AddChild(SeqMoveForTarget);
         // 이동 시퀀스
-        SeqMoveForTarget.AddChild(TimerNode);
+        SeqMoveForTarget.AddChild(TargetPosUpdateNode);
         SeqMoveForTarget.AddChild(MoveForTargetNode);
     }
 }

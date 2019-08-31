@@ -16,34 +16,75 @@ public abstract class ActorController : MonoBehaviour
     protected World ContainedWorld;
     protected Animator AnimatorInstance;
     protected BehaviorTree[] AIGroup = new BehaviorTree[(int)AITypes.COUNT];
-    protected bool bContactGround = false;
+    protected bool bContactTerrain = false;
+    protected bool bContactEnvrioment = false;
+    protected bool bContactActor = false;
 
-    public bool IsContactGround()
+    public bool IsContactTerrain()
     {
-        return bContactGround;
+        return bContactTerrain;
     }
+    public bool IsContactEnvrioment()
+    {
+        return bContactEnvrioment;
+    }
+    public bool IsContactActor()
+    {
+        return bContactActor;
+    }
+
 
     protected void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("TerrainChunk") == true)
+        if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.TERRAIN_CHUNK_LAYER))
         {
-            bContactGround = true;
+            bContactTerrain = true;
+        }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ENVIROMENT_CHUNK_LAYER))
+        {
+            bContactEnvrioment = true;
+        }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ACTOR_NPC_LAYER) ||
+                 collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ACTOR_ANIMAL_LAYER) ||
+                 collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ACTOR_MONSTER_LAYER))
+        {
+            bContactActor = true;
         }
     }
 
     protected void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("TerrainChunk") == true)
+        if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.TERRAIN_CHUNK_LAYER))
         {
-            bContactGround = false;
+            bContactTerrain = false;
+        }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ENVIROMENT_CHUNK_LAYER))
+        {
+            bContactEnvrioment = false;
+        }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ACTOR_NPC_LAYER) ||
+                 collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ACTOR_ANIMAL_LAYER) ||
+                 collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ACTOR_MONSTER_LAYER))
+        {
+            bContactActor = false;
         }
     }
 
     protected void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("TerrainChunk") == true)
+        if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.TERRAIN_CHUNK_LAYER))
         {
-            bContactGround = true;
+            bContactTerrain = true;
+        }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ENVIROMENT_CHUNK_LAYER))
+        {
+            bContactEnvrioment = true;
+        }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ACTOR_NPC_LAYER) ||
+                 collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ACTOR_ANIMAL_LAYER) ||
+                 collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ACTOR_MONSTER_LAYER))
+        {
+            bContactActor = true;
         }
     }
     public void Move(Vector3 dir, float speed)
