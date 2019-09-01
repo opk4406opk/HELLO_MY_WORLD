@@ -15,7 +15,7 @@ using System;
 [Obsolete("Save and Load Manager Deprecated. will be deleted soon.")]
 public class SaveAndLoadManager : MonoBehaviour {
 
-    private Dictionary<string, WorldState> GameWorldStates;
+    private Dictionary<string, SubWorldState> GameWorldStates;
     private byte[] mergeWorldData;
     private int mergeWorldSize = 0;
     private int mergeIdx = 0;

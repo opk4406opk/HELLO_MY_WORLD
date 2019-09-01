@@ -13,7 +13,7 @@ public enum ChunkType
 
 public abstract class AChunk : MonoBehaviour {
 
-	public SubWorld World { set; get; }
+	public SubWorld SubWorldInstance { set; get; }
 	protected List<Vector3> NewVertices = new List<Vector3>();
 	protected List<int> NewTriangles = new List<int>();
 	protected List<Vector2> NewUV = new List<Vector2>();
@@ -82,19 +82,17 @@ public abstract class AChunk : MonoBehaviour {
 	protected BlockTileType GetBlockType(int x, int y, int z)
 	{
 		var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-		if (x >= gameWorldConfig.sub_world_x_size ||
-			   x < 0 ||
-			   y >= gameWorldConfig.sub_world_y_size ||
-			   y < 0 ||
-			   z >= gameWorldConfig.sub_world_z_size ||
-			   z < 0)
+        Const<bool> bOverXrange = new Const<bool>(x >= gameWorldConfig.sub_world_x_size || x < 0);
+        Const<bool> bOverYrange = new Const<bool>(y >= gameWorldConfig.sub_world_y_size || y < 0);
+        Const<bool> bOverZrange = new Const<bool>(z >= gameWorldConfig.sub_world_z_size || z < 0);
+        if (bOverXrange.Value == true || bOverYrange.Value == true || bOverZrange.Value == true)
 		{
 			return BlockTileType.EMPTY;
 		}
-		return (BlockTileType)World.WorldBlockData[x, y, z].Type;
+		return (BlockTileType)SubWorldInstance.WorldBlockData[x, y, z].Type;
 	}
 
-	protected void CubeTopFace(float x, float y, float z, BlockTileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
+	protected void CubeTopFace(float x, float y, float z, BlockTileType tileType)
 	{
 		NewVertices.Add(new Vector3(x, y, z + 1));
 		NewVertices.Add(new Vector3(x + 1, y, z + 1));
@@ -108,7 +106,7 @@ public abstract class AChunk : MonoBehaviour {
 		CreateFace(TexturePos);
 	}
 
-	protected void CubeNorthFace(float x, float y, float z, BlockTileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
+	protected void CubeNorthFace(float x, float y, float z, BlockTileType tileType)
 	{
 
 		NewVertices.Add(new Vector3(x + 1, y - 1, z + 1));
@@ -124,7 +122,7 @@ public abstract class AChunk : MonoBehaviour {
 
 	}
 
-	protected void CubeEastFace(float x, float y, float z, BlockTileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
+	protected void CubeEastFace(float x, float y, float z, BlockTileType tileType)
 	{
 
 		NewVertices.Add(new Vector3(x + 1, y - 1, z));
@@ -140,7 +138,7 @@ public abstract class AChunk : MonoBehaviour {
 
 	}
 
-	protected void CubeSouthFace(float x, float y, float z, BlockTileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
+	protected void CubeSouthFace(float x, float y, float z, BlockTileType tileType)
 	{
 
 		NewVertices.Add(new Vector3(x, y - 1, z));
@@ -156,7 +154,7 @@ public abstract class AChunk : MonoBehaviour {
 
 	}
 
-	protected void CubeWestFace(float x, float y, float z, BlockTileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
+	protected void CubeWestFace(float x, float y, float z, BlockTileType tileType)
 	{
 
 		NewVertices.Add(new Vector3(x, y - 1, z + 1));
@@ -172,7 +170,7 @@ public abstract class AChunk : MonoBehaviour {
 
 	}
 
-	protected void CubeBottomFace(float x, float y, float z, BlockTileType tileType, int blockIdxX, int blockIdxY, int blockIdxZ)
+	protected void CubeBottomFace(float x, float y, float z, BlockTileType tileType)
 	{
 
 		NewVertices.Add(new Vector3(x, y - 1, z));

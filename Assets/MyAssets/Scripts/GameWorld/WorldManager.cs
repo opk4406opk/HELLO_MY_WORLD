@@ -30,13 +30,13 @@ public struct SubWorldNormalizedOffset
     public int Y;
     public int Z;
 }
-public class WorldState
+public class SubWorldState
 {
     public SubWorld SubWorldInstance;
-    public WorldRealTimeStatus RealTimeStatus = WorldRealTimeStatus.None;
+    public SubWorldRealTimeStatus RealTimeStatus = SubWorldRealTimeStatus.None;
 }
 
-public enum WorldRealTimeStatus
+public enum SubWorldRealTimeStatus
 {
     None,
     NotLoaded,
@@ -52,7 +52,7 @@ public class WorldManager : MonoBehaviour
     private Transform WorldGroupTrans;
     public static WorldManager Instance { get; private set; }
 
-    public Dictionary<string, WorldState> WholeWorldStates { get; } = new Dictionary<string, WorldState>();
+    public Dictionary<string, SubWorldState> WholeWorldStates { get; } = new Dictionary<string, SubWorldState>();
 
     public void Init()
     {
@@ -100,7 +100,7 @@ public class WorldManager : MonoBehaviour
         return await Task.Run(() => {
             Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
 
-            WholeWorldStates.TryGetValue(uniqueID, out WorldState state);
+            WholeWorldStates.TryGetValue(uniqueID, out SubWorldState state);
             string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", state.SubWorldInstance.WorldName);
             // 파일 생성.
             BinaryFormatter bf = new BinaryFormatter();
@@ -134,7 +134,7 @@ public class WorldManager : MonoBehaviour
     {
         // deserializing.
         return await Task.Run(()=> {
-            WholeWorldStates.TryGetValue(uniqueID, out WorldState worldState);
+            WholeWorldStates.TryGetValue(uniqueID, out SubWorldState worldState);
             string fileName = worldState.SubWorldInstance.WorldName;
             string filePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", fileName);
             // 파일 열기.
@@ -149,8 +149,8 @@ public class WorldManager : MonoBehaviour
     public async void LoadAsyncSubWorldFile(string uniqueID)
     {
         // 로딩 상태로 전환.
-        WholeWorldStates.TryGetValue(uniqueID, out WorldState worldState);
-        worldState.RealTimeStatus = WorldRealTimeStatus.Loading;
+        WholeWorldStates.TryGetValue(uniqueID, out SubWorldState worldState);
+        worldState.RealTimeStatus = SubWorldRealTimeStatus.Loading;
         // 실제 파일을 로딩.
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} Start and Waiting Async Load from file.", uniqueID));
         var loadedWorldData = await LoadSubWorldFile(uniqueID);
@@ -170,10 +170,10 @@ public class WorldManager : MonoBehaviour
             subWorld.OnFinishRelease += OnFinishReleaseSubWorldInstance;
             subWorld.Init(subWorldData);
             //add world.
-            WorldState worldState = new WorldState
+            SubWorldState worldState = new SubWorldState
             {
                 SubWorldInstance = subWorld,
-                RealTimeStatus = WorldRealTimeStatus.NotLoaded
+                RealTimeStatus = SubWorldRealTimeStatus.NotLoaded
             };
             WholeWorldStates.Add(subWorldData.UniqueID, worldState);
         }
@@ -190,10 +190,10 @@ public class WorldManager : MonoBehaviour
 
     private void OnFinishSubWorldLoadChunks(string uniqueID)
     {
-        WholeWorldStates.TryGetValue(uniqueID, out WorldState worldState);
-        worldState.RealTimeStatus = WorldRealTimeStatus.LoadFinish;
+        WholeWorldStates.TryGetValue(uniqueID, out SubWorldState worldState);
+        worldState.RealTimeStatus = SubWorldRealTimeStatus.LoadFinish;
         //
-        //NCP 생성 테스트. 
+        //NPC 생성 테스트. 
         if(worldState.SubWorldInstance.bSurfaceWorld == true)
         {
             ActorSuperviosr.Instance.RequestSpawnRandomNPC(NPC_TYPE.Merchant, uniqueID, 1, true);
@@ -205,9 +205,9 @@ public class WorldManager : MonoBehaviour
         switch(WholeWorldStates[uniqueID].RealTimeStatus)
         {
             //case WorldRealTimeStatus.Loading:
-            case WorldRealTimeStatus.LoadFinish:
+            case SubWorldRealTimeStatus.LoadFinish:
                 // 릴리즈 상태로 전환.
-                WholeWorldStates[uniqueID].RealTimeStatus = WorldRealTimeStatus.Release;
+                WholeWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Release;
                 // 메모리 해제 직전, Sub WorldData를 외부 파일로 저장.
                 SaveAsyncSubWorldFile(uniqueID);
                 // 메모리 해제 시작.
@@ -219,7 +219,7 @@ public class WorldManager : MonoBehaviour
 
     private void OnFinishReleaseSubWorldInstance(string uniqueID)
     {
-        WholeWorldStates[uniqueID].RealTimeStatus = WorldRealTimeStatus.ReleaseFinish;
+        WholeWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.ReleaseFinish;
     }
 
     /// <summary>
@@ -278,14 +278,14 @@ public class WorldManager : MonoBehaviour
                         {
                             switch (WholeWorldStates[uniqueID].RealTimeStatus)
                             {
-                                case WorldRealTimeStatus.None:
+                                case SubWorldRealTimeStatus.None:
                                     // nothing to do.
                                     break;
-                                case WorldRealTimeStatus.NotLoaded:
-                                    WholeWorldStates[uniqueID].RealTimeStatus = WorldRealTimeStatus.Loading;
+                                case SubWorldRealTimeStatus.NotLoaded:
+                                    WholeWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Loading;
                                     WholeWorldStates[uniqueID].SubWorldInstance.LoadSynchro();
                                     break;
-                                case WorldRealTimeStatus.ReleaseFinish:
+                                case SubWorldRealTimeStatus.ReleaseFinish:
                                     LoadAsyncSubWorldFile(uniqueID);
                                     break;
                             }

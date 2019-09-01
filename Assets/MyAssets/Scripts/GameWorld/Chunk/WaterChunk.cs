@@ -44,12 +44,12 @@ public class WaterChunk : AChunk
                         cubeZ = relativeZ + _RealCoordZ;
 
                         // 중첩되는 Face들은 버텍스를 생성하지 않는다.
-                        if (GetBlockType(blockIdxX, blockIdxY + 1, blockIdxZ) == BlockTileType.EMPTY) CubeTopFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
-                        if (GetBlockType(blockIdxX, blockIdxY - 1, blockIdxZ) == BlockTileType.EMPTY) CubeBottomFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
-                        if (GetBlockType(blockIdxX, blockIdxY, blockIdxZ + 1) == BlockTileType.EMPTY) CubeNorthFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
-                        if (GetBlockType(blockIdxX, blockIdxY, blockIdxZ - 1) == BlockTileType.EMPTY) CubeSouthFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
-                        if (GetBlockType(blockIdxX + 1, blockIdxY, blockIdxZ) == BlockTileType.EMPTY) CubeEastFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
-                        if (GetBlockType(blockIdxX - 1, blockIdxY, blockIdxZ) == BlockTileType.EMPTY) CubeWestFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
+                        if (GetBlockType(blockIdxX, blockIdxY + 1, blockIdxZ) == BlockTileType.EMPTY) CubeTopFace(cubeX, cubeY, cubeZ, blockType);
+                        if (GetBlockType(blockIdxX, blockIdxY - 1, blockIdxZ) == BlockTileType.EMPTY) CubeBottomFace(cubeX, cubeY, cubeZ, blockType);
+                        if (GetBlockType(blockIdxX, blockIdxY, blockIdxZ + 1) == BlockTileType.EMPTY) CubeNorthFace(cubeX, cubeY, cubeZ, blockType);
+                        if (GetBlockType(blockIdxX, blockIdxY, blockIdxZ - 1) == BlockTileType.EMPTY) CubeSouthFace(cubeX, cubeY, cubeZ, blockType);
+                        if (GetBlockType(blockIdxX + 1, blockIdxY, blockIdxZ) == BlockTileType.EMPTY) CubeEastFace(cubeX, cubeY, cubeZ, blockType);
+                        if (GetBlockType(blockIdxX - 1, blockIdxY, blockIdxZ) == BlockTileType.EMPTY) CubeWestFace(cubeX, cubeY, cubeZ, blockType);
 
                         // points 배열은 실제 블록을 생성할 때 쓰이는 8개의 포인트로 실제 월드 좌표값이다.
                         // 따라서, 이를 이용해 블록의 AABB의 Min, Max Extent 값을 정한다.
@@ -67,10 +67,10 @@ public class WaterChunk : AChunk
                         float blockCenterX = cubeX + 0.5f;
                         float blockCenterY = cubeY - 0.5f;
                         float blockCenterZ = cubeZ + 0.5f;
-                        World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterX = blockCenterX;
-                        World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterY = blockCenterY;
-                        World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterZ = blockCenterZ;
-                        World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].bRendered = true;
+                        SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterX = blockCenterX;
+                        SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterY = blockCenterY;
+                        SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterZ = blockCenterZ;
+                        SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].bRendered = true;
                     }
 
                 }

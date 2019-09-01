@@ -264,7 +264,7 @@ public class SubWorld : MonoBehaviour
                                 ChunkSlots[x, y, z].Chunks[type] = newChunk.GetComponent<EnviromentChunk>();
                                 break;
                         }
-                        ChunkSlots[x, y, z].Chunks[type].World = this;
+                        ChunkSlots[x, y, z].Chunks[type].SubWorldInstance = this;
                         ChunkSlots[x, y, z].Chunks[type].WorldDataIdxX = x * ChunkSize;
                         ChunkSlots[x, y, z].Chunks[type].WorldDataIdxY = y * ChunkSize;
                         ChunkSlots[x, y, z].Chunks[type].WorldDataIdxZ = z * ChunkSize;

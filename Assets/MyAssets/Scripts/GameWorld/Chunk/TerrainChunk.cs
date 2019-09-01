@@ -49,12 +49,12 @@ public class TerrainChunk : AChunk
                         cubeY = relativeY + _RealCoordY;
                         cubeZ = relativeZ + _RealCoordZ;
 
-                        CubeTopFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
-                        CubeBottomFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
-                        CubeNorthFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
-                        CubeSouthFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
-                        CubeEastFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
-                        CubeWestFace(cubeX, cubeY, cubeZ, blockType, blockIdxX, blockIdxY, blockIdxZ);
+                        CubeTopFace(cubeX, cubeY, cubeZ, blockType);
+                        CubeBottomFace(cubeX, cubeY, cubeZ, blockType);
+                        CubeNorthFace(cubeX, cubeY, cubeZ, blockType);
+                        CubeSouthFace(cubeX, cubeY, cubeZ, blockType);
+                        CubeEastFace(cubeX, cubeY, cubeZ, blockType);
+                        CubeWestFace(cubeX, cubeY, cubeZ, blockType);
 
                         // points 배열은 실제 블록을 생성할 때 쓰이는 8개의 포인트로 실제 월드 좌표값이다.
                         // 따라서, 이를 이용해 블록의 AABB의 Min, Max Extent 값을 정한다.
@@ -72,12 +72,12 @@ public class TerrainChunk : AChunk
                         float blockCenterX = cubeX + 0.5f;
                         float blockCenterY = cubeY - 0.5f;
                         float blockCenterZ = cubeZ + 0.5f;
-                        World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterX = blockCenterX;
-                        World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterY = blockCenterY;
-                        World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterZ = blockCenterZ;
-                        World.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].bRendered = true;
+                        SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterX = blockCenterX;
+                        SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterY = blockCenterY;
+                        SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterZ = blockCenterZ;
+                        SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].bRendered = true;
                         // 월드맵에 생성된 블록의 중앙점을 이용해 Octree의 노드를 생성합니다.
-                        World.CustomOctreeInstance.Add(new Vector3(blockCenterX, blockCenterY, blockCenterZ));
+                        SubWorldInstance.CustomOctreeInstance.Add(new Vector3(blockCenterX, blockCenterY, blockCenterZ));
                     }
 
                 }

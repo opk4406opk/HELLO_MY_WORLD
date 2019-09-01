@@ -23,9 +23,9 @@ public class AnimalManager : AnimalSpawner
                 .GetComponent<Actor>();
             instance.transform.parent = ActorSuperviosr.Instance.GetSpawnedGroupTransform();
             //
-            WorldManager.Instance.WholeWorldStates.TryGetValue(worldUniqueID, out WorldState worldState);
-            if (worldState.RealTimeStatus == WorldRealTimeStatus.Loading ||
-               worldState.RealTimeStatus == WorldRealTimeStatus.LoadFinish)
+            WorldManager.Instance.WholeWorldStates.TryGetValue(worldUniqueID, out SubWorldState worldState);
+            if (worldState.RealTimeStatus == SubWorldRealTimeStatus.Loading ||
+               worldState.RealTimeStatus == SubWorldRealTimeStatus.LoadFinish)
             {
                 worldState.SubWorldInstance.RegisterActor(instance);
                 int spanwID = instance.GetHashCode();
