@@ -12,15 +12,15 @@ public class WorldGenAlgorithms
         Vector3 highestPoint = Vector3.zero;
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         // perlin 알고리즘을 이용해 지형을 생성한다.
-        for (int x = 0; x < gameWorldConfig.sub_world_x_size; x++)
+        for (int x = 0; x < gameWorldConfig.SubWorldSizeX; x++)
         {
-            for (int z = 0; z < gameWorldConfig.sub_world_z_size; z++)
+            for (int z = 0; z < gameWorldConfig.SubWorldSizeZ; z++)
             {
                 int internalTerrain = WorldGenerateUtils.PerlinNoise(x, 20, z, 3, KojeomUtility.RandomInteger(1, 3), 2);
                 internalTerrain += param.BaseOffset;
                 int surface = WorldGenerateUtils.PerlinNoise(x, 21, z, 1, KojeomUtility.RandomInteger(1, 2), 1) + 1;
 
-                for (int y = 0; y < gameWorldConfig.sub_world_y_size; y++)
+                for (int y = 0; y < gameWorldConfig.SubWorldSizeY; y++)
                 {
                     if (y <= internalTerrain)
                     {
@@ -66,11 +66,11 @@ public class WorldGenAlgorithms
     {
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         // perlin 알고리즘을 이용해 지형을 생성한다.
-        for (int x = 0; x < gameWorldConfig.sub_world_x_size; x++)
+        for (int x = 0; x < gameWorldConfig.SubWorldSizeX; x++)
         {
-            for (int z = 0; z < gameWorldConfig.sub_world_z_size; z++)
+            for (int z = 0; z < gameWorldConfig.SubWorldSizeZ; z++)
             {
-                for (int y = 0; y < gameWorldConfig.sub_world_y_size; y++)
+                for (int y = 0; y < gameWorldConfig.SubWorldSizeY; y++)
                 {
                     subWorldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.GetBlockTileInfo(BlockTileType.STONE_BIG).Type;
                 }
@@ -87,13 +87,13 @@ public class WorldGenAlgorithms
     private static void GenerateSphereCaves(Block[,,] subWorldBlockData)
     {
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        int startX = KojeomUtility.RandomInteger(3, gameWorldConfig.sub_world_x_size - 16);
-        int maxX = KojeomUtility.RandomInteger(startX, gameWorldConfig.sub_world_x_size);
+        int startX = KojeomUtility.RandomInteger(3, gameWorldConfig.SubWorldSizeX - 16);
+        int maxX = KojeomUtility.RandomInteger(startX, gameWorldConfig.SubWorldSizeX);
         //
-        int startZ = KojeomUtility.RandomInteger(3, gameWorldConfig.sub_world_z_size - 16);
-        int maxZ = KojeomUtility.RandomInteger(startX, gameWorldConfig.sub_world_z_size);
+        int startZ = KojeomUtility.RandomInteger(3, gameWorldConfig.SubWorldSizeZ - 16);
+        int maxZ = KojeomUtility.RandomInteger(startX, gameWorldConfig.SubWorldSizeZ);
         //
-        int maxY = KojeomUtility.RandomInteger(10, gameWorldConfig.sub_world_y_size - 10);
+        int maxY = KojeomUtility.RandomInteger(10, gameWorldConfig.SubWorldSizeY - 10);
         int startY = KojeomUtility.RandomInteger(5, maxY - 1);
         for (int x = startX; x < maxX; x++)
         {

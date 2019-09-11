@@ -4,13 +4,16 @@ using UnityEngine;
 
 public struct WorldConfig
 {
-    public float one_tile_unit;
-    public int sub_world_x_size;
-    public int sub_world_y_size;
-    public int sub_world_z_size;
-    public int chunk_size;
-    public float chunkLoadIntervalSeconds;
-    public WorldEnviromentsConfig enviromentsConfig;
+    public int SubWorld_Count_X_Axis_Per_WorldArea;
+    public int SubWorld_Count_Y_Axis_Per_WorldArea;
+    public int SubWorld_Count_Z_Axis_Per_WorldArea;
+    public float OneTileUnit;
+    public int SubWorldSizeX;
+    public int SubWorldSizeY;
+    public int SubWorldSizeZ;
+    public int ChunkSize;
+    public float ChunkLoadIntervalSeconds;
+    public WorldEnviromentsConfig EnviromentsConfig;
 }
 
 /// <summary>
@@ -50,23 +53,32 @@ public class WorldConfigFile : BaseDataFile
                 //to do
                 var data = JsonObject.ToDictionary();
                 string extractedValue;
-                data.TryGetValue("chunkLoadIntervalSeconds", out extractedValue);
-                Config.chunkLoadIntervalSeconds = float.Parse(extractedValue);
+                data.TryGetValue("ChunkLoadIntervalSeconds", out extractedValue);
+                Config.ChunkLoadIntervalSeconds = float.Parse(extractedValue);
                 //
-                data.TryGetValue("sub_world_x_size", out extractedValue);
-                Config.sub_world_x_size = int.Parse(extractedValue);
+                data.TryGetValue("SubWorldSizeX", out extractedValue);
+                Config.SubWorldSizeX = int.Parse(extractedValue);
                 //
-                data.TryGetValue("sub_world_y_size", out extractedValue);
-                Config.sub_world_y_size = int.Parse(extractedValue);
+                data.TryGetValue("SubWorldSizeY", out extractedValue);
+                Config.SubWorldSizeY = int.Parse(extractedValue);
                 //
-                data.TryGetValue("sub_world_z_size", out extractedValue);
-                Config.sub_world_z_size = int.Parse(extractedValue);
+                data.TryGetValue("SubWorldSizeZ", out extractedValue);
+                Config.SubWorldSizeZ = int.Parse(extractedValue);
                 //
-                data.TryGetValue("one_tile_unit", out extractedValue);
-                Config.one_tile_unit = float.Parse(extractedValue);
+                data.TryGetValue("OneTileUnit", out extractedValue);
+                Config.OneTileUnit = float.Parse(extractedValue);
                 //
-                data.TryGetValue("chunk_size", out extractedValue);
-                Config.chunk_size = int.Parse(extractedValue);
+                data.TryGetValue("ChunkSize", out extractedValue);
+                Config.ChunkSize = int.Parse(extractedValue);
+                //
+                data.TryGetValue("SubWorld_Count_X_Axis_Per_WorldArea", out extractedValue);
+                Config.SubWorld_Count_X_Axis_Per_WorldArea = int.Parse(extractedValue);
+                //
+                data.TryGetValue("SubWorld_Count_Y_Axis_Per_WorldArea", out extractedValue);
+                Config.SubWorld_Count_Y_Axis_Per_WorldArea = int.Parse(extractedValue);
+                //
+                data.TryGetValue("SubWorld_Count_Z_Axis_Per_WorldArea", out extractedValue);
+                Config.SubWorld_Count_Z_Axis_Per_WorldArea = int.Parse(extractedValue);
                 break;
             case JSONObject.Type.ARRAY:
                 break;

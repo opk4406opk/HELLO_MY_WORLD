@@ -6,7 +6,7 @@ public abstract class MovableObjectSpawner : MonoBehaviour
 {
     public abstract void Init();
     public abstract void RandomSpawn();
-    public abstract void SpawnActor(int uniqueID, string worldUniqueID, Vector3 spawnPos, int num, bool initShow = false);
+    public abstract void SpawnActor(int uniqueID, string subWorldUniqueID, string worldAreaUniqueID, Vector3 spawnPos, int num, bool initShow = false);
 
     protected Dictionary<int, Actor> ActorGroup { get; private set; } = new Dictionary<int, Actor>();
 

@@ -34,7 +34,7 @@ public class SaveAndLoadManager : MonoBehaviour {
     public void Init()
     {
         filePath = Application.dataPath + "/GameSavefile.dat";
-        GameWorldStates = WorldManager.Instance.WholeWorldStates;
+        //GameWorldStates = WorldAreaManager.Instance.SubWorldStates;
         lzfCompress = new LZFCompress();
         CalcWorldDataSize();
     }
@@ -79,11 +79,11 @@ public class SaveAndLoadManager : MonoBehaviour {
     private void SubWorldToTotalWorld(string uniqueID)
     {
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        for (int x = 0; x < gameWorldConfig.sub_world_x_size; ++x)
-            for (int y = 0; y < gameWorldConfig.sub_world_y_size; ++y)
-                for (int z = 0; z < gameWorldConfig.sub_world_z_size; ++z)
+        for (int x = 0; x < gameWorldConfig.SubWorldSizeX; ++x)
+            for (int y = 0; y < gameWorldConfig.SubWorldSizeY; ++y)
+                for (int z = 0; z < gameWorldConfig.SubWorldSizeZ; ++z)
                 {
-                    mergeIdx = (x * gameWorldConfig.sub_world_y_size * gameWorldConfig.sub_world_z_size) + (y * gameWorldConfig.sub_world_z_size) + z;
+                    mergeIdx = (x * gameWorldConfig.SubWorldSizeY * gameWorldConfig.SubWorldSizeZ) + (y * gameWorldConfig.SubWorldSizeZ) + z;
                     mergeWorldData[mergeIdx + mergeIdxOffset] = GameWorldStates[uniqueID].SubWorldInstance.WorldBlockData[x, y, z].Type;
                 }
         
@@ -187,7 +187,7 @@ public class SaveAndLoadManager : MonoBehaviour {
     private void CalcWorldDataSize()
     {
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        int subWorldSize = gameWorldConfig.sub_world_x_size * gameWorldConfig.sub_world_y_size * gameWorldConfig.sub_world_z_size;
+        int subWorldSize = gameWorldConfig.SubWorldSizeX * gameWorldConfig.SubWorldSizeY * gameWorldConfig.SubWorldSizeZ;
         mergeWorldSize = (subWorldSize * GameWorldStates.Count) + GameWorldStates.Count;
 
         int recordNum = 0;

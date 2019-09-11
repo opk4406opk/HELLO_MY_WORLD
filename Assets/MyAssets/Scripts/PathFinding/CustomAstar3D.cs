@@ -78,12 +78,12 @@ public class PathNode3D
 }
 public struct SimpleVector3
 {
-    public float X { get; set; }
-    public float Y { get; set; }
-    public float Z { get; set; }
+    public float x { get; set; }
+    public float y { get; set; }
+    public float z { get; set; }
 
-    public SimpleVector3(float x, float y, float z) { X = x; Y = y; Z = z; }
-    public SimpleVector3(Vector3 vec3) { X = vec3.x; Y = vec3.y; Z = vec3.z; }
+    public SimpleVector3(float x, float y, float z) { this.x = x; this.y = y; this.z = z; }
+    public SimpleVector3(Vector3 vec3) { x = vec3.x; y = vec3.y; z = vec3.z; }
 }
 /// <summary>
 /// 길찾기 시작에 필요한 초기화 데이터.
@@ -91,14 +91,18 @@ public struct SimpleVector3
 public struct PathFinderInitData
 {
     public Block[,,] WorldBlockData;
-    public int OffsetX, OffsetY, OffsetZ;
+    public int SubWorldOffsetX, SubWorldOffsetY, SubWorldOffsetZ;
+    public int WorldAreaOffsetX, WorldAreaOffsetY, WorldAreaOffsetZ;
 
-    public PathFinderInitData(Block[,,] blockData, int _offsetX, int _offsetY, int _offsetZ)
+    public PathFinderInitData(Block[,,] blockData, Vector3 subWorldOffset, Vector3 worldAreaOffset)
     {
         WorldBlockData = blockData;
-        OffsetX = _offsetX;
-        OffsetY = _offsetY;
-        OffsetZ = _offsetZ;
+        SubWorldOffsetX = (int)subWorldOffset.x;
+        SubWorldOffsetY = (int)subWorldOffset.y;
+        SubWorldOffsetZ = (int)subWorldOffset.z;
+        WorldAreaOffsetX = (int)worldAreaOffset.x;
+        WorldAreaOffsetY = (int)worldAreaOffset.y;
+        WorldAreaOffsetZ = (int)worldAreaOffset.z;
     }
 }
 public class CustomAstar3D : MonoBehaviour
@@ -106,18 +110,17 @@ public class CustomAstar3D : MonoBehaviour
     private PathNode3D[,,] PathFindMapData;
     private List<PathNode3D> OpenList = new List<PathNode3D>();
     private List<PathNode3D> ClosedList = new List<PathNode3D>();
-
     private List<Vector3> LoopDirections = new List<Vector3>();
-
     private PathNode3D CurrentNode, GoalNode;
-
-    private Block[,,] WorldBlockData;
-    private SimpleVector3 ActorPosition;
-
     private Stack<PathNode3D> NavigatePath = new Stack<PathNode3D>();
-
-    private int OffsetX = 0, OffsetY = 0, OffsetZ = 0;
+    private SimpleVector3 ActorPosition;
+    //
     private WorldConfig GameWorldConfing;
+    private PathFinderInitData InitData;
+    private int OffsetX = 0;
+    private int OffsetY = 0;
+    private int OffsetZ = 0;
+
 
     public delegate void Del_OnFinishAsyncPathFinding(Stack<PathNode3D> resultPath);
     public event Del_OnFinishAsyncPathFinding OnFinishAsyncPathFinding;
@@ -125,17 +128,19 @@ public class CustomAstar3D : MonoBehaviour
     public void Init(PathFinderInitData data, SimpleVector3 actorPosition)
     {
         //
+        InitData = data;
         ActorPosition = actorPosition;
         GameWorldConfing = WorldConfigFile.Instance.GetConfig();
         //
-        OffsetX = data.OffsetX;
-        OffsetY = data.OffsetY;
-        OffsetZ = data.OffsetZ;
-        WorldBlockData = data.WorldBlockData;
-        PathFindMapData = new PathNode3D[GameWorldConfing.sub_world_x_size, GameWorldConfing.sub_world_y_size, GameWorldConfing.sub_world_z_size];
-        for (int x = 0; x < GameWorldConfing.sub_world_x_size; x++)
-            for (int y = 0; y < GameWorldConfing.sub_world_y_size; y++)
-                for (int z = 0; z < GameWorldConfing.sub_world_z_size; z++)
+        var mapData = WorldMapDataFile.Instance.WorldMapDataInstance;
+        OffsetX = (InitData.SubWorldOffsetX * GameWorldConfing.SubWorldSizeX) + (InitData.WorldAreaOffsetX * mapData.SubWorldRow * GameWorldConfing.SubWorldSizeX);
+        OffsetY = (InitData.SubWorldOffsetY * GameWorldConfing.SubWorldSizeY) + (InitData.WorldAreaOffsetY * mapData.SubWorldColumn * GameWorldConfing.SubWorldSizeY);
+        OffsetZ = (InitData.SubWorldOffsetZ * GameWorldConfing.SubWorldSizeZ) + (InitData.WorldAreaOffsetZ * mapData.SubWorldLayer * GameWorldConfing.SubWorldSizeZ);
+        //
+        PathFindMapData = new PathNode3D[GameWorldConfing.SubWorldSizeX, GameWorldConfing.SubWorldSizeY, GameWorldConfing.SubWorldSizeZ];
+        for (int x = 0; x < GameWorldConfing.SubWorldSizeX; x++)
+            for (int y = 0; y < GameWorldConfing.SubWorldSizeY; y++)
+                for (int z = 0; z < GameWorldConfing.SubWorldSizeZ; z++)
                 {
                     PathFindMapData[x, y, z] = new PathNode3D();
                     PathFindMapData[x, y, z].PathMapDataX = x;
@@ -146,14 +151,42 @@ public class CustomAstar3D : MonoBehaviour
                 }
         InitLoopDirection();
     }
+
+    private Vector3 ConvertPathToWorldCoordinate(SimpleVector3 pathPosition)
+    {
+        return new Vector3(pathPosition.x + OffsetX, pathPosition.y + OffsetY, pathPosition.z + OffsetZ);
+    }
+
+    private Vector3 ConvertPathToWorldCoordinate(Vector3 pathPosition)
+    {
+        return new Vector3(pathPosition.x + OffsetX, pathPosition.y + OffsetY, pathPosition.z + OffsetZ);
+    }
+
+    private Vector3 ConvertWorldToPathCoordinate(SimpleVector3 worldPosition)
+    {
+        int x = Mathf.Clamp((int)worldPosition.x - OffsetX, 0, GameWorldConfing.SubWorldSizeX - 1);
+        int y = Mathf.Clamp((int)worldPosition.y - OffsetY, 0, GameWorldConfing.SubWorldSizeY - 1);
+        int z = Mathf.Clamp((int)worldPosition.z - OffsetZ, 0, GameWorldConfing.SubWorldSizeZ - 1);
+        return new Vector3(x, y, z);
+    }
+
+    private Vector3 ConvertWorldToPathCoordinate(Vector3 worldPosition)
+    {
+        int x = Mathf.Clamp((int)worldPosition.x - OffsetX, 0, GameWorldConfing.SubWorldSizeX - 1);
+        int y = Mathf.Clamp((int)worldPosition.y - OffsetY, 0, GameWorldConfing.SubWorldSizeY - 1);
+        int z = Mathf.Clamp((int)worldPosition.z - OffsetZ, 0, GameWorldConfing.SubWorldSizeZ - 1);
+        return new Vector3(x, y, z);
+    }
+
     private void ExtractNavigatePath()
     {
         PathNode3D path = GoalNode;
         while (path.ParentNode != null)
         {
-            path.WorldCoordX = path.PathMapDataX + OffsetX * GameWorldConfing.sub_world_x_size;
-            path.WorldCoordY = path.PathMapDataY + OffsetY * GameWorldConfing.sub_world_y_size;
-            path.WorldCoordZ = path.PathMapDataZ + OffsetZ * GameWorldConfing.sub_world_z_size;
+            Vector3 worldPos = ConvertPathToWorldCoordinate(new SimpleVector3(path.PathMapDataX, path.PathMapDataY, path.PathMapDataZ));
+            path.WorldCoordX = (int)worldPos.x;
+            path.WorldCoordY = (int)worldPos.y;
+            path.WorldCoordZ = (int)worldPos.z;
             NavigatePath.Push(path);
             path = path.ParentNode;
         }
@@ -226,11 +259,8 @@ public class CustomAstar3D : MonoBehaviour
 
     private void SetStartPathNode()
     {
-        // 각 sub World 마다 간격이 있으므로 해당 간격에 맞추어 offset 값을 추가.
-        int x = Mathf.Clamp((int)ActorPosition.X - OffsetX * GameWorldConfing.sub_world_x_size, 0, GameWorldConfing.sub_world_x_size);
-        int y = Mathf.Clamp((int)ActorPosition.Y - OffsetY * GameWorldConfing.sub_world_y_size, 0, GameWorldConfing.sub_world_y_size);
-        int z = Mathf.Clamp((int)ActorPosition.Z - OffsetZ * GameWorldConfing.sub_world_z_size, 0, GameWorldConfing.sub_world_z_size);
-        CurrentNode = PathFindMapData[x, y, z];
+        Vector3 toPathCoordinate = ConvertWorldToPathCoordinate(ActorPosition);
+        CurrentNode = PathFindMapData[(int)toPathCoordinate.x, (int)toPathCoordinate.y, (int)toPathCoordinate.z];
         CurrentNode.ParentNode = null;
         CurrentNode.CalcHValue(GoalNode);
         CurrentNode.CalcGValue();
@@ -239,21 +269,15 @@ public class CustomAstar3D : MonoBehaviour
 
     public void SetGoalPathNode(int worldCoordX, int worldCoordY, int worldCoordZ)
     {
-        // 각 sub World 마다 간격이 있으므로 해당 간격에 맞추어 offset 값을 추가.
-        int mapX = Mathf.Clamp(worldCoordX - OffsetX * GameWorldConfing.sub_world_x_size, 0, GameWorldConfing.sub_world_x_size);
-        int mapY = Mathf.Clamp(worldCoordY - OffsetY * GameWorldConfing.sub_world_y_size, 0, GameWorldConfing.sub_world_y_size);
-        int mapZ = Mathf.Clamp(worldCoordZ - OffsetZ * GameWorldConfing.sub_world_z_size, 0, GameWorldConfing.sub_world_z_size);
-        GoalNode = PathFindMapData[mapX, mapY, mapZ];
+        Vector3 toPathCoordinate = ConvertWorldToPathCoordinate(ActorPosition);
+        GoalNode = PathFindMapData[(int)toPathCoordinate.x, (int)toPathCoordinate.y, (int)toPathCoordinate.z];
         GoalNode.bGoalNode = true;
     }
 
     public void SetGoalPathNode(Vector3 worldPosition)
     {
-        // 각 sub World 마다 간격이 있으므로 해당 간격에 맞추어 offset 값을 추가.
-        int mapX = Mathf.Clamp((int)worldPosition.x - OffsetX * GameWorldConfing.sub_world_x_size, 0, GameWorldConfing.sub_world_x_size);
-        int mapY = Mathf.Clamp((int)worldPosition.y - OffsetY * GameWorldConfing.sub_world_y_size, 0, GameWorldConfing.sub_world_y_size);
-        int mapZ = Mathf.Clamp((int)worldPosition.z - OffsetZ * GameWorldConfing.sub_world_z_size, 0, GameWorldConfing.sub_world_z_size);
-        GoalNode = PathFindMapData[mapX, mapY, mapZ];
+        Vector3 toPathCoordinate = ConvertWorldToPathCoordinate(new SimpleVector3(worldPosition));
+        GoalNode = PathFindMapData[(int)toPathCoordinate.x, (int)toPathCoordinate.y, (int)toPathCoordinate.z];
         GoalNode.bGoalNode = true;
     }
 
@@ -263,9 +287,9 @@ public class CustomAstar3D : MonoBehaviour
     /// </summary>
     private void InitPathFindMapData()
     {
-        for (int x = 0; x < GameWorldConfing.sub_world_x_size; x++)
-            for (int y = 0; y < GameWorldConfing.sub_world_y_size; y++)
-                for (int z = 0; z < GameWorldConfing.sub_world_z_size; z++)
+        for (int x = 0; x < GameWorldConfing.SubWorldSizeX; x++)
+            for (int y = 0; y < GameWorldConfing.SubWorldSizeY; y++)
+                for (int z = 0; z < GameWorldConfing.SubWorldSizeZ; z++)
                 {
                     PathFindMapData[x, y, z].PathMapDataX = x;
                     PathFindMapData[x, y, z].PathMapDataY = y;
@@ -283,15 +307,15 @@ public class CustomAstar3D : MonoBehaviour
     {
         //길을 찾아 움직이려는 오브젝트의 현재 높이.
         //실제 밟고 서있는 WorldBlock 배열의 Y값을 구한다.
-        int curHeight = Mathf.Clamp((int)ActorPosition.Y - OffsetY * GameWorldConfing.sub_world_y_size, 0, GameWorldConfing.sub_world_y_size);
-        for (int x = 0; x < GameWorldConfing.sub_world_x_size; x++)
-            for(int y = 0; y < GameWorldConfing.sub_world_y_size; y++)
-                for (int z = 0; z < GameWorldConfing.sub_world_z_size; z++)
+        int curHeight = Mathf.Clamp((int)ActorPosition.y - OffsetY, 0, GameWorldConfing.SubWorldSizeY - 1);
+        for (int x = 0; x < GameWorldConfing.SubWorldSizeX; x++)
+            for(int y = 0; y < GameWorldConfing.SubWorldSizeY; y++)
+                for (int z = 0; z < GameWorldConfing.SubWorldSizeZ; z++)
                 {
                     int jumpedHeight = curHeight + 1;
-                    if (jumpedHeight < WorldBlockData.GetLength(2))
+                    if (jumpedHeight < InitData.WorldBlockData.GetLength(2))
                     {
-                        if (WorldBlockData[x, jumpedHeight, z].bRendered)
+                        if (InitData.WorldBlockData[x, jumpedHeight, z].bRendered)
                         {
                             PathFindMapData[x, y, z].bJumped = true;
                             PathFindMapData[x, y, z].WorldCoordY = jumpedHeight;
@@ -306,7 +330,7 @@ public class CustomAstar3D : MonoBehaviour
         int height = 0;
         for (int y = curHeight; y > 0; y--)
         {
-            if (WorldBlockData[x, y, z].bRendered)
+            if (InitData.WorldBlockData[x, y, z].bRendered)
             {
                 height = y;
                 break;
@@ -323,9 +347,9 @@ public class CustomAstar3D : MonoBehaviour
             int searchPosX = selectNode.PathMapDataX + (int)pos.x;
             int searchPosY = selectNode.PathMapDataY + (int)pos.y;
             int searchPosZ = selectNode.PathMapDataZ + (int)pos.z;
-            if ((searchPosX >= 0 && searchPosX < GameWorldConfing.sub_world_x_size) &&
-                (searchPosY >= 0 && searchPosY < GameWorldConfing.sub_world_y_size) &&
-                (searchPosZ >= 0 && searchPosZ < GameWorldConfing.sub_world_z_size))
+            if ((searchPosX >= 0 && searchPosX < GameWorldConfing.SubWorldSizeX) &&
+                (searchPosY >= 0 && searchPosY < GameWorldConfing.SubWorldSizeY) &&
+                (searchPosZ >= 0 && searchPosZ < GameWorldConfing.SubWorldSizeZ))
             {
                 if (!IsInClosedList(searchPosX, searchPosY, searchPosZ))
                 {
@@ -383,9 +407,9 @@ public class CustomAstar3D : MonoBehaviour
             int searchPosX = CurrentNode.PathMapDataX + (int)pos.x;
             int searchPosY = CurrentNode.PathMapDataY + (int)pos.y;
             int searchPosZ = CurrentNode.PathMapDataZ + (int)pos.z;
-            if ((searchPosX >= 0 && searchPosX < GameWorldConfing.sub_world_x_size) &&
-                (searchPosY >= 0 && searchPosY < GameWorldConfing.sub_world_y_size) &&
-                (searchPosZ >= 0 && searchPosZ < GameWorldConfing.sub_world_z_size) )
+            if ((searchPosX >= 0 && searchPosX < GameWorldConfing.SubWorldSizeX) &&
+                (searchPosY >= 0 && searchPosY < GameWorldConfing.SubWorldSizeY) &&
+                (searchPosZ >= 0 && searchPosZ < GameWorldConfing.SubWorldSizeZ) )
             {
                 if ((!IsInClosedList(searchPosX, searchPosY, searchPosZ)) && (!IsInOpenList(searchPosX, searchPosY, searchPosZ)))
                 {

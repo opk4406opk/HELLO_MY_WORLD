@@ -168,7 +168,7 @@ public class GamePlayerController : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        if (CharacterInstance == null || WorldManager.Instance == null || PlayerCamera == null)
+        if (CharacterInstance == null || WorldAreaManager.Instance == null || PlayerCamera == null)
         {
             return;
         }
@@ -177,7 +177,7 @@ public class GamePlayerController : MonoBehaviour {
         playerPos.y += 2.0f;
         PlayerCamera.transform.position = playerPos;
 
-        SubWorld containWorld = WorldManager.Instance.ContainedWorld(CharacterInstance.transform.position);
+        SubWorld containWorld = WorldAreaManager.Instance.ContainedSubWorld(CharacterInstance.transform.position);
         if (containWorld == null)
         {
             return;
@@ -188,7 +188,7 @@ public class GamePlayerController : MonoBehaviour {
         }
 
         KojeomLogger.DebugLog(string.Format("Player's contain world : {0}, position : {1}", 
-            containWorld.name, containWorld.WorldOffsetCoordinate), LOG_TYPE.DEBUG_TEST);
+            containWorld.name, containWorld.SubWorldOffsetCoordinate), LOG_TYPE.DEBUG_TEST);
         //
         if (IsControllProcessOn == false)
         {

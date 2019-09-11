@@ -50,8 +50,8 @@ public struct CollideInfo
     public CustomAABB aabb;
     public Block GetBlock()
     {
-        var containWorld = WorldManager.Instance.ContainedWorld(HitBlockCenter);
-        Vector3 worldCoord = WorldManager.Instance.GetRealCoordToWorldCoord(HitBlockCenter);
+        var containWorld = WorldAreaManager.Instance.ContainedSubWorld(HitBlockCenter);
+        Vector3 worldCoord = WorldAreaManager.GetRealCoordToWorldCoord(HitBlockCenter);
         return containWorld.WorldBlockData[(int)worldCoord.x, (int)worldCoord.y, (int)worldCoord.z];
     }
 }

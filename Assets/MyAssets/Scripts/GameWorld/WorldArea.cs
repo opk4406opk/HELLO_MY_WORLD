@@ -46,25 +46,32 @@ public enum SubWorldRealTimeStatus
     ReleaseFinish // 해제완료.
 }
 
-public class WorldManager : MonoBehaviour
+public class WorldArea : MonoBehaviour
 {
-    [SerializeField]
-    private Transform WorldGroupTrans;
-    public static WorldManager Instance { get; private set; }
+    public string AreaName { get; private set; }
+    public string AreaUniqueID { get; private set; }
+    // WorldArea 위치값( == 오프셋값).
+    public Vector3 OffsetCoordinate { get; private set; }
+    // 실제 게임오브젝트로서 존재하는 위치값.
+    public Vector3 RealCoordinate { get; private set; }
 
-    public Dictionary<string, SubWorldState> WholeWorldStates { get; } = new Dictionary<string, SubWorldState>();
+    public Dictionary<string, SubWorldState> SubWorldStates { get; } = new Dictionary<string, SubWorldState>();
 
-    public void Init()
+    public void Init(WorldAreaData worldAreaData)
     {
-        KojeomLogger.DebugLog("GameWorld 생성을 시작합니다.");
-        CreateWholeWorld();
-        if (GameSupervisor.Instance != null && GameSupervisor.Instance.IsSubWorldDataSave == true)
+        KojeomLogger.DebugLog("WorldArea 생성을 시작합니다.");
+        AreaName = worldAreaData.AreaName;
+        AreaUniqueID = worldAreaData.UniqueID;
+        OffsetCoordinate = new Vector3(worldAreaData.OffsetX, worldAreaData.OffsetY, worldAreaData.OffsetZ);
+        RealCoordinate = OffsetCoordinate;
+        //
+        CreateArea(worldAreaData);
+        if (GameSupervisor.Instance != null && GameSupervisor.Instance.bSubWorldDataSave == true)
         {
             SaveAllSubWorld();
         }
         StartCoroutine(DynamicSubWorldLoader());
-        KojeomLogger.DebugLog("GameWorld 생성을 종료합니다.");
-        Instance = this;
+        KojeomLogger.DebugLog("WorldArea 생성을 종료합니다.");
     }
  
     /// <summary>
@@ -75,7 +82,7 @@ public class WorldManager : MonoBehaviour
     {
         Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
         int idx = 0;
-        foreach(var element in WholeWorldStates)
+        foreach(var element in SubWorldStates)
         {
             string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", element.Value.SubWorldInstance.WorldName);
             // 파일 생성.
@@ -100,7 +107,7 @@ public class WorldManager : MonoBehaviour
         return await Task.Run(() => {
             Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
 
-            WholeWorldStates.TryGetValue(uniqueID, out SubWorldState state);
+            SubWorldStates.TryGetValue(uniqueID, out SubWorldState state);
             string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", state.SubWorldInstance.WorldName);
             // 파일 생성.
             BinaryFormatter bf = new BinaryFormatter();
@@ -134,7 +141,7 @@ public class WorldManager : MonoBehaviour
     {
         // deserializing.
         return await Task.Run(()=> {
-            WholeWorldStates.TryGetValue(uniqueID, out SubWorldState worldState);
+            SubWorldStates.TryGetValue(uniqueID, out SubWorldState worldState);
             string fileName = worldState.SubWorldInstance.WorldName;
             string filePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", fileName);
             // 파일 열기.
@@ -149,7 +156,7 @@ public class WorldManager : MonoBehaviour
     public async void LoadAsyncSubWorldFile(string uniqueID)
     {
         // 로딩 상태로 전환.
-        WholeWorldStates.TryGetValue(uniqueID, out SubWorldState worldState);
+        SubWorldStates.TryGetValue(uniqueID, out SubWorldState worldState);
         worldState.RealTimeStatus = SubWorldRealTimeStatus.Loading;
         // 실제 파일을 로딩.
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} Start and Waiting Async Load from file.", uniqueID));
@@ -159,59 +166,58 @@ public class WorldManager : MonoBehaviour
         worldState.SubWorldInstance.LoadSynchro(loadedWorldData.BlockData);
     }
 
-    private void CreateWholeWorld()
+    private void CreateArea(WorldAreaData worldAreaData)
     {
-        var gameConfig = GameConfigDataFile.Instance.GetGameConfigData();
-        foreach(var subWorldData in WorldMapDataFile.instance.WorldMapData.SubWorldDatas)
+        foreach(var subWorldData in worldAreaData.SubWorldDataList)
         {
-            SubWorld subWorld = MakeNewWorldInstance();
+            SubWorld subWorld = MakeNewSubWorldInstance();
             subWorld.OnFinishLoadChunks += OnFinishSubWorldLoadChunks;
             subWorld.OnReadyToRelease += OnReleaseSubWorldInstance;
             subWorld.OnFinishRelease += OnFinishReleaseSubWorldInstance;
-            subWorld.Init(subWorldData);
+            subWorld.Init(subWorldData, this);
             //add world.
             SubWorldState worldState = new SubWorldState
             {
                 SubWorldInstance = subWorld,
                 RealTimeStatus = SubWorldRealTimeStatus.NotLoaded
             };
-            WholeWorldStates.Add(subWorldData.UniqueID, worldState);
+            SubWorldStates.Add(subWorldData.UniqueID, worldState);
         }
     }
 
-    private SubWorld MakeNewWorldInstance()
+    private SubWorld MakeNewSubWorldInstance()
     {
-        GameObject newSubWorld = Instantiate(GameResourceSupervisor.GetInstance().WorldPrefab.LoadSynchro(), new Vector3(0, 0, 0),
+        GameObject newSubWorld = Instantiate(GameResourceSupervisor.GetInstance().SubWorldPrefab.LoadSynchro(), new Vector3(0, 0, 0),
                new Quaternion(0, 0, 0, 0)) as GameObject;
-        newSubWorld.transform.parent = WorldGroupTrans;
+        newSubWorld.transform.parent = this.transform;
         //
         return newSubWorld.GetComponent<SubWorld>();
     }
 
-    private void OnFinishSubWorldLoadChunks(string uniqueID)
+    private void OnFinishSubWorldLoadChunks(string subWorldUniqueID)
     {
-        WholeWorldStates.TryGetValue(uniqueID, out SubWorldState worldState);
+        SubWorldStates.TryGetValue(subWorldUniqueID, out SubWorldState worldState);
         worldState.RealTimeStatus = SubWorldRealTimeStatus.LoadFinish;
         //
         //NPC 생성 테스트. 
         if(worldState.SubWorldInstance.bSurfaceWorld == true)
         {
-            ActorSuperviosr.Instance.RequestSpawnRandomNPC(NPC_TYPE.Merchant, uniqueID, 1, true);
+            ActorSuperviosr.Instance.RequestSpawnRandomNPC(NPC_TYPE.Merchant, subWorldUniqueID, AreaUniqueID, 1, true);
         }
     }
 
     private void OnReleaseSubWorldInstance(string uniqueID)
     {
-        switch(WholeWorldStates[uniqueID].RealTimeStatus)
+        switch(SubWorldStates[uniqueID].RealTimeStatus)
         {
             //case WorldRealTimeStatus.Loading:
             case SubWorldRealTimeStatus.LoadFinish:
                 // 릴리즈 상태로 전환.
-                WholeWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Release;
+                SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Release;
                 // 메모리 해제 직전, Sub WorldData를 외부 파일로 저장.
                 SaveAsyncSubWorldFile(uniqueID);
                 // 메모리 해제 시작.
-                WholeWorldStates[uniqueID].SubWorldInstance.Release();
+                SubWorldStates[uniqueID].SubWorldInstance.Release();
                 KojeomLogger.DebugLog(string.Format("Subworld ID : {0} is Start Release. ", uniqueID));
                 break;
         }
@@ -219,7 +225,7 @@ public class WorldManager : MonoBehaviour
 
     private void OnFinishReleaseSubWorldInstance(string uniqueID)
     {
-        WholeWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.ReleaseFinish;
+        SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.ReleaseFinish;
     }
 
     /// <summary>
@@ -227,9 +233,9 @@ public class WorldManager : MonoBehaviour
     /// </summary>
     /// <param name="pos"></param>
     /// <returns></returns>
-    public SubWorld ContainedWorld(Vector3 pos)
+    public SubWorld ContainedSubWorld(Vector3 pos)
     {
-        var state = WholeWorldStates[GetSubWorldUniqueID(pos)];
+        var state = SubWorldStates[WorldAreaManager.GetSubWorldUniqueID(pos)];
         if(state == null)
         {
             return null;
@@ -249,15 +255,15 @@ public class WorldManager : MonoBehaviour
             if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.IsInitializeFinish == true)
             {
                 playerPos = GamePlayerManager.Instance.MyGamePlayer.Controller.GetPosition();
-                offsetPos = WholeWorldStates[GetSubWorldUniqueID(playerPos)].SubWorldInstance.WorldOffsetCoordinate;
+                offsetPos = SubWorldStates[WorldAreaManager.GetSubWorldUniqueID(playerPos)].SubWorldInstance.SubWorldOffsetCoordinate;
             }
             else
             {
-                foreach(var state in WholeWorldStates)
+                foreach(var state in SubWorldStates)
                 {
                     if(state.Value.SubWorldInstance != null && state.Value.SubWorldInstance.bSurfaceWorld == true)
                     {
-                        offsetPos = state.Value.SubWorldInstance.WorldOffsetCoordinate;
+                        offsetPos = state.Value.SubWorldInstance.SubWorldOffsetCoordinate;
                         break;
                     }
                 }
@@ -273,17 +279,17 @@ public class WorldManager : MonoBehaviour
                 {
                     for (int z = (int)offsetPos.z - 1; z <= (int)offsetPos.z + 1; z++)
                     {
-                        string uniqueID = MakeUniqueID(x, y, z);
-                        if(WholeWorldStates.ContainsKey(uniqueID) == true)
+                        string uniqueID = WorldAreaManager.MakeUniqueID(x, y, z);
+                        if(SubWorldStates.ContainsKey(uniqueID) == true)
                         {
-                            switch (WholeWorldStates[uniqueID].RealTimeStatus)
+                            switch (SubWorldStates[uniqueID].RealTimeStatus)
                             {
                                 case SubWorldRealTimeStatus.None:
                                     // nothing to do.
                                     break;
                                 case SubWorldRealTimeStatus.NotLoaded:
-                                    WholeWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Loading;
-                                    WholeWorldStates[uniqueID].SubWorldInstance.LoadSynchro();
+                                    SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Loading;
+                                    SubWorldStates[uniqueID].SubWorldInstance.LoadSynchro();
                                     break;
                                 case SubWorldRealTimeStatus.ReleaseFinish:
                                     LoadAsyncSubWorldFile(uniqueID);
@@ -298,80 +304,15 @@ public class WorldManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 월드 Name으로부터 Data Array Index를 추출.
+    /// 서브월드 Name으로부터 Data Array Index를 추출.
     /// </summary>
     /// <param name="worldName"></param>
     /// <returns></returns>
-    public static int MakeWorldDataArrIndex(string worldName)
+    public static int MakeSubWorldDataIndex(string worldName)
     {
         var splits = worldName.Split('_');
         return int.Parse(splits[2]);
     }
-    /// <summary>
-    /// UniqueID를 생성합니다.
-    /// </summary>
-    /// <param name="xyz"></param>
-    /// <returns></returns>
-    public static string MakeUniqueID(Vector3 pos)
-    {
-        // basic form : unique_0:0:0  ( x:y:z )
-        return string.Format("unique_{0}:{1}:{2}", pos.x, pos.y, pos.z);
-    }
-
-    /// <summary>
-    /// UniqueID를 생성합니다.
-    /// </summary>
-    /// <param name="xyz"></param>
-    /// <returns></returns>
-    public static string MakeUniqueID(int x, int y, int z)
-    {
-        // basic form : unique_0:0:0  ( x:y:z )
-        return string.Format("unique_{0}:{1}:{2}", x, y, z);
-    }
-
-    public static Vector3 DisassembleUniqueID(string uniqueID)
-    {
-        var sub = uniqueID.Substring(uniqueID.IndexOf("_"));
-        var split = sub.Split(':');
-        return new Vector3(float.Parse(split[0]), float.Parse(split[1]), float.Parse(split[2]));
-    }
-
-    /// <summary>
-    /// 오브젝트 위치를 통해 어느 SubWorld에 위치했는지 확인 후 해당 World UniqueID를 리턴.
-    /// </summary>
-    /// <param name="objectPos">오브젝트 위치</param>
-    /// <returns></returns>
-    public string GetSubWorldUniqueID(Vector3 objectPos)
-    {
-        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        int x = (Mathf.CeilToInt(objectPos.x) / gameWorldConfig.sub_world_x_size) % WorldMapDataFile.instance.WorldMapData.Row;
-        int y = (Mathf.CeilToInt(objectPos.y) / gameWorldConfig.sub_world_y_size) % WorldMapDataFile.instance.WorldMapData.Layer;
-        int z = (Mathf.CeilToInt(objectPos.z) / gameWorldConfig.sub_world_z_size) % WorldMapDataFile.instance.WorldMapData.Column;
-
-        return MakeUniqueID(x, y, z);
-    }
-
-    /// <summary>
-    /// 게임 속 실제 좌표(=Real) 값을 월드배열 좌표값으로 변환.
-    /// </summary>
-    /// <param name="objectPos"></param>
-    /// <returns></returns>
-    public Vector3 GetRealCoordToWorldCoord(Vector3 objectPos)
-    {
-        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        int x = (Mathf.CeilToInt(objectPos.x) / gameWorldConfig.sub_world_x_size) % WorldMapDataFile.instance.WorldMapData.Row;
-        int y = (Mathf.CeilToInt(objectPos.y) / gameWorldConfig.sub_world_y_size) % WorldMapDataFile.instance.WorldMapData.Layer;
-        int z = (Mathf.CeilToInt(objectPos.z) / gameWorldConfig.sub_world_z_size) % WorldMapDataFile.instance.WorldMapData.Column;
-        return new Vector3(x, y, z);
-    }
-
-    public Vector3 GetWorldCoordToRealCoord(Vector3 worldCoord)
-    {
-        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        int x = (Mathf.CeilToInt(worldCoord.x) * gameWorldConfig.sub_world_x_size) * WorldMapDataFile.instance.WorldMapData.Row;
-        int y = (Mathf.CeilToInt(worldCoord.y) * gameWorldConfig.sub_world_y_size) * WorldMapDataFile.instance.WorldMapData.Layer;
-        int z = (Mathf.CeilToInt(worldCoord.z) * gameWorldConfig.sub_world_z_size) * WorldMapDataFile.instance.WorldMapData.Column;
-        return new Vector3(x, y, z);
-    }
+    
 
 }

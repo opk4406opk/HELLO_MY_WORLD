@@ -1,8 +1,11 @@
 {
-  "sub_world_x_size": "32",
-  "sub_world_y_size": "32",
-  "sub_world_z_size": "32",
-  "chunk_size": "8",
-  "chunkLoadIntervalSeconds": "0.2",
-  "one_tile_unit": "0.0625"
+  "SubWorldSizeX": 32,
+  "SubWorldSizeY": 32,
+  "SubWorldSizeZ": 32,
+  "SubWorld_Count_X_Axis_Per_WorldArea": 32,
+  "SubWorld_Count_Y_Axis_Per_WorldArea": 32,
+  "SubWorld_Count_Z_Axis_Per_WorldArea": 32,
+  "ChunkSize": 8,
+  "ChunkLoadIntervalSeconds": 0.2,
+  "OneTileUnit": 0.0625
 }

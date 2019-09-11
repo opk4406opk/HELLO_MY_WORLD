@@ -3,10 +3,23 @@ using System.Collections.Generic;
 
 public class WorldMapData
 {
-    public List<SubWorldData> SubWorldDatas = new List<SubWorldData>();
-    public int Row;
-    public int Column;
-    public int Layer;
+    public List<WorldAreaData> WorldAreaDatas = new List<WorldAreaData>();
+   
+    public int WorldAreaRow;
+    public int WorldAreaColumn;
+    public int WorldAreaLayer;
+
+    public int SubWorldRow;
+    public int SubWorldColumn;
+    public int SubWorldLayer;
+}
+
+public class WorldAreaData
+{
+    public string UniqueID;
+    public int OffsetX, OffsetY, OffsetZ;
+    public string AreaName;
+    public List<SubWorldData> SubWorldDataList = new List<SubWorldData>();
 }
 
 public struct SubWorldData
@@ -44,9 +57,9 @@ public struct SubWorldData
 public class WorldMapDataFile : BaseDataFile
 {
     private List<Dictionary<string, string>> JsonDataSheet;
-    public WorldMapData WorldMapData { get; private set; } = new WorldMapData();
+    public WorldMapData WorldMapDataInstance { get; private set; } = new WorldMapData();
     //
-    public static WorldMapDataFile instance = null;
+    public static WorldMapDataFile Instance = null;
 
     public override void Init()
     {
@@ -55,51 +68,77 @@ public class WorldMapDataFile : BaseDataFile
         JsonObject = new JSONObject(JsonFile.text);
         AccessData(JsonObject);
 
-        if (instance == null) instance = this;
+        if (Instance == null) Instance = this;
     }
 
     protected override void AccessData(JSONObject jsonObj)
     {
         var properties = jsonObj.list[0].ToDictionary();
-        var subWorldDatas = jsonObj.list[1].list;
+        var worldAreaList = jsonObj.list[1].list;
         //
         string extractedData;
-        properties.TryGetValue("ROW", out extractedData);
-        WorldMapData.Row = int.Parse(extractedData);
-        properties.TryGetValue("COLUMN", out extractedData);
-        WorldMapData.Column = int.Parse(extractedData);
-        properties.TryGetValue("LAYER", out extractedData);
-        WorldMapData.Layer = int.Parse(extractedData);
+        properties.TryGetValue("WorldAreaRow", out extractedData);
+        WorldMapDataInstance.WorldAreaRow = int.Parse(extractedData);
+        properties.TryGetValue("WorldAreaColumn", out extractedData);
+        WorldMapDataInstance.WorldAreaColumn = int.Parse(extractedData);
+        properties.TryGetValue("WorldAreaLayer", out extractedData);
+        WorldMapDataInstance.WorldAreaLayer = int.Parse(extractedData);
         //
-        foreach(var subworld in subWorldDatas)
+        properties.TryGetValue("SubWorldRow", out extractedData);
+        WorldMapDataInstance.SubWorldRow = int.Parse(extractedData);
+        properties.TryGetValue("SubWorldColumn", out extractedData);
+        WorldMapDataInstance.SubWorldColumn = int.Parse(extractedData);
+        properties.TryGetValue("SubWorldLayer", out extractedData);
+        WorldMapDataInstance.SubWorldLayer = int.Parse(extractedData);
+        //
+        foreach(var worldArea in worldAreaList)
         {
-            SubWorldData subWorldData = new SubWorldData();
-            //
-            var data = subworld.ToDictionary();
+            WorldAreaData worldAreaData = new WorldAreaData();
+            var data = worldArea.ToDictionary();
             string val;
-            data.TryGetValue("WORLD_NAME", out val);
-            subWorldData.WorldName = val;
-            //
+            data.TryGetValue("AREA_NAME", out val);
+            worldAreaData.AreaName = val;
             data.TryGetValue("OFFSET_X", out val);
-            subWorldData.OffsetX = int.Parse(val);
+            worldAreaData.OffsetX = int.Parse(val);
             data.TryGetValue("OFFSET_Y", out val);
-            subWorldData.OffsetY = int.Parse(val);
+            worldAreaData.OffsetY = int.Parse(val);
             data.TryGetValue("OFFSET_Z", out val);
-            subWorldData.OffsetZ = int.Parse(val);
-            //
+            worldAreaData.OffsetZ = int.Parse(val);
             data.TryGetValue("UNIQUE_ID", out val);
-            subWorldData.UniqueID = val;
-
-            data.TryGetValue("IS_SURFACE", out val);
-            if(val == "False")
+            worldAreaData.UniqueID = val;
+            // 데이터 리스트에 마지막 원소가 SubWorld 데이터 리스트임.
+            var subWorldDataList = worldArea.list[worldArea.list.Count - 1].list;
+            foreach (var subWorld in subWorldDataList)
             {
-                subWorldData.IsSurface = false;
+                SubWorldData subWorldData = new SubWorldData();
+                //
+                var map = subWorld.ToDictionary();
+                string outValue;
+                map.TryGetValue("WORLD_NAME", out outValue);
+                subWorldData.WorldName = outValue;
+                //
+                map.TryGetValue("OFFSET_X", out outValue);
+                subWorldData.OffsetX = int.Parse(outValue);
+                map.TryGetValue("OFFSET_Y", out outValue);
+                subWorldData.OffsetY = int.Parse(outValue);
+                map.TryGetValue("OFFSET_Z", out outValue);
+                subWorldData.OffsetZ = int.Parse(outValue);
+                //
+                map.TryGetValue("UNIQUE_ID", out outValue);
+                subWorldData.UniqueID = outValue;
+                //
+                map.TryGetValue("IS_SURFACE", out val);
+                if (val == "False")
+                {
+                    subWorldData.IsSurface = false;
+                }
+                else
+                {
+                    subWorldData.IsSurface = true;
+                }
+                worldAreaData.SubWorldDataList.Add(subWorldData);
             }
-            else
-            {
-                subWorldData.IsSurface = true;
-            }
-            WorldMapData.SubWorldDatas.Add(subWorldData);
+            WorldMapDataInstance.WorldAreaDatas.Add(worldAreaData);
         }
     }
 }

@@ -51,9 +51,9 @@ public class GameSupervisor : MonoBehaviour
     #endregion
 
     #region simple config.
-    public bool IsSoundOn = false;
-    public bool IsSubWorldDataSave = false;
-    public bool IsLockCursor = false;
+    public bool bSoundOn = false;
+    public bool bSubWorldDataSave = false;
+    public bool bLockCursor = false;
     #endregion
     //
     #region Inspector variables.
@@ -61,10 +61,10 @@ public class GameSupervisor : MonoBehaviour
     private GamePlayerManager playerManager;
     [SerializeField]
     private BeltItemSelector beltItemSelector;
+    //[SerializeField]
+    //private SaveAndLoadManager saveAndLoadManager;
     [SerializeField]
-    private SaveAndLoadManager saveAndLoadManager;
-    [SerializeField]
-    private WorldManager worldManager;
+    private WorldAreaManager WorldAreaManager;
     [SerializeField]
     private GameSoundManager soundManager;
     [SerializeField]
@@ -106,7 +106,7 @@ public class GameSupervisor : MonoBehaviour
 
     private void InitSettings()
     {
-        if(IsLockCursor == true)
+        if(bLockCursor == true)
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -139,15 +139,15 @@ public class GameSupervisor : MonoBehaviour
     {
         KojeomLogger.DebugLog("게임매니저 클래스들을 초기화 합니다.");
         // sound init.
-        if(IsSoundOn == true)
+        if(bSoundOn == true)
         {
             GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_InGame);
         }
         //
         kojeomCoroutineHelper.Init();
         inputManager.Init();
-        //GameWorld Init
-        worldManager.Init();
+        //Game Total World Init
+        WorldAreaManager.Init();
         //player Init
         playerManager.Init();
         // Actor Manager init..
@@ -156,7 +156,7 @@ public class GameSupervisor : MonoBehaviour
         //InGameUI Init
         beltItemSelector.Init();
         //saveAndLoad Init
-        saveAndLoadManager.Init();
+        //saveAndLoadManager.Init();
         //
         actorCollideManager.Init();
         //
@@ -168,7 +168,7 @@ public class GameSupervisor : MonoBehaviour
 
         if (GameStatus.DetailSingleMode == DetailSingleMode.LOAD_GAME)
         {
-            saveAndLoadManager.Load();
+            // 게임을 로드?.
         }
         KojeomLogger.DebugLog("게임매니저 클래스 초기화 완료.");
     }

@@ -41,9 +41,9 @@ public class WorldGenerateUtils
     public static bool CheckBoundary(int x, int y, int z)
     {
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        if (x >= gameWorldConfig.sub_world_x_size || x < 0) return false;
-        if (y >= gameWorldConfig.sub_world_y_size || y < 0) return false;
-        if (z >= gameWorldConfig.sub_world_z_size || z < 0) return false;
+        if (x >= gameWorldConfig.SubWorldSizeX || x < 0) return false;
+        if (y >= gameWorldConfig.SubWorldSizeY || y < 0) return false;
+        if (z >= gameWorldConfig.SubWorldSizeZ || z < 0) return false;
         return true;
     }
 

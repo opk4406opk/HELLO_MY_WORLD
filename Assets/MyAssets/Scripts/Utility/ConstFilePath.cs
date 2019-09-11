@@ -91,6 +91,10 @@ public class ConstFilePath
     /// 서브월드 프리팹 경로.
     /// </summary>
     public readonly static string SUB_WORLD_PREFAB = "GamePrefabs/SubWorld";
+    /// <summary>
+    /// WorldArea 프리팹 경로.
+    /// </summary>
+    public readonly static string WORLD_AREA_PREFAB = "GamePrefabs/WorldArea";
 
     public readonly static string NPC_PREFABS_ASSET_PATH = "Assets/MyAssets/Resources/GamePrefabs/Actor/NPC";
     public readonly static string NPC_PREFABS_RESOURCE_PATH = "GamePrefabs/Actor/NPC";

@@ -21,27 +21,31 @@ public class GamePlayerManager : MonoBehaviour {
         KojeomLogger.DebugLog(string.Format("[GamePlayerManager] Start InitProcess"), LOG_TYPE.INFO);
         while(true)
         {
-            if(WorldManager.Instance != null)
+            if(WorldAreaManager.Instance != null)
             {
-                foreach(var state in WorldManager.Instance.WholeWorldStates)
+                foreach(var worldArea in WorldAreaManager.Instance.WorldAreas)
                 {
-                    if(state.Value.RealTimeStatus == SubWorldRealTimeStatus.LoadFinish)
+                    foreach (var state in worldArea.Value.SubWorldStates)
                     {
-                        Vector3 worldInstPos = state.Value.SubWorldInstance.WorldOffsetCoordinate;
-                        //
-                        var instance = Instantiate(GameResourceSupervisor.GetInstance().GamePlayerPrefab.LoadSynchro(), Vector3.zero, Quaternion.identity);
-                        MyGamePlayer = instance.GetComponent<GamePlayer>();
-                        MyGamePlayer.Initialize(GameLocalDataManager.GetInstance().CharacterType,
-                            GameLocalDataManager.GetInstance().CharacterName,
-                            new Vector3(worldInstPos.x, 60.0f, worldInstPos.z));
-                        //Player Manager 하위 종속으로 변경.
-                        MyGamePlayer.transform.parent = gameObject.transform;
-                        //
-                        IsInitializeFinish = true;
-                        break;
+                        if (state.Value.RealTimeStatus == SubWorldRealTimeStatus.LoadFinish)
+                        {
+                            Vector3 worldInstPos = state.Value.SubWorldInstance.SubWorldOffsetCoordinate;
+                            //
+                            var instance = Instantiate(GameResourceSupervisor.GetInstance().GamePlayerPrefab.LoadSynchro(), Vector3.zero, Quaternion.identity);
+                            MyGamePlayer = instance.GetComponent<GamePlayer>();
+                            MyGamePlayer.Initialize(GameLocalDataManager.GetInstance().CharacterType,
+                                GameLocalDataManager.GetInstance().CharacterName,
+                                new Vector3(worldInstPos.x, 60.0f, worldInstPos.z));
+                            //Player Manager 하위 종속으로 변경.
+                            MyGamePlayer.transform.parent = gameObject.transform;
+                            //
+                            IsInitializeFinish = true;
+                            break;
+                        }
+                        yield return null;
                     }
-                    yield return null;
                 }
+              
                 if(IsInitializeFinish == true)
                 {
                     break;

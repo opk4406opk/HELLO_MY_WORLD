@@ -4,16 +4,18 @@ using UnityEngine;
 
 public struct RequestSpawnActorData
 {
-    public string WorldUniqueID;
+    public string WorldAreaUniqueID;
+    public string SubWorldUniqueID;
     public int ActorUniqueID;
     public Vector3 SpawnPosition;
     public ACTOR_TYPE ActorType;
     public int Num;
     public bool SpawnAndShow;
 
-    public RequestSpawnActorData(string worldUniqueID, int actorUniqueID, Vector3 spawnPosition, ACTOR_TYPE actorType, int num, bool spawnAndShow)
+    public RequestSpawnActorData(string subWorldUniqueID, string worldAreaUniqueID, int actorUniqueID, Vector3 spawnPosition, ACTOR_TYPE actorType, int num, bool spawnAndShow)
     {
-        WorldUniqueID = worldUniqueID;
+        SubWorldUniqueID = subWorldUniqueID;
+        WorldAreaUniqueID = worldAreaUniqueID;
         ActorUniqueID = actorUniqueID;
         SpawnPosition = spawnPosition;
         ActorType = actorType;
@@ -97,10 +99,10 @@ public class ActorSuperviosr : MonoBehaviour
         RequestSpawnMessages.Enqueue(message);
     }
 
-    public void RequestSpawnRandomNPC(NPC_TYPE npcType, string worldUniqueID, int num, bool spawnAndShow)
+    public void RequestSpawnRandomNPC(NPC_TYPE npcType, string subWorldUniqueID, string worldAreaUniqueID, int num, bool spawnAndShow)
     {
-        WorldManager.Instance.WholeWorldStates.TryGetValue(worldUniqueID, out SubWorldState worldState);
-        var data = new RequestSpawnActorData(worldUniqueID,
+        WorldAreaManager.Instance.GetWorldArea(worldAreaUniqueID).SubWorldStates.TryGetValue(subWorldUniqueID, out SubWorldState worldState);
+        var data = new RequestSpawnActorData(subWorldUniqueID, worldAreaUniqueID,
             KojeomUtility.RandomInteger(0, NPCDataFile.Instance.NpcSpawnDatas.Count - 1),
             worldState.SubWorldInstance.RandomPosAtSurface(), ACTOR_TYPE.NPC, num, spawnAndShow);
         RequestSpawnNPCMessage msg = new RequestSpawnNPCMessage(data, npcType);
@@ -134,7 +136,8 @@ public class ActorSuperviosr : MonoBehaviour
                         break;
                     case ACTOR_TYPE.NPC:
                         NPCManagerInstance.SpawnActor(message.SpawnData.ActorUniqueID,
-                            message.SpawnData.WorldUniqueID,
+                            message.SpawnData.SubWorldUniqueID,
+                            message.SpawnData.WorldAreaUniqueID,
                             message.SpawnData.SpawnPosition,
                             message.SpawnData.Num,
                             message.SpawnData.SpawnAndShow);

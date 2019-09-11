@@ -12,7 +12,7 @@ public class AnimalManager : AnimalSpawner
     {
     }
 
-    public override void SpawnActor(int uniqueID, string worldUniqueID, Vector3 spawnPos, int num, bool initShow = false)
+    public override void SpawnActor(int uniqueID, string subWorldUniqueID, string worldAreaUniqueID, Vector3 spawnPos, int num, bool initShow = false)
     {
         for (int spawnNum = 0; spawnNum < num; spawnNum++)
         {
@@ -23,7 +23,7 @@ public class AnimalManager : AnimalSpawner
                 .GetComponent<Actor>();
             instance.transform.parent = ActorSuperviosr.Instance.GetSpawnedGroupTransform();
             //
-            WorldManager.Instance.WholeWorldStates.TryGetValue(worldUniqueID, out SubWorldState worldState);
+            WorldAreaManager.Instance.GetWorldArea(worldAreaUniqueID).SubWorldStates.TryGetValue(subWorldUniqueID, out SubWorldState worldState);
             if (worldState.RealTimeStatus == SubWorldRealTimeStatus.Loading ||
                worldState.RealTimeStatus == SubWorldRealTimeStatus.LoadFinish)
             {
@@ -53,7 +53,7 @@ public class AnimalManager : AnimalSpawner
             }
             else
             {
-                KojeomLogger.DebugLog(string.Format("World Id : {0} is Not Loaded..So, Actor Spawn Failed.", worldUniqueID), LOG_TYPE.ERROR);
+                KojeomLogger.DebugLog(string.Format("World Id : {0} is Not Loaded..So, Actor Spawn Failed.", subWorldUniqueID), LOG_TYPE.ERROR);
             }
         }
     }

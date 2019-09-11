@@ -8,28 +8,80 @@ using System.IO;
 
 namespace MapTool.Source
 {
-    public struct MapGenerateData
+    public struct WorldMapData
     {
-        public int Row;
-        public int Column;
-        public int Layer;
-        public string SelectPath;
+        public int WorldAreaRow;
+        public int WorldAreaColumn;
+        public int WorldAreaLayer;
+        //
+        public int SubWorldRow;
+        public int SubWorldColumn;
+        public int SubWorldLayer;
+    }
+
+    public struct WorldMapConfigData
+    {
+        public int SubWorldSizeX;
+        public int SubWorldSizeY;
+        public int SubWorldSizeZ;
+        //
+        public int SubWorld_Count_X_Axis_Per_WorldArea;
+        public int SubWorld_Count_Y_Axis_Per_WorldArea;
+        public int SubWorld_Count_Z_Axis_Per_WorldArea;
+        //
+        public int ChunkSize;
+        public float ChunkLoadIntervalSeconds;
+        public float OneTileUnit;
     }
         
     class MapDataGenerator
     {
         #region defualt values.
-        public static readonly int  DefaultRowValue = 2;
-        public static readonly int  DefaultColumnValue = 2;
-        public static readonly int  DefaultLayerValue = 2;
+        public static readonly int  DefaultSubWorldRowValue = 2;
+        public static readonly int  DefaultSubWorldColumnValue = 2;
+        public static readonly int  DefaultSubWorldLayerValue = 2;
+        //
+        public static readonly int DefaultWorldAreaRowValue = 1;
+        public static readonly int DefaultWorldAreaColumnValue = 1;
+        public static readonly int DefaultWorldAreaLayerValue = 1;
         //
         #endregion
 
+        #region WorldMap Config Information.
+        public static readonly int SubWorldSizeX = 32;
+        public static readonly int SubWorldSizeY = 32;
+        public static readonly int SubWorldSizeZ = 32;
+        //
+        public static readonly int SubWorld_Count_X_Axis_Per_WorldArea = 32;
+        public static readonly int SubWorld_Count_Y_Axis_Per_WorldArea = 32;
+        public static readonly int SubWorld_Count_Z_Axis_Per_WorldArea = 32;
+        //
+        public static readonly int ChunkSize = 8;
+        public static readonly float ChunkLoadIntervalSeconds = 0.2f;
+        public static readonly float OneTileUnit = 0.0625f;
+        #endregion
+
+        private readonly int NumberOfGenerateTimes = 800;
+
         private struct Properties
         {
-            public int ROW;
-            public int COLUMN;
-            public int LAYER;
+            public int WorldAreaRow;
+            public int WorldAreaColumn;
+            public int WorldAreaLayer;
+
+            public int SubWorldRow;
+            public int SubWorldColumn;
+            public int SubWorldLayer;
+        }
+
+        private class WorldAreaData
+        {
+            public string UNIQUE_ID;
+            public string OFFSET_X;
+            public string OFFSET_Y;
+            public string OFFSET_Z;
+            public string AREA_NAME;
+            public List<SubWorldData> SubWorldDatas = new List<SubWorldData>();
         }
        
         private struct SubWorldData
@@ -42,32 +94,85 @@ namespace MapTool.Source
             public string IS_SURFACE;
         }
 
-        private MapGenerateData GenData;
+        private WorldMapData WorldMapDataInstance;
 
-        class MapJsonData
+        class SubWorldJsonFileData
         {
             public Properties Properties;
-            public List<SubWorldData> SubWorldDatas = new List<SubWorldData>();
-        }
-        
-        public void Init(MapGenerateData genData)
-        {
-            GenData = genData;
+            public List<WorldAreaData> WorldAreaDatas = new List<WorldAreaData>();
         }
 
-        public bool Generate()
-        {
-            MapJsonData mapData = new MapJsonData();
-            mapData.Properties.ROW = GenData.Row;
-            mapData.Properties.COLUMN = GenData.Column;
-            mapData.Properties.LAYER = GenData.Layer;
 
-            int worldIndex = 0;
-            for (int x = 0; x < GenData.Row; x++)
+        public void Init(WorldMapData genData)
+        {
+            WorldMapDataInstance = genData;
+        }
+
+        private bool GenerateWorldMapConfigData()
+        {
+            WorldMapConfigData configData;
+            configData.SubWorldSizeX = MapDataGenerator.SubWorldSizeX;
+            configData.SubWorldSizeY = MapDataGenerator.SubWorldSizeY;
+            configData.SubWorldSizeZ = MapDataGenerator.SubWorldSizeZ;
+            configData.SubWorld_Count_X_Axis_Per_WorldArea = MapDataGenerator.SubWorld_Count_X_Axis_Per_WorldArea;
+            configData.SubWorld_Count_Y_Axis_Per_WorldArea = MapDataGenerator.SubWorld_Count_Y_Axis_Per_WorldArea;
+            configData.SubWorld_Count_Z_Axis_Per_WorldArea = MapDataGenerator.SubWorld_Count_Z_Axis_Per_WorldArea;
+            configData.ChunkLoadIntervalSeconds = MapDataGenerator.ChunkLoadIntervalSeconds;
+            configData.ChunkSize = MapDataGenerator.ChunkSize;
+            configData.OneTileUnit = MapDataGenerator.OneTileUnit;
+
+            File.WriteAllText(MapToolPath.WorldConfigJsonFilePath, JsonConvert.SerializeObject(configData, Formatting.Indented));
+            return true;
+        }
+
+        private bool GenerateSubWorldDatas()
+        {
+            SubWorldJsonFileData jsonFileData = new SubWorldJsonFileData();
+            jsonFileData.Properties.SubWorldRow = WorldMapDataInstance.SubWorldRow;
+            jsonFileData.Properties.SubWorldColumn = WorldMapDataInstance.SubWorldColumn;
+            jsonFileData.Properties.SubWorldLayer = WorldMapDataInstance.SubWorldLayer;
+            jsonFileData.Properties.WorldAreaRow = WorldMapDataInstance.WorldAreaRow;
+            jsonFileData.Properties.WorldAreaColumn = WorldMapDataInstance.WorldAreaColumn;
+            jsonFileData.Properties.WorldAreaLayer = WorldMapDataInstance.WorldAreaLayer;
+
+            int areaIndex = 0;
+            for(int x = 0; x < WorldMapDataInstance.WorldAreaRow; x++)
             {
-                for (int y = 0; y < GenData.Layer; y++)
+                for (int y = 0; y < WorldMapDataInstance.WorldAreaLayer; y++)
                 {
-                    for (int z = 0; z < GenData.Column; z++)
+                    for (int z = 0; z < WorldMapDataInstance.WorldAreaColumn; z++)
+                    {
+                        WorldAreaData worldArea = new WorldAreaData
+                        {
+                            UNIQUE_ID = string.Format("unique_{0}:{1}:{2}", x.ToString(), y.ToString(), z.ToString()),
+                            OFFSET_X = x.ToString(),
+                            OFFSET_Y = y.ToString(),
+                            OFFSET_Z = z.ToString(),
+                            AREA_NAME = string.Format("WORLD_AREA_{0}", areaIndex),
+                        };
+                        jsonFileData.WorldAreaDatas.Add(worldArea);
+                        CreateSubWorlds(jsonFileData, areaIndex);
+                        areaIndex++;
+                    }
+                }
+            }
+            
+            File.WriteAllText(MapToolPath.SubWorldJsonFilePath, JsonConvert.SerializeObject(jsonFileData, Formatting.Indented));
+            
+            return true;
+        }
+
+        private void CreateSubWorlds(SubWorldJsonFileData jsonFileData, int areaIndex)
+        {
+            //
+            // 서브 월드 정보 생성.
+            //
+            int worldIndex = 0;
+            for (int x = 0; x < WorldMapDataInstance.SubWorldRow; x++)
+            {
+                for (int y = 0; y < WorldMapDataInstance.SubWorldLayer; y++)
+                {
+                    for (int z = 0; z < WorldMapDataInstance.SubWorldColumn; z++)
                     {
                         SubWorldData subWorldData = new SubWorldData
                         {
@@ -75,9 +180,9 @@ namespace MapTool.Source
                             OFFSET_X = x.ToString(),
                             OFFSET_Y = y.ToString(),
                             OFFSET_Z = z.ToString(),
-                            WORLD_NAME = string.Format("SUB_WORLD_{0}", worldIndex)
+                            WORLD_NAME = string.Format("AREA_{0}_SUB_WORLD_{1}", areaIndex, worldIndex),
                         };
-                        if(y == (GenData.Layer - 1))
+                        if (y == (WorldMapDataInstance.SubWorldLayer - 1))
                         {
                             subWorldData.IS_SURFACE = true.ToString();
                         }
@@ -85,13 +190,16 @@ namespace MapTool.Source
                         {
                             subWorldData.IS_SURFACE = false.ToString();
                         }
-                        mapData.SubWorldDatas.Add(subWorldData);
+                        jsonFileData.WorldAreaDatas[areaIndex].SubWorldDatas.Add(subWorldData);
                         worldIndex++;
                     }
                 }
             }
-            File.WriteAllText(GenData.SelectPath, JsonConvert.SerializeObject(mapData, Formatting.Indented));
-            return true;
+        }
+
+        public bool Generate()
+        {
+            return GenerateSubWorldDatas() && GenerateWorldMapConfigData();
         }
     }
 }

@@ -107,9 +107,14 @@ public abstract class ActorController : MonoBehaviour
         return ContainedWorld.WorldBlockData;
     }
 
-    public Vector3 GetSubWorldOffset()
+    public Vector3 GetContainedSubWorldOffset()
     {
-        return ContainedWorld.WorldOffsetCoordinate;
+        return ContainedWorld.SubWorldOffsetCoordinate;
+    }
+
+    public Vector3 GetContainedWorldAreaOffset()
+    {
+        return ContainedWorld.GetWorldAreaOffset();
     }
 
     public void ChangeAI(AITypes type)

@@ -14,7 +14,8 @@ using UnityEngine;
 public class GameResourceSupervisor : MonoBehaviour {
 
     #region world
-    public SoftObjectPtr WorldPrefab { get; private set; }
+    public SoftObjectPtr WorldAreaPrefab { get; private set; }
+    public SoftObjectPtr SubWorldPrefab { get; private set; }
     public SoftObjectPtr TerrainChunkPrefab { get; private set; }
     public SoftObjectPtr WaterChunkPrefab { get; private set; }
     public SoftObjectPtr EnviromentChunkPrefab { get; private set; }
@@ -38,8 +39,9 @@ public class GameResourceSupervisor : MonoBehaviour {
         //
         CharacterPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER_RESOURCE_PATH);
         //
+        WorldAreaPrefab = new SoftObjectPtr(ConstFilePath.WORLD_AREA_PREFAB);
         TerrainChunkPrefab = new SoftObjectPtr(ConstFilePath.TERRAIN_CHUNK_PREFAB_RESOURCE_PATH);
-        WorldPrefab = new SoftObjectPtr(ConstFilePath.SUB_WORLD_PREFAB);
+        SubWorldPrefab = new SoftObjectPtr(ConstFilePath.SUB_WORLD_PREFAB);
         WaterChunkPrefab = new SoftObjectPtr(ConstFilePath.WATER_CHUNK_PREFAB_RESOURCE_PATH);
         EnviromentChunkPrefab = new SoftObjectPtr(ConstFilePath.ENVIROMENT_CHUNK_PREFAB_RESOURCE_PATH);
         //

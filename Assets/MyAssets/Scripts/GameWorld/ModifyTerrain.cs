@@ -17,7 +17,7 @@ public class ModifyTerrain : MonoBehaviour
     public void Init()
     {
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        chunkSize = gameWorldConfig.chunk_size;
+        chunkSize = gameWorldConfig.ChunkSize;
     }
 
     public void ReplaceBlockCursor(Ray ray, Vector3 clickWorldPos, byte blockType)
@@ -42,7 +42,7 @@ public class ModifyTerrain : MonoBehaviour
     }
     private void SelectWorld(Vector3 clickWorldPos)
     {
-        foreach (var element in WorldManager.Instance.WholeWorldStates)
+        foreach (var element in WorldAreaManager.Instance.ContainedWorldArea(clickWorldPos).SubWorldStates)
         {
             if (CustomAABB.IsInterSectPoint(element.Value.SubWorldInstance.CustomOctreeInstance.RootMinBound,
                 element.Value.SubWorldInstance.CustomOctreeInstance.RootMaxBound, clickWorldPos))
@@ -63,9 +63,9 @@ public class ModifyTerrain : MonoBehaviour
             blockY = (int)(collideInfo.HitBlockCenter.y);
             blockZ = (int)(collideInfo.HitBlockCenter.z);
             var gameConfig = WorldConfigFile.Instance.GetConfig();
-            blockX -= (int)world.WorldOffsetCoordinate.x * gameConfig.sub_world_x_size;
-            blockY -= (int)world.WorldOffsetCoordinate.y * gameConfig.sub_world_y_size;
-            blockZ -= (int)world.WorldOffsetCoordinate.z * gameConfig.sub_world_z_size;
+            blockX -= (int)world.SubWorldOffsetCoordinate.x * gameConfig.SubWorldSizeX;
+            blockY -= (int)world.SubWorldOffsetCoordinate.y * gameConfig.SubWorldSizeY;
+            blockZ -= (int)world.SubWorldOffsetCoordinate.z * gameConfig.SubWorldSizeZ;
             //-------------------------------------------------------------------------------
             if (isCreate)
             {
@@ -89,9 +89,9 @@ public class ModifyTerrain : MonoBehaviour
     private void SetBlockForAdd(int x, int y, int z, byte block)
     {
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        if ((x < gameWorldConfig.sub_world_x_size) &&
-           (y < gameWorldConfig.sub_world_y_size) &&
-           (z < gameWorldConfig.sub_world_z_size) &&
+        if ((x < gameWorldConfig.SubWorldSizeX) &&
+           (y < gameWorldConfig.SubWorldSizeY) &&
+           (z < gameWorldConfig.SubWorldSizeZ) &&
            (x >= 0) && (y >= 0) && (z >= 0)) 
         {
             world.WorldBlockData[x, y, z].Type = block;
@@ -160,9 +160,9 @@ public class ModifyTerrain : MonoBehaviour
         };
 
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        if ((x < gameWorldConfig.sub_world_x_size) &&
-           (y < gameWorldConfig.sub_world_y_size) &&
-           (z < gameWorldConfig.sub_world_z_size) &&
+        if ((x < gameWorldConfig.SubWorldSizeX) &&
+           (y < gameWorldConfig.SubWorldSizeY) &&
+           (z < gameWorldConfig.SubWorldSizeZ) &&
            (x >= 0) && (y >= 0) && (z >= 0))
         {
             UpdateUserItem(world.WorldBlockData[x, y, z].Type);
@@ -198,7 +198,7 @@ public class ModifyTerrain : MonoBehaviour
             world.ChunkSlots[updateX - 1, updateY, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
         }
 
-        if (x - (chunkSize * updateX) == gameWorldConfig.chunk_size && updateX != world.ChunkSlots.GetLength(0) - 1)
+        if (x - (chunkSize * updateX) == gameWorldConfig.ChunkSize && updateX != world.ChunkSlots.GetLength(0) - 1)
         {
             world.ChunkSlots[updateX + 1, updateY, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
         }
@@ -208,7 +208,7 @@ public class ModifyTerrain : MonoBehaviour
             world.ChunkSlots[updateX, updateY - 1, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
         }
 
-        if (y - (chunkSize * updateY) == gameWorldConfig.chunk_size && updateY != world.ChunkSlots.GetLength(1) - 1)
+        if (y - (chunkSize * updateY) == gameWorldConfig.ChunkSize && updateY != world.ChunkSlots.GetLength(1) - 1)
         {
             world.ChunkSlots[updateX, updateY + 1, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
         }
@@ -218,7 +218,7 @@ public class ModifyTerrain : MonoBehaviour
             world.ChunkSlots[updateX, updateY, updateZ - 1].Chunks[(int)ChunkType.TERRAIN].Update = true;
         }
 
-        if (z - (chunkSize * updateZ) == gameWorldConfig.chunk_size && updateZ != world.ChunkSlots.GetLength(2) - 1)
+        if (z - (chunkSize * updateZ) == gameWorldConfig.ChunkSize && updateZ != world.ChunkSlots.GetLength(2) - 1)
         {
             world.ChunkSlots[updateX, updateY, updateZ + 1].Chunks[(int)ChunkType.TERRAIN].Update = true;
         }

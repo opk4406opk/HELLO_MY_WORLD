@@ -13,40 +13,62 @@ using System.Windows.Forms;
 using MapTool.Source;
 namespace MapTool
 {
+    public class MapToolPath
+    {
+        //
+        public static string SubWorldJsonFilePath;
+        public static string WorldConfigJsonFilePath;
+        //
+    }
     
+   
     public partial class MainForm : Form
     {
-        private SaveSlotFile SaveSlotFile;
-        private IFormatter BinFormatter = new BinaryFormatter();
-        private MapDataGenerator MapDataGenerator;
+        
+        private SaveSlotFile SaveSlotFileInstance;
+        private IFormatter BinaryFormatterInstance = new BinaryFormatter();
+        private MapDataGenerator MapDataGeneratorInstance;
         public MainForm()
         {
             InitializeComponent();
             //
-            MapDataGenerator = new MapDataGenerator();
-            SaveSlotFile = new SaveSlotFile();
+            MapDataGeneratorInstance = new MapDataGenerator();
+            SaveSlotFileInstance = new SaveSlotFile();
         }
 
-        private bool CheckInputDataValidate(ref int row, ref int column, ref int layer)
+        private bool CheckInputDataValidate(ref int subWorldRow, ref int subWorldColumn, ref int subWorldLayer, ref int worldAreaRow, ref int worldAreaColumn, ref int worldAreaLayer)
         {
-            return int.TryParse(tbx_row.Text, out row) && int.TryParse(tbx_column.Text, out column) && int.TryParse(tbx_layer.Text, out layer);
+            return int.TryParse(tbx_subWorldRow.Text, out subWorldRow) &&
+                   int.TryParse(tbx_subWorldColumn.Text, out subWorldColumn) &&
+                   int.TryParse(tbx_subWorldLayer.Text, out subWorldLayer) &&
+                   int.TryParse(tbx_worldAreaRow.Text, out worldAreaRow) &&
+                   int.TryParse(tbx_worldAreaColumn.Text, out worldAreaColumn) &&
+                   int.TryParse(tbx_worldAreaLayer.Text, out worldAreaLayer);
         }
 
         private void btn_StartGenerate_Click(object sender, EventArgs e)
         {
-            MapGenerateData mapGenData;
-            int row = 0, column = 0, layer = 0;
-            if(CheckInputDataValidate(ref row, ref column, ref layer) == true)
+            WorldMapData mapGenData;
+            int worldAreaRow = 0, worldAreaColumn = 0, worldAreaLayer = 0;
+            int subWorldRow = 0, subWorldColumn = 0, subWorldLayer = 0;
+            if(CheckInputDataValidate(ref subWorldRow, ref subWorldColumn, ref subWorldLayer, ref worldAreaRow, ref worldAreaColumn, ref worldAreaLayer) == true)
             {
-                mapGenData.Row = row;
-                mapGenData.Column = column;
-                mapGenData.Layer = layer;
+               
+                mapGenData.SubWorldRow = MapToolUtils.Clamp<int>(subWorldRow, 0, MapDataGenerator.SubWorld_Count_X_Axis_Per_WorldArea);
+                mapGenData.SubWorldColumn = MapToolUtils.Clamp<int>(subWorldColumn, 0, MapDataGenerator.SubWorld_Count_Y_Axis_Per_WorldArea);
+                mapGenData.SubWorldLayer = MapToolUtils.Clamp<int>(subWorldLayer, 0, MapDataGenerator.SubWorld_Count_Z_Axis_Per_WorldArea);
+                mapGenData.WorldAreaRow = worldAreaRow;
+                mapGenData.WorldAreaColumn = worldAreaColumn;
+                mapGenData.WorldAreaLayer = worldAreaLayer;
             }
             else
             {
-                mapGenData.Row = MapDataGenerator.DefaultRowValue;
-                mapGenData.Column = MapDataGenerator.DefaultColumnValue;
-                mapGenData.Layer = MapDataGenerator.DefaultLayerValue;
+                mapGenData.SubWorldRow = MapDataGenerator.DefaultSubWorldRowValue;
+                mapGenData.SubWorldColumn = MapDataGenerator.DefaultSubWorldColumnValue;
+                mapGenData.SubWorldLayer = MapDataGenerator.DefaultSubWorldLayerValue;
+                mapGenData.WorldAreaRow = MapDataGenerator.DefaultWorldAreaRowValue;
+                mapGenData.WorldAreaColumn = MapDataGenerator.DefaultWorldAreaColumnValue;
+                mapGenData.WorldAreaLayer = MapDataGenerator.DefaultWorldAreaLayerValue;
             }
 
             if(File.Exists(SaveSlotFile.SaveFilePath) == true && 
@@ -54,26 +76,30 @@ namespace MapTool
             {
                 using (var SaveFileStream = new FileStream(SaveSlotFile.SaveFilePath, FileMode.Open))
                 {
-                    SaveSlotFile = BinFormatter.Deserialize(SaveFileStream) as SaveSlotFile;
-                    mapGenData.SelectPath = SaveSlotFile.LastestSavePath;
+                    SaveSlotFileInstance = BinaryFormatterInstance.Deserialize(SaveFileStream) as SaveSlotFile;
+                    MapToolPath.SubWorldJsonFilePath = SaveSlotFileInstance.LastestSubWorldSavePath;
+                    MapToolPath.WorldConfigJsonFilePath = SaveSlotFileInstance.LastestWorldConfgSavePath;
                 }
             }
             else if (string.Equals(dig_folderBrowser.SelectedPath, string.Empty) == false)
             {
-                mapGenData.SelectPath = string.Format("{0}//WorldMapData.json", dig_folderBrowser.SelectedPath);
+                MapToolPath.SubWorldJsonFilePath = string.Format("{0}//WorldMapData.json", dig_folderBrowser.SelectedPath);
+                MapToolPath.WorldConfigJsonFilePath = string.Format("{0}//WorldConfigData.json", dig_folderBrowser.SelectedPath);
             }
             else
             {
-                mapGenData.SelectPath = ".//WorldMapData.json";
+                MapToolPath.SubWorldJsonFilePath = ".//WorldMapData.json";
+                MapToolPath.WorldConfigJsonFilePath = ".//WorldConfigData.json";
             }
 
-            MapDataGenerator.Init(mapGenData);
-            if(MapDataGenerator.Generate())
+            MapDataGeneratorInstance.Init(mapGenData);
+            if(MapDataGeneratorInstance.Generate())
             {
                 using (var SaveFileStream = new FileStream(SaveSlotFile.SaveFilePath, FileMode.OpenOrCreate))
                 {
-                    SaveSlotFile.LastestSavePath = mapGenData.SelectPath;
-                    BinFormatter.Serialize(SaveFileStream, SaveSlotFile);
+                    SaveSlotFileInstance.LastestSubWorldSavePath = MapToolPath.SubWorldJsonFilePath;
+                    SaveSlotFileInstance.LastestWorldConfgSavePath = MapToolPath.WorldConfigJsonFilePath;
+                    BinaryFormatterInstance.Serialize(SaveFileStream, SaveSlotFileInstance);
                 }
                 tbx_logBox.AppendText(string.Format("[LOG] Success MapData Generate. \n"));
             }
@@ -94,11 +120,21 @@ namespace MapTool
             {
                 using (var SaveFileStream = new FileStream(SaveSlotFile.SaveFilePath, FileMode.Open))
                 {
-                    SaveSlotFile = BinFormatter.Deserialize(SaveFileStream) as SaveSlotFile;
-                    tbx_lastSavePath.Text = SaveSlotFile.LastestSavePath;
+                    SaveSlotFileInstance = BinaryFormatterInstance.Deserialize(SaveFileStream) as SaveSlotFile;
+                    tbx_lastSavePath.Text = SaveSlotFileInstance.LastestSubWorldSavePath;
                     SaveFileStream.Close();
                 }
             }
+        }
+
+        private void Panel_MapViewer_Paint(object sender, PaintEventArgs e)
+        {
+            //using (MapViewer viewer = new MapViewer(800, 600, "LearnOpenTK"))
+            //{
+            //    //Run takes a double, which is how many frames per second it should strive to reach.
+            //    //You can leave that out and it'll just update as fast as the hardware will allow it.
+            //    viewer.Run(60.0);
+            //}
         }
     }
 
@@ -108,7 +144,8 @@ namespace MapTool
     public class SaveSlotFile
     {
         public static readonly string SaveFilePath = ".//SaveData.bin";
-        public string LastestSavePath;
+        public string LastestSubWorldSavePath;
+        public string LastestWorldConfgSavePath;
     }
 
 }

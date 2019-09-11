@@ -82,9 +82,9 @@ public abstract class AChunk : MonoBehaviour {
 	protected BlockTileType GetBlockType(int x, int y, int z)
 	{
 		var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        Const<bool> bOverXrange = new Const<bool>(x >= gameWorldConfig.sub_world_x_size || x < 0);
-        Const<bool> bOverYrange = new Const<bool>(y >= gameWorldConfig.sub_world_y_size || y < 0);
-        Const<bool> bOverZrange = new Const<bool>(z >= gameWorldConfig.sub_world_z_size || z < 0);
+        Const<bool> bOverXrange = new Const<bool>(x >= gameWorldConfig.SubWorldSizeX || x < 0);
+        Const<bool> bOverYrange = new Const<bool>(y >= gameWorldConfig.SubWorldSizeY || y < 0);
+        Const<bool> bOverZrange = new Const<bool>(z >= gameWorldConfig.SubWorldSizeZ || z < 0);
         if (bOverXrange.Value == true || bOverYrange.Value == true || bOverZrange.Value == true)
 		{
 			return BlockTileType.EMPTY;
