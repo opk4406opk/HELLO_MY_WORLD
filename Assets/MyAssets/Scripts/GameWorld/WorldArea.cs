@@ -14,7 +14,7 @@ using UnityEngine;
 public class SubWorldExternalDataFile
 {
     public int WorldDataArrayIndex;
-    public string UniqueID;
+    public string UniqueID;  
     public Block[,,] BlockData;
 }
 

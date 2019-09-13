@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2018
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29201.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapTool", "CustomMapTool\MapTool.csproj", "{C2542939-D163-4042-944A-1D7D18219376}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapTool", "MapTool\MapTool.csproj", "{C2542939-D163-4042-944A-1D7D18219376}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActorGeneratorTool", "ActorGeneratorTool\ActorGeneratorTool.csproj", "{0BCFA7BE-A0DC-41E8-8902-89FD9F042FBE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{C2542939-D163-4042-944A-1D7D18219376}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2542939-D163-4042-944A-1D7D18219376}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2542939-D163-4042-944A-1D7D18219376}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BCFA7BE-A0DC-41E8-8902-89FD9F042FBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BCFA7BE-A0DC-41E8-8902-89FD9F042FBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BCFA7BE-A0DC-41E8-8902-89FD9F042FBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BCFA7BE-A0DC-41E8-8902-89FD9F042FBE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
