@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class WorldMapData
 {
-    public List<WorldAreaData> WorldAreaDatas = new List<WorldAreaData>();
+    public List<WorldAreaTerrainData> WorldAreaDatas = new List<WorldAreaTerrainData>();
    
     public int WorldAreaRow;
     public int WorldAreaColumn;
@@ -14,7 +14,7 @@ public class WorldMapData
     public int SubWorldLayer;
 }
 
-public class WorldAreaData
+public class WorldAreaTerrainData
 {
     public string UniqueID;
     public int OffsetX, OffsetY, OffsetZ;
@@ -93,7 +93,7 @@ public class WorldMapDataFile : BaseDataFile
         //
         foreach(var worldArea in worldAreaList)
         {
-            WorldAreaData worldAreaData = new WorldAreaData();
+            WorldAreaTerrainData worldAreaData = new WorldAreaTerrainData();
             var data = worldArea.ToDictionary();
             string val;
             data.TryGetValue("AREA_NAME", out val);

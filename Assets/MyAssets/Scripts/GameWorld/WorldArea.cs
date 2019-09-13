@@ -39,7 +39,7 @@ public class SubWorldState
 public enum SubWorldRealTimeStatus
 {
     None,
-    NotLoaded,
+    ReadyToFirstLoad,
     Loading, // 로딩중.
     LoadFinish, // 로딩완료.
     Release, // 해제중.
@@ -57,7 +57,7 @@ public class WorldArea : MonoBehaviour
 
     public Dictionary<string, SubWorldState> SubWorldStates { get; } = new Dictionary<string, SubWorldState>();
 
-    public void Init(WorldAreaData worldAreaData)
+    public void Init(WorldAreaTerrainData worldAreaData)
     {
         KojeomLogger.DebugLog("WorldArea 생성을 시작합니다.");
         AreaName = worldAreaData.AreaName;
@@ -102,7 +102,7 @@ public class WorldArea : MonoBehaviour
         }
     }
 
-    private async Task<bool> SaveSpecificSubWorld(string uniqueID)
+    private async Task<bool> TaskSaveSpecificSubWorld(string uniqueID)
     {
         return await Task.Run(() => {
             Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
@@ -125,11 +125,15 @@ public class WorldArea : MonoBehaviour
         });
     }
 
-    public async void SaveAsyncSubWorldFile(string uniqueID)
-    {
+    public async void AsyncReleaseSubWorldFile(string uniqueID)
+    { 
+        // 메모리 해제 직전, Sub WorldData를 외부 파일로 저장.
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} Start and Waiting Async Save.", uniqueID));
-        var isSaveSuccess = await SaveSpecificSubWorld(uniqueID);
+        var isSaveSuccess = await TaskSaveSpecificSubWorld(uniqueID);
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} End Waiting Async Save.", uniqueID));
+        // 메모리 해제 시작.
+        SubWorldStates[uniqueID].SubWorldInstance.Release();
+        KojeomLogger.DebugLog(string.Format("Subworld ID : {0} is Start Release. ", uniqueID));
     }
 
     /// <summary>
@@ -137,7 +141,7 @@ public class WorldArea : MonoBehaviour
     /// </summary>
     /// <param name="uniqueID"></param>
     /// <returns></returns>
-    private async Task<SubWorldExternalDataFile> LoadSubWorldFile(string uniqueID)
+    private async Task<SubWorldExternalDataFile> TaskLoadSubWorldFile(string uniqueID)
     {
         // deserializing.
         return await Task.Run(()=> {
@@ -153,20 +157,18 @@ public class WorldArea : MonoBehaviour
         });
     }
 
-    public async void LoadAsyncSubWorldFile(string uniqueID)
+    public async void AsyncLoadSubWorldFile(string uniqueID)
     {
-        // 로딩 상태로 전환.
         SubWorldStates.TryGetValue(uniqueID, out SubWorldState worldState);
-        worldState.RealTimeStatus = SubWorldRealTimeStatus.Loading;
         // 실제 파일을 로딩.
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} Start and Waiting Async Load from file.", uniqueID));
-        var loadedWorldData = await LoadSubWorldFile(uniqueID);
+        var loadedWorldData = await TaskLoadSubWorldFile(uniqueID);
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} Finish Waiting Async Load from file.", uniqueID));
-        // 읽어들인 파일을 이용해 게임에서 로딩.
-        worldState.SubWorldInstance.LoadSynchro(loadedWorldData.BlockData);
+        // 읽어들인 파일을 이용해 서브월드 로딩.
+        worldState.SubWorldInstance.AsyncLoading(loadedWorldData.BlockData);
     }
 
-    private void CreateArea(WorldAreaData worldAreaData)
+    private void CreateArea(WorldAreaTerrainData worldAreaData)
     {
         foreach(var subWorldData in worldAreaData.SubWorldDataList)
         {
@@ -179,7 +181,7 @@ public class WorldArea : MonoBehaviour
             SubWorldState worldState = new SubWorldState
             {
                 SubWorldInstance = subWorld,
-                RealTimeStatus = SubWorldRealTimeStatus.NotLoaded
+                RealTimeStatus = SubWorldRealTimeStatus.ReadyToFirstLoad
             };
             SubWorldStates.Add(subWorldData.UniqueID, worldState);
         }
@@ -214,11 +216,7 @@ public class WorldArea : MonoBehaviour
             case SubWorldRealTimeStatus.LoadFinish:
                 // 릴리즈 상태로 전환.
                 SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Release;
-                // 메모리 해제 직전, Sub WorldData를 외부 파일로 저장.
-                SaveAsyncSubWorldFile(uniqueID);
-                // 메모리 해제 시작.
-                SubWorldStates[uniqueID].SubWorldInstance.Release();
-                KojeomLogger.DebugLog(string.Format("Subworld ID : {0} is Start Release. ", uniqueID));
+                AsyncReleaseSubWorldFile(uniqueID);
                 break;
         }
     }
@@ -287,12 +285,13 @@ public class WorldArea : MonoBehaviour
                                 case SubWorldRealTimeStatus.None:
                                     // nothing to do.
                                     break;
-                                case SubWorldRealTimeStatus.NotLoaded:
+                                case SubWorldRealTimeStatus.ReadyToFirstLoad:
                                     SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Loading;
-                                    SubWorldStates[uniqueID].SubWorldInstance.LoadSynchro();
+                                    SubWorldStates[uniqueID].SubWorldInstance.AsyncLoading();
                                     break;
                                 case SubWorldRealTimeStatus.ReleaseFinish:
-                                    LoadAsyncSubWorldFile(uniqueID);
+                                    SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Loading;
+                                    AsyncLoadSubWorldFile(uniqueID);
                                     break;
                             }
                         }

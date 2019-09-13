@@ -7,6 +7,33 @@ public class WorldGenAlgorithms
 {
     private static List<Vector3> TreeSpawnCandidates = new List<Vector3>();
 
+    public static bool GenerateWorldAreaTerrainData(int[,] xzPlaneTerrain, int areaSizeX, int areaSizeZ, int generateNumber = 800)
+    {
+        for (int loop = 0; loop < generateNumber; loop++)
+        {
+            Vector2 firstPoint = new Vector2(KojeomUtility.RandomInteger(0, areaSizeX), KojeomUtility.RandomInteger(0, areaSizeZ));
+            Vector2 secondPoint = new Vector2(KojeomUtility.RandomInteger(0, areaSizeX), KojeomUtility.RandomInteger(0, areaSizeZ));
+            Vector2 dirVec = secondPoint - firstPoint;
+            for (int x = 0; x < areaSizeX; x++)
+            {
+                for (int z = 0; z < areaSizeZ; z++)
+                {
+                    Vector2 point = new Vector2(x, z);
+                    Vector3 crossVec = Vector3.Cross(dirVec, point);
+                    if (crossVec.z > 0)
+                    {
+                        xzPlaneTerrain[x, z]++;
+                    }
+                    else
+                    {
+                        xzPlaneTerrain[x, z]--;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     public static void DefaultGenSurfaceSubWorld(Block[,,] subWorldBlockData, MakeWorldParam param)
     {
         Vector3 highestPoint = Vector3.zero;

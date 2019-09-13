@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class WorldAreaManager : MonoBehaviour
@@ -13,14 +14,38 @@ public class WorldAreaManager : MonoBehaviour
         //
         foreach(var worldAreaData in WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaDatas)
         {
-            GameObject newWorldArea = Instantiate(GameResourceSupervisor.GetInstance().WorldAreaPrefab.LoadSynchro(), new Vector3(0, 0, 0),
-               new Quaternion(0, 0, 0, 0)) as GameObject;
-            newWorldArea.transform.parent = transform;
-            //
-            WorldArea worldAreaInstance = newWorldArea.GetComponent<WorldArea>();
-            worldAreaInstance.Init(worldAreaData);
-            WorldAreas.Add(worldAreaData.UniqueID, worldAreaInstance);
+            AsyncGenerateArea(worldAreaData);
         }
+    }
+
+    private async void AsyncGenerateArea(WorldAreaTerrainData worldAreaData)
+    {
+        var worldConfig = WorldConfigFile.Instance.GetConfig();
+        var worldMapData = WorldMapDataFile.Instance.WorldMapDataInstance;
+        int worldAreaSizeX = worldMapData.SubWorldRow * worldConfig.SubWorldSizeX;
+        int worldAreaSizeZ = worldMapData.SubWorldColumn * worldConfig.SubWorldSizeZ;
+        //
+        GameObject newWorldArea = Instantiate(GameResourceSupervisor.GetInstance().WorldAreaPrefab.LoadSynchro(), new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
+        newWorldArea.transform.parent = transform;
+        //
+        KojeomLogger.DebugLog(string.Format("WorldArea ID : {0} ({1} * {2}) Start Async Generate.", worldAreaData.UniqueID, worldAreaSizeX, worldAreaSizeZ));
+        var planeTerrainData = await TaskGenerateAreaData(worldAreaSizeX, worldAreaSizeZ);
+        KojeomLogger.DebugLog(string.Format("WorldArea ID : {0} ({1} * {2}) Finish Async Generate.", worldAreaData.UniqueID, worldAreaSizeX, worldAreaSizeZ));
+        //
+        WorldArea worldAreaInstance = newWorldArea.GetComponent<WorldArea>();
+        worldAreaInstance.Init(worldAreaData);
+        WorldAreas.Add(worldAreaData.UniqueID, worldAreaInstance);
+        //
+       
+    }
+
+    private async Task<int[,]> TaskGenerateAreaData(int areaSizeX, int areaSizeZ)
+    {
+        return await Task.Run(() => {
+            int[,] map = new int[areaSizeX, areaSizeZ]; 
+            bool isSuccess = WorldGenAlgorithms.GenerateWorldAreaTerrainData(map, areaSizeX, areaSizeZ);
+            return map;
+        });
     }
 
     public WorldArea GetWorldArea(string worldAreaUniqueID)

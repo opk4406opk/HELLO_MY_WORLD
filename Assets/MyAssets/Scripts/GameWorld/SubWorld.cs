@@ -54,6 +54,7 @@ public class SubWorld : MonoBehaviour
 
     public void Init(SubWorldData subWorldData, WorldArea worldArea)
     {
+        ChunkSize = WorldConfigFile.Instance.GetConfig().ChunkSize;
         WorldAreaInstance = worldArea;
         bLoadFinish = false;
         InGameObjRegister = new InGameObjectRegister();
@@ -146,66 +147,64 @@ public class SubWorld : MonoBehaviour
         OnFinishRelease(UniqueID);
     }
 
-    public void LoadSynchro(Block[,,] newBlockData = null)
+    public async void AsyncLoading(Block[,,] newBlockData = null)
     {
-        bool isReLoaded = false;
-        if(newBlockData != null)
-        {
-            isReLoaded = true;
-        }
+        var isSuccess = await TaskLoadSubWorldTerrain(newBlockData);
+        StartCoroutine(LoadTerrainChunks());
+    }
 
-        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        ChunkSize = gameWorldConfig.ChunkSize;
-        // init world data.
-        if(newBlockData == null)
-        {
-            WorldBlockData = new Block[gameWorldConfig.SubWorldSizeX,
-            gameWorldConfig.SubWorldSizeY,
-            gameWorldConfig.SubWorldSizeZ];
-            for (int x = 0; x < gameWorldConfig.SubWorldSizeX; x++)
+    private async Task<bool> TaskLoadSubWorldTerrain(Block[,,] newBlockData = null)
+    {
+        return await Task.Run(() => {
+            var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
+            // init world data.
+            if (newBlockData == null)
             {
-                for (int z = 0; z < gameWorldConfig.SubWorldSizeZ; z++)
+                WorldBlockData = new Block[gameWorldConfig.SubWorldSizeX,
+                gameWorldConfig.SubWorldSizeY,
+                gameWorldConfig.SubWorldSizeZ];
+                for (int x = 0; x < gameWorldConfig.SubWorldSizeX; x++)
                 {
-                    for (int y = 0; y < gameWorldConfig.SubWorldSizeY; y++)
+                    for (int z = 0; z < gameWorldConfig.SubWorldSizeZ; z++)
                     {
-                        WorldBlockData[x, y, z] = new Block
+                        for (int y = 0; y < gameWorldConfig.SubWorldSizeY; y++)
                         {
-                            Type = (byte)BlockTileType.EMPTY,
-                            bRendered = false
-                        };
+                            WorldBlockData[x, y, z] = new Block
+                            {
+                                Type = (byte)BlockTileType.EMPTY,
+                                bRendered = false
+                            };
+                        }
                     }
                 }
             }
-        }
-        else
-        {
-            WorldBlockData = newBlockData;
-        }
-        
-        // init chunk group.
-        ChunkSlots = new ChunkSlot[Mathf.FloorToInt(gameWorldConfig.SubWorldSizeX / ChunkSize),
-            Mathf.FloorToInt(gameWorldConfig.SubWorldSizeY / ChunkSize),
-            Mathf.FloorToInt(gameWorldConfig.SubWorldSizeZ / ChunkSize)];
-        for (int x = 0; x < ChunkSlots.GetLength(0); x++)
-        {
-            for (int z = 0; z < ChunkSlots.GetLength(2); z++)
+            else
             {
-                for (int y = 0; y < ChunkSlots.GetLength(1); y++)
+                WorldBlockData = newBlockData;
+            }
+
+            // init chunk group.
+            ChunkSlots = new ChunkSlot[Mathf.FloorToInt(gameWorldConfig.SubWorldSizeX / ChunkSize),
+                Mathf.FloorToInt(gameWorldConfig.SubWorldSizeY / ChunkSize),
+                Mathf.FloorToInt(gameWorldConfig.SubWorldSizeZ / ChunkSize)];
+            for (int x = 0; x < ChunkSlots.GetLength(0); x++)
+            {
+                for (int z = 0; z < ChunkSlots.GetLength(2); z++)
                 {
-                    ChunkSlots[x, y, z] = new ChunkSlot();
+                    for (int y = 0; y < ChunkSlots.GetLength(1); y++)
+                    {
+                        ChunkSlots[x, y, z] = new ChunkSlot();
+                    }
                 }
             }
-        }
 
-        switch (GameStatus.DetailSingleMode)
-        {
-            case DetailSingleMode.SAVE_GAME:
-                break;
-            case DetailSingleMode.EDITOR_TEST_PLAY:
-            case DetailSingleMode.LOAD_GAME:
-                if(isReLoaded == false)
-                {
-                    if(bSurfaceWorld == true)
+            switch (GameStatus.DetailSingleMode)
+            {
+                case DetailSingleMode.SAVE_GAME:
+                    break;
+                case DetailSingleMode.EDITOR_TEST_PLAY:
+                case DetailSingleMode.LOAD_GAME:
+                    if (bSurfaceWorld == true)
                     {
                         MakeWorldParam param;
                         param.BaseOffset = KojeomUtility.RandomInteger(2, 29);
@@ -215,12 +214,11 @@ public class SubWorld : MonoBehaviour
                     {
                         WorldGenAlgorithms.DefaultGenInternalSubWorld(WorldBlockData);
                     }
-                   
-                }
-                break;
-        }
-        KojeomLogger.DebugLog(string.Format("World name : {0}, Chunk 로드를 시작합니다.", WorldName), LOG_TYPE.DEBUG_TEST);
-        StartCoroutine(LoadTerrainChunks());
+                    break;
+            }
+            //
+            return true;
+        });
     }
 
     //void OnDrawGizmos()
@@ -230,6 +228,7 @@ public class SubWorld : MonoBehaviour
 
     private IEnumerator LoadTerrainChunks()
     {
+        KojeomLogger.DebugLog(string.Format("World name : {0}, Chunk 로드를 시작합니다.", WorldName), LOG_TYPE.DEBUG_TEST);
         for (int x = 0; x < ChunkSlots.GetLength(0); x++)
         {
             for (int z = 0; z < ChunkSlots.GetLength(2); z++)
