@@ -29,7 +29,7 @@ public class WorldAreaManager : MonoBehaviour
         newWorldArea.transform.parent = transform;
         //
         KojeomLogger.DebugLog(string.Format("WorldArea ID : {0} ({1} * {2}) Start Async Generate.", worldAreaData.UniqueID, worldAreaSizeX, worldAreaSizeZ));
-        var planeTerrainData = await TaskGenerateAreaData(worldAreaSizeX, worldAreaSizeZ);
+        var planeTerrainData = await TaskGenerateAreaData(worldAreaSizeX, worldAreaSizeZ, worldAreaData.SubWorldDataList);
         KojeomLogger.DebugLog(string.Format("WorldArea ID : {0} ({1} * {2}) Finish Async Generate.", worldAreaData.UniqueID, worldAreaSizeX, worldAreaSizeZ));
         //
         WorldArea worldAreaInstance = newWorldArea.GetComponent<WorldArea>();
@@ -39,11 +39,37 @@ public class WorldAreaManager : MonoBehaviour
        
     }
 
-    private async Task<int[,]> TaskGenerateAreaData(int areaSizeX, int areaSizeZ)
+    private async Task<int[,]> TaskGenerateAreaData(int areaSizeX, int areaSizeZ, List<SubWorldData> subWorldDatas)
     {
         return await Task.Run(() => {
             int[,] map = new int[areaSizeX, areaSizeZ]; 
-            bool isSuccess = WorldGenAlgorithms.GenerateWorldAreaTerrainData(map, areaSizeX, areaSizeZ);
+            bool isSuccess = WorldGenAlgorithms.GenerateWorldAreaTerrainData(map, areaSizeX, areaSizeZ, 400);
+            //
+            var worldConfig = WorldConfigFile.Instance.GetConfig();
+            foreach (var data in subWorldDatas)
+            {
+                for(int x = 0; x < worldConfig.SubWorldSizeX; x++)
+                {
+                    for(int z = 0; z < worldConfig.SubWorldSizeZ; z++)
+                    {
+                        int mapX = (data.OffsetX * worldConfig.SubWorldSizeX) + x;
+                        int mapZ = (data.OffsetZ * worldConfig.SubWorldSizeZ) + z;
+                        int terrainValue = map[mapX, mapZ];
+                        if(terrainValue > 0)
+                        {
+
+                        }
+                        else
+                        {
+
+                        }
+                        for(int y = 0; y < worldConfig.SubWorldSizeY; y++)
+                        {
+                            
+                        }
+                    }
+                }
+            }
             return map;
         });
     }
@@ -60,12 +86,12 @@ public class WorldAreaManager : MonoBehaviour
     /// <returns></returns>
     public SubWorld ContainedSubWorld(Vector3 pos)
     {
-        var state = WorldAreas[GetWorldAreaUniqueID(pos)].SubWorldStates[GetSubWorldUniqueID(pos)];
-        if (state == null)
+        var subWorldInstance = WorldAreas[GetWorldAreaUniqueID(pos)].ContainedSubWorld(pos);
+        if (subWorldInstance == null)
         {
             return null;
         }
-        return state.SubWorldInstance;
+        return subWorldInstance;
     }
 
     public WorldArea ContainedWorldArea(Vector3 pos)
@@ -85,20 +111,6 @@ public class WorldAreaManager : MonoBehaviour
         int x = (Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX) % WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaRow;
         int y = (Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY) % WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaLayer;
         int z = (Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ) % WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaColumn;
-        return MakeUniqueID(x, y, z);
-    }
-
-    /// <summary>
-    /// 오브젝트 위치를 통해 어느 SubWorld에 위치했는지 확인 후 해당 World UniqueID를 리턴.
-    /// </summary>
-    /// <param name="objectPos">오브젝트 위치</param>
-    /// <returns></returns>
-    public static string GetSubWorldUniqueID(Vector3 objectPos)
-    {
-        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        int x = (Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX) % WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldRow % WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaRow;
-        int y = (Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY) % WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldLayer % WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaLayer;
-        int z = (Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ) % WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldColumn % WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaColumn;
         return MakeUniqueID(x, y, z);
     }
 

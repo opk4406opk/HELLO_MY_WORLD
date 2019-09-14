@@ -54,7 +54,6 @@ public class WorldArea : MonoBehaviour
     public Vector3 OffsetCoordinate { get; private set; }
     // 실제 게임오브젝트로서 존재하는 위치값.
     public Vector3 RealCoordinate { get; private set; }
-
     public Dictionary<string, SubWorldState> SubWorldStates { get; } = new Dictionary<string, SubWorldState>();
 
     public void Init(WorldAreaTerrainData worldAreaData)
@@ -132,8 +131,8 @@ public class WorldArea : MonoBehaviour
         var isSaveSuccess = await TaskSaveSpecificSubWorld(uniqueID);
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} End Waiting Async Save.", uniqueID));
         // 메모리 해제 시작.
-        SubWorldStates[uniqueID].SubWorldInstance.Release();
         KojeomLogger.DebugLog(string.Format("Subworld ID : {0} is Start Release. ", uniqueID));
+        SubWorldStates[uniqueID].SubWorldInstance.Release();
     }
 
     /// <summary>
@@ -233,7 +232,7 @@ public class WorldArea : MonoBehaviour
     /// <returns></returns>
     public SubWorld ContainedSubWorld(Vector3 pos)
     {
-        var state = SubWorldStates[WorldAreaManager.GetSubWorldUniqueID(pos)];
+        var state = SubWorldStates[GetSubWorldUniqueID(pos)];
         if(state == null)
         {
             return null;
@@ -253,7 +252,7 @@ public class WorldArea : MonoBehaviour
             if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.IsInitializeFinish == true)
             {
                 playerPos = GamePlayerManager.Instance.MyGamePlayer.Controller.GetPosition();
-                offsetPos = SubWorldStates[WorldAreaManager.GetSubWorldUniqueID(playerPos)].SubWorldInstance.SubWorldOffsetCoordinate;
+                offsetPos = SubWorldStates[GetSubWorldUniqueID(playerPos)].SubWorldInstance.SubWorldOffsetCoordinate;
             }
             else
             {
@@ -312,6 +311,20 @@ public class WorldArea : MonoBehaviour
         var splits = worldName.Split('_');
         return int.Parse(splits[2]);
     }
-    
+
+
+    /// <summary>
+    /// 오브젝트 위치를 통해 어느 SubWorld에 위치했는지 확인 후 해당 World UniqueID를 리턴.
+    /// </summary>
+    /// <param name="objectPos">오브젝트 위치</param>
+    /// <returns></returns>
+    public static string GetSubWorldUniqueID(Vector3 objectPos)
+    {
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
+        int x = (Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX) % WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldRow;
+        int y = (Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY) % WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldLayer;
+        int z = (Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ) % WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldColumn;
+        return WorldAreaManager.MakeUniqueID(x, y, z);
+    }
 
 }
