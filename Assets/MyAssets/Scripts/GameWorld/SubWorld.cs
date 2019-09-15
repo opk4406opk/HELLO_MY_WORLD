@@ -37,9 +37,9 @@ public class SubWorld : MonoBehaviour
     public string WorldName { get; private set; }
     public string UniqueID { get; private set; }
     // 월드맵 위치값( == 오프셋값).
-    public Vector3 SubWorldOffsetCoordinate { get; private set; }
+    public Vector3 OffsetCoordinate { get; private set; }
     // 실제 게임오브젝트로서 존재하는 위치값.
-    public Vector3 SubWorldRealCoordinate{ get; private set; }
+    public Vector3 RealCoordinate{ get; private set; }
     public bool bSurfaceWorld { get; private set; }
     #endregion
 
@@ -62,20 +62,20 @@ public class SubWorld : MonoBehaviour
         // setting to World
         WorldName = subWorldData.WorldName;
         UniqueID = subWorldData.UniqueID;
-        SubWorldOffsetCoordinate = new Vector3(subWorldData.OffsetX, subWorldData.OffsetY, subWorldData.OffsetZ);
+        OffsetCoordinate = new Vector3(subWorldData.OffsetX, subWorldData.OffsetY, subWorldData.OffsetZ);
         var configData = WorldConfigFile.Instance.GetConfig();
         var mapData = WorldMapDataFile.Instance.WorldMapDataInstance;
-        float realCoordX = (SubWorldOffsetCoordinate.x * configData.SubWorldSizeX) + (WorldAreaInstance.OffsetCoordinate.x * mapData.SubWorldRow * configData.SubWorldSizeX);
-        float realCoordY = (SubWorldOffsetCoordinate.y * configData.SubWorldSizeY) + (WorldAreaInstance.OffsetCoordinate.y * mapData.SubWorldColumn * configData.SubWorldSizeY);
-        float realCoordZ = (SubWorldOffsetCoordinate.z * configData.SubWorldSizeZ) + (WorldAreaInstance.OffsetCoordinate.z * mapData.SubWorldLayer * configData.SubWorldSizeZ);
-        SubWorldRealCoordinate = new Vector3(realCoordX, realCoordY, realCoordZ);
+        float realCoordX = (OffsetCoordinate.x * configData.SubWorldSizeX) + (WorldAreaInstance.OffsetCoordinate.x * mapData.SubWorldRow * configData.SubWorldSizeX);
+        float realCoordY = (OffsetCoordinate.y * configData.SubWorldSizeY) + (WorldAreaInstance.OffsetCoordinate.y * mapData.SubWorldColumn * configData.SubWorldSizeY);
+        float realCoordZ = (OffsetCoordinate.z * configData.SubWorldSizeZ) + (WorldAreaInstance.OffsetCoordinate.z * mapData.SubWorldLayer * configData.SubWorldSizeZ);
+        RealCoordinate = new Vector3(realCoordX, realCoordY, realCoordZ);
         bSurfaceWorld = subWorldData.IsSurface;
         // setting to GameObject
         gameObject.name = WorldName;
         // Octree init.
-        CustomOctreeInstance.Init(SubWorldRealCoordinate, new Vector3(configData.SubWorldSizeX + SubWorldRealCoordinate.x,
-            configData.SubWorldSizeY + SubWorldRealCoordinate.y,
-            configData.SubWorldSizeZ + SubWorldRealCoordinate.z));
+        CustomOctreeInstance.Init(RealCoordinate, new Vector3(configData.SubWorldSizeX + RealCoordinate.x,
+            configData.SubWorldSizeY + RealCoordinate.y,
+            configData.SubWorldSizeZ + RealCoordinate.z));
         //
         bTicking = true;
         StartCoroutine(Tick());
@@ -96,7 +96,7 @@ public class SubWorld : MonoBehaviour
                 var curPlayerWorld = WorldAreaInstance.ContainedSubWorld(GamePlayerManager.Instance.MyGamePlayer.Controller.GetPosition());
                 if (curPlayerWorld != null)
                 {
-                    var dist = Mathf.RoundToInt(Vector3.Distance(curPlayerWorld.SubWorldOffsetCoordinate, SubWorldOffsetCoordinate));
+                    var dist = Mathf.RoundToInt(Vector3.Distance(curPlayerWorld.OffsetCoordinate, OffsetCoordinate));
                     //KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} away from {1} distance Player contained World",
                     //    UniqueID, dist));
                     // 거리값이 3(테스트용 값) 이상이 되면..Release.
@@ -160,9 +160,7 @@ public class SubWorld : MonoBehaviour
             // init world data.
             if (newBlockData == null)
             {
-                WorldBlockData = new Block[gameWorldConfig.SubWorldSizeX,
-                gameWorldConfig.SubWorldSizeY,
-                gameWorldConfig.SubWorldSizeZ];
+                WorldBlockData = new Block[gameWorldConfig.SubWorldSizeX, gameWorldConfig.SubWorldSizeY, gameWorldConfig.SubWorldSizeZ];
                 for (int x = 0; x < gameWorldConfig.SubWorldSizeX; x++)
                 {
                     for (int z = 0; z < gameWorldConfig.SubWorldSizeZ; z++)
@@ -204,15 +202,22 @@ public class SubWorld : MonoBehaviour
                     break;
                 case DetailSingleMode.EDITOR_TEST_PLAY:
                 case DetailSingleMode.LOAD_GAME:
-                    if (bSurfaceWorld == true)
+                    var worldConfig = WorldConfigFile.Instance.GetConfig();
+                    for (int x = 0; x < worldConfig.SubWorldSizeX; x++)
                     {
-                        MakeWorldParam param;
-                        param.BaseOffset = KojeomUtility.RandomInteger(2, 29);
-                        WorldGenAlgorithms.DefaultGenSurfaceSubWorld(WorldBlockData, param);
-                    }
-                    else
-                    {
-                        WorldGenAlgorithms.DefaultGenInternalSubWorld(WorldBlockData);
+                        for (int z = 0; z < worldConfig.SubWorldSizeZ; z++)
+                        {
+                            int mapX = ((int)OffsetCoordinate.x * worldConfig.SubWorldSizeX) + x;
+                            int mapZ = ((int)OffsetCoordinate.z * worldConfig.SubWorldSizeZ) + z;
+                            //
+                            WorldGenAlgorithms.TerrainValue terrainValue = WorldAreaInstance.XZPlaneDataArray[mapX, mapZ];
+                            int rangeY = terrainValue.Layers[(int)OffsetCoordinate.y];
+                            byte blockType = (byte)WorldGenAlgorithms.CalcTerrainValueToBlockType(terrainValue.ScalaValue);
+                            for (int y = 0; y < rangeY; y++)
+                            {
+                                WorldBlockData[x, y, z].Type = blockType;
+                            }
+                        }
                     }
                     break;
             }
@@ -277,9 +282,9 @@ public class SubWorld : MonoBehaviour
                         ChunkSlots[x, y, z].Chunks[type].WorldDataIdxY = y * ChunkSize;
                         ChunkSlots[x, y, z].Chunks[type].WorldDataIdxZ = z * ChunkSize;
                         var worldConfig = WorldConfigFile.Instance.GetConfig();
-                        ChunkSlots[x, y, z].Chunks[type].RealCoordX = chunkRealCoordX + SubWorldRealCoordinate.x;
-                        ChunkSlots[x, y, z].Chunks[type].RealCoordY = chunkRealCoordY + SubWorldRealCoordinate.y;
-                        ChunkSlots[x, y, z].Chunks[type].RealCoordZ = chunkRealCoordZ + SubWorldRealCoordinate.z;
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordX = chunkRealCoordX + RealCoordinate.x;
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordY = chunkRealCoordY + RealCoordinate.y;
+                        ChunkSlots[x, y, z].Chunks[type].RealCoordZ = chunkRealCoordZ + RealCoordinate.z;
                         ChunkSlots[x, y, z].Chunks[type].Init();
                         yield return new WaitForSeconds(WorldConfigFile.Instance.GetConfig().ChunkLoadIntervalSeconds);
                     }
@@ -327,24 +332,24 @@ public class SubWorld : MonoBehaviour
     {
         Vector3 ret;
         var worldConfig = WorldConfigFile.Instance.GetConfig();
-        if(SubWorldRealCoordinate.x == 0)
+        if(RealCoordinate.x == 0)
         {
-            ret.x = KojeomUtility.RandomInteger(0, (int)SubWorldRealCoordinate.x);
+            ret.x = KojeomUtility.RandomInteger(0, (int)RealCoordinate.x);
         }
         else
         {
-            ret.x = KojeomUtility.RandomInteger((int)SubWorldRealCoordinate.x - worldConfig.SubWorldSizeX, (int)SubWorldRealCoordinate.x);
+            ret.x = KojeomUtility.RandomInteger((int)RealCoordinate.x - worldConfig.SubWorldSizeX, (int)RealCoordinate.x);
         }
         //
         ret.y = HighestHeightInWorld();
 
-        if (SubWorldRealCoordinate.z == 0)
+        if (RealCoordinate.z == 0)
         {
-            ret.z = KojeomUtility.RandomInteger(0, (int)SubWorldRealCoordinate.z);
+            ret.z = KojeomUtility.RandomInteger(0, (int)RealCoordinate.z);
         }
         else
         {
-            ret.z = KojeomUtility.RandomInteger((int)SubWorldRealCoordinate.z - worldConfig.SubWorldSizeZ, (int)SubWorldRealCoordinate.z);
+            ret.z = KojeomUtility.RandomInteger((int)RealCoordinate.z - worldConfig.SubWorldSizeZ, (int)RealCoordinate.z);
         }
 
         return ret;
@@ -370,6 +375,6 @@ public class SubWorld : MonoBehaviour
                 }
             }
         }
-        return highest + (gameWorldConfig.SubWorldSizeY * SubWorldOffsetCoordinate.y);
+        return highest + (gameWorldConfig.SubWorldSizeY * OffsetCoordinate.y);
     }
 }

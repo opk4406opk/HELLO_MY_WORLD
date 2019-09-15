@@ -109,7 +109,7 @@ public abstract class ActorController : MonoBehaviour
 
     public Vector3 GetContainedSubWorldOffset()
     {
-        return ContainedWorld.SubWorldOffsetCoordinate;
+        return ContainedWorld.OffsetCoordinate;
     }
 
     public Vector3 GetContainedWorldAreaOffset()

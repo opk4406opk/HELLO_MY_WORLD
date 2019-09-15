@@ -55,10 +55,13 @@ public class WorldArea : MonoBehaviour
     // 실제 게임오브젝트로서 존재하는 위치값.
     public Vector3 RealCoordinate { get; private set; }
     public Dictionary<string, SubWorldState> SubWorldStates { get; } = new Dictionary<string, SubWorldState>();
+    // XZ 평면 데이터 정보 ( SubWorld에서 블록정보 세팅할 때 필요함.)
+    public WorldGenAlgorithms.TerrainValue[,] XZPlaneDataArray { get; private set; }
 
-    public void Init(WorldAreaTerrainData worldAreaData)
+    public void Init(WorldAreaTerrainData worldAreaData, WorldGenAlgorithms.TerrainValue[,] worldAreaXZPlaneData)
     {
         KojeomLogger.DebugLog("WorldArea 생성을 시작합니다.");
+        XZPlaneDataArray = worldAreaXZPlaneData;
         AreaName = worldAreaData.AreaName;
         AreaUniqueID = worldAreaData.UniqueID;
         OffsetCoordinate = new Vector3(worldAreaData.OffsetX, worldAreaData.OffsetY, worldAreaData.OffsetZ);
@@ -252,7 +255,7 @@ public class WorldArea : MonoBehaviour
             if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.IsInitializeFinish == true)
             {
                 playerPos = GamePlayerManager.Instance.MyGamePlayer.Controller.GetPosition();
-                offsetPos = SubWorldStates[GetSubWorldUniqueID(playerPos)].SubWorldInstance.SubWorldOffsetCoordinate;
+                offsetPos = SubWorldStates[GetSubWorldUniqueID(playerPos)].SubWorldInstance.OffsetCoordinate;
             }
             else
             {
@@ -260,7 +263,7 @@ public class WorldArea : MonoBehaviour
                 {
                     if(state.Value.SubWorldInstance != null && state.Value.SubWorldInstance.bSurfaceWorld == true)
                     {
-                        offsetPos = state.Value.SubWorldInstance.SubWorldOffsetCoordinate;
+                        offsetPos = state.Value.SubWorldInstance.OffsetCoordinate;
                         break;
                     }
                 }

@@ -7,13 +7,62 @@ public class WorldGenAlgorithms
 {
     private static List<Vector3> TreeSpawnCandidates = new List<Vector3>();
 
-    public static bool GenerateWorldAreaTerrainData(int[,] xzPlaneTerrain, int areaSizeX, int areaSizeZ, int generateNumber = 800)
+    public struct TerrainValue
     {
+        public int ScalaValue;
+        public List<int> Layers;
+    }
+
+    public static BlockTileType CalcTerrainValueToBlockType(int terrainScalaValue)
+    {
+        BlockTileType blockType = BlockTileType.EMPTY;
+        int subWorldLayerNum = WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldLayer;
+        int subWorldSizeY = WorldConfigFile.Instance.GetConfig().SubWorldSizeY;
+        int range = subWorldLayerNum * subWorldSizeY;
+        int min = -1 * range;
+        int max = range;
+
+        if(terrainScalaValue > (min + 2) && terrainScalaValue < min + 10)
+        {
+            blockType = BlockTileType.WATER;
+        }
+        else if(terrainScalaValue >= min && terrainScalaValue <= (min + 2))
+        {
+            blockType = BlockTileType.STONE_IRON;
+        }
+        else if(terrainScalaValue >= (min + 10) && terrainScalaValue < 0)
+        {
+            blockType = BlockTileType.STONE_GOLD;
+        }
+        else if(terrainScalaValue <= (max - 10) && terrainScalaValue > 10)
+        {
+            blockType = BlockTileType.STONE_SMALL;
+        }
+        else if(terrainScalaValue < 10 && terrainScalaValue >= 0)
+        {
+            blockType = BlockTileType.SAND;
+        }
+        else if(terrainScalaValue > (max - 10) && terrainScalaValue <= max)
+        {
+            blockType = BlockTileType.STONE_SILVER;
+        }
+        return blockType;
+    }
+
+    public static TerrainValue[,] GenerateWorldAreaTerrainData(int areaSizeX, int areaSizeZ, int generateNumber = 800)
+    {
+        
+        int[,] xzPlane = new int[areaSizeX, areaSizeZ];
+        //
+        int subWorldLayerNum = WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldLayer;
+        int subWorldSizeY = WorldConfigFile.Instance.GetConfig().SubWorldSizeY;
+        int rangeValue = subWorldLayerNum * subWorldSizeY;
         for (int loop = 0; loop < generateNumber; loop++)
         {
             Vector2 firstPoint = new Vector2(KojeomUtility.RandomInteger(0, areaSizeX), KojeomUtility.RandomInteger(0, areaSizeZ));
             Vector2 secondPoint = new Vector2(KojeomUtility.RandomInteger(0, areaSizeX), KojeomUtility.RandomInteger(0, areaSizeZ));
             Vector2 dirVec = secondPoint - firstPoint;
+            bool randomIncOrDec = KojeomUtility.RandomBool();
             for (int x = 0; x < areaSizeX; x++)
             {
                 for (int z = 0; z < areaSizeZ; z++)
@@ -22,19 +71,56 @@ public class WorldGenAlgorithms
                     Vector3 crossVec = Vector3.Cross(dirVec, point);
                     if (crossVec.z > 0)
                     {
-                        xzPlaneTerrain[x, z]++;
+                        if (randomIncOrDec == true) xzPlane[x, z]++;
+                        else xzPlane[x, z]--;
+
                     }
                     else
                     {
-                        xzPlaneTerrain[x, z]--;
+                        if (randomIncOrDec == true) xzPlane[x, z]--;
+                        else xzPlane[x, z]++;
                     }
+                    //
+                    xzPlane[x, z] = Mathf.Clamp(xzPlane[x, z], -1 * rangeValue, rangeValue);
                 }
             }
         }
-        return true;
+
+        TerrainValue[,] terrainValues = new TerrainValue[areaSizeX, areaSizeZ];
+        for(int x = 0; x < areaSizeX; x++)
+        {
+            for(int z = 0; z < areaSizeZ; z++)
+            {
+                terrainValues[x, z].ScalaValue = xzPlane[x, z];
+                terrainValues[x, z].Layers = new List<int>();
+                int absTerrainScalaValue = Mathf.Abs(xzPlane[x, z]);
+                for (int layer = 0; layer < subWorldLayerNum; layer++)
+                {
+                    int rangeY = 0;
+                    if (absTerrainScalaValue <= 0)
+                    {
+                        absTerrainScalaValue = 0;
+                        rangeY = absTerrainScalaValue;
+                    }
+                    else if (absTerrainScalaValue < subWorldSizeY)
+                    {
+                        rangeY = absTerrainScalaValue;
+                        absTerrainScalaValue -= subWorldSizeY;
+                    }
+                    else if(absTerrainScalaValue >= subWorldSizeY)
+                    {
+                        rangeY = subWorldSizeY;
+                        absTerrainScalaValue -= subWorldSizeY;
+                    }
+                    //
+                    terrainValues[x, z].Layers.Add(Mathf.Abs(rangeY));
+                }
+            }
+        }
+        return terrainValues;
     }
 
-    public static void DefaultGenSurfaceSubWorld(Block[,,] subWorldBlockData, MakeWorldParam param)
+    public static void GenerateSubWorldWithPerlinNoise(Block[,,] subWorldBlockData, MakeWorldParam param)
     {
         Vector3 highestPoint = Vector3.zero;
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
@@ -51,11 +137,11 @@ public class WorldGenAlgorithms
                 {
                     if (y <= internalTerrain)
                     {
-                        subWorldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.GetBlockTileInfo(BlockTileType.STONE_BIG).Type;
+                        subWorldBlockData[x, y, z].Type = (byte)BlockTileType.STONE_BIG;
                     }
                     else if (y <= surface + internalTerrain)
                     {
-                        subWorldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.GetBlockTileInfo(BlockTileType.GRASS).Type;
+                        subWorldBlockData[x, y, z].Type = (byte)BlockTileType.GRASS;
                         if (y > highestPoint.y)
                         {
                             highestPoint = new Vector3(x, y, z);
@@ -89,24 +175,6 @@ public class WorldGenAlgorithms
         EnviromentGenAlgorithms.MakeDefaultWaterArea(highestPoint, subWorldBlockData);
     }
 
-    public static void DefaultGenInternalSubWorld(Block[,,] subWorldBlockData)
-    {
-        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        // perlin 알고리즘을 이용해 지형을 생성한다.
-        for (int x = 0; x < gameWorldConfig.SubWorldSizeX; x++)
-        {
-            for (int z = 0; z < gameWorldConfig.SubWorldSizeZ; z++)
-            {
-                for (int y = 0; y < gameWorldConfig.SubWorldSizeY; y++)
-                {
-                    subWorldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.GetBlockTileInfo(BlockTileType.STONE_BIG).Type;
-                }
-            }
-        }
-        // caves
-        GenerateSphereCaves(subWorldBlockData);
-    }
-
     /// <summary>
     /// flood fill 알고리즘을 이용한 Sphere 모양의 동굴 생성.
     /// </summary>
@@ -131,8 +199,7 @@ public class WorldGenAlgorithms
                     int cave = WorldGenerateUtils.PerlinNoise(x, y * 3, z, 2, 18, 1);
                     if (cave > y)
                     {
-                        subWorldBlockData[x, y, z].Type = (byte)BlockTileDataFile.Instance.
-                            GetBlockTileInfo(BlockTileType.EMPTY).Type;
+                        subWorldBlockData[x, y, z].Type = (byte)BlockTileType.EMPTY;
                         WorldGenerateUtils.FloodFill(new FloodFillNode(x, y, z), BlockTileType.SAND, BlockTileType.EMPTY,
                                     subWorldBlockData, 4);
                     }

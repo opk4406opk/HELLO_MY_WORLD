@@ -93,6 +93,13 @@ public class KojeomUtility
         return tokens[2];
     }
 
+    public static bool RandomBool()
+    {
+        int randValue = RandomInstance.Next(0, 1);
+        if (randValue == 0) return false;
+        return true;
+    }
+
     // Seed 값은 일정하게 0으로 고정.
     private static System.Random RandomInstance = new System.Random(SeedValue);
     /// <summary>

@@ -27,49 +27,23 @@ public class WorldAreaManager : MonoBehaviour
         //
         GameObject newWorldArea = Instantiate(GameResourceSupervisor.GetInstance().WorldAreaPrefab.LoadSynchro(), new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
         newWorldArea.transform.parent = transform;
+        newWorldArea.gameObject.name = worldAreaData.AreaName;
         //
         KojeomLogger.DebugLog(string.Format("WorldArea ID : {0} ({1} * {2}) Start Async Generate.", worldAreaData.UniqueID, worldAreaSizeX, worldAreaSizeZ));
-        var planeTerrainData = await TaskGenerateAreaData(worldAreaSizeX, worldAreaSizeZ, worldAreaData.SubWorldDataList);
+        var terrainValueData = await TaskGenerateAreaData(worldAreaSizeX, worldAreaSizeZ);
         KojeomLogger.DebugLog(string.Format("WorldArea ID : {0} ({1} * {2}) Finish Async Generate.", worldAreaData.UniqueID, worldAreaSizeX, worldAreaSizeZ));
         //
         WorldArea worldAreaInstance = newWorldArea.GetComponent<WorldArea>();
-        worldAreaInstance.Init(worldAreaData);
+        worldAreaInstance.Init(worldAreaData, terrainValueData);
         WorldAreas.Add(worldAreaData.UniqueID, worldAreaInstance);
         //
        
     }
 
-    private async Task<int[,]> TaskGenerateAreaData(int areaSizeX, int areaSizeZ, List<SubWorldData> subWorldDatas)
+    private async Task<WorldGenAlgorithms.TerrainValue[,]> TaskGenerateAreaData(int areaSizeX, int areaSizeZ)
     {
         return await Task.Run(() => {
-            int[,] map = new int[areaSizeX, areaSizeZ]; 
-            bool isSuccess = WorldGenAlgorithms.GenerateWorldAreaTerrainData(map, areaSizeX, areaSizeZ, 400);
-            //
-            var worldConfig = WorldConfigFile.Instance.GetConfig();
-            foreach (var data in subWorldDatas)
-            {
-                for(int x = 0; x < worldConfig.SubWorldSizeX; x++)
-                {
-                    for(int z = 0; z < worldConfig.SubWorldSizeZ; z++)
-                    {
-                        int mapX = (data.OffsetX * worldConfig.SubWorldSizeX) + x;
-                        int mapZ = (data.OffsetZ * worldConfig.SubWorldSizeZ) + z;
-                        int terrainValue = map[mapX, mapZ];
-                        if(terrainValue > 0)
-                        {
-
-                        }
-                        else
-                        {
-
-                        }
-                        for(int y = 0; y < worldConfig.SubWorldSizeY; y++)
-                        {
-                            
-                        }
-                    }
-                }
-            }
+            WorldGenAlgorithms.TerrainValue[,] map = WorldGenAlgorithms.GenerateWorldAreaTerrainData(areaSizeX, areaSizeZ, 300);
             return map;
         });
     }

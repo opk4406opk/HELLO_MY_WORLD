@@ -63,9 +63,9 @@ public class ModifyTerrain : MonoBehaviour
             blockY = (int)(collideInfo.HitBlockCenter.y);
             blockZ = (int)(collideInfo.HitBlockCenter.z);
             var gameConfig = WorldConfigFile.Instance.GetConfig();
-            blockX -= (int)world.SubWorldOffsetCoordinate.x * gameConfig.SubWorldSizeX;
-            blockY -= (int)world.SubWorldOffsetCoordinate.y * gameConfig.SubWorldSizeY;
-            blockZ -= (int)world.SubWorldOffsetCoordinate.z * gameConfig.SubWorldSizeZ;
+            blockX -= (int)world.OffsetCoordinate.x * gameConfig.SubWorldSizeX;
+            blockY -= (int)world.OffsetCoordinate.y * gameConfig.SubWorldSizeY;
+            blockZ -= (int)world.OffsetCoordinate.z * gameConfig.SubWorldSizeZ;
             //-------------------------------------------------------------------------------
             if (isCreate)
             {
