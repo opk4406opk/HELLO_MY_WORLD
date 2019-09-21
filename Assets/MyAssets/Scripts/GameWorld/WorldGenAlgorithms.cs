@@ -22,34 +22,27 @@ public class WorldGenAlgorithms
         int min = -1 * range;
         int max = range;
 
-        if(terrainScalaValue > (min + 2) && terrainScalaValue < min + 10)
-        {
-            blockType = BlockTileType.WATER;
-        }
-        else if(terrainScalaValue >= min && terrainScalaValue <= (min + 2))
-        {
-            blockType = BlockTileType.STONE_IRON;
-        }
-        else if(terrainScalaValue >= (min + 10) && terrainScalaValue < 0)
-        {
-            blockType = BlockTileType.STONE_GOLD;
-        }
-        else if(terrainScalaValue <= (max - 10) && terrainScalaValue > 10)
-        {
-            blockType = BlockTileType.STONE_SMALL;
-        }
-        else if(terrainScalaValue < 10 && terrainScalaValue >= 0)
-        {
-            blockType = BlockTileType.SAND;
-        }
-        else if(terrainScalaValue > (max - 10) && terrainScalaValue <= max)
+        if(terrainScalaValue <= min + 10 && terrainScalaValue >= min)
         {
             blockType = BlockTileType.STONE_SILVER;
         }
+        else if(terrainScalaValue > min + 10 && terrainScalaValue <= 0)
+        {
+            blockType = BlockTileType.WATER;
+        }
+        else if(terrainScalaValue > 0 && terrainScalaValue <= max / 2)
+        {
+            blockType = BlockTileType.STONE_BIG;
+        }
+        else if(terrainScalaValue > max / 2 && terrainScalaValue <= max)
+        {
+            blockType = BlockTileType.RED_STONE;
+        }
+        
         return blockType;
     }
 
-    public static TerrainValue[,] GenerateWorldAreaTerrainData(int areaSizeX, int areaSizeZ, int generateNumber = 800)
+    public static TerrainValue[,] GenerateNormalTerrain(int areaSizeX, int areaSizeZ, int generateNumber = 800)
     {
         
         int[,] xzPlane = new int[areaSizeX, areaSizeZ];
@@ -62,7 +55,6 @@ public class WorldGenAlgorithms
             Vector2 firstPoint = new Vector2(KojeomUtility.RandomInteger(0, areaSizeX), KojeomUtility.RandomInteger(0, areaSizeZ));
             Vector2 secondPoint = new Vector2(KojeomUtility.RandomInteger(0, areaSizeX), KojeomUtility.RandomInteger(0, areaSizeZ));
             Vector2 dirVec = secondPoint - firstPoint;
-            bool randomIncOrDec = KojeomUtility.RandomBool();
             for (int x = 0; x < areaSizeX; x++)
             {
                 for (int z = 0; z < areaSizeZ; z++)
@@ -71,21 +63,40 @@ public class WorldGenAlgorithms
                     Vector3 crossVec = Vector3.Cross(dirVec, point);
                     if (crossVec.z > 0)
                     {
-                        if (randomIncOrDec == true) xzPlane[x, z]++;
-                        else xzPlane[x, z]--;
+                        xzPlane[x, z]++;
 
+                    }
+                    else if(crossVec.z < 0)
+                    {
+                        xzPlane[x, z]--;
                     }
                     else
                     {
-                        if (randomIncOrDec == true) xzPlane[x, z]--;
+                        if (KojeomUtility.RandomBool() == true) xzPlane[x, z]--;
                         else xzPlane[x, z]++;
                     }
                     //
-                    xzPlane[x, z] = Mathf.Clamp(xzPlane[x, z], -1 * rangeValue, rangeValue);
+                    int min = -1 * rangeValue;
+                    int max = rangeValue;
+                    xzPlane[x, z] = Mathf.Clamp(xzPlane[x, z], min, max);
                 }
             }
         }
 
+        // Normalize Terrain.
+        for(int x = 0; x < areaSizeX; x++)
+        {
+            for(int z = 0; z < areaSizeZ; z++)
+            {
+                // Water 지형이라면, 평준화 시킨다.
+                if (xzPlane[x, z] < 0)
+                {
+                    WorldGenerateUtils.NormalizeCrossDirection(x, z, xzPlane, -1);
+                }
+            }
+        }
+
+        // Calc Range per Chunk size.
         TerrainValue[,] terrainValues = new TerrainValue[areaSizeX, areaSizeZ];
         for(int x = 0; x < areaSizeX; x++)
         {
@@ -200,7 +211,7 @@ public class WorldGenAlgorithms
                     if (cave > y)
                     {
                         subWorldBlockData[x, y, z].Type = (byte)BlockTileType.EMPTY;
-                        WorldGenerateUtils.FloodFill(new FloodFillNode(x, y, z), BlockTileType.SAND, BlockTileType.EMPTY,
+                        WorldGenerateUtils.FloodFillSubWorld(new FloodFill3DNode(x, y, z), BlockTileType.SAND, BlockTileType.EMPTY,
                                     subWorldBlockData, 4);
                     }
                 }

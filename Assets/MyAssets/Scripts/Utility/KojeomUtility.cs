@@ -102,6 +102,11 @@ public class KojeomUtility
 
     // Seed 값은 일정하게 0으로 고정.
     private static System.Random RandomInstance = new System.Random(SeedValue);
+
+    public static void ChangeSeed()
+    {
+        RandomInstance = new System.Random(DateTime.Now.Millisecond);
+    }
     /// <summary>
     /// 
     /// </summary>
