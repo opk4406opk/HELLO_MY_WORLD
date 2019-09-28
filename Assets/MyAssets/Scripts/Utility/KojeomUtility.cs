@@ -95,9 +95,15 @@ public class KojeomUtility
 
     public static bool RandomBool()
     {
-        int randValue = RandomInstance.Next(0, 1);
+        // min( inclusive ) max (exclusive)
+        int randValue = RandomInstance.Next(0, 2);
         if (randValue == 0) return false;
         return true;
+    }
+
+    public static float DistinguishBetweenVec2Direction(Vector2 a, Vector2 b)
+    {
+        return (a.x * b.y - a.y * b.x);
     }
 
     // Seed 값은 일정하게 0으로 고정.

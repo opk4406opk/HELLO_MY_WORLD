@@ -83,7 +83,7 @@ public class WorldGenerateUtils
         return true;
     }
 
-    public static void NormalizeCrossDirection(int centerX, int centerY, int[,] map, int normalizeBasis)
+    public static void NormalizeCrossDirection(int centerX, int centerY, int[,] map, int normalizeBasisValue)
     {
         int mapX = map.GetLength(0);
         int mapY = map.GetLength(1);
@@ -94,10 +94,10 @@ public class WorldGenerateUtils
         int downX = centerX, downY = centerY - 1;
 
         bool[] includeDirections = new bool[4];
-        includeDirections[0] = CheckBoundary(leftX, leftY, mapX, mapY) == true && map[leftX, leftY] <= normalizeBasis; // left
-        includeDirections[1] = CheckBoundary(rightX, rightY, mapX, mapY) == true && map[rightX, rightY] <= normalizeBasis; // right
-        includeDirections[2] = CheckBoundary(upX, upY, mapX, mapY) == true && map[upX, upY] <= normalizeBasis; // up
-        includeDirections[3] = CheckBoundary(downX, downY, mapX, mapY) == true && map[downX, downY] <= normalizeBasis; // down
+        includeDirections[0] = CheckBoundary(leftX, leftY, mapX, mapY) == true && map[leftX, leftY] <= normalizeBasisValue; // left
+        includeDirections[1] = CheckBoundary(rightX, rightY, mapX, mapY) == true && map[rightX, rightY] <= normalizeBasisValue; // right
+        includeDirections[2] = CheckBoundary(upX, upY, mapX, mapY) == true && map[upX, upY] <= normalizeBasisValue; // up
+        includeDirections[3] = CheckBoundary(downX, downY, mapX, mapY) == true && map[downX, downY] <= normalizeBasisValue; // down
 
         bool isIncludeAnyDirection = includeDirections[0] | includeDirections[1] | includeDirections[2] | includeDirections[3];
         if (isIncludeAnyDirection == false) return;

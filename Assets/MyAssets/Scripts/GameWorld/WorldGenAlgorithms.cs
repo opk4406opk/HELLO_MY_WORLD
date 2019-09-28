@@ -21,64 +21,73 @@ public class WorldGenAlgorithms
         int range = subWorldLayerNum * subWorldSizeY;
         int min = -1 * range;
         int max = range;
+        int half = max / 2;
+        int underHalf = -1 * half;
 
-        if(terrainScalaValue <= min + 10 && terrainScalaValue >= min)
-        {
-            blockType = BlockTileType.STONE_SILVER;
-        }
-        else if(terrainScalaValue > min + 10 && terrainScalaValue <= 0)
+        bool bWater = terrainScalaValue < 0 && terrainScalaValue >= underHalf;
+        bool bSand = terrainScalaValue < underHalf && terrainScalaValue >= min;
+        bool bStone = terrainScalaValue < half && terrainScalaValue >= 0;
+        bool bGrass = terrainScalaValue < max && terrainScalaValue >= half;
+
+        if(bWater == true)
         {
             blockType = BlockTileType.WATER;
         }
-        else if(terrainScalaValue > 0 && terrainScalaValue <= max / 2)
+        else if(bSand == true)
         {
-            blockType = BlockTileType.STONE_BIG;
+            blockType = BlockTileType.SAND;
         }
-        else if(terrainScalaValue > max / 2 && terrainScalaValue <= max)
+        else if (bStone == true)
         {
-            blockType = BlockTileType.RED_STONE;
+            blockType = BlockTileType.STONE_SMALL;
         }
-        
+        else if (bGrass == true)
+        {
+            blockType = BlockTileType.GRASS;
+        }
         return blockType;
     }
 
     public static TerrainValue[,] GenerateNormalTerrain(int areaSizeX, int areaSizeZ, int generateNumber = 800)
     {
-        
         int[,] xzPlane = new int[areaSizeX, areaSizeZ];
         //
         int subWorldLayerNum = WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldLayer;
         int subWorldSizeY = WorldConfigFile.Instance.GetConfig().SubWorldSizeY;
         int rangeValue = subWorldLayerNum * subWorldSizeY;
+        int rangeHeightMin = -1 * rangeValue;
+        int rangeHeightMax = rangeValue;
+        Vector2[] startPoints = new Vector2[4];
+        startPoints[0] = new Vector2(0, 0);
+        startPoints[1] = new Vector2(0, areaSizeZ);
+        startPoints[2] = new Vector2(areaSizeX, areaSizeZ);
+        startPoints[3] = new Vector2(areaSizeX, 0);
         for (int loop = 0; loop < generateNumber; loop++)
         {
-            Vector2 firstPoint = new Vector2(KojeomUtility.RandomInteger(0, areaSizeX), KojeomUtility.RandomInteger(0, areaSizeZ));
-            Vector2 secondPoint = new Vector2(KojeomUtility.RandomInteger(0, areaSizeX), KojeomUtility.RandomInteger(0, areaSizeZ));
-            Vector2 dirVec = secondPoint - firstPoint;
+            //KojeomUtility.ChangeSeed();
+            Vector2 point1 = startPoints[KojeomUtility.RandomInteger(0, 4)];
+            Vector2 point2 = new Vector2(KojeomUtility.RandomInteger(areaSizeX / 3, areaSizeX), KojeomUtility.RandomInteger(areaSizeZ / 3, areaSizeZ));
+            Vector2 lineVector = point2 - point1;
             for (int x = 0; x < areaSizeX; x++)
             {
                 for (int z = 0; z < areaSizeZ; z++)
                 {
                     Vector2 point = new Vector2(x, z);
-                    Vector3 crossVec = Vector3.Cross(dirVec, point);
-                    if (crossVec.z > 0)
+                    float dirValue = KojeomUtility.DistinguishBetweenVec2Direction(lineVector, point);
+                    if (dirValue > 0)
                     {
+                        if (KojeomUtility.RandomBool() == true) xzPlane[x, z]++;
+                        else xzPlane[x, z]--;
                         xzPlane[x, z]++;
 
                     }
-                    else if(crossVec.z < 0)
-                    {
-                        xzPlane[x, z]--;
-                    }
-                    else
+                    else if(dirValue <= 0)
                     {
                         if (KojeomUtility.RandomBool() == true) xzPlane[x, z]--;
                         else xzPlane[x, z]++;
+                        xzPlane[x, z]--;
                     }
-                    //
-                    int min = -1 * rangeValue;
-                    int max = rangeValue;
-                    xzPlane[x, z] = Mathf.Clamp(xzPlane[x, z], min, max);
+                    xzPlane[x, z] = Mathf.Clamp(xzPlane[x, z], rangeHeightMin, rangeHeightMax);
                 }
             }
         }
@@ -89,9 +98,13 @@ public class WorldGenAlgorithms
             for(int z = 0; z < areaSizeZ; z++)
             {
                 // Water 지형이라면, 평준화 시킨다.
-                if (xzPlane[x, z] < 0)
+                if (xzPlane[x, z] < -15)
                 {
-                    WorldGenerateUtils.NormalizeCrossDirection(x, z, xzPlane, -1);
+                    WorldGenerateUtils.NormalizeCrossDirection(x, z, xzPlane, -15);
+                }
+                else if(xzPlane[x, z] > 0)
+                {
+                    WorldGenerateUtils.NormalizeCrossDirection(x, z, xzPlane, 0);
                 }
             }
         }

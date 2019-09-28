@@ -3,8 +3,8 @@
     "WorldAreaRow": 1,
     "WorldAreaColumn": 1,
     "WorldAreaLayer": 1,
-    "SubWorldRow": 3,
-    "SubWorldColumn": 3,
+    "SubWorldRow": 2,
+    "SubWorldColumn": 2,
     "SubWorldLayer": 2
   },
   "WorldAreaDatas": [
@@ -32,19 +32,11 @@
           "IS_SURFACE": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:0:2",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "2",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_2",
-          "IS_SURFACE": "False"
-        },
-        {
           "UNIQUE_ID": "unique_0:1:0",
           "OFFSET_X": "0",
           "OFFSET_Y": "1",
           "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_3",
+          "WORLD_NAME": "AREA_0_SUB_WORLD_2",
           "IS_SURFACE": "True"
         },
         {
@@ -52,15 +44,7 @@
           "OFFSET_X": "0",
           "OFFSET_Y": "1",
           "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_4",
-          "IS_SURFACE": "True"
-        },
-        {
-          "UNIQUE_ID": "unique_0:1:2",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "2",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_5",
+          "WORLD_NAME": "AREA_0_SUB_WORLD_3",
           "IS_SURFACE": "True"
         },
         {
@@ -68,7 +52,7 @@
           "OFFSET_X": "1",
           "OFFSET_Y": "0",
           "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_6",
+          "WORLD_NAME": "AREA_0_SUB_WORLD_4",
           "IS_SURFACE": "False"
         },
         {
@@ -76,15 +60,7 @@
           "OFFSET_X": "1",
           "OFFSET_Y": "0",
           "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_7",
-          "IS_SURFACE": "False"
-        },
-        {
-          "UNIQUE_ID": "unique_1:0:2",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "2",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_8",
+          "WORLD_NAME": "AREA_0_SUB_WORLD_5",
           "IS_SURFACE": "False"
         },
         {
@@ -92,7 +68,7 @@
           "OFFSET_X": "1",
           "OFFSET_Y": "1",
           "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_9",
+          "WORLD_NAME": "AREA_0_SUB_WORLD_6",
           "IS_SURFACE": "True"
         },
         {
@@ -100,63 +76,7 @@
           "OFFSET_X": "1",
           "OFFSET_Y": "1",
           "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_10",
-          "IS_SURFACE": "True"
-        },
-        {
-          "UNIQUE_ID": "unique_1:1:2",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "2",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_11",
-          "IS_SURFACE": "True"
-        },
-        {
-          "UNIQUE_ID": "unique_2:0:0",
-          "OFFSET_X": "2",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_12",
-          "IS_SURFACE": "False"
-        },
-        {
-          "UNIQUE_ID": "unique_2:0:1",
-          "OFFSET_X": "2",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_13",
-          "IS_SURFACE": "False"
-        },
-        {
-          "UNIQUE_ID": "unique_2:0:2",
-          "OFFSET_X": "2",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "2",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_14",
-          "IS_SURFACE": "False"
-        },
-        {
-          "UNIQUE_ID": "unique_2:1:0",
-          "OFFSET_X": "2",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_15",
-          "IS_SURFACE": "True"
-        },
-        {
-          "UNIQUE_ID": "unique_2:1:1",
-          "OFFSET_X": "2",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_16",
-          "IS_SURFACE": "True"
-        },
-        {
-          "UNIQUE_ID": "unique_2:1:2",
-          "OFFSET_X": "2",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "2",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_17",
+          "WORLD_NAME": "AREA_0_SUB_WORLD_7",
           "IS_SURFACE": "True"
         }
       ]

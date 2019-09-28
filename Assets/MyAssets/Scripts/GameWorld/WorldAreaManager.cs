@@ -43,7 +43,7 @@ public class WorldAreaManager : MonoBehaviour
     private async Task<WorldGenAlgorithms.TerrainValue[,]> TaskGenerateAreaData(int areaSizeX, int areaSizeZ)
     {
         return await Task.Run(() => {
-            WorldGenAlgorithms.TerrainValue[,] map = WorldGenAlgorithms.GenerateNormalTerrain(areaSizeX, areaSizeZ, 300);
+            WorldGenAlgorithms.TerrainValue[,] map = WorldGenAlgorithms.GenerateNormalTerrain(areaSizeX, areaSizeZ, 1500);
             return map;
         });
     }
