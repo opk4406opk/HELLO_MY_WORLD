@@ -19,6 +19,7 @@ public abstract class ActorController : MonoBehaviour
     protected bool bContactTerrain = false;
     protected bool bContactEnvrioment = false;
     protected bool bContactActor = false;
+    protected bool bContactWater = false;
 
     public bool IsContactTerrain()
     {
@@ -33,6 +34,10 @@ public abstract class ActorController : MonoBehaviour
         return bContactActor;
     }
 
+    public bool IsContactWater()
+    {
+        return bContactWater;
+    }
 
     protected void OnCollisionEnter(Collision collision)
     {
@@ -43,6 +48,10 @@ public abstract class ActorController : MonoBehaviour
         else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ENVIROMENT_CHUNK_LAYER))
         {
             bContactEnvrioment = true;
+        }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.WATER_CHUNK_LAYER))
+        {
+            bContactWater = true;
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ACTOR_NPC_LAYER) ||
                  collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ACTOR_ANIMAL_LAYER) ||
@@ -62,6 +71,10 @@ public abstract class ActorController : MonoBehaviour
         {
             bContactEnvrioment = false;
         }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.WATER_CHUNK_LAYER))
+        {
+            bContactWater = false;
+        }
         else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ACTOR_NPC_LAYER) ||
                  collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ACTOR_ANIMAL_LAYER) ||
                  collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ACTOR_MONSTER_LAYER))
@@ -79,6 +92,10 @@ public abstract class ActorController : MonoBehaviour
         else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ENVIROMENT_CHUNK_LAYER))
         {
             bContactEnvrioment = true;
+        }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.WATER_CHUNK_LAYER))
+        {
+            bContactWater = true;
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ACTOR_NPC_LAYER) ||
                  collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.ACTOR_ANIMAL_LAYER) ||

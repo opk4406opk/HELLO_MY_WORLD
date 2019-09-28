@@ -19,6 +19,7 @@ public class WaterChunk : AChunk
         ChunkSize = gameWorldConfig.ChunkSize;
         TileUnit = gameWorldConfig.OneTileUnit;
         MeshInstance = GetComponent<MeshFilter>().mesh;
+        MeshColliderComponent = GetComponent<MeshCollider>();
         GenerateMesh();
     }
 

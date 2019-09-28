@@ -14,6 +14,7 @@ public class GameCharacterInstance : MonoBehaviour
     public Rigidbody RigidBodyInstance { get; private set; }
 
     public bool bContactGround { get; private set; } = false;
+    public bool bContactWater { get; private set; } = false;
 
     public void Init()
     {
@@ -33,25 +34,37 @@ public class GameCharacterInstance : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.layer == LayerMask.NameToLayer("TerrainChunk") == true)
+        if(collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.TERRAIN_CHUNK_LAYER) == true)
         {
             bContactGround = true;
+        }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.WATER_CHUNK_LAYER) == true)
+        {
+            bContactWater = true;
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("TerrainChunk") == true)
+        if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.TERRAIN_CHUNK_LAYER) == true)
         {
             bContactGround = false;
+        }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.WATER_CHUNK_LAYER) == true)
+        {
+            bContactWater = false;
         }
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("TerrainChunk") == true)
+        if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.TERRAIN_CHUNK_LAYER) == true)
         {
             bContactGround = true;
+        }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.WATER_CHUNK_LAYER) == true)
+        {
+            bContactWater = true;
         }
     }
 

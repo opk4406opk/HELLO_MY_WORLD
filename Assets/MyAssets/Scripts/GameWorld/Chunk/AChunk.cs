@@ -213,6 +213,7 @@ public abstract class AChunk : MonoBehaviour {
 		//
 		switch(ChunkType)
 		{
+            case ChunkType.WATER:
 			case ChunkType.TERRAIN:
 				MeshColliderComponent.sharedMesh = MeshInstance;
 				break;

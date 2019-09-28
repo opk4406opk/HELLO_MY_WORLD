@@ -189,6 +189,7 @@ public class WorldGenerateUtils
         directions.Add(southEast);
         directions.Add(southWest);
 
+        // 주변
         foreach (var dir in directions)
         {
             bool condtion = CheckBoundary(dir, mapX, mapY) == true && map[(int)dir.x, (int)dir.y] <= Mathf.Abs(waterBasisValue);
@@ -197,6 +198,8 @@ public class WorldGenerateUtils
                 map[(int)dir.x, (int)dir.y] = blockHeight;
             }
         }
+        // 중심.
+        map[centerX, centerY] = blockHeight;
     }
 
     public static void NormalizeCrossDirection(int centerX, int centerY, int[,] map, int normalizeBasisValue, int normalizeDivideFactor = 1)
@@ -230,11 +233,12 @@ public class WorldGenerateUtils
             if (include == true) num++; 
         }
 
-        int nomalizeValue = (sum / num) / normalizeDivideFactor;
-        if (includeDirections[0] == true) map[(int)west.x, (int)west.y] = nomalizeValue;
-        if (includeDirections[1] == true) map[(int)east.x, (int)east.y] = nomalizeValue;
-        if (includeDirections[2] == true) map[(int)north.x, (int)north.y] = nomalizeValue;
-        if (includeDirections[3] == true) map[(int)south.x, (int)south.y] = nomalizeValue;
+        int normalizeValue = (sum / num) / normalizeDivideFactor;
+        if (includeDirections[0] == true) map[(int)west.x, (int)west.y] = normalizeValue;
+        if (includeDirections[1] == true) map[(int)east.x, (int)east.y] = normalizeValue;
+        if (includeDirections[2] == true) map[(int)north.x, (int)north.y] = normalizeValue;
+        if (includeDirections[3] == true) map[(int)south.x, (int)south.y] = normalizeValue;
+        map[centerX, centerY] = normalizeValue;
     }
 
     public static void FloodFillSubWorld(FloodFill3DNode centerNode, BlockTileType exceptType,

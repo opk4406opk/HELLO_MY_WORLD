@@ -165,7 +165,9 @@ public class ModifyTerrain : MonoBehaviour
            (z < gameWorldConfig.SubWorldSizeZ) &&
            (x >= 0) && (y >= 0) && (z >= 0))
         {
-            UpdateUserItem(world.WorldBlockData[x, y, z].Type);
+            // 블록을 삭제할때마다, DB를 접속해서 쿼리 날리고 갱신시키는건 너무 무거운 작업.
+            // 비동기로 처리하는게 좋을 듯 싶다.
+            //UpdateUserItem(world.WorldBlockData[x, y, z].Type);
             world.WorldBlockData[x, y, z].Type = block;
             world.WorldBlockData[x, y, z].bRendered = false;
             UpdateChunkAt(x, y, z, block);

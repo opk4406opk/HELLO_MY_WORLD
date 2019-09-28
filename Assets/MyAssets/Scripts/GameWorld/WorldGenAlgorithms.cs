@@ -65,7 +65,7 @@ public class WorldGenAlgorithms
             for (int z = 0; z < areaSizeZ; z++)
             {
                 // Water 지형이라면, 평준화 시킨다.
-                if (xzPlane[x, z] < waterBasisValue)
+                if (xzPlane[x, z] <= waterBasisValue)
                 {
                     WorldGenerateUtils.NormalizeWaterTerrain(x, z, xzPlane, waterBasisValue, 6);
                 }
