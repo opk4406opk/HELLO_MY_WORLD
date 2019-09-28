@@ -83,30 +83,146 @@ public class WorldGenerateUtils
         return true;
     }
 
-    public static void NormalizeCrossDirection(int centerX, int centerY, int[,] map, int normalizeBasisValue)
+    public static bool CheckBoundary(Vector2 location, int boundaryX, int boundaryY)
+    {
+        if (location.x < 0 || location.x >= boundaryX) return false;
+        if (location.y < 0 || location.y >= boundaryY) return false;
+        return true;
+    }
+
+    public static BlockTileType CalcTerrainValueToBlockType(int terrainScalaValue)
+    {
+        BlockTileType blockType = BlockTileType.EMPTY;
+        int subWorldLayerNum = WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldLayer;
+        int subWorldSizeY = WorldConfigFile.Instance.GetConfig().SubWorldSizeY;
+        int range = subWorldLayerNum * subWorldSizeY;
+        int min = -1 * range;
+        int max = range;
+        int half = max / 2;
+        int underHalf = -1 * half;
+
+        bool bWater = terrainScalaValue == 6;
+        bool bStone = terrainScalaValue < half && terrainScalaValue >= 0;
+        bool bGrass = terrainScalaValue < max && terrainScalaValue >= half;
+
+        if (bWater == true)
+        {
+            blockType = BlockTileType.WATER;
+        }
+        else if (bStone == true)
+        {
+            blockType = BlockTileType.STONE_SMALL;
+        }
+        else if (bGrass == true)
+        {
+            blockType = BlockTileType.GRASS;
+        }
+        return blockType;
+    }
+
+    public static void ForceNormalize8Direction(int centerX, int centerY, int[,] map)
     {
         int mapX = map.GetLength(0);
         int mapY = map.GetLength(1);
 
-        int leftX = centerX - 1, leftY = centerY;
-        int rightX = centerX + 1, rightY = centerY;
-        int upX = centerX, upY = centerY + 1;
-        int downX = centerX, downY = centerY - 1;
+        Vector2 west = new Vector2(centerX - 1, centerY);
+        Vector2 east = new Vector2(centerX + 1, centerY);
+        Vector2 north = new Vector2(centerX, centerY + 1);
+        Vector2 south = new Vector2(centerX, centerY - 1);
+        Vector2 northEast = new Vector2(centerX + 1, centerY + 1);
+        Vector2 northWest = new Vector2(centerX - 1, centerY + 1);
+        Vector2 southEast = new Vector2(centerX + 1, centerY - 1);
+        Vector2 southWest = new Vector2(centerX - 1, centerY - 1);
+
+        List<Vector2> directions = new List<Vector2>();
+        directions.Add(west);
+        directions.Add(east);
+        directions.Add(north);
+        directions.Add(south);
+        directions.Add(northEast);
+        directions.Add(northWest);
+        directions.Add(southEast);
+        directions.Add(southWest);
+
+        int sum = 0;
+        List<Vector2> candidates = new List<Vector2>();
+        foreach(var dir in directions)
+        {
+            if(CheckBoundary(dir, mapX, mapY) == true)
+            {
+                sum += map[(int)dir.x, (int)dir.y];
+                candidates.Add(dir);
+            }
+        }
+
+        if(candidates.Count > 0)
+        {
+            int averageTerrainValue = sum / candidates.Count;
+            foreach (var candidate in candidates)
+            {
+                map[(int)candidate.x, (int)candidate.y] = averageTerrainValue;
+            }
+        }
+    }
+
+    public static void NormalizeWaterTerrain(int centerX, int centerY, int[,] map, int waterBasisValue, int blockHeight)
+    {
+        int mapX = map.GetLength(0);
+        int mapY = map.GetLength(1);
+
+        Vector2 west = new Vector2(centerX - 1, centerY);
+        Vector2 east = new Vector2(centerX + 1, centerY);
+        Vector2 north = new Vector2(centerX, centerY + 1);
+        Vector2 south = new Vector2(centerX, centerY - 1);
+        Vector2 northEast = new Vector2(centerX + 1, centerY + 1);
+        Vector2 northWest = new Vector2(centerX - 1, centerY + 1);
+        Vector2 southEast = new Vector2(centerX + 1, centerY - 1);
+        Vector2 southWest = new Vector2(centerX - 1, centerY - 1);
+
+        List<Vector2> directions = new List<Vector2>();
+        directions.Add(west);
+        directions.Add(east);
+        directions.Add(north);
+        directions.Add(south);
+        directions.Add(northEast);
+        directions.Add(northWest);
+        directions.Add(southEast);
+        directions.Add(southWest);
+
+        foreach (var dir in directions)
+        {
+            bool condtion = CheckBoundary(dir, mapX, mapY) == true && map[(int)dir.x, (int)dir.y] <= Mathf.Abs(waterBasisValue);
+            if (condtion == true)
+            {
+                map[(int)dir.x, (int)dir.y] = blockHeight;
+            }
+        }
+    }
+
+    public static void NormalizeCrossDirection(int centerX, int centerY, int[,] map, int normalizeBasisValue, int normalizeDivideFactor = 1)
+    {
+        int mapX = map.GetLength(0);
+        int mapY = map.GetLength(1);
+
+        Vector2 west = new Vector2(centerX - 1, centerY);
+        Vector2 east = new Vector2(centerX + 1, centerY);
+        Vector2 north = new Vector2(centerX, centerY + 1);
+        Vector2 south = new Vector2(centerX , centerY - 1);
 
         bool[] includeDirections = new bool[4];
-        includeDirections[0] = CheckBoundary(leftX, leftY, mapX, mapY) == true && map[leftX, leftY] <= normalizeBasisValue; // left
-        includeDirections[1] = CheckBoundary(rightX, rightY, mapX, mapY) == true && map[rightX, rightY] <= normalizeBasisValue; // right
-        includeDirections[2] = CheckBoundary(upX, upY, mapX, mapY) == true && map[upX, upY] <= normalizeBasisValue; // up
-        includeDirections[3] = CheckBoundary(downX, downY, mapX, mapY) == true && map[downX, downY] <= normalizeBasisValue; // down
+        includeDirections[0] = CheckBoundary(west, mapX, mapY) == true && map[(int)west.x, (int)west.y] <= normalizeBasisValue; // west
+        includeDirections[1] = CheckBoundary(east, mapX, mapY) == true && map[(int)east.x, (int)east.y] <= normalizeBasisValue; // east
+        includeDirections[2] = CheckBoundary(north, mapX, mapY) == true && map[(int)north.x, (int)north.y] <= normalizeBasisValue; // north
+        includeDirections[3] = CheckBoundary(south, mapX, mapY) == true && map[(int)south.x, (int)south.y] <= normalizeBasisValue; // south
 
         bool isIncludeAnyDirection = includeDirections[0] | includeDirections[1] | includeDirections[2] | includeDirections[3];
         if (isIncludeAnyDirection == false) return;
 
         int sum = 0;
-        sum += includeDirections[0] ? map[leftX, leftY] : 0;
-        sum += includeDirections[1] ? map[rightX, rightY] : 0;
-        sum += includeDirections[2] ? map[upX, upY] : 0;
-        sum += includeDirections[3] ? map[downX, downY] : 0;
+        sum += includeDirections[0] ? map[(int)west.x, (int)west.y] : 0;
+        sum += includeDirections[1] ? map[(int)east.x, (int)east.y] : 0;
+        sum += includeDirections[2] ? map[(int)north.x, (int)north.y] : 0;
+        sum += includeDirections[3] ? map[(int)south.x, (int)south.y] : 0;
 
         int num = 0;
         foreach(bool include in includeDirections)
@@ -114,11 +230,11 @@ public class WorldGenerateUtils
             if (include == true) num++; 
         }
 
-        int nomalizeValue = sum / num;
-        if (includeDirections[0] == true) map[leftX, leftY] = nomalizeValue;
-        if (includeDirections[1] == true) map[rightX, rightY] = nomalizeValue;
-        if (includeDirections[2] == true) map[upX, upY] = nomalizeValue;
-        if (includeDirections[3] == true) map[downX, downY] = nomalizeValue;
+        int nomalizeValue = (sum / num) / normalizeDivideFactor;
+        if (includeDirections[0] == true) map[(int)west.x, (int)west.y] = nomalizeValue;
+        if (includeDirections[1] == true) map[(int)east.x, (int)east.y] = nomalizeValue;
+        if (includeDirections[2] == true) map[(int)north.x, (int)north.y] = nomalizeValue;
+        if (includeDirections[3] == true) map[(int)south.x, (int)south.y] = nomalizeValue;
     }
 
     public static void FloodFillSubWorld(FloodFill3DNode centerNode, BlockTileType exceptType,
@@ -177,5 +293,32 @@ public class WorldGenerateUtils
 
         if (power != 0) rValue = Mathf.Pow(rValue, power);
         return (int)rValue;
+    }
+
+    // ref : https://epochabuse.com/gaussian-blur/
+    public static float[,] GaussianBlur(int lenght, float weight)
+    {
+        float[,] kernel = new float[lenght, lenght];
+        float kernelSum = 0;
+        int foff = (lenght - 1) / 2;
+        float distance = 0;
+        float constant = 1f / (2 * Mathf.PI * weight * weight);
+        for (int y = -foff; y <= foff; y++)
+        {
+            for (int x = -foff; x <= foff; x++)
+            {
+                distance = ((y * y) + (x * x)) / (2 * weight * weight);
+                kernel[y + foff, x + foff] = constant * Mathf.Exp(-distance);
+                kernelSum += kernel[y + foff, x + foff];
+            }
+        }
+        for (int y = 0; y < lenght; y++)
+        {
+            for (int x = 0; x < lenght; x++)
+            {
+                kernel[y, x] = kernel[y, x] * 1f / kernelSum;
+            }
+        }
+        return kernel;
     }
 }

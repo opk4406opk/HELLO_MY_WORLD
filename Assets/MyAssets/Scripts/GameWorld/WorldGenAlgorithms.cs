@@ -9,43 +9,8 @@ public class WorldGenAlgorithms
 
     public struct TerrainValue
     {
-        public int ScalaValue;
+        public BlockTileType BlockType;
         public List<int> Layers;
-    }
-
-    public static BlockTileType CalcTerrainValueToBlockType(int terrainScalaValue)
-    {
-        BlockTileType blockType = BlockTileType.EMPTY;
-        int subWorldLayerNum = WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldLayer;
-        int subWorldSizeY = WorldConfigFile.Instance.GetConfig().SubWorldSizeY;
-        int range = subWorldLayerNum * subWorldSizeY;
-        int min = -1 * range;
-        int max = range;
-        int half = max / 2;
-        int underHalf = -1 * half;
-
-        bool bWater = terrainScalaValue < 0 && terrainScalaValue >= underHalf;
-        bool bSand = terrainScalaValue < underHalf && terrainScalaValue >= min;
-        bool bStone = terrainScalaValue < half && terrainScalaValue >= 0;
-        bool bGrass = terrainScalaValue < max && terrainScalaValue >= half;
-
-        if(bWater == true)
-        {
-            blockType = BlockTileType.WATER;
-        }
-        else if(bSand == true)
-        {
-            blockType = BlockTileType.SAND;
-        }
-        else if (bStone == true)
-        {
-            blockType = BlockTileType.STONE_SMALL;
-        }
-        else if (bGrass == true)
-        {
-            blockType = BlockTileType.GRASS;
-        }
-        return blockType;
     }
 
     public static TerrainValue[,] GenerateNormalTerrain(int areaSizeX, int areaSizeZ, int generateNumber = 800)
@@ -93,18 +58,20 @@ public class WorldGenAlgorithms
         }
 
         // Normalize Terrain.
-        for(int x = 0; x < areaSizeX; x++)
+        int waterBasisValue = 0;
+        int heightBasisValue = rangeHeightMax / 4;
+        for (int x = 0; x < areaSizeX; x++)
         {
-            for(int z = 0; z < areaSizeZ; z++)
+            for (int z = 0; z < areaSizeZ; z++)
             {
                 // Water 지형이라면, 평준화 시킨다.
-                if (xzPlane[x, z] < -15)
+                if (xzPlane[x, z] < waterBasisValue)
                 {
-                    WorldGenerateUtils.NormalizeCrossDirection(x, z, xzPlane, -15);
+                    WorldGenerateUtils.NormalizeWaterTerrain(x, z, xzPlane, waterBasisValue, 6);
                 }
-                else if(xzPlane[x, z] > 0)
+                else if (xzPlane[x, z] >= heightBasisValue)
                 {
-                    WorldGenerateUtils.NormalizeCrossDirection(x, z, xzPlane, 0);
+                    WorldGenerateUtils.ForceNormalize8Direction(x, z, xzPlane);
                 }
             }
         }
@@ -115,7 +82,7 @@ public class WorldGenAlgorithms
         {
             for(int z = 0; z < areaSizeZ; z++)
             {
-                terrainValues[x, z].ScalaValue = xzPlane[x, z];
+                terrainValues[x, z].BlockType = WorldGenerateUtils.CalcTerrainValueToBlockType(xzPlane[x, z]);
                 terrainValues[x, z].Layers = new List<int>();
                 int absTerrainScalaValue = Mathf.Abs(xzPlane[x, z]);
                 for (int layer = 0; layer < subWorldLayerNum; layer++)

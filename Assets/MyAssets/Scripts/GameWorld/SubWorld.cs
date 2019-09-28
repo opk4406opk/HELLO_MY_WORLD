@@ -212,7 +212,7 @@ public class SubWorld : MonoBehaviour
                             //
                             WorldGenAlgorithms.TerrainValue terrainValue = WorldAreaInstance.XZPlaneDataArray[mapX, mapZ];
                             int rangeY = terrainValue.Layers[(int)OffsetCoordinate.y];
-                            byte blockType = (byte)WorldGenAlgorithms.CalcTerrainValueToBlockType(terrainValue.ScalaValue);
+                            byte blockType = (byte)terrainValue.BlockType;
                             for (int y = 0; y < rangeY; y++)
                             {
                                 WorldBlockData[x, y, z].Type = blockType;
