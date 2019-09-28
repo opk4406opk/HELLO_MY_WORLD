@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnviromentChunk : AChunk
 {
-    protected override void LateUpdate()
+    protected override void FixedUpdate()
     {
         if (_Update)
         {

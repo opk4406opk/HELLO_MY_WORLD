@@ -76,7 +76,7 @@ public abstract class AChunk : MonoBehaviour {
 	}
 
 	protected abstract void GenerateMesh();
-	protected abstract void LateUpdate();
+	protected abstract void FixedUpdate();
 	public abstract void Init();
 
 	protected BlockTileType GetBlockType(int x, int y, int z)

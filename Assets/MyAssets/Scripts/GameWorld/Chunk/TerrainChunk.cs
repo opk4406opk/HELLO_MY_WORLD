@@ -8,7 +8,7 @@ using System.Collections.Generic;
 /// </summary>
 public class TerrainChunk : AChunk
 {
-    protected override void LateUpdate()
+    protected override void FixedUpdate()
     {
         if (_Update)
         {
