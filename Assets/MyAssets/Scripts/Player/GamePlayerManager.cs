@@ -29,13 +29,12 @@ public class GamePlayerManager : MonoBehaviour {
                     {
                         if (state.Value.RealTimeStatus == SubWorldRealTimeStatus.LoadFinish)
                         {
-                            Vector3 worldInstPos = state.Value.SubWorldInstance.OffsetCoordinate;
+                            Vector3 initialPosition = state.Value.SubWorldInstance.RandomRealPositionAtSurface();
                             //
                             var instance = Instantiate(GameResourceSupervisor.GetInstance().GamePlayerPrefab.LoadSynchro(), Vector3.zero, Quaternion.identity);
                             MyGamePlayer = instance.GetComponent<GamePlayer>();
                             MyGamePlayer.Initialize(GameLocalDataManager.GetInstance().CharacterType,
-                                GameLocalDataManager.GetInstance().CharacterName,
-                                new Vector3(worldInstPos.x, 60.0f, worldInstPos.z));
+                                GameLocalDataManager.GetInstance().CharacterName, initialPosition);
                             //Player Manager 하위 종속으로 변경.
                             MyGamePlayer.transform.parent = gameObject.transform;
                             //

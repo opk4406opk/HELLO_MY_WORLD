@@ -28,61 +28,33 @@ public class TerrainChunk : AChunk
         GenerateMesh();
     }
 
-    protected override void GenerateMesh()
+    protected override void CreateCube(int blockIdxX, int blockIdxY, int blockIdxZ, float cubeX, float cubeY, float cubeZ, float blockCenterX, float blockCenterY, float blockCenterZ)
     {
-        for (int relativeX = 0; relativeX < ChunkSize; relativeX++)
+        //This code will run for every block in the chunk
+        var blockType = GetBlockType(blockIdxX, blockIdxY, blockIdxZ);
+        if (blockType != BlockTileType.EMPTY && blockType != BlockTileType.WATER)
         {
-            for (int relativeY = 0; relativeY < ChunkSize; relativeY++)
-            {
-                for (int relativeZ = 0; relativeZ < ChunkSize; relativeZ++)
-                {
-                    int blockIdxX, blockIdxY, blockIdxZ;
-                    blockIdxX = relativeX + _WorldDataIdxX;
-                    blockIdxY = relativeY + _WorldDataIdxY;
-                    blockIdxZ = relativeZ + _WorldDataIdxZ;
-                    //This code will run for every block in the chunk
-                    var blockType = GetBlockType(blockIdxX, blockIdxY, blockIdxZ);
-                    if (blockType != BlockTileType.EMPTY && blockType != BlockTileType.WATER)
-                    {
-                        float cubeX, cubeY, cubeZ;
-                        cubeX = relativeX + _RealCoordX;
-                        cubeY = relativeY + _RealCoordY;
-                        cubeZ = relativeZ + _RealCoordZ;
-
-                        CubeTopFace(cubeX, cubeY, cubeZ, blockType);
-                        CubeBottomFace(cubeX, cubeY, cubeZ, blockType);
-                        CubeNorthFace(cubeX, cubeY, cubeZ, blockType);
-                        CubeSouthFace(cubeX, cubeY, cubeZ, blockType);
-                        CubeEastFace(cubeX, cubeY, cubeZ, blockType);
-                        CubeWestFace(cubeX, cubeY, cubeZ, blockType);
-
-                        // points 배열은 실제 블록을 생성할 때 쓰이는 8개의 포인트로 실제 월드 좌표값이다.
-                        // 따라서, 이를 이용해 블록의 AABB의 Min, Max Extent 값을 정한다.
-                        Vector3[] points = new Vector3[8];
-                        points[0] = new Vector3(cubeX, cubeY, cubeZ);
-                        points[1] = new Vector3(cubeX + 1, cubeY, cubeZ);
-                        points[2] = new Vector3(cubeX + 1, cubeY, cubeZ + 1 );
-                        points[3] = new Vector3(cubeX, cubeY, cubeZ + 1);
-                        points[4] = new Vector3(cubeX, cubeY - 1, cubeZ);
-                        points[5] = new Vector3(cubeX + 1, cubeY - 1, cubeZ);
-                        points[6] = new Vector3(cubeX + 1, cubeY - 1, cubeZ + 1);
-                        points[7] = new Vector3(cubeX, cubeY - 1, cubeZ + 1);
-                        // 블록 생성시 6개의 면들의 위치를 조정하기 위해 추가했던 offset 값을 제거한다.
-                        // x, z 는 0.5f 씩 더해주고, y는 0.5f 빼준다.
-                        float blockCenterX = cubeX + 0.5f;
-                        float blockCenterY = cubeY - 0.5f;
-                        float blockCenterZ = cubeZ + 0.5f;
-                        SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterX = blockCenterX;
-                        SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterY = blockCenterY;
-                        SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterZ = blockCenterZ;
-                        SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].bRendered = true;
-                        // 월드맵에 생성된 블록의 중앙점을 이용해 Octree의 노드를 생성합니다.
-                        SubWorldInstance.CustomOctreeInstance.Add(new Vector3(blockCenterX, blockCenterY, blockCenterZ));
-                    }
-
-                }
-            }
+            CubeTopFace(cubeX, cubeY, cubeZ, blockType);
+            CubeBottomFace(cubeX, cubeY, cubeZ, blockType);
+            CubeNorthFace(cubeX, cubeY, cubeZ, blockType);
+            CubeSouthFace(cubeX, cubeY, cubeZ, blockType);
+            CubeEastFace(cubeX, cubeY, cubeZ, blockType);
+            CubeWestFace(cubeX, cubeY, cubeZ, blockType);
+            // points 배열은 실제 블록을 생성할 때 쓰이는 8개의 포인트로 실제 월드 좌표값이다.
+            // 따라서, 이를 이용해 블록의 AABB의 Min, Max Extent 값을 정한다.
+            Vector3[] points = new Vector3[8];
+            points[0] = new Vector3(cubeX, cubeY, cubeZ);
+            points[1] = new Vector3(cubeX + 1, cubeY, cubeZ);
+            points[2] = new Vector3(cubeX + 1, cubeY, cubeZ + 1);
+            points[3] = new Vector3(cubeX, cubeY, cubeZ + 1);
+            points[4] = new Vector3(cubeX, cubeY - 1, cubeZ);
+            points[5] = new Vector3(cubeX + 1, cubeY - 1, cubeZ);
+            points[6] = new Vector3(cubeX + 1, cubeY - 1, cubeZ + 1);
+            points[7] = new Vector3(cubeX, cubeY - 1, cubeZ + 1);
+            //
+            SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].bRendered = true;
+            // 월드맵에 생성된 블록의 중앙점을 이용해 Octree의 노드를 생성합니다.
+            SubWorldInstance.CustomOctreeInstance.Add(new Vector3(blockCenterX, blockCenterY, blockCenterZ));
         }
-        UpdateMesh();
     }
 }

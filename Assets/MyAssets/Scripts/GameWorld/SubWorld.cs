@@ -328,53 +328,23 @@ public class SubWorld : MonoBehaviour
         InGameObjRegister.UnRegister(type, obj);
     }
 
-    public Vector3 RandomPosAtSurface()
+    public Vector3 RandomRealPositionAtSurface()
     {
-        Vector3 ret;
+        Vector3 position = Vector3.zero;
         var worldConfig = WorldConfigFile.Instance.GetConfig();
-        if(RealCoordinate.x == 0)
+        int indexX = KojeomUtility.RandomInteger(0, worldConfig.SubWorldSizeX);
+        int indexZ = KojeomUtility.RandomInteger(0, worldConfig.SubWorldSizeZ);
+        for(int indexY = 0; indexY < worldConfig.SubWorldSizeY; indexY++)
         {
-            ret.x = KojeomUtility.RandomInteger(0, (int)RealCoordinate.x);
-        }
-        else
-        {
-            ret.x = KojeomUtility.RandomInteger((int)RealCoordinate.x - worldConfig.SubWorldSizeX, (int)RealCoordinate.x);
-        }
-        //
-        ret.y = HighestHeightInWorld();
-
-        if (RealCoordinate.z == 0)
-        {
-            ret.z = KojeomUtility.RandomInteger(0, (int)RealCoordinate.z);
-        }
-        else
-        {
-            ret.z = KojeomUtility.RandomInteger((int)RealCoordinate.z - worldConfig.SubWorldSizeZ, (int)RealCoordinate.z);
-        }
-
-        return ret;
-    }
-
-    private float HighestHeightInWorld()
-    {
-        float highest = 0.0f;
-        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        for (int x = 0; x < gameWorldConfig.SubWorldSizeX; x++)
-        {
-            for (int z = 0; z < gameWorldConfig.SubWorldSizeZ; z++)
+            Block block = WorldBlockData[indexX, indexY, indexZ];
+            if ((BlockTileType)block.Type == BlockTileType.EMPTY)
             {
-                for (int y = 1; y < gameWorldConfig.SubWorldSizeY; y++)
-                {
-                    if ((BlockTileType)WorldBlockData[x, y - 1, z].Type != BlockTileType.EMPTY)
-                    {
-                        if(highest < y)
-                        {
-                            highest = y;
-                        }
-                    }
-                }
+                position.x = block.CenterX;
+                position.y = block.CenterY;
+                position.z = block.CenterZ;
+                break;
             }
         }
-        return highest + (gameWorldConfig.SubWorldSizeY * OffsetCoordinate.y);
+        return position;
     }
 }

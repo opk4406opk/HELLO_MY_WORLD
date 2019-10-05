@@ -75,7 +75,7 @@ public abstract class AChunk : MonoBehaviour {
 		set { _Update = value; }
 	}
 
-	protected abstract void GenerateMesh();
+	protected abstract void CreateCube(int blockIdxX, int blockIdxY, int blockIdxZ, float cubeX, float cubeY, float cubeZ, float blockCenterX, float blockCenterY, float blockCenterZ);
 	protected abstract void FixedUpdate();
 	public abstract void Init();
 
@@ -202,6 +202,39 @@ public abstract class AChunk : MonoBehaviour {
 
 		FaceCount++; // Add this line
 	}
+
+    protected void GenerateMesh()
+    {
+        for (int relativeX = 0; relativeX < ChunkSize; relativeX++)
+        {
+            for (int relativeY = 0; relativeY < ChunkSize; relativeY++)
+            {
+                for (int relativeZ = 0; relativeZ < ChunkSize; relativeZ++)
+                {
+                    int blockIdxX, blockIdxY, blockIdxZ;
+                    blockIdxX = relativeX + _WorldDataIdxX;
+                    blockIdxY = relativeY + _WorldDataIdxY;
+                    blockIdxZ = relativeZ + _WorldDataIdxZ;
+                    //
+                    float cubeX, cubeY, cubeZ;
+                    cubeX = relativeX + _RealCoordX;
+                    cubeY = relativeY + _RealCoordY;
+                    cubeZ = relativeZ + _RealCoordZ;
+                    //
+                    // 블록 생성시 6개의 면들의 위치를 조정하기 위해 추가했던 offset 값을 제거한다.
+                    // x, z 는 0.5f 씩 더해주고, y는 0.5f 빼준다.
+                    float blockCenterX = cubeX + 0.5f;
+                    float blockCenterY = cubeY - 0.5f;
+                    float blockCenterZ = cubeZ + 0.5f;
+                    SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterX = blockCenterX;
+                    SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterY = blockCenterY;
+                    SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterZ = blockCenterZ;
+                    CreateCube(blockIdxX, blockIdxY, blockIdxZ, cubeX, cubeY, cubeZ, blockCenterX, blockCenterY, blockCenterZ);
+                }
+            }
+        }
+        UpdateMesh();
+    }
 
 	protected void UpdateMesh()
 	{
