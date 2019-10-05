@@ -44,7 +44,7 @@ public class NPCManager : NPCSpawner
         {
             NPCDataFile.Instance.NpcSpawnDatas.TryGetValue(uniqueID, out NPCSpawnData spawnData);
             Actor instance = Instantiate(GameResourceSupervisor.GetInstance().ActorPrefabs[(int)ACTOR_TYPE.NPC]
-                .Group[KojeomUtility.GetResourceNumberFromID(spawnData.ResourceID)]
+                .Group[(int)KojeomUtility.GetResourceEnumFromID<NPC_TYPE>(spawnData.ResourceID)]
                 .LoadSynchro(), spawnPos, Quaternion.identity)
                 .GetComponent<Actor>();
             instance.transform.parent = ActorSuperviosr.Instance.GetSpawnedGroupTransform();

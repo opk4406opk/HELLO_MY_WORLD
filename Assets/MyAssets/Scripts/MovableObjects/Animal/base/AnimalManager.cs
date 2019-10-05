@@ -18,7 +18,7 @@ public class AnimalManager : AnimalSpawner
         {
             AnimalDataFile.Instance.AnimalSpawnDatas.TryGetValue(uniqueID, out AnimalSpawnData spawnData);
             Actor instance = Instantiate(GameResourceSupervisor.GetInstance().ActorPrefabs[(int)ACTOR_TYPE.ANIMAL]
-                .Group[KojeomUtility.GetResourceNumberFromID(spawnData.ResourceID)]
+                .Group[(int)KojeomUtility.GetResourceEnumFromID<ANIMAL_TYPE>(spawnData.ResourceID)]
                 .LoadSynchro(), spawnPos, Quaternion.identity)
                 .GetComponent<Actor>();
             instance.transform.parent = ActorSuperviosr.Instance.GetSpawnedGroupTransform();
@@ -32,12 +32,8 @@ public class AnimalManager : AnimalSpawner
                 //
                 switch (spawnData.AnimalType)
                 {
+                    case ANIMAL_TYPE.Chick:
                     case ANIMAL_TYPE.Chiken:
-                    case ANIMAL_TYPE.Dog:
-                    case ANIMAL_TYPE.Fox:
-                    case ANIMAL_TYPE.Lion:
-                    case ANIMAL_TYPE.Pig:
-                    case ANIMAL_TYPE.Cow:
                         instance.Init(spawnData, worldState.SubWorldInstance, spanwID);
                         if (initShow == false)
                         {

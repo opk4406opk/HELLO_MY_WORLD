@@ -5,7 +5,12 @@ using UnityEngine;
  * 
  *   NPC, Monster..etc preafb -> [ActorTypc]_[DetailType]_[ResourceID]_[Name]
  *   
- *   1) Actor type에 따라 리소스 이름 규칙도 다르다.
+ *   ex) MONSTER_Cyclopes_RID(Cyclopes)_Cyclopes
+ *      (대분류)(소분류)(리소스)(이름)
+ *      대분류 : ACTOR_TYPE
+ *      소분류 : MONSTER_TYPE
+ *      리소스 : 소분류 Enum 값과 동일하다. 
+ *      이름 : 실제 이름 ( 인게임에 등장할 때 사용되는..)
 */
 
 /// <summary>
@@ -55,8 +60,7 @@ public class GameResourceSupervisor : MonoBehaviour {
         foreach (var guid in npcGuids)
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
-            ActorPrefabs[(int)ACTOR_TYPE.NPC].Group[KojeomUtility.GetResourceNumberFromAssetPath(path)] = new SoftObjectPtr(KojeomUtility.ConvertAssetPathToResourcePath(path));
-            KojeomUtility.GetResourceNumberFromAssetPath(path);
+            ActorPrefabs[(int)ACTOR_TYPE.NPC].Group[(int)KojeomUtility.GetResourceEnumFromAssetPath<NPC_TYPE>(path)] = new SoftObjectPtr(KojeomUtility.ConvertAssetPathToResourcePath(path));
         }
 
         ActorPrefabs[(int)ACTOR_TYPE.MONSTER].Group = new SoftObjectPtr[(int)MONSTER_TYPE.COUNT];
@@ -64,7 +68,7 @@ public class GameResourceSupervisor : MonoBehaviour {
         foreach(var guid in monsterGuids)
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
-            ActorPrefabs[(int)ACTOR_TYPE.MONSTER].Group[KojeomUtility.GetResourceNumberFromAssetPath(path)] = new SoftObjectPtr(KojeomUtility.ConvertAssetPathToResourcePath(path));
+            ActorPrefabs[(int)ACTOR_TYPE.MONSTER].Group[(int)KojeomUtility.GetResourceEnumFromAssetPath<MONSTER_TYPE>(path)] = new SoftObjectPtr(KojeomUtility.ConvertAssetPathToResourcePath(path));
         }
 
         ActorPrefabs[(int)ACTOR_TYPE.ANIMAL].Group = new SoftObjectPtr[(int)ANIMAL_TYPE.COUNT];
@@ -72,7 +76,7 @@ public class GameResourceSupervisor : MonoBehaviour {
         foreach (var guid in animalGuids)
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
-            ActorPrefabs[(int)ACTOR_TYPE.ANIMAL].Group[KojeomUtility.GetResourceNumberFromAssetPath(path)] = new SoftObjectPtr(KojeomUtility.ConvertAssetPathToResourcePath(path));
+            ActorPrefabs[(int)ACTOR_TYPE.ANIMAL].Group[(int)KojeomUtility.GetResourceEnumFromAssetPath<ANIMAL_TYPE>(path)] = new SoftObjectPtr(KojeomUtility.ConvertAssetPathToResourcePath(path));
         }
     }
 

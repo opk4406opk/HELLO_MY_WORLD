@@ -53,27 +53,20 @@ public class KojeomUtility
         return StringToEnum<T>(tokens[1]);
     }
 
-    public static int GetResourceNumberFromAssetPath(string assetPath)
+    public static T GetResourceEnumFromAssetPath<T>(string assetPath)
     {
         string prefabName = assetPath.Substring(assetPath.LastIndexOf('/') + 1);
         var splits = prefabName.Split('.');
         var tokens = splits[0].Split('_');
-        var data = Regex.Match(tokens[2], "[0-9]").ToString();
-        return int.Parse(data);
+        var resoruceString = Regex.Match(tokens[2].Substring(3), "[a-zA-Z]+").ToString();
+        return StringToEnum<T>(resoruceString);
     }
 
-    public static int GetResourceIDFromAssetPath(string assetPath)
+    public static T GetResourceEnumFromID<T>(string resourceID)
     {
-        string prefabName = assetPath.Substring(assetPath.LastIndexOf('/') + 1);
-        var splits = prefabName.Split('.');
-        var tokens = splits[0].Split('_');
-        return int.Parse(tokens[2]);
-    }
-
-    public static int GetResourceNumberFromID(string resourceID)
-    {
-        var data = Regex.Match(resourceID, "[0-9]").ToString();
-        return int.Parse(data);
+        string subString = resourceID.Substring(3);
+        var data = Regex.Match(subString, "[a-zA-Z]+").ToString();
+        return StringToEnum<T>(data);
     }
 
     public static string ConvertAssetPathToResourcePath(string assetPath)

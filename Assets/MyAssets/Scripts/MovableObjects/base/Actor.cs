@@ -5,7 +5,7 @@
  * 대분류 타입은 대문자로, 소분류 타입은 소문자로
  * // 동물의 경우 카테고리별로 세부적인 구분을 한다.
  * 
-     */
+ */
 
 public enum ACTOR_TYPE
 {
@@ -25,6 +25,8 @@ public enum NPC_TYPE
 public enum MONSTER_TYPE
 {
     // to do
+    Cyclopes,
+    Fiery,
     COUNT
 }
 
@@ -38,12 +40,8 @@ public enum ANIMAL_CATEGORY
 
 public enum ANIMAL_TYPE
 {
-    Pig,
-    Cow,
+    Chick,
     Chiken,
-    Fox,
-    Lion,
-    Dog,
     COUNT
 }
 
