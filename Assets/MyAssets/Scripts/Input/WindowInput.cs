@@ -72,23 +72,13 @@ public class WindowInput : AInput
             }
         }
         ///////////////////////////////////////////////////////////////////////////////////////
-        if (Input.GetKey(KeyCode.W))
-        {
-            CreateWindowInputData(INPUT_STATE.CHARACTER_MOVE, KeyCode.W);
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            CreateWindowInputData(INPUT_STATE.CHARACTER_MOVE, KeyCode.S);
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            CreateWindowInputData(INPUT_STATE.CHARACTER_MOVE, KeyCode.A);
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            CreateWindowInputData(INPUT_STATE.CHARACTER_MOVE, KeyCode.D);
-        }
-       
+        List<KeyCode> moveKeyCodes = new List<KeyCode>();
+        if (Input.GetKey(KeyCode.W)) moveKeyCodes.Add(KeyCode.W);
+        if (Input.GetKey(KeyCode.S)) moveKeyCodes.Add(KeyCode.S);
+        if (Input.GetKey(KeyCode.A)) moveKeyCodes.Add(KeyCode.A);
+        if (Input.GetKey(KeyCode.D)) moveKeyCodes.Add(KeyCode.D);
+        CreateWindowInputData(INPUT_STATE.CHARACTER_MOVE, moveKeyCodes);
+        ////////////////////////////////////////////////////////////////////////////////////////
         if (Input.GetKeyDown(KeyCode.Space))
         {
             CreateWindowInputData(INPUT_STATE.CHARACTER_JUMP, KeyCode.Space);

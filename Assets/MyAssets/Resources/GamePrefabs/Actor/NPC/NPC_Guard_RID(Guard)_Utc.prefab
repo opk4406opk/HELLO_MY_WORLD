@@ -4943,7 +4943,7 @@ GameObject:
   - component: {fileID: 4287795866793534998}
   - component: {fileID: 7047658255803175810}
   m_Layer: 12
-  m_Name: NPC_Guard_NPC1_Utc
+  m_Name: NPC_Guard_RID(Guard)_Utc
   m_TagString: ACTOR_NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5207,7 +5207,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.3, y: 1, z: 0.3}
+  m_Size: {x: 0.2, y: 1, z: 0.2}
   m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!54 &54100016725308480
 Rigidbody:

@@ -34,21 +34,7 @@ public class GameLocalDataManager
 /// </summary>
 public class GameSupervisor : MonoBehaviour
 {
-    #region data file.
-    // data file parser.
-    private WorldConfigFile WorldConfigDataFileInstance = new WorldConfigFile();
-    private WorldMapDataFile SubWorldDataFileInstance = new WorldMapDataFile();
-    private BlockTileDataFile TileDataFileInstance = new BlockTileDataFile();
-    private CraftItemListDataFile CraftItemListDataFileInstance = new CraftItemListDataFile();
-    private NPCDataFile NpcDataFileInstance = new NPCDataFile();
-    private AnimalDataFile AnimalDataFileInstance = new AnimalDataFile();
-    private GameConfigDataFile GameConfigDataFileInstance = new GameConfigDataFile();
-    // data tables.
-    private RawElementTableReader RawElementTableReaderInstance = new RawElementTableReader();
-    private BlockProductTableReader BlockProductTableReaderInstance = new BlockProductTableReader();
-    private ItemTableReader ItemTableReaderInstance = new ItemTableReader();
-    //
-    #endregion
+   
 
     #region simple config.
     public bool bSoundOn = false;
@@ -84,15 +70,16 @@ public class GameSupervisor : MonoBehaviour
     #endregion
     public static GameSupervisor Instance { get; private set; }
     public AGameModeBase[] GameModeGroup = new AGameModeBase[(int)GameModeState.COUNT];
+    private GameDataManager GameDataManagerInstance = new GameDataManager();
     private void Start ()
     {
-        KojeomLogger.DebugLog(string.Format("GameModeState : {0}, DataMode : {1}", GameStatus.CurrentGameModeState, GameStatus.DetailSingleMode), LOG_TYPE.SYSTEM);
         Instance = this;
+        KojeomLogger.DebugLog(string.Format("GameModeState : {0}, DataMode : {1}", GameStatus.CurrentGameModeState, GameStatus.DetailSingleMode), LOG_TYPE.SYSTEM);
         GameModeGroup[(int)GameModeState.SINGLE] = new SingleGameMode();
         GameModeGroup[(int)GameModeState.MULTI] = new SingleGameMode();
         //
         InitSettings();
-        InitDataFiles();
+        GameDataManagerInstance.Initialize();
         InitManagers();
     }
 
@@ -112,26 +99,6 @@ public class GameSupervisor : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 게임에 사용되는 데이터파일들을 초기화합니다. ( 게임 매니저 초기화보다 먼저 호출되야 합니다. )
-    /// </summary>
-    private void InitDataFiles()
-    {
-        KojeomLogger.DebugLog("게임 데이터 파일 초기화 시작.");
-        // init tables.
-        RawElementTableReaderInstance.Initialize(ConstFilePath.RAW_ELEMENT_TABLE_PATH);
-        BlockProductTableReaderInstance.Initialize(ConstFilePath.BLOCK_PRODUCT_TABLE_PATH);
-        ItemTableReaderInstance.Initialize(ConstFilePath.ITEM_TABLE_PATH);
-        //GameDataFiles Init
-        WorldConfigDataFileInstance.Init();
-        GameConfigDataFileInstance.Init();
-        TileDataFileInstance.Init();
-        SubWorldDataFileInstance.Init();
-        CraftItemListDataFileInstance.Init();
-        NpcDataFileInstance.Init();
-        AnimalDataFileInstance.Init();
-        KojeomLogger.DebugLog("게임 데이터 파일 초기화 완료.");
-    }
     /// <summary>
     /// 게임내 각종 매니저 클래스들을 초기화합니다. ( 게임 데이터파일들이 초기화 된 이후에 호출되야 합니다. )
     /// </summary>

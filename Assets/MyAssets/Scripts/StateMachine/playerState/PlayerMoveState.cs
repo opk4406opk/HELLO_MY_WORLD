@@ -44,31 +44,31 @@ public class PlayerMoveState : APlayerState, IState
     }
     private Vector3 CalcWindowMoveDir()
     {
-        if (InputData.KeyCodeValue == KeyCode.W)
+        Vector3 dirVector = Vector3.zero;
+        foreach(KeyCode keycode in InputData.KeyCodeValues)
         {
-            return GamePlayer.Controller.CharacterInstance.transform.forward;
+            switch(keycode)
+            {
+                case KeyCode.W:
+                    dirVector += GamePlayer.Controller.CharacterInstance.transform.forward;
+                    break;
+                case KeyCode.S:
+                    dirVector += GamePlayer.Controller.CharacterInstance.transform.forward * -1;
+                    break;
+                case KeyCode.D:
+                    dirVector += GamePlayer.Controller.CharacterInstance.transform.right;
+                    break;
+                case KeyCode.A:
+                    dirVector += GamePlayer.Controller.CharacterInstance.transform.right * -1;
+                    break;
+            }
         }
-        else if (InputData.KeyCodeValue == KeyCode.S)
-        {
-            return -GamePlayer.Controller.CharacterInstance.transform.forward;
-        }
-        else if (InputData.KeyCodeValue == KeyCode.D)
-        {
-            return GamePlayer.Controller.CharacterInstance.transform.right;
-        }
-        else if (InputData.KeyCodeValue == KeyCode.A)
-        {
-            return -GamePlayer.Controller.CharacterInstance.transform.right;
-        }
-        else
-        {
-            return Vector3.zero;
-        }
+        return dirVector;
     }
 
     private void Move()
     {
-        KojeomLogger.DebugLog(string.Format("USER InputData : {0}", InputData.KeyCodeValue), LOG_TYPE.USER_INPUT);
+        KojeomLogger.DebugLog(string.Format("USER InputData : {0}", InputData.KeyCodeValues), LOG_TYPE.USER_INPUT);
         //
         Vector3 dir = Vector3.zero;
         switch(KojeomUtility.GetInputDeviceType())

@@ -1795,7 +1795,7 @@ GameObject:
   - component: {fileID: 1532353067693822860}
   - component: {fileID: 8837817158051955182}
   m_Layer: 12
-  m_Name: NPC_Merchant_NPC0_Misaki
+  m_Name: NPC_Merchant_RID(Merchant)_Misaki
   m_TagString: ACTOR_NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2068,7 +2068,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.3, y: 1, z: 0.3}
+  m_Size: {x: 0.2, y: 1, z: 0.2}
   m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!54 &54360198909762578
 Rigidbody:

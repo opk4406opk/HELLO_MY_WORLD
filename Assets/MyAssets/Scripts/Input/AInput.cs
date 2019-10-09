@@ -12,7 +12,8 @@ public abstract class AInput
     {
         InputData inputData;
         inputData.InputState = INPUT_STATE.NONE;
-        inputData.KeyCodeValue = KeyCode.None;
+        inputData.KeyCodeValues = new List<KeyCode>();
+        inputData.KeyCodeValues.Add(KeyCode.None);
         inputData.MobileInputType = MOBILE_INPUT_TYPE.NONE;
         switch (InputDeviceType)
         {
@@ -38,7 +39,8 @@ public abstract class AInput
     {
         InputData inputData;
         inputData.InputState = INPUT_STATE.NONE;
-        inputData.KeyCodeValue = KeyCode.None;
+        inputData.KeyCodeValues = new List<KeyCode>();
+        inputData.KeyCodeValues.Add(KeyCode.None);
         inputData.MobileInputType = MOBILE_INPUT_TYPE.NONE;
         switch (InputDeviceType)
         {
@@ -58,13 +60,26 @@ public abstract class AInput
         return inputData;
     }
 
-    protected void CreateWindowInputData(INPUT_STATE inputState, KeyCode keyCode)
+    protected void CreateWindowInputData(INPUT_STATE inputState, KeyCode singleKeyCode)
     {
         InputData newInputData;
         newInputData.InputState = inputState;
         newInputData.MobileInputType = MOBILE_INPUT_TYPE.NONE;
-        newInputData.KeyCodeValue = keyCode;
-        if(WindowInputDatas.Count < MaximumInputDatas && WindowInputDatas.Contains(newInputData) == false)
+        newInputData.KeyCodeValues = new List<KeyCode>();
+        newInputData.KeyCodeValues.Add(singleKeyCode);
+        if (WindowInputDatas.Count < MaximumInputDatas && WindowInputDatas.Contains(newInputData) == false)
+        {
+            WindowInputDatas.Add(newInputData);
+        }
+    }
+
+    protected void CreateWindowInputData(INPUT_STATE inputState, List<KeyCode> keyCodes)
+    {
+        InputData newInputData;
+        newInputData.InputState = inputState;
+        newInputData.MobileInputType = MOBILE_INPUT_TYPE.NONE;
+        newInputData.KeyCodeValues = keyCodes;
+        if (WindowInputDatas.Count < MaximumInputDatas && WindowInputDatas.Contains(newInputData) == false)
         {
             WindowInputDatas.Add(newInputData);
         }
@@ -75,7 +90,8 @@ public abstract class AInput
         InputData newInputData;
         newInputData.InputState = inputState;
         newInputData.MobileInputType = mobileInputType;
-        newInputData.KeyCodeValue = KeyCode.None;
+        newInputData.KeyCodeValues = new List<KeyCode>();
+        newInputData.KeyCodeValues.Add(KeyCode.None);
         if (MobileInputDatas.Count < MaximumInputDatas)
         {
             MobileInputDatas.Add(newInputData);

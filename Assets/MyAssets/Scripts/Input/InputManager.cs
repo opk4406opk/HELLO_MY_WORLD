@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public struct InputData
 {
     public INPUT_STATE InputState;
-    public KeyCode KeyCodeValue;
+    public List<KeyCode> KeyCodeValues;
     public MOBILE_INPUT_TYPE MobileInputType;
 }
 
