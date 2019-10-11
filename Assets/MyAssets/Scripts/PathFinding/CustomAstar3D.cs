@@ -120,6 +120,7 @@ public class CustomAstar3D : MonoBehaviour
     private int OffsetX = 0;
     private int OffsetY = 0;
     private int OffsetZ = 0;
+    private bool bAlreadyAsyncCalcPaths = false;
 
 
     public delegate void Del_OnFinishAsyncPathFinding(Stack<PathNode3D> resultPath);
@@ -127,6 +128,7 @@ public class CustomAstar3D : MonoBehaviour
 
     public void Init(PathFinderInitData data, SimpleVector3 actorPosition)
     {
+        if (bAlreadyAsyncCalcPaths == true) return;
         //
         InitData = data;
         ActorPosition = actorPosition;
@@ -139,7 +141,9 @@ public class CustomAstar3D : MonoBehaviour
         //
         PathFindMapData = new PathNode3D[GameWorldConfing.SubWorldSizeX, GameWorldConfing.SubWorldSizeY, GameWorldConfing.SubWorldSizeZ];
         for (int x = 0; x < GameWorldConfing.SubWorldSizeX; x++)
+        { 
             for (int y = 0; y < GameWorldConfing.SubWorldSizeY; y++)
+            {
                 for (int z = 0; z < GameWorldConfing.SubWorldSizeZ; z++)
                 {
                     PathFindMapData[x, y, z] = new PathNode3D();
@@ -149,6 +153,8 @@ public class CustomAstar3D : MonoBehaviour
                     PathFindMapData[x, y, z].ParentNode = null;
                     PathFindMapData[x, y, z].bGoalNode = false;
                 }
+            }
+        }
         InitLoopDirection();
     }
 
@@ -197,7 +203,6 @@ public class CustomAstar3D : MonoBehaviour
         ClosedList.Clear();
         NavigatePath.Clear();
         InitPathFindMapData();
-        BuildPathFindMapData();
     }
     /// <summary>
     /// 길찾기를 시작합니다.
@@ -230,8 +235,12 @@ public class CustomAstar3D : MonoBehaviour
     /// <returns>길 노드 목록을 Stack으로 반환합니다.</returns>
     public async void AsyncPathFinding(Vector3 goalWorldPosition)
     {
+        if (bAlreadyAsyncCalcPaths == true) return;
+        //
         KojeomLogger.DebugLog("비동기 경로탐색을 시작합니다.");
+        bAlreadyAsyncCalcPaths = true;
         var resultPath = await AsyncNavigating(goalWorldPosition);
+        bAlreadyAsyncCalcPaths = false;
         KojeomLogger.DebugLog(string.Format("비동기 경로탐색이 완료되었습니다. [탐색 경로 Count : {0}]", resultPath.Count));
         OnFinishAsyncPathFinding(resultPath);
     }
@@ -294,51 +303,11 @@ public class CustomAstar3D : MonoBehaviour
                     PathFindMapData[x, y, z].PathMapDataX = x;
                     PathFindMapData[x, y, z].PathMapDataY = y;
                     PathFindMapData[x, y, z].PathMapDataZ = z;
-                    PathFindMapData[x, y, z].WorldCoordY = 0; // ??
                     PathFindMapData[x, y, z].ParentNode = null;
                     PathFindMapData[x, y, z].bGoalNode = false;
                     PathFindMapData[x, y, z].bJumped = false;
                 }
     }
-    /// <summary>
-    /// 길찾기에 이용되는 맵정보 배열에 실질적인 정보를 저장합니다.
-    /// </summary>
-    private void BuildPathFindMapData()
-    {
-        //길을 찾아 움직이려는 오브젝트의 현재 높이.
-        //실제 밟고 서있는 WorldBlock 배열의 Y값을 구한다.
-        int curHeight = Mathf.Clamp((int)ActorPosition.y - OffsetY, 0, GameWorldConfing.SubWorldSizeY - 1);
-        for (int x = 0; x < GameWorldConfing.SubWorldSizeX; x++)
-            for(int y = 0; y < GameWorldConfing.SubWorldSizeY; y++)
-                for (int z = 0; z < GameWorldConfing.SubWorldSizeZ; z++)
-                {
-                    int jumpedHeight = curHeight + 1;
-                    if (jumpedHeight < InitData.WorldBlockData.GetLength(2))
-                    {
-                        if (InitData.WorldBlockData[x, jumpedHeight, z].bRendered)
-                        {
-                            PathFindMapData[x, y, z].bJumped = true;
-                            PathFindMapData[x, y, z].WorldCoordY = jumpedHeight;
-                        }
-                    }
-                    PathFindMapData[x, y, z].WorldCoordY = CalcDepth(curHeight, x, z);
-                }
-    }
-
-    private int CalcDepth(int curHeight, int x, int z)
-    {
-        int height = 0;
-        for (int y = curHeight; y > 0; y--)
-        {
-            if (InitData.WorldBlockData[x, y, z].bRendered)
-            {
-                height = y;
-                break;
-            }
-        }
-        return height;
-    }
-
 
     private void SearchAdjacentNodes(PathNode3D selectNode)
     {

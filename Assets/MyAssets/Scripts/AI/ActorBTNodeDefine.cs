@@ -8,8 +8,6 @@ using UnityEngine;
 
 public class BTNodeMoveForTarget : Node
 {
-    private bool bRunningPathFinding = false;
-    private readonly float IntervalDistance = 0.12f;
     public CustomAstar3D PathFinderInstance { get; private set; } = new CustomAstar3D();
     public BTNodeMoveForTarget(BehaviorTree behaviorTreeInstance, ActorController actorController)
     {
@@ -21,34 +19,13 @@ public class BTNodeMoveForTarget : Node
     {
         if (BehaviorTreeInstance.GetBlackBoard().PathList.Count > 0)
         {
-            PathNode3D node = BehaviorTreeInstance.GetBlackBoard().PathList.Peek();
-            Vector3 startPosition = Controller.GetActorTransform().position;
-            Vector3 nextPosition = node.GetWorldPosition();
-            Vector3 dir = nextPosition - startPosition;
-            if (Vector3.Distance(startPosition, nextPosition) <= IntervalDistance)
-            {
-                // 다음노드와 길찾기 목적지 노드와 동일하다면 완료!
-                if(BehaviorTreeInstance.GetBlackBoard().PathFidningTargetPoint == nextPosition)
-                {
-                    bRunningPathFinding = false;
-                    Controller.ChangeActorState(ActorStateType.Idle);
-                }
-                BehaviorTreeInstance.GetBlackBoard().PathList.Pop();
-            }
-            else
-            {
-                Controller.ChangeActorState(ActorStateType.Run);
-                Controller.LookAt(dir);
-                Controller.Move(dir, 1.5f);
-            }
+            // test code.
+            PathNode3D node = BehaviorTreeInstance.GetBlackBoard().PathList.Pop();
+            Controller.Teleport(node.GetWorldPosition());
         }
         else
         {
-            if(bRunningPathFinding == false)
-            {
-                bRunningPathFinding = true;
-                AsyncPathFinding(BehaviorTreeInstance.GetBlackBoard().PathFidningTargetPoint);
-            }
+            AsyncPathFinding(BehaviorTreeInstance.GetBlackBoard().PathFidningTargetPoint);
         }
         return true;
     }

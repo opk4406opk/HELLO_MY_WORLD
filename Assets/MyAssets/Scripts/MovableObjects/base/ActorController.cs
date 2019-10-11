@@ -104,6 +104,10 @@ public abstract class ActorController : MonoBehaviour
             bContactActor = true;
         }
     }
+    public void Teleport(Vector3 toPosition)
+    {
+        gameObject.transform.position = toPosition;
+    }
     public void Move(Vector3 dir, float speed)
     {
         Vector3 newPos = gameObject.transform.position;
