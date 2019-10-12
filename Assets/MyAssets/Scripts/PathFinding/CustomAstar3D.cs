@@ -131,29 +131,6 @@ public class CustomAstar3D : MonoBehaviour
         PathFindingNeedData = data;
         ActorPosition = actorPosition;
         GameWorldConfing = WorldConfigFile.Instance.GetConfig();
-        //
-        var mapData = WorldMapDataFile.Instance.WorldMapDataInstance;
-        OffsetX = (PathFindingNeedData.SubWorldOffsetX * GameWorldConfing.SubWorldSizeX) + (PathFindingNeedData.WorldAreaOffsetX * mapData.SubWorldRow * GameWorldConfing.SubWorldSizeX);
-        OffsetY = (PathFindingNeedData.SubWorldOffsetY * GameWorldConfing.SubWorldSizeY) + (PathFindingNeedData.WorldAreaOffsetY * mapData.SubWorldColumn * GameWorldConfing.SubWorldSizeY);
-        OffsetZ = (PathFindingNeedData.SubWorldOffsetZ * GameWorldConfing.SubWorldSizeZ) + (PathFindingNeedData.WorldAreaOffsetZ * mapData.SubWorldLayer * GameWorldConfing.SubWorldSizeZ);
-        //
-        PathFindMapData = new PathNode3D[GameWorldConfing.SubWorldSizeX, GameWorldConfing.SubWorldSizeY, GameWorldConfing.SubWorldSizeZ];
-        for (int x = 0; x < GameWorldConfing.SubWorldSizeX; x++)
-        { 
-            for (int y = 0; y < GameWorldConfing.SubWorldSizeY; y++)
-            {
-                for (int z = 0; z < GameWorldConfing.SubWorldSizeZ; z++)
-                {
-                    PathFindMapData[x, y, z] = new PathNode3D();
-                    PathFindMapData[x, y, z].PathMapDataX = x;
-                    PathFindMapData[x, y, z].PathMapDataY = y;
-                    PathFindMapData[x, y, z].PathMapDataZ = z;
-                    PathFindMapData[x, y, z].ParentNode = null;
-                    PathFindMapData[x, y, z].bGoalNode = false;
-                }
-            }
-        }
-        InitLoopDirection();
     }
 
     private Vector3 ConvertPathToWorldCoordinate(SimpleVector3 pathPosition)
@@ -195,12 +172,36 @@ public class CustomAstar3D : MonoBehaviour
             path = path.ParentNode;
         }
     }
-    private void InitPathFinding()
+    private void InitializePathFinding()
     {
+        // Offset 세팅.
+        var mapData = WorldMapDataFile.Instance.WorldMapDataInstance;
+        OffsetX = (PathFindingNeedData.SubWorldOffsetX * GameWorldConfing.SubWorldSizeX) + (PathFindingNeedData.WorldAreaOffsetX * mapData.SubWorldRow * GameWorldConfing.SubWorldSizeX);
+        OffsetY = (PathFindingNeedData.SubWorldOffsetY * GameWorldConfing.SubWorldSizeY) + (PathFindingNeedData.WorldAreaOffsetY * mapData.SubWorldColumn * GameWorldConfing.SubWorldSizeY);
+        OffsetZ = (PathFindingNeedData.SubWorldOffsetZ * GameWorldConfing.SubWorldSizeZ) + (PathFindingNeedData.WorldAreaOffsetZ * mapData.SubWorldLayer * GameWorldConfing.SubWorldSizeZ);
+        // 길찾기용 맵 데이터 초기화.
+        PathFindMapData = new PathNode3D[GameWorldConfing.SubWorldSizeX, GameWorldConfing.SubWorldSizeY, GameWorldConfing.SubWorldSizeZ];
+        for (int x = 0; x < GameWorldConfing.SubWorldSizeX; x++)
+        {
+            for (int y = 0; y < GameWorldConfing.SubWorldSizeY; y++)
+            {
+                for (int z = 0; z < GameWorldConfing.SubWorldSizeZ; z++)
+                {
+                    PathFindMapData[x, y, z] = new PathNode3D();
+                    PathFindMapData[x, y, z].PathMapDataX = x;
+                    PathFindMapData[x, y, z].PathMapDataY = y;
+                    PathFindMapData[x, y, z].PathMapDataZ = z;
+                    PathFindMapData[x, y, z].ParentNode = null;
+                    PathFindMapData[x, y, z].bGoalNode = false;
+                }
+            }
+        }
+        //
         OpenList.Clear();
         ClosedList.Clear();
         NavigatePath.Clear();
-        InitPathFindMapData();
+        //
+        InitLoopDirection();
     }
     /// <summary>
     /// 길찾기를 시작합니다.
@@ -209,7 +210,7 @@ public class CustomAstar3D : MonoBehaviour
     /// <returns>길 노드 목록을 Stack으로 반환합니다.</returns>
     public Stack<PathNode3D> PathFinding(Vector3 goalWorldPosition)
     {
-        InitPathFinding();
+        InitializePathFinding();
         SetGoalPathNode(goalWorldPosition);
         SetStartPathNode();
         while ((OpenList.Count != 0) && (!IsGoalInOpenList()))
@@ -246,7 +247,7 @@ public class CustomAstar3D : MonoBehaviour
     private async Task<Stack<PathNode3D>> TaskAsyncNavigating(Vector3 goalWorldPosition)
     {
         return await Task.Run(()=> {
-            InitPathFinding();
+            InitializePathFinding();
             SetGoalPathNode(goalWorldPosition);
             SetStartPathNode();
             while ((OpenList.Count != 0) && (!IsGoalInOpenList()))
@@ -280,26 +281,6 @@ public class CustomAstar3D : MonoBehaviour
         GoalNode = PathFindMapData[(int)toPathCoordinate.x, (int)toPathCoordinate.y, (int)toPathCoordinate.z];
         GoalNode.bGoalNode = true;
     }
-
-    /// <summary>
-    /// 길찾기에 이용되는 맵정보 배열을 초기화 합니다.
-    /// 실제 월드 블록 배열의 XZ평면의 범위값을 이용해 맵 정보 배열을 순회.
-    /// </summary>
-    private void InitPathFindMapData()
-    {
-        for (int x = 0; x < GameWorldConfing.SubWorldSizeX; x++)
-            for (int y = 0; y < GameWorldConfing.SubWorldSizeY; y++)
-                for (int z = 0; z < GameWorldConfing.SubWorldSizeZ; z++)
-                {
-                    PathFindMapData[x, y, z].PathMapDataX = x;
-                    PathFindMapData[x, y, z].PathMapDataY = y;
-                    PathFindMapData[x, y, z].PathMapDataZ = z;
-                    PathFindMapData[x, y, z].ParentNode = null;
-                    PathFindMapData[x, y, z].bGoalNode = false;
-                    PathFindMapData[x, y, z].bJumped = false;
-                }
-    }
-
     private void SearchAdjacentNodes(PathNode3D selectNode)
     {
         foreach (Vector3 pos in LoopDirections)
