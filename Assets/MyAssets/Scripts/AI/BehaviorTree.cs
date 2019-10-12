@@ -83,7 +83,8 @@ public abstract class BehaviorTree
         KojeomLogger.DebugLog("BehaviorProcess Start!!");
         while(bRunningBT == true)
         {
-            if(ActorControllerInstance != null && ActorControllerInstance.IsContactTerrain() == true)
+            bool bContactTerrainOrWater = ActorControllerInstance.IsContactTerrain() == true || ActorControllerInstance.IsContactWater() == true;
+            if (ActorControllerInstance != null && bContactTerrainOrWater == true)
             {
                 RootNode.Invoke(Time.deltaTime);
             }

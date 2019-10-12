@@ -4943,7 +4943,7 @@ GameObject:
   - component: {fileID: 4287795866793534998}
   - component: {fileID: 7047658255803175810}
   m_Layer: 12
-  m_Name: NPC_Guard_RID(Guard)_Utc
+  m_Name: NPC_Merchant_RID(Merchant1)_Utc
   m_TagString: ACTOR_NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5224,7 +5224,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 2
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &4287795866793534998
 MonoBehaviour:
   m_ObjectHideFlags: 0
