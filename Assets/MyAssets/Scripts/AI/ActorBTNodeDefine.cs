@@ -9,6 +9,8 @@ using UnityEngine;
 public class BTNodeMoveForTarget : Node
 {
     public CustomAstar3D PathFinderInstance { get; private set; } = new CustomAstar3D();
+    //
+    private float ReCalcPathfindingTimeSec = 5.0f;
     public BTNodeMoveForTarget(BehaviorTree behaviorTreeInstance, ActorController actorController)
     {
         Controller = actorController;
@@ -17,14 +19,18 @@ public class BTNodeMoveForTarget : Node
    
     public override bool Invoke(float DeltaTime)
     {
+        ElapsedTimeSec += DeltaTime;
         if (BehaviorTreeInstance.GetBlackBoard().PathList.Count > 0)
         {
             // test code.
             PathNode3D node = BehaviorTreeInstance.GetBlackBoard().PathList.Pop();
             Controller.Teleport(node.GetWorldPosition());
         }
-        else
+
+        bool bReCalcPathFinding = BehaviorTreeInstance.GetBlackBoard().PathList.Count == 0 && ElapsedTimeSec >= ReCalcPathfindingTimeSec;
+        if (bReCalcPathFinding == true)
         {
+            ElapsedTimeSec = 0.0f;
             AsyncPathFinding(BehaviorTreeInstance.GetBlackBoard().PathFidningTargetPoint);
         }
         return true;
@@ -32,10 +38,10 @@ public class BTNodeMoveForTarget : Node
     public void AsyncPathFinding(Vector3 goalWorldPosition)
     {
         // init
-        PathFinderInitData initData = new PathFinderInitData(Controller.GetContainedWorldBlockData(),
+        PathFinderNeedData needData = new PathFinderNeedData(Controller.GetContainedWorldBlockData(),
                                                              Controller.GetContainedSubWorldOffset(),
                                                              Controller.GetContainedWorldAreaOffset());
-        PathFinderInstance.Init(initData, new SimpleVector3(Controller.GetActorTransform().position));
+        PathFinderInstance.Init(needData, new SimpleVector3(Controller.GetActorTransform().position));
         PathFinderInstance.OnFinishAsyncPathFinding += OnFinishAsyncPathFinding;
         // async start.
         PathFinderInstance.AsyncPathFinding(goalWorldPosition);
@@ -48,7 +54,6 @@ public class BTNodeMoveForTarget : Node
 
 public class BTNodeTimer : Node
 {
-    private float ElapsedTimeSec = 0.0f;
     private float WakeupTimeSec = 2.0f;
     public delegate void CallBackAfterTimer();
     private CallBackAfterTimer CallBack;

@@ -8,7 +8,6 @@ public class PathNode3D
     // 길찾기용 맵 데이터 좌표 X,Z 이다. 그러나 실제 월드 블록 배열 X,Z 평면값과 동일한 의미로 쓰이기도 하니,
     // 이 값을 실제 길을 찾아가는 오브젝트가 월드 좌표 (x, z)값으로 사용 가능하다.
     #region variables.
-
     public int PathMapDataX { set; get; }
     public int PathMapDataY { set; get; }
     public int PathMapDataZ { set; get; }
@@ -20,8 +19,8 @@ public class PathNode3D
     public bool bGoalNode { set; get; }
     public int GValue { get; private set; }
     #endregion
-    #region method
 
+    #region method
     public Vector3 GetWorldPosition()
     {
         return new Vector3(WorldCoordX, WorldCoordY, WorldCoordZ);
@@ -86,15 +85,15 @@ public struct SimpleVector3
     public SimpleVector3(Vector3 vec3) { x = vec3.x; y = vec3.y; z = vec3.z; }
 }
 /// <summary>
-/// 길찾기 시작에 필요한 초기화 데이터.
+/// 길찾기 시작에 필요한 데이터.
 /// </summary>
-public struct PathFinderInitData
+public struct PathFinderNeedData
 {
     public Block[,,] WorldBlockData;
     public int SubWorldOffsetX, SubWorldOffsetY, SubWorldOffsetZ;
     public int WorldAreaOffsetX, WorldAreaOffsetY, WorldAreaOffsetZ;
 
-    public PathFinderInitData(Block[,,] blockData, Vector3 subWorldOffset, Vector3 worldAreaOffset)
+    public PathFinderNeedData(Block[,,] blockData, Vector3 subWorldOffset, Vector3 worldAreaOffset)
     {
         WorldBlockData = blockData;
         SubWorldOffsetX = (int)subWorldOffset.x;
@@ -116,28 +115,27 @@ public class CustomAstar3D : MonoBehaviour
     private SimpleVector3 ActorPosition;
     //
     private WorldConfig GameWorldConfing;
-    private PathFinderInitData InitData;
+    private PathFinderNeedData PathFindingNeedData;
     private int OffsetX = 0;
     private int OffsetY = 0;
     private int OffsetZ = 0;
     private bool bAlreadyAsyncCalcPaths = false;
 
-
     public delegate void Del_OnFinishAsyncPathFinding(Stack<PathNode3D> resultPath);
     public event Del_OnFinishAsyncPathFinding OnFinishAsyncPathFinding;
 
-    public void Init(PathFinderInitData data, SimpleVector3 actorPosition)
+    public void Init(PathFinderNeedData data, SimpleVector3 actorPosition)
     {
         if (bAlreadyAsyncCalcPaths == true) return;
         //
-        InitData = data;
+        PathFindingNeedData = data;
         ActorPosition = actorPosition;
         GameWorldConfing = WorldConfigFile.Instance.GetConfig();
         //
         var mapData = WorldMapDataFile.Instance.WorldMapDataInstance;
-        OffsetX = (InitData.SubWorldOffsetX * GameWorldConfing.SubWorldSizeX) + (InitData.WorldAreaOffsetX * mapData.SubWorldRow * GameWorldConfing.SubWorldSizeX);
-        OffsetY = (InitData.SubWorldOffsetY * GameWorldConfing.SubWorldSizeY) + (InitData.WorldAreaOffsetY * mapData.SubWorldColumn * GameWorldConfing.SubWorldSizeY);
-        OffsetZ = (InitData.SubWorldOffsetZ * GameWorldConfing.SubWorldSizeZ) + (InitData.WorldAreaOffsetZ * mapData.SubWorldLayer * GameWorldConfing.SubWorldSizeZ);
+        OffsetX = (PathFindingNeedData.SubWorldOffsetX * GameWorldConfing.SubWorldSizeX) + (PathFindingNeedData.WorldAreaOffsetX * mapData.SubWorldRow * GameWorldConfing.SubWorldSizeX);
+        OffsetY = (PathFindingNeedData.SubWorldOffsetY * GameWorldConfing.SubWorldSizeY) + (PathFindingNeedData.WorldAreaOffsetY * mapData.SubWorldColumn * GameWorldConfing.SubWorldSizeY);
+        OffsetZ = (PathFindingNeedData.SubWorldOffsetZ * GameWorldConfing.SubWorldSizeZ) + (PathFindingNeedData.WorldAreaOffsetZ * mapData.SubWorldLayer * GameWorldConfing.SubWorldSizeZ);
         //
         PathFindMapData = new PathNode3D[GameWorldConfing.SubWorldSizeX, GameWorldConfing.SubWorldSizeY, GameWorldConfing.SubWorldSizeZ];
         for (int x = 0; x < GameWorldConfing.SubWorldSizeX; x++)
@@ -239,13 +237,13 @@ public class CustomAstar3D : MonoBehaviour
         //
         KojeomLogger.DebugLog("비동기 경로탐색을 시작합니다.");
         bAlreadyAsyncCalcPaths = true;
-        var resultPath = await AsyncNavigating(goalWorldPosition);
+        var resultPath = await TaskAsyncNavigating(goalWorldPosition);
         bAlreadyAsyncCalcPaths = false;
         KojeomLogger.DebugLog(string.Format("비동기 경로탐색이 완료되었습니다. [탐색 경로 Count : {0}]", resultPath.Count));
         OnFinishAsyncPathFinding(resultPath);
     }
 
-    private async Task<Stack<PathNode3D>> AsyncNavigating(Vector3 goalWorldPosition)
+    private async Task<Stack<PathNode3D>> TaskAsyncNavigating(Vector3 goalWorldPosition)
     {
         return await Task.Run(()=> {
             InitPathFinding();
@@ -274,13 +272,6 @@ public class CustomAstar3D : MonoBehaviour
         CurrentNode.CalcHValue(GoalNode);
         CurrentNode.CalcGValue();
         OpenList.Add(CurrentNode);
-    }
-
-    public void SetGoalPathNode(int worldCoordX, int worldCoordY, int worldCoordZ)
-    {
-        Vector3 toPathCoordinate = ConvertWorldToPathCoordinate(ActorPosition);
-        GoalNode = PathFindMapData[(int)toPathCoordinate.x, (int)toPathCoordinate.y, (int)toPathCoordinate.z];
-        GoalNode.bGoalNode = true;
     }
 
     public void SetGoalPathNode(Vector3 worldPosition)
@@ -320,20 +311,22 @@ public class CustomAstar3D : MonoBehaviour
                 (searchPosY >= 0 && searchPosY < GameWorldConfing.SubWorldSizeY) &&
                 (searchPosZ >= 0 && searchPosZ < GameWorldConfing.SubWorldSizeZ))
             {
-                if (!IsInClosedList(searchPosX, searchPosY, searchPosZ))
+                PathNode3D searchNode = PathFindMapData[searchPosX, searchPosY, searchPosZ];
+                if (IsInClosedList(searchPosX, searchPosY, searchPosZ) == false && IsCanMoveNode(searchNode) == true)
                 {
-                    if (!IsInOpenList(searchPosX, searchPosY, searchPosZ))
+                    if (IsInOpenList(searchPosX, searchPosY, searchPosZ) == false)
                     {
-                        OpenList.Add(PathFindMapData[searchPosX, searchPosY, searchPosZ]);
-                        PathFindMapData[searchPosX, searchPosY, searchPosZ].ParentNode = CurrentNode;
-                        PathFindMapData[searchPosX, searchPosY, searchPosZ].CalcHValue(GoalNode);
-                        PathFindMapData[searchPosX, searchPosY, searchPosZ].CalcGValue();
+                        OpenList.Add(searchNode);
+                        searchNode.ParentNode = CurrentNode;
+                        searchNode.CalcHValue(GoalNode);
+                        searchNode.CalcGValue();
                     }
                     else
                     {
-                        if ((PathFindMapData[searchPosX, searchPosY, searchPosZ].GValue < selectNode.GValue))
+                        int searchNodeGValue = searchNode.GValue;
+                        if (searchNodeGValue < selectNode.GValue)
                         {
-                            selectNode.ParentNode = PathFindMapData[searchPosX, searchPosY, searchPosZ];
+                            selectNode.ParentNode = searchNode;
                             selectNode.CalcHValue(GoalNode);
                             selectNode.CalcGValue();
                         }
@@ -380,16 +373,42 @@ public class CustomAstar3D : MonoBehaviour
                 (searchPosY >= 0 && searchPosY < GameWorldConfing.SubWorldSizeY) &&
                 (searchPosZ >= 0 && searchPosZ < GameWorldConfing.SubWorldSizeZ) )
             {
-                if ((!IsInClosedList(searchPosX, searchPosY, searchPosZ)) && (!IsInOpenList(searchPosX, searchPosY, searchPosZ)))
+                PathNode3D searchNode = PathFindMapData[searchPosX, searchPosY, searchPosZ];
+                bool bNotInCloseAndOpen = (IsInClosedList(searchPosX, searchPosY, searchPosZ) == false) && (IsInOpenList(searchPosX, searchPosY, searchPosZ) == false);
+                if (bNotInCloseAndOpen == true && IsCanMoveNode(searchNode) == true)
                 {
-                    PathFindMapData[searchPosX, searchPosY, searchPosZ].ParentNode = CurrentNode;
-                    PathFindMapData[searchPosX, searchPosY, searchPosZ].CalcHValue(GoalNode);
-                    PathFindMapData[searchPosX, searchPosY, searchPosZ].CalcGValue();
-                    OpenList.Add(PathFindMapData[searchPosX, searchPosY, searchPosZ]);
+                    searchNode.ParentNode = CurrentNode;
+                    searchNode.CalcHValue(GoalNode);
+                    searchNode.CalcGValue();
+                    OpenList.Add(searchNode);
                 }
             }
         }
         CurNodeToClosedList();
+    }
+
+    private bool IsCanMoveNode(PathNode3D node)
+    {
+        int x = node.PathMapDataX;
+        int y = node.PathMapDataY;
+        int z = node.PathMapDataZ;
+        BlockTileType blockType = (BlockTileType)PathFindingNeedData.WorldBlockData[x, y, z].Type;
+        if (blockType == BlockTileType.EMPTY)
+        {
+            return false;
+        }
+
+        int upperHeight = y + 1;
+        if (upperHeight < PathFindingNeedData.SubWorldOffsetY)
+        {
+            BlockTileType upperBlockType = (BlockTileType)PathFindingNeedData.WorldBlockData[x, upperHeight, z].Type;
+            if(upperBlockType != BlockTileType.EMPTY)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private bool IsInClosedList(int searchPosX, int searchPosY, int searchPosZ)

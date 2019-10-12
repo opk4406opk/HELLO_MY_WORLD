@@ -8,6 +8,7 @@ public abstract class Node
     public abstract bool Invoke(float DeltaTime);
     protected ActorController Controller;
     protected BehaviorTree BehaviorTreeInstance;
+    protected float ElapsedTimeSec = 0.0f;
 }
 
 public class CompositeNode : Node

@@ -70,6 +70,25 @@ public class KojeomUtility
         return true;
     }
 
+    public static Block[,,] CopyWorldBlockData(Block[,,] original)
+    {
+        int lengthX = WorldConfigFile.Instance.GetConfig().SubWorldSizeX;
+        int lengthY = WorldConfigFile.Instance.GetConfig().SubWorldSizeY;
+        int lengthZ = WorldConfigFile.Instance.GetConfig().SubWorldSizeZ;
+        Block[,,] copiedBlockData = new Block[lengthX, lengthY, lengthZ];
+        for (int x = 0; x < lengthX; x++)
+        {
+            for (int y = 0; y < lengthY; y++)
+            {
+                for (int z = 0; z < lengthZ; z++)
+                {
+                    copiedBlockData[x, y, z] = original[x, y, z];
+                }
+            }
+        }
+        return copiedBlockData;
+    }
+
 
     public static string ConvertAssetPathToResourcePath(string assetPath)
     {
