@@ -35,7 +35,8 @@ namespace ActorGeneratorTool.Sources
                     data.NAME = string.Format("Default_NPC_{0}", idx.ToString());
                     int randVal = KojeomUtils.GetInstance().GetRandomInstance().Next((int)NPC_TYPE.Merchant, (int)NPC_TYPE.COUNT);
                     data.TYPE = ((NPC_TYPE)randVal).ToString();
-                    data.RESOURCE_ID = string.Format("RID({0})", ((NPC_TYPE)randVal).ToString());
+                    data.RESOURCE_ID = string.Format("{0}{1}", ((NPC_TYPE)randVal).ToString(), 
+                        KojeomUtils.GetInstance().GetRandomInstance().Next(0, 2));
                     data.UNIQUE_ID = idx.ToString();
                     NpcDatas.SpawnDatas.Add(data);
                 }

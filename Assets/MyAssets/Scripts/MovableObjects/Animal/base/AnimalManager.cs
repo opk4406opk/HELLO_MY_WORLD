@@ -17,10 +17,13 @@ public class AnimalManager : AnimalSpawner
         for (int spawnNum = 0; spawnNum < num; spawnNum++)
         {
             AnimalDataFile.Instance.AnimalSpawnDatas.TryGetValue(uniqueID, out AnimalSpawnData spawnData);
+            if (KojeomUtility.IsValidActorResourceGroup(GameResourceSupervisor.GetInstance().ActorPrefabs[(int)ACTOR_TYPE.ANIMAL].ActorResourceGroups[(int)spawnData.AnimalType]) == false)
+            {
+                continue;
+            }
             Actor instance = Instantiate(GameResourceSupervisor.GetInstance().ActorPrefabs[(int)ACTOR_TYPE.ANIMAL]
-                .Group[(int)KojeomUtility.GetResourceEnumFromID<ANIMAL_TYPE>(spawnData.ResourceID)]
-                .LoadSynchro(), spawnPos, Quaternion.identity)
-                .GetComponent<Actor>();
+                .ActorResourceGroups[(int)spawnData.AnimalType].Resoruces[spawnData.ResourceID].LoadSynchro(),
+                spawnPos, Quaternion.identity).GetComponent<Actor>();
             instance.transform.parent = ActorSuperviosr.Instance.GetSpawnedGroupTransform();
             //
             WorldAreaManager.Instance.GetWorldArea(worldAreaUniqueID).SubWorldStates.TryGetValue(subWorldUniqueID, out SubWorldState worldState);

@@ -35,7 +35,8 @@ namespace ActorGeneratorTool.Sources
                     data.NAME = string.Format("Default_Animal_{0}", idx.ToString());
                     int randVal = KojeomUtils.GetInstance().GetRandomInstance().Next((int)ANIMAL_TYPE.Chick, (int)ANIMAL_TYPE.COUNT);
                     data.TYPE = ((ANIMAL_TYPE)randVal).ToString();
-                    data.RESOURCE_ID = string.Format("RID({0})", ((ANIMAL_TYPE)randVal).ToString());
+                    data.RESOURCE_ID = string.Format("{0}{1}", ((ANIMAL_TYPE)randVal).ToString(),
+                        KojeomUtils.GetInstance().GetRandomInstance().Next(0,1));
                     data.UNIQUE_ID = idx.ToString();
                     data.CATEGORY = GetCategory((ANIMAL_TYPE)randVal).ToString();
                     AnimalDatas.SpawnDatas.Add(data);

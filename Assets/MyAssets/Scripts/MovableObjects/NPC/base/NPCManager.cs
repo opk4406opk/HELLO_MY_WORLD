@@ -43,10 +43,14 @@ public class NPCManager : NPCSpawner
         for(int spawnNum = 0; spawnNum < num; spawnNum++)
         {
             NPCDataFile.Instance.NpcSpawnDatas.TryGetValue(uniqueID, out NPCSpawnData spawnData);
+            if(KojeomUtility.IsValidActorResourceGroup(GameResourceSupervisor.GetInstance().ActorPrefabs[(int)ACTOR_TYPE.NPC].ActorResourceGroups[(int)spawnData.NpcType]) == false)
+            {
+                continue;
+            }
+            //
             Actor instance = Instantiate(GameResourceSupervisor.GetInstance().ActorPrefabs[(int)ACTOR_TYPE.NPC]
-                .Group[(int)KojeomUtility.GetResourceEnumFromID<NPC_TYPE>(spawnData.ResourceID)]
-                .LoadSynchro(), spawnPos, Quaternion.identity)
-                .GetComponent<Actor>();
+                .ActorResourceGroups[(int)spawnData.NpcType].Resoruces[spawnData.ResourceID].LoadSynchro(),
+                spawnPos, Quaternion.identity).GetComponent<Actor>();
             instance.transform.parent = ActorSuperviosr.Instance.GetSpawnedGroupTransform();
             //
             WorldAreaManager.Instance.GetWorldArea(worldAreaUniqueID).SubWorldStates.TryGetValue(subWorldUniqueID, out SubWorldState worldState);
