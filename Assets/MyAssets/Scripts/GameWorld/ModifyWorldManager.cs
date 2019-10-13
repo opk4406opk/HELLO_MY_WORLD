@@ -10,7 +10,7 @@ using System.Text;
 /// 게임내 사용자가 월드 블록을 수정/삭제를 관리하는 클래스.
 /// </summary>
 /// 
-public class ModifyTerrain : MonoBehaviour
+public class ModifyWorldManager : MonoBehaviour
 {
     private SubWorld world;
     private int chunkSize = 0;

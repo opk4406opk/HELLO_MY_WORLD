@@ -38,7 +38,7 @@ public class InputManager : MonoBehaviour
 {
 
     [SerializeField]
-    private ModifyTerrain modifyTerrain;
+    private ModifyWorldManager modifyTerrain;
 
     private AInput CurrentInputDevice;
     private WindowInput WindowInput;

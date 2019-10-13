@@ -7,7 +7,7 @@ public class WindowInput : AInput
     private Vector3 ClickPosition;
     private Ray RayInstance;
 
-    public override void Init(ModifyTerrain modifyTerrain)
+    public override void Init(ModifyWorldManager modifyTerrain)
     {
         ModifyTerrainInstance = modifyTerrain;
         InputDeviceType = INPUT_DEVICE_TYPE.WINDOW;

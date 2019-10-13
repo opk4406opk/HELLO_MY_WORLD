@@ -13,7 +13,7 @@ public enum MOBILE_INPUT_TYPE
 }
 public class MobileInput : AInput
 {
-    public override void Init(ModifyTerrain modifyTerrain)
+    public override void Init(ModifyWorldManager modifyTerrain)
     {
         ModifyTerrainInstance = modifyTerrain;
         InputDeviceType = INPUT_DEVICE_TYPE.MOBILE;

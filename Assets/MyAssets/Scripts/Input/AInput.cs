@@ -6,7 +6,7 @@ public abstract class AInput
 {
     private readonly int MaximumInputDatas = 10;
     public abstract void UpdateProcess();
-    public abstract void Init(ModifyTerrain modifyTerrain);
+    public abstract void Init(ModifyWorldManager modifyTerrain);
    
     public InputData GetInputData()
     {
@@ -100,7 +100,7 @@ public abstract class AInput
 
     protected List<InputData> WindowInputDatas = new List<InputData>();
     protected List<InputData> MobileInputDatas = new List<InputData>();
-    protected ModifyTerrain ModifyTerrainInstance;
+    protected ModifyWorldManager ModifyTerrainInstance;
     protected INPUT_DEVICE_TYPE InputDeviceType = INPUT_DEVICE_TYPE.NONE;
 
     protected abstract void CheckInputState();

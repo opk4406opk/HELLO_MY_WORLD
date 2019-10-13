@@ -45,10 +45,14 @@ public class PathNode3D
         int absY = 0;
         int absZ = 0;
         // 대각선 이동.
-        if (((x == -1) && (y == 1) && (z == 1))
-            || ((x == 1) && (y == 1) && (z == 1))
-            || ((x == -1) && (y == -1) && ( z == -1))
-            || ((x == 1) && (y == -1) && ( z == -1)))
+        if (((x == 1) && (y == 1) && (z == 1))||
+            ((x == 1) && (y == 1) && (z == -1)) ||
+            ((x == -1) && (y == 1) && ( z == 1))||
+            ((x == -1) && (y == 1) && ( z == -1)) ||
+            ((x == 1) && (y == -1) && (z == 1)) ||
+            ((x == 1) && (y == -1) && (z == -1)) ||
+            ((x == -1) && (y == -1) && (z == 1)) ||
+            ((x == -1) && (y == -1) && (z == -1)))
         {
             absX = Mathf.Abs(x);
             absY = Mathf.Abs(y);
@@ -213,7 +217,7 @@ public class CustomAstar3D : MonoBehaviour
         InitializePathFinding();
         SetGoalPathNode(goalWorldPosition);
         SetStartPathNode();
-        while ((OpenList.Count != 0) && (!IsGoalInOpenList()))
+        while (OpenList.Count > 0 && IsGoalInOpenList() == false)
         {
             SetOpenList();
             PathNode3D selectNode = SelectLowCostPath();
@@ -239,9 +243,9 @@ public class CustomAstar3D : MonoBehaviour
         KojeomLogger.DebugLog("비동기 경로탐색을 시작합니다.");
         bAlreadyAsyncCalcPaths = true;
         var resultPath = await TaskAsyncNavigating(goalWorldPosition);
+        OnFinishAsyncPathFinding(resultPath);
         bAlreadyAsyncCalcPaths = false;
         KojeomLogger.DebugLog(string.Format("비동기 경로탐색이 완료되었습니다. [탐색 경로 Count : {0}]", resultPath.Count));
-        OnFinishAsyncPathFinding(resultPath);
     }
 
     private async Task<Stack<PathNode3D>> TaskAsyncNavigating(Vector3 goalWorldPosition)
@@ -250,7 +254,7 @@ public class CustomAstar3D : MonoBehaviour
             InitializePathFinding();
             SetGoalPathNode(goalWorldPosition);
             SetStartPathNode();
-            while ((OpenList.Count != 0) && (!IsGoalInOpenList()))
+            while (OpenList.Count > 0 && IsGoalInOpenList() == false)
             {
                 SetOpenList();
                 PathNode3D selectNode = SelectLowCostPath();
@@ -379,15 +383,15 @@ public class CustomAstar3D : MonoBehaviour
             return false;
         }
 
-        int upperHeight = y + 1;
-        if (upperHeight < PathFindingNeedData.SubWorldOffsetY)
-        {
-            BlockTileType upperBlockType = (BlockTileType)PathFindingNeedData.WorldBlockData[x, upperHeight, z].Type;
-            if(upperBlockType != BlockTileType.EMPTY)
-            {
-                return false;
-            }
-        }
+        //int upperHeight = y + 1;
+        //if (upperHeight < PathFindingNeedData.SubWorldOffsetY)
+        //{
+        //    BlockTileType upperBlockType = (BlockTileType)PathFindingNeedData.WorldBlockData[x, upperHeight, z].Type;
+        //    if(upperBlockType != BlockTileType.EMPTY)
+        //    {
+        //        return false;
+        //    }
+        //}
 
         return true;
     }
