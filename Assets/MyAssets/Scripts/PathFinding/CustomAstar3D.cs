@@ -41,11 +41,12 @@ public class PathNode3D
         int x = PathMapDataX - ParentNode.PathMapDataX;
         int y = PathMapDataY - ParentNode.PathMapDataY;
         int z = PathMapDataZ - ParentNode.PathMapDataZ;
-        int absX = 0;
-        int absY = 0;
-        int absZ = 0;
         // 대각선 이동.
-        if (((x == 1) && (y == 1) && (z == 1))||
+        if (((x == 1) && (y == 0) && (z == 1)) ||
+            ((x == 1) && (y == 0) && (z == -1)) ||
+            ((x == -1) && (y == 0) && (z == 1)) ||
+            ((x == -1) && (y == 0) && (z == -1)) ||
+            ((x == 1) && (y == 1) && (z == 1))||
             ((x == 1) && (y == 1) && (z == -1)) ||
             ((x == -1) && (y == 1) && ( z == 1))||
             ((x == -1) && (y == 1) && ( z == -1)) ||
@@ -54,17 +55,11 @@ public class PathNode3D
             ((x == -1) && (y == -1) && (z == 1)) ||
             ((x == -1) && (y == -1) && (z == -1)))
         {
-            absX = Mathf.Abs(x);
-            absY = Mathf.Abs(y);
-            absZ = Mathf.Abs(z);
-            GValue = (absX + absY + absZ) * 14 + ParentNode.GValue;
+            GValue = (Mathf.Abs(x) + Mathf.Abs(y) + Mathf.Abs(z)) * 14 + ParentNode.GValue;
         }
         else
         {
-            absX = Mathf.Abs(x);
-            absY = Mathf.Abs(y);
-            absZ = Mathf.Abs(z);
-            GValue = (absX + absY + absZ) * 10 + ParentNode.GValue;
+            GValue = (Mathf.Abs(x) + Mathf.Abs(y) + Mathf.Abs(z)) * 10 + ParentNode.GValue;
         }
     }
 
@@ -91,13 +86,13 @@ public struct SimpleVector3
 /// <summary>
 /// 길찾기 시작에 필요한 데이터.
 /// </summary>
-public struct PathFinderNeedData
+public struct PathFinderSettings
 {
     public Block[,,] WorldBlockData;
     public int SubWorldOffsetX, SubWorldOffsetY, SubWorldOffsetZ;
     public int WorldAreaOffsetX, WorldAreaOffsetY, WorldAreaOffsetZ;
 
-    public PathFinderNeedData(Block[,,] blockData, Vector3 subWorldOffset, Vector3 worldAreaOffset)
+    public PathFinderSettings(Block[,,] blockData, Vector3 subWorldOffset, Vector3 worldAreaOffset)
     {
         WorldBlockData = blockData;
         SubWorldOffsetX = (int)subWorldOffset.x;
@@ -119,7 +114,7 @@ public class CustomAstar3D : MonoBehaviour
     private SimpleVector3 ActorPosition;
     //
     private WorldConfig GameWorldConfing;
-    private PathFinderNeedData PathFindingNeedData;
+    private PathFinderSettings PathFindingSettings;
     private int OffsetX = 0;
     private int OffsetY = 0;
     private int OffsetZ = 0;
@@ -128,11 +123,11 @@ public class CustomAstar3D : MonoBehaviour
     public delegate void Del_OnFinishAsyncPathFinding(Stack<PathNode3D> resultPath);
     public event Del_OnFinishAsyncPathFinding OnFinishAsyncPathFinding;
 
-    public void Init(PathFinderNeedData data, SimpleVector3 actorPosition)
+    public void Init(PathFinderSettings settings, SimpleVector3 actorPosition)
     {
         if (bAlreadyAsyncCalcPaths == true) return;
         //
-        PathFindingNeedData = data;
+        PathFindingSettings = settings;
         ActorPosition = actorPosition;
         GameWorldConfing = WorldConfigFile.Instance.GetConfig();
     }
@@ -149,17 +144,17 @@ public class CustomAstar3D : MonoBehaviour
 
     private Vector3 ConvertWorldToPathCoordinate(SimpleVector3 worldPosition)
     {
-        int x = Mathf.Clamp((int)worldPosition.x - OffsetX, 0, GameWorldConfing.SubWorldSizeX - 1);
-        int y = Mathf.Clamp((int)worldPosition.y - OffsetY, 0, GameWorldConfing.SubWorldSizeY - 1);
-        int z = Mathf.Clamp((int)worldPosition.z - OffsetZ, 0, GameWorldConfing.SubWorldSizeZ - 1);
+        int x = Mathf.Clamp(Mathf.Abs((int)worldPosition.x - OffsetX), 0, GameWorldConfing.SubWorldSizeX - 1);
+        int y = Mathf.Clamp(Mathf.Abs((int)worldPosition.y - OffsetY), 0, GameWorldConfing.SubWorldSizeY - 1);
+        int z = Mathf.Clamp(Mathf.Abs((int)worldPosition.z - OffsetZ), 0, GameWorldConfing.SubWorldSizeZ - 1);
         return new Vector3(x, y, z);
     }
 
     private Vector3 ConvertWorldToPathCoordinate(Vector3 worldPosition)
     {
-        int x = Mathf.Clamp((int)worldPosition.x - OffsetX, 0, GameWorldConfing.SubWorldSizeX - 1);
-        int y = Mathf.Clamp((int)worldPosition.y - OffsetY, 0, GameWorldConfing.SubWorldSizeY - 1);
-        int z = Mathf.Clamp((int)worldPosition.z - OffsetZ, 0, GameWorldConfing.SubWorldSizeZ - 1);
+        int x = Mathf.Clamp(Mathf.Abs((int)worldPosition.x - OffsetX), 0, GameWorldConfing.SubWorldSizeX - 1);
+        int y = Mathf.Clamp(Mathf.Abs((int)worldPosition.y - OffsetY), 0, GameWorldConfing.SubWorldSizeY - 1);
+        int z = Mathf.Clamp(Mathf.Abs((int)worldPosition.z - OffsetZ), 0, GameWorldConfing.SubWorldSizeZ - 1);
         return new Vector3(x, y, z);
     }
 
@@ -180,9 +175,9 @@ public class CustomAstar3D : MonoBehaviour
     {
         // Offset 세팅.
         var mapData = WorldMapDataFile.Instance.WorldMapDataInstance;
-        OffsetX = (PathFindingNeedData.SubWorldOffsetX * GameWorldConfing.SubWorldSizeX) + (PathFindingNeedData.WorldAreaOffsetX * mapData.SubWorldRow * GameWorldConfing.SubWorldSizeX);
-        OffsetY = (PathFindingNeedData.SubWorldOffsetY * GameWorldConfing.SubWorldSizeY) + (PathFindingNeedData.WorldAreaOffsetY * mapData.SubWorldColumn * GameWorldConfing.SubWorldSizeY);
-        OffsetZ = (PathFindingNeedData.SubWorldOffsetZ * GameWorldConfing.SubWorldSizeZ) + (PathFindingNeedData.WorldAreaOffsetZ * mapData.SubWorldLayer * GameWorldConfing.SubWorldSizeZ);
+        OffsetX = (PathFindingSettings.SubWorldOffsetX * GameWorldConfing.SubWorldSizeX) + (PathFindingSettings.WorldAreaOffsetX * mapData.SubWorldRow * GameWorldConfing.SubWorldSizeX);
+        OffsetY = (PathFindingSettings.SubWorldOffsetY * GameWorldConfing.SubWorldSizeY) + (PathFindingSettings.WorldAreaOffsetY * mapData.SubWorldColumn * GameWorldConfing.SubWorldSizeY);
+        OffsetZ = (PathFindingSettings.SubWorldOffsetZ * GameWorldConfing.SubWorldSizeZ) + (PathFindingSettings.WorldAreaOffsetZ * mapData.SubWorldLayer * GameWorldConfing.SubWorldSizeZ);
         // 길찾기용 맵 데이터 초기화.
         PathFindMapData = new PathNode3D[GameWorldConfing.SubWorldSizeX, GameWorldConfing.SubWorldSizeY, GameWorldConfing.SubWorldSizeZ];
         for (int x = 0; x < GameWorldConfing.SubWorldSizeX; x++)
@@ -297,19 +292,18 @@ public class CustomAstar3D : MonoBehaviour
                 (searchPosZ >= 0 && searchPosZ < GameWorldConfing.SubWorldSizeZ))
             {
                 PathNode3D searchNode = PathFindMapData[searchPosX, searchPosY, searchPosZ];
-                if (IsInClosedList(searchPosX, searchPosY, searchPosZ) == false && IsCanMoveNode(searchNode) == true)
+                if (IsInClosedList(searchPosX, searchPosY, searchPosZ) == false)
                 {
-                    if (IsInOpenList(searchPosX, searchPosY, searchPosZ) == false)
+                    if (IsInOpenList(searchPosX, searchPosY, searchPosZ) == false && IsCanMoveNode(searchNode) == true)
                     {
                         OpenList.Add(searchNode);
                         searchNode.ParentNode = CurrentNode;
                         searchNode.CalcHValue(GoalNode);
                         searchNode.CalcGValue();
                     }
-                    else
+                    else if (IsInOpenList(searchPosX, searchPosY, searchPosZ) == true && IsCanMoveNode(searchNode) == true)
                     {
-                        int searchNodeGValue = searchNode.GValue;
-                        if (searchNodeGValue < selectNode.GValue)
+                        if (searchNode.GValue < selectNode.GValue)
                         {
                             selectNode.ParentNode = searchNode;
                             selectNode.CalcHValue(GoalNode);
@@ -377,7 +371,7 @@ public class CustomAstar3D : MonoBehaviour
         int x = node.PathMapDataX;
         int y = node.PathMapDataY;
         int z = node.PathMapDataZ;
-        BlockTileType blockType = (BlockTileType)PathFindingNeedData.WorldBlockData[x, y, z].Type;
+        BlockTileType blockType = (BlockTileType)PathFindingSettings.WorldBlockData[x, y, z].Type;
         if (blockType == BlockTileType.EMPTY)
         {
             return false;
@@ -444,37 +438,31 @@ public class CustomAstar3D : MonoBehaviour
 
     private void InitLoopDirection()
     {
-        // 6면 방향.
-        Vector3 top = new Vector3(0, 1, 0);
-        Vector3 bottom = new Vector3(0, -1, 0);
-        Vector3 front = new Vector3(0, 0, 1);
-        Vector3 back = new Vector3(0, 0, -1);
-        Vector3 left = new Vector3(1, 0, 0);
-        Vector3 right = new Vector3(-1, 0, 0);
-        // 대각선 방향.
-        Vector3 diagonal1 = new Vector3(1, 1, 1);
-        Vector3 diagonal2 = new Vector3(1, 1, -1);
-        Vector3 diagonal3 = new Vector3(-1, 1, 1);
-        Vector3 diagonal4 = new Vector3(-1, 1, -1);
-        Vector3 diagonal5 = new Vector3(1, -1, 1);
-        Vector3 diagonal6 = new Vector3(1, -1, -1);
-        Vector3 diagonal7 = new Vector3(-1, -1, 1);
-        Vector3 diagonal8 = new Vector3(-1, -1, -1);
-
-        LoopDirections.Add(top);
-        LoopDirections.Add(bottom);
-        LoopDirections.Add(front);
-        LoopDirections.Add(back);
-        LoopDirections.Add(left);
-        LoopDirections.Add(right);
+        LoopDirections.Clear();
+        LoopDirections.Add(new Vector3(0, 0, 1));
+        LoopDirections.Add(new Vector3(0, 0, -1));
+        LoopDirections.Add(new Vector3(1, 0, 0));
+        LoopDirections.Add(new Vector3(-1, 0, 0));
+        LoopDirections.Add(new Vector3(0, -1, 1));
+        LoopDirections.Add(new Vector3(0, -1, -1));
+        LoopDirections.Add(new Vector3(1, -1, 0));
+        LoopDirections.Add(new Vector3(-1, -1, 0));
+        LoopDirections.Add(new Vector3(0, 1, 1));
+        LoopDirections.Add(new Vector3(0, 1, -1));
+        LoopDirections.Add(new Vector3(1, 1, 0));
+        LoopDirections.Add(new Vector3(-1, 1, 0));
         //
-        LoopDirections.Add(diagonal1);
-        LoopDirections.Add(diagonal2);
-        LoopDirections.Add(diagonal3);
-        LoopDirections.Add(diagonal4);
-        LoopDirections.Add(diagonal5);
-        LoopDirections.Add(diagonal6);
-        LoopDirections.Add(diagonal7);
-        LoopDirections.Add(diagonal8);
+        LoopDirections.Add(new Vector3(1, 0, 1));
+        LoopDirections.Add(new Vector3(1, 0, -1));
+        LoopDirections.Add(new Vector3(-1, 0, 1));
+        LoopDirections.Add(new Vector3(-1, 0, -1));
+        LoopDirections.Add(new Vector3(1, -1, 1));
+        LoopDirections.Add(new Vector3(1, -1, -1));
+        LoopDirections.Add(new Vector3(-1, -1, 1));
+        LoopDirections.Add(new Vector3(-1, -1, -1));
+        LoopDirections.Add(new Vector3(1, 1, 1));
+        LoopDirections.Add(new Vector3(1, 1, -1));
+        LoopDirections.Add(new Vector3(-1, 1, 1));
+        LoopDirections.Add(new Vector3(-1, 1, -1));
     }
 }

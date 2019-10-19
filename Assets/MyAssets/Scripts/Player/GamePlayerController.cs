@@ -37,7 +37,7 @@ public class GamePlayerController : MonoBehaviour {
     #endregion
     [Range(3.5f, 15.5f)]
     public float MoveSpeed;
-    private bool IsControllProcessOn = false;
+    private bool bControllProcessOn = false;
 
     private PlayerMoveState MoveState;
     private PlayerIdleState IdleState;
@@ -95,11 +95,11 @@ public class GamePlayerController : MonoBehaviour {
 
     public void StartControllProcess()
     {
-        IsControllProcessOn = true;
+        bControllProcessOn = true;
     }
     public void StopControllProcess()
     {
-        IsControllProcessOn = false;
+        bControllProcessOn = false;
     }
 
     public GAMEPLAYER_CHAR_STATE GetPlayerState()
@@ -190,7 +190,7 @@ public class GamePlayerController : MonoBehaviour {
         KojeomLogger.DebugLog(string.Format("Player's contain world : {0}, position : {1}", 
             containWorld.name, containWorld.OffsetCoordinate), LOG_TYPE.DEBUG_TEST);
         //
-        if (IsControllProcessOn == false)
+        if (bControllProcessOn == false)
         {
             return;
         }

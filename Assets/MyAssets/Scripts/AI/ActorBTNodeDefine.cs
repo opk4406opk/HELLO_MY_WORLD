@@ -38,7 +38,7 @@ public class BTNodeMoveForTarget : Node
     public void AsyncPathFinding(Vector3 goalWorldPosition)
     {
         // init
-        PathFinderNeedData needData = new PathFinderNeedData(Controller.GetContainedWorldBlockData(),
+        PathFinderSettings needData = new PathFinderSettings(Controller.GetContainedWorldBlockData(),
                                                              Controller.GetContainedSubWorldOffset(),
                                                              Controller.GetContainedWorldAreaOffset());
         PathFinderInstance.Init(needData, new SimpleVector3(Controller.GetActorTransform().position));

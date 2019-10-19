@@ -68,7 +68,13 @@ public class PlayerMoveState : APlayerState, IState
 
     private void Move()
     {
-        KojeomLogger.DebugLog(string.Format("USER InputData : {0}", InputData.KeyCodeValues), LOG_TYPE.USER_INPUT);
+        if (InputData.KeyCodeValues.Count > 0)
+        {
+            for(int idx = 0; idx < InputData.KeyCodeValues.Count; idx++)
+            {
+                KojeomLogger.DebugLog(string.Format("USER InputData : {0}", InputData.KeyCodeValues[idx]), LOG_TYPE.USER_INPUT);
+            }
+        }
         //
         Vector3 dir = Vector3.zero;
         switch(KojeomUtility.GetInputDeviceType())

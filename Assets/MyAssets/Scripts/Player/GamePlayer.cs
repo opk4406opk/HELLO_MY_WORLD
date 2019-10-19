@@ -16,8 +16,8 @@ public class GamePlayer : MonoBehaviour
     public void Initialize(int charType, string charName, Vector3 initPos)
     {
         // init position.
-        gameObject.transform.position = initPos;
-        gameObject.name = charName;
+        //gameObject.transform.position = initPos;
+        gameObject.name = string.Format("GamePlayer_{0}",charName);
         //
         KojeomLogger.DebugLog("게임플레이어 PostInit 시작", LOG_TYPE.INFO);
         CharacterName = charName;
