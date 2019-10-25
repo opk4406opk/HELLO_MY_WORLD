@@ -31,6 +31,19 @@ public class PathNode3D
         return new Vector3(PathMapDataX, PathMapDataY, PathMapDataZ);
     }
 
+    public static bool operator ==(PathNode3D a, PathNode3D b)
+    {
+        if (ReferenceEquals(a, b) == true) return true;
+        if (ReferenceEquals(a, null) == true) return false;
+        if (ReferenceEquals(b, null) == true) return false;
+        return a.PathMapDataX == b.PathMapDataX && a.PathMapDataY == b.PathMapDataY && a.PathMapDataZ == b.PathMapDataZ;
+    }
+
+    public static bool operator !=(PathNode3D a, PathNode3D b)
+    {
+        return !(a == b);
+    }
+
     public void CalcGValue()
     {
         if (ParentNode == null)
@@ -39,27 +52,18 @@ public class PathNode3D
             return;
         }
         int x = PathMapDataX - ParentNode.PathMapDataX;
-        int y = PathMapDataY - ParentNode.PathMapDataY;
         int z = PathMapDataZ - ParentNode.PathMapDataZ;
         // 대각선 이동.
-        if (((x == 1) && (y == 0) && (z == 1)) ||
-            ((x == 1) && (y == 0) && (z == -1)) ||
-            ((x == -1) && (y == 0) && (z == 1)) ||
-            ((x == -1) && (y == 0) && (z == -1)) ||
-            ((x == 1) && (y == 1) && (z == 1))||
-            ((x == 1) && (y == 1) && (z == -1)) ||
-            ((x == -1) && (y == 1) && ( z == 1))||
-            ((x == -1) && (y == 1) && ( z == -1)) ||
-            ((x == 1) && (y == -1) && (z == 1)) ||
-            ((x == 1) && (y == -1) && (z == -1)) ||
-            ((x == -1) && (y == -1) && (z == 1)) ||
-            ((x == -1) && (y == -1) && (z == -1)))
+        if (((x == 1) && (z == 1)) ||
+            ((x == 1) && (z == -1)) ||
+            ((x == -1) && (z == 1)) ||
+            ((x == -1) && (z == -1)))
         {
-            GValue = (Mathf.Abs(x) + Mathf.Abs(y) + Mathf.Abs(z)) * 14 + ParentNode.GValue;
+            GValue = (Mathf.Abs(x) + Mathf.Abs(z)) * 14 + ParentNode.GValue;
         }
         else
         {
-            GValue = (Mathf.Abs(x) + Mathf.Abs(y) + Mathf.Abs(z)) * 10 + ParentNode.GValue;
+            GValue = (Mathf.Abs(x) + Mathf.Abs(z)) * 10 + ParentNode.GValue;
         }
     }
 
@@ -68,9 +72,8 @@ public class PathNode3D
     public void CalcHValue(PathNode3D goal)
     {
         int x = Mathf.Abs(goal.PathMapDataX - PathMapDataX);
-        int y = Mathf.Abs(goal.PathMapDataY - PathMapDataY);
         int z = Mathf.Abs(goal.PathMapDataZ - PathMapDataZ);
-        HValue = (x + y + z) * 10;
+        HValue = (x + z) * 10;
     }
     #endregion
 }
@@ -292,16 +295,16 @@ public class CustomAstar3D : MonoBehaviour
                 (searchPosZ >= 0 && searchPosZ < GameWorldConfing.SubWorldSizeZ))
             {
                 PathNode3D searchNode = PathFindMapData[searchPosX, searchPosY, searchPosZ];
-                if (IsInClosedList(searchPosX, searchPosY, searchPosZ) == false)
+                if (IsInClosedList(searchNode) == false)
                 {
-                    if (IsInOpenList(searchPosX, searchPosY, searchPosZ) == false && IsCanMoveNode(searchNode) == true)
+                    if (IsInOpenList(searchNode) == false && IsCanMoveNode(searchNode) == true)
                     {
                         OpenList.Add(searchNode);
                         searchNode.ParentNode = CurrentNode;
                         searchNode.CalcHValue(GoalNode);
                         searchNode.CalcGValue();
                     }
-                    else if (IsInOpenList(searchPosX, searchPosY, searchPosZ) == true && IsCanMoveNode(searchNode) == true)
+                    else if (IsInOpenList(searchNode) == true && IsCanMoveNode(searchNode) == true)
                     {
                         if (searchNode.GValue < selectNode.GValue)
                         {
@@ -353,7 +356,7 @@ public class CustomAstar3D : MonoBehaviour
                 (searchPosZ >= 0 && searchPosZ < GameWorldConfing.SubWorldSizeZ) )
             {
                 PathNode3D searchNode = PathFindMapData[searchPosX, searchPosY, searchPosZ];
-                bool bNotInCloseAndOpen = (IsInClosedList(searchPosX, searchPosY, searchPosZ) == false) && (IsInOpenList(searchPosX, searchPosY, searchPosZ) == false);
+                bool bNotInCloseAndOpen = (IsInClosedList(searchNode) == false) && (IsInOpenList(searchNode) == false);
                 if (bNotInCloseAndOpen == true && IsCanMoveNode(searchNode) == true)
                 {
                     searchNode.ParentNode = CurrentNode;
@@ -368,14 +371,14 @@ public class CustomAstar3D : MonoBehaviour
 
     private bool IsCanMoveNode(PathNode3D node)
     {
-        int x = node.PathMapDataX;
-        int y = node.PathMapDataY;
-        int z = node.PathMapDataZ;
-        BlockTileType blockType = (BlockTileType)PathFindingSettings.WorldBlockData[x, y, z].Type;
-        if (blockType == BlockTileType.EMPTY)
-        {
-            return false;
-        }
+        //int x = node.PathMapDataX;
+        //int y = node.PathMapDataY;
+        //int z = node.PathMapDataZ;
+        //BlockTileType blockType = (BlockTileType)PathFindingSettings.WorldBlockData[x, y, z].Type;
+        //if (blockType == BlockTileType.EMPTY)
+        //{
+        //    return false;
+        //}
 
         //int upperHeight = y + 1;
         //if (upperHeight < PathFindingNeedData.SubWorldOffsetY)
@@ -404,6 +407,32 @@ public class CustomAstar3D : MonoBehaviour
         }));
     }
 
+    private bool IsInClosedList(Vector3 searchPos)
+    {
+        return (ClosedList.Exists((PathNode3D p) =>
+        {
+            if ((p.PathMapDataX == (int)searchPos.x)
+            && (p.PathMapDataY == (int)searchPos.y)
+            && (p.PathMapDataZ == (int)searchPos.z))
+            {
+                return true;
+            }
+            return false;
+        }));
+    }
+
+    private bool IsInClosedList(PathNode3D node)
+    {
+        return (ClosedList.Exists((PathNode3D p) =>
+        {
+            if(p == node)
+            {
+                return true;
+            }
+            return false;
+        }));
+    }
+
     private bool IsInOpenList(int searchPosX, int searchPosY, int searchPosZ)
     {
         return (OpenList.Exists((PathNode3D p) =>
@@ -411,6 +440,32 @@ public class CustomAstar3D : MonoBehaviour
             if ((p.PathMapDataX == searchPosX) 
             && (p.PathMapDataY == searchPosY) 
             && (p.PathMapDataZ == searchPosZ))
+            {
+                return true;
+            }
+            return false;
+        }));
+    }
+
+    private bool IsInOpenList(Vector3 searchPos)
+    {
+        return (OpenList.Exists((PathNode3D p) =>
+        {
+            if ((p.PathMapDataX == (int)searchPos.x)
+             && (p.PathMapDataY == (int)searchPos.y)
+             && (p.PathMapDataZ == (int)searchPos.z))
+            {
+                return true;
+            }
+            return false;
+        }));
+    }
+
+    private bool IsInOpenList(PathNode3D node)
+    {
+        return (OpenList.Exists((PathNode3D p) =>
+        {
+            if (p == node)
             {
                 return true;
             }
@@ -443,26 +498,26 @@ public class CustomAstar3D : MonoBehaviour
         LoopDirections.Add(new Vector3(0, 0, -1));
         LoopDirections.Add(new Vector3(1, 0, 0));
         LoopDirections.Add(new Vector3(-1, 0, 0));
-        LoopDirections.Add(new Vector3(0, -1, 1));
-        LoopDirections.Add(new Vector3(0, -1, -1));
-        LoopDirections.Add(new Vector3(1, -1, 0));
-        LoopDirections.Add(new Vector3(-1, -1, 0));
-        LoopDirections.Add(new Vector3(0, 1, 1));
-        LoopDirections.Add(new Vector3(0, 1, -1));
-        LoopDirections.Add(new Vector3(1, 1, 0));
-        LoopDirections.Add(new Vector3(-1, 1, 0));
+        //LoopDirections.Add(new Vector3(0, -1, 1));
+        //LoopDirections.Add(new Vector3(0, -1, -1));
+        //LoopDirections.Add(new Vector3(1, -1, 0));
+        //LoopDirections.Add(new Vector3(-1, -1, 0));
+        //LoopDirections.Add(new Vector3(0, 1, 1));
+        //LoopDirections.Add(new Vector3(0, 1, -1));
+        //LoopDirections.Add(new Vector3(1, 1, 0));
+        //LoopDirections.Add(new Vector3(-1, 1, 0));
         //
         LoopDirections.Add(new Vector3(1, 0, 1));
         LoopDirections.Add(new Vector3(1, 0, -1));
         LoopDirections.Add(new Vector3(-1, 0, 1));
         LoopDirections.Add(new Vector3(-1, 0, -1));
-        LoopDirections.Add(new Vector3(1, -1, 1));
-        LoopDirections.Add(new Vector3(1, -1, -1));
-        LoopDirections.Add(new Vector3(-1, -1, 1));
-        LoopDirections.Add(new Vector3(-1, -1, -1));
-        LoopDirections.Add(new Vector3(1, 1, 1));
-        LoopDirections.Add(new Vector3(1, 1, -1));
-        LoopDirections.Add(new Vector3(-1, 1, 1));
-        LoopDirections.Add(new Vector3(-1, 1, -1));
+        //LoopDirections.Add(new Vector3(1, -1, 1));
+        //LoopDirections.Add(new Vector3(1, -1, -1));
+        //LoopDirections.Add(new Vector3(-1, -1, 1));
+        //LoopDirections.Add(new Vector3(-1, -1, -1));
+        //LoopDirections.Add(new Vector3(1, 1, 1));
+        //LoopDirections.Add(new Vector3(1, 1, -1));
+        //LoopDirections.Add(new Vector3(-1, 1, 1));
+        //LoopDirections.Add(new Vector3(-1, 1, -1));
     }
 }
