@@ -21,19 +21,19 @@ public struct DBUserItem
 /// https://docs.unity3d.com/Manual/StreamingAssets.html
 /// 안드로이드에서 sqlite3 사용 하는 방법 문서.
 /// https://answers.unity.com/questions/872068/dllnotfoundexception-sqlite3.html
-public class GameDBHelper
+public class GameDBManager
 {
-    private static GameDBHelper Instance;
-    public static GameDBHelper GetInstance()
+    private static GameDBManager Instance;
+    public static GameDBManager GetInstance()
     {
-        if (Instance == null) Instance = new GameDBHelper();
+        if (Instance == null) Instance = new GameDBManager();
         return Instance;
     }
     /// <summary>
     /// 게임 DB파일이 있는 path.
     /// </summary>
     private string DBConnectionPath;
-    private GameDBHelper()
+    private GameDBManager()
     {
         var platform = Application.platform;
         if (platform == RuntimePlatform.Android)
@@ -72,7 +72,7 @@ public class GameDBHelper
     /// 선택한 게임 캐릭터의 타입 정보를 DB에서 가져온다.
     /// </summary>
     /// <returns>Chactacter type</returns>
-    public int GetSelectCharType()
+    public int GetSelectedCharacterType()
     {
         string chType = System.String.Empty;
         Action GetUserInfo = () =>

@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-/*   게임에서 사용되는 프리팹 이름 규칙. ( = Naming Rule)
+/*   게임에서 사용되는 액터 프리팹 이름 규칙. ( = Naming Rule)
  * 
  *   NPC, Monster..etc preafb -> [ActorTypc]_[DetailType]_[ResourceID]_[Name]
  *   
@@ -24,8 +24,25 @@ public class ActorResourceGroup
     public Dictionary<string, SoftObjectPtr> Resoruces = new Dictionary<string, SoftObjectPtr>();
 }
 
+
+/*  파티클 이펙트 프리팹 이름 규칙.
+ *  
+ *  [Category]_[Name]
+ */
+
+public class ParticleEffectCategoryContainer
+{
+    public ParticleEffectResourceGroup[] PartiecleEffectResources;
+}
+
+public class ParticleEffectResourceGroup
+{
+    public Dictionary<string, SoftObjectPtr> Resources = new Dictionary<string, SoftObjectPtr>();
+}
+
 /// <summary>
-/// 게임내에 사용되는 프리팹들을 저장하고 있는 클래스.
+/// 게임내에 전반적으로 사용되는 프리팹들을 저장하고 있는 클래스.
+/// (스킬, 버프 제외)
 /// </summary>
 public class GameResourceSupervisor
 {
@@ -44,6 +61,11 @@ public class GameResourceSupervisor
 
     #region Player
     public SoftObjectPtr GamePlayerPrefab { get; private set; }
+    public SoftObjectPtr GamePlayerCameraPrefab { get; private set; }
+    #endregion
+
+    #region ParticleSystem
+    public ParticleEffectCategoryContainer[] ParticleEffectPrefabs { get; private set; } = new ParticleEffectCategoryContainer[(int)GameParticeEffectCategory.COUNT];
     #endregion
     //
     //
@@ -53,6 +75,7 @@ public class GameResourceSupervisor
     private GameResourceSupervisor()
     {
         GamePlayerPrefab = new SoftObjectPtr(ConstFilePath.GAME_NET_PLAYER_PREFAB_RESOURCE_PATH);
+        GamePlayerCameraPrefab = new SoftObjectPtr(ConstFilePath.PLAYER_CAMERA_PREFAB);
         //
         CharacterPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER_RESOURCE_PATH);
         //
@@ -61,12 +84,18 @@ public class GameResourceSupervisor
         SubWorldPrefab = new SoftObjectPtr(ConstFilePath.SUB_WORLD_PREFAB);
         WaterChunkPrefab = new SoftObjectPtr(ConstFilePath.WATER_CHUNK_PREFAB_RESOURCE_PATH);
         EnviromentChunkPrefab = new SoftObjectPtr(ConstFilePath.ENVIROMENT_CHUNK_PREFAB_RESOURCE_PATH);
-        //
-        for(int idx = 0; idx < (int)ACTOR_TYPE.COUNT; idx++)
+
+        // 게임 파티클.
+        for(int idx = 0; idx < (int)GameParticeEffectCategory.COUNT; idx++)
+        {
+            ParticleEffectPrefabs[idx] = new ParticleEffectCategoryContainer();
+        }
+
+        // 액터.
+        for (int idx = 0; idx < (int)ACTOR_TYPE.COUNT; idx++)
         {
             ActorPrefabs[idx] = new ActorTypeGroup();
         }
-
         ActorPrefabs[(int)ACTOR_TYPE.NPC].ActorResourceGroups = new ActorResourceGroup[(int)NPC_TYPE.COUNT];
         var npcGuids = AssetDatabase.FindAssets("NPC", new[] { ConstFilePath.NPC_PREFABS_ASSET_PATH });
         foreach (var guid in npcGuids)

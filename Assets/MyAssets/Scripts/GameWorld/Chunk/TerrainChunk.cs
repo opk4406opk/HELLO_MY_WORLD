@@ -42,15 +42,15 @@ public class TerrainChunk : AChunk
             CubeWestFace(cubeX, cubeY, cubeZ, blockType);
             // points 배열은 실제 블록을 생성할 때 쓰이는 8개의 포인트로 실제 월드 좌표값이다.
             // 따라서, 이를 이용해 블록의 AABB의 Min, Max Extent 값을 정한다.
-            Vector3[] points = new Vector3[8];
-            points[0] = new Vector3(cubeX, cubeY, cubeZ);
-            points[1] = new Vector3(cubeX + 1, cubeY, cubeZ);
-            points[2] = new Vector3(cubeX + 1, cubeY, cubeZ + 1);
-            points[3] = new Vector3(cubeX, cubeY, cubeZ + 1);
-            points[4] = new Vector3(cubeX, cubeY - 1, cubeZ);
-            points[5] = new Vector3(cubeX + 1, cubeY - 1, cubeZ);
-            points[6] = new Vector3(cubeX + 1, cubeY - 1, cubeZ + 1);
-            points[7] = new Vector3(cubeX, cubeY - 1, cubeZ + 1);
+            //Vector3[] points = new Vector3[8];
+            //points[0] = new Vector3(cubeX, cubeY, cubeZ);
+            //points[1] = new Vector3(cubeX + 1, cubeY, cubeZ);
+            //points[2] = new Vector3(cubeX + 1, cubeY, cubeZ + 1);
+            //points[3] = new Vector3(cubeX, cubeY, cubeZ + 1);
+            //points[4] = new Vector3(cubeX, cubeY - 1, cubeZ);
+            //points[5] = new Vector3(cubeX + 1, cubeY - 1, cubeZ);
+            //points[6] = new Vector3(cubeX + 1, cubeY - 1, cubeZ + 1);
+            //points[7] = new Vector3(cubeX, cubeY - 1, cubeZ + 1);
             //
             SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].bRendered = true;
             // 월드맵에 생성된 블록의 중앙점을 이용해 Octree의 노드를 생성합니다.

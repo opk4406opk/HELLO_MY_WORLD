@@ -113,7 +113,7 @@ public class InGameUISupervisor : MonoBehaviour {
     public void OnClickJump()
     {
         KojeomLogger.DebugLog("Clicked Jump Button");
-        var inputMgr = InputManager.Singleton;
+        var inputMgr = InputManager.Instance;
         if(inputMgr != null)
         {
             var device = inputMgr.GetCurInputDevice();
@@ -123,7 +123,7 @@ public class InGameUISupervisor : MonoBehaviour {
     public void OnClickCreateBlock()
     {
         KojeomLogger.DebugLog("Clicked Create Block");
-        var inputMgr = InputManager.Singleton;
+        var inputMgr = InputManager.Instance;
         if (inputMgr != null)
         {
             var device = inputMgr.GetCurInputDevice();
@@ -133,7 +133,7 @@ public class InGameUISupervisor : MonoBehaviour {
     public void OnClickDeleteBlock()
     {
         KojeomLogger.DebugLog("Clicked Delete Block");
-        var inputMgr = InputManager.Singleton;
+        var inputMgr = InputManager.Instance;
         if (inputMgr != null)
         {
             var device = inputMgr.GetCurInputDevice();
@@ -144,7 +144,7 @@ public class InGameUISupervisor : MonoBehaviour {
     public void OnClickInventory()
     {
         KojeomLogger.DebugLog("Clicked OnClickInventory");
-        var inputMgr = InputManager.Singleton;
+        var inputMgr = InputManager.Instance;
         if (inputMgr != null)
         {
             var device = inputMgr.GetCurInputDevice();
@@ -154,7 +154,7 @@ public class InGameUISupervisor : MonoBehaviour {
     public void OnClickCraftItem()
     {
         KojeomLogger.DebugLog("Clicked CraftItem");
-        var inputMgr = InputManager.Singleton;
+        var inputMgr = InputManager.Instance;
         if (inputMgr != null)
         {
             var device = inputMgr.GetCurInputDevice();
@@ -164,7 +164,7 @@ public class InGameUISupervisor : MonoBehaviour {
     public void OnClickMenu()
     {
         KojeomLogger.DebugLog("Clicked MainMenu");
-        var inputMgr = InputManager.Singleton;
+        var inputMgr = InputManager.Instance;
         if (inputMgr != null)
         {
             var device = inputMgr.GetCurInputDevice();

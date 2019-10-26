@@ -109,6 +109,11 @@ public class ConstFilePath
     /// </summary>
     public readonly static string ACTOR_COMMONS_NAME_RESOURCE_PATH = "GamePrefabs/Actor/Commons/txt_mesh_Name";
 
+    /// <summary>
+    /// 플레이어 메인 카메라 프리팹.
+    /// </summary>
+    public readonly static string PLAYER_CAMERA_PREFAB = "GamePrefabs/Camera/PlayerCamera";
+
 }
 
 

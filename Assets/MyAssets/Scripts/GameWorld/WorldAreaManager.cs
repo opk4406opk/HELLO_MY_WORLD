@@ -29,15 +29,13 @@ public class WorldAreaManager : MonoBehaviour
         newWorldArea.transform.parent = transform;
         newWorldArea.gameObject.name = worldAreaData.AreaName;
         //
-        KojeomLogger.DebugLog(string.Format("WorldArea ID : {0} ({1} * {2}) Start Async Generate.", worldAreaData.UniqueID, worldAreaSizeX, worldAreaSizeZ));
+        KojeomLogger.DebugLog(string.Format("WorldArea ID : {0} ({1} * {2}) Start Generate Area.", worldAreaData.UniqueID, worldAreaSizeX, worldAreaSizeZ));
         var terrainValueData = await TaskGenerateAreaData(worldAreaSizeX, worldAreaSizeZ);
-        KojeomLogger.DebugLog(string.Format("WorldArea ID : {0} ({1} * {2}) Finish Async Generate.", worldAreaData.UniqueID, worldAreaSizeX, worldAreaSizeZ));
         //
         WorldArea worldAreaInstance = newWorldArea.GetComponent<WorldArea>();
         worldAreaInstance.Init(worldAreaData, terrainValueData);
         WorldAreas.Add(worldAreaData.UniqueID, worldAreaInstance);
-        //
-       
+        KojeomLogger.DebugLog(string.Format("WorldArea ID : {0} ({1} * {2}) Finish Generate Area.", worldAreaData.UniqueID, worldAreaSizeX, worldAreaSizeZ));
     }
 
     private async Task<WorldGenAlgorithms.TerrainValue[,]> TaskGenerateAreaData(int areaSizeX, int areaSizeZ)

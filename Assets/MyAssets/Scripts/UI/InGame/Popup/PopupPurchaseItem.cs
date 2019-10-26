@@ -44,7 +44,7 @@ public class PopupPurchaseItem : APopupUI {
         // to do
         Action<int> UpdateUserItem = (int quantity) =>
         {
-            string conn = GameDBHelper.GetInstance().GetDBConnectionPath();
+            string conn = GameDBManager.GetInstance().GetDBConnectionPath();
 
             IDbConnection dbconn;
             IDbCommand dbcmd;

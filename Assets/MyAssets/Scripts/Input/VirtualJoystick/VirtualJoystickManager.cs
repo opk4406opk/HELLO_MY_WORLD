@@ -58,7 +58,7 @@ public class VirtualJoystickManager : MonoBehaviour {
         if (ingameUISupervisor != null)
         {
             var uiCam = ingameUISupervisor.GetIngameUICamera();
-            var inputMgr = InputManager.Singleton;
+            var inputMgr = InputManager.Instance;
             Vector3 worldPoint = uiCam.ScreenToWorldPoint(touch.position);
             if (moveStickCollider.bounds.Contains(worldPoint) == true)
             {

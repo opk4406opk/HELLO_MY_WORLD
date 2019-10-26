@@ -31,7 +31,7 @@ public class PopupChData : APopupUI
     {
         Action InsertInfo = () =>
         {
-            string conn = GameDBHelper.GetInstance().GetDBConnectionPath();
+            string conn = GameDBManager.GetInstance().GetDBConnectionPath();
             using (var dbconn = new SqliteConnection(conn))
             {
                 dbconn.Open(); //Open connection to the database.

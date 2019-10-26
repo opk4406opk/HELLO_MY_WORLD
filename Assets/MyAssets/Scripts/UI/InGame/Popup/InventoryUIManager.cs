@@ -75,7 +75,7 @@ public class InventoryUIManager : APopupUI {
         Action GetUserItems = () =>
         {
             StringBuilder conn = new StringBuilder();
-            conn.AppendFormat(GameDBHelper.GetInstance().GetDBConnectionPath(), Application.dataPath);
+            conn.AppendFormat(GameDBManager.GetInstance().GetDBConnectionPath(), Application.dataPath);
 
             using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn.ToString()))
             {

@@ -36,32 +36,31 @@ public enum INPUT_STATE
 /// </summary>
 public class InputManager : MonoBehaviour
 {
-
     [SerializeField]
-    private ModifyWorldManager modifyTerrain;
+    private ModifyWorldManager ModifyWorldManagerInstance;
 
     private AInput CurrentInputDevice;
     private WindowInput WindowInput;
     private MobileInput MobileInput;
 
-    private static InputManager _Singleton = null;
-    public static InputManager Singleton
+    private static InputManager _Instance = null;
+    public static InputManager Instance
     {
         get
         {
-            if (_Singleton == null) KojeomLogger.DebugLog("InputManager 초기화 되지 않았습니다", LOG_TYPE.ERROR);
-            return _Singleton;
+            if (_Instance == null) KojeomLogger.DebugLog("InputManager 초기화 되지 않았습니다", LOG_TYPE.ERROR);
+            return _Instance;
         }
     }
 
     public void Init()
     {
-        _Singleton = this;
-        modifyTerrain.Init();
+        _Instance = this;
+        ModifyWorldManagerInstance.Init();
         WindowInput = new WindowInput();
-        WindowInput.Init(modifyTerrain);
+        WindowInput.Init(ModifyWorldManagerInstance);
         MobileInput = new MobileInput();
-        MobileInput.Init(modifyTerrain);
+        MobileInput.Init(ModifyWorldManagerInstance);
 
         var currentPlatform = Application.platform;
         if(currentPlatform == RuntimePlatform.WindowsEditor ||

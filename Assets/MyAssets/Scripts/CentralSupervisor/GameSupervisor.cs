@@ -67,6 +67,10 @@ public class GameSupervisor : MonoBehaviour
     private ActorCollideManager actorCollideManager;
     [SerializeField]
     private ActorSuperviosr ActorSupervisorInstance;
+    [SerializeField]
+    private GameParticleEffectManager GameParticleManagerInstance;
+    [SerializeField]
+    private GamePlayerCameraManager PlayerCameraManagerInstance;
     #endregion
     public static GameSupervisor Instance { get; private set; }
     public AGameModeBase[] GameModeGroup = new AGameModeBase[(int)GameModeState.COUNT];
@@ -114,8 +118,10 @@ public class GameSupervisor : MonoBehaviour
         kojeomCoroutineHelper.Init();
         inputManager.Init();
         //Game Total World Init
+        GameParticleManagerInstance.Init();
         WorldAreaManager.Init();
         //player Init
+        PlayerCameraManagerInstance.Init();
         playerManager.Init();
         // Actor Manager init..
         ActorSupervisorInstance.Init();

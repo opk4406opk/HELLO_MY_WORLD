@@ -28,7 +28,7 @@ public class GamePlayer : MonoBehaviour
         CharInstance.transform.localPosition = new Vector3(0, 0, 0);
         //
         Controller = gameObject.GetComponent<GamePlayerController>();
-        Controller.Init(Camera.main, this, CharInstance);
+        Controller.Init(this, CharInstance);
         Controller.SetPosition(initPos);
         Controller.StartControllProcess();
         SetObjectLayer(true);

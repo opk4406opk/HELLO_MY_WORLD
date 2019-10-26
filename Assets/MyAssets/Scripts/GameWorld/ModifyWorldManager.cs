@@ -53,7 +53,7 @@ public class ModifyWorldManager : MonoBehaviour
         }
     }
 
-    private void RayCastingProcess(Ray ray, byte blockType, bool isCreate)
+    private void RayCastingProcess(Ray ray, byte blockType, bool bCreate)
     {
         CollideInfo collideInfo = world.CustomOctreeInstance.Collide(ray);
         if (collideInfo.IsCollide)
@@ -67,7 +67,7 @@ public class ModifyWorldManager : MonoBehaviour
             blockY -= (int)world.OffsetCoordinate.y * gameConfig.SubWorldSizeY;
             blockZ -= (int)world.OffsetCoordinate.z * gameConfig.SubWorldSizeZ;
             //-------------------------------------------------------------------------------
-            if (isCreate)
+            if (bCreate == true)
             {
                 //Vector3 createPosition = new Vector3(Mathf.Ceil(collideInfo.collisionPoint.x),
                 //    Mathf.Ceil(collideInfo.collisionPoint.y),
@@ -110,7 +110,7 @@ public class ModifyWorldManager : MonoBehaviour
         Action<byte> UpdateUserItem = (byte blockType) =>
         {
             StringBuilder conn = new StringBuilder();
-            conn.AppendFormat(GameDBHelper.GetInstance().GetDBConnectionPath(), Application.dataPath);
+            conn.AppendFormat(GameDBManager.GetInstance().GetDBConnectionPath(), Application.dataPath);
 
             IDbConnection dbconn;
             IDbCommand dbcmd;

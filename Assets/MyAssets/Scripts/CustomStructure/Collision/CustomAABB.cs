@@ -15,7 +15,7 @@ public struct CustomAABB {
     ///  in world space coordinate
     /// </summary>
     public Vector3 Position;
-    public bool IsEnable { set; get; }
+    public bool bEnable { set; get; }
 
     public Vector3 HitPointWithRay;
 

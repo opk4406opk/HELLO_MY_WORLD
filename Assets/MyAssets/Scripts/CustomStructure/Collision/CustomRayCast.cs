@@ -50,7 +50,7 @@ public class CustomRayCast : MonoBehaviour
     }
 
     /// <summary>
-    /// AABB 경계상자와 광선과의 충돌 판정 메소드.
+    /// AABB, 광선과의 충돌 판정 메소드.
     /// </summary>
     /// <param name="ray"></param>
     /// <param name="aabb"></param>
@@ -119,7 +119,7 @@ public class CustomRayCast : MonoBehaviour
     /// <returns></returns>
     public static bool InterSectWithAABB_TEST_Version(Ray r, CustomAABB aabb)
     {
-        if (!aabb.IsEnable) return false;
+        if (!aabb.bEnable) return false;
 
         Vector3 dirfrac;
         float t;

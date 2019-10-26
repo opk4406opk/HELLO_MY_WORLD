@@ -49,11 +49,11 @@ public class GamePlayerController : MonoBehaviour {
 
     public GameCharacterInstance CharacterInstance { get; private set; }
 
-    public void Init(Camera mainCam, GamePlayer gamePlayer, GameCharacterInstance characterInstance)
+    public void Init(GamePlayer gamePlayer, GameCharacterInstance characterInstance)
     {
         GamePlayerInstance = gamePlayer;
         CharacterInstance = characterInstance;
-        PlayerCamera = mainCam;
+        PlayerCamera = GamePlayerCameraManager.Instance.GetPlayerCamera();
         PlayerCamera.transform.parent = CharacterInstance.transform;
         //
         camOrigRotation = PlayerCamera.transform.localRotation;
@@ -200,7 +200,9 @@ public class GamePlayerController : MonoBehaviour {
             var state = InGameUISupervisor.Singleton.ChattingBoardState;
             if (state == CHATTING_BOARD_STATE.CLOSE && UIPopupSupervisor.bInGameAllPopupClose)
             {
-                var inputData = InputManager.Singleton.GetInputData();
+                bool bPlayerInGroundOrWater = GamePlayerInstance.Controller.CharacterInstance.bContactGround == true ||
+                                              GamePlayerInstance.Controller.CharacterInstance.bContactWater == true;
+                var inputData = InputManager.Instance.GetInputData();
                 if (inputData.InputState == INPUT_STATE.CHARACTER_MOVE)
                 {
                     CurPlayerState = GAMEPLAYER_CHAR_STATE.MOVE;
@@ -210,14 +212,12 @@ public class GamePlayerController : MonoBehaviour {
                     CurPlayerState = GAMEPLAYER_CHAR_STATE.IDLE;
                 }
                 else if (inputData.InputState == INPUT_STATE.CHARACTER_JUMP &&
-                    CurPlayerState == GAMEPLAYER_CHAR_STATE.MOVE &&
-                    GamePlayerInstance.Controller.CharacterInstance.bContactGround == true)
+                    CurPlayerState == GAMEPLAYER_CHAR_STATE.MOVE && bPlayerInGroundOrWater == true)
                 {
                     CurPlayerState = GAMEPLAYER_CHAR_STATE.MOVING_JUMP;
                 }
                 else if (inputData.InputState == INPUT_STATE.CHARACTER_JUMP &&
-                    CurPlayerState != GAMEPLAYER_CHAR_STATE.MOVE &&
-                     GamePlayerInstance.Controller.CharacterInstance.bContactGround == true)
+                    CurPlayerState != GAMEPLAYER_CHAR_STATE.MOVE && bPlayerInGroundOrWater == true)
                 {
                     CurPlayerState = GAMEPLAYER_CHAR_STATE.JUMP;
                 }

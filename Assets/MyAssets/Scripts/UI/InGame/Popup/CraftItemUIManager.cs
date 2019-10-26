@@ -91,7 +91,7 @@ public class CraftItemUIManager : APopupUI {
     private int GetUserMaterialAmount(string itemID)
     {
         StringBuilder conn = new StringBuilder();
-        conn.AppendFormat(GameDBHelper.GetInstance().GetDBConnectionPath(), Application.dataPath);
+        conn.AppendFormat(GameDBManager.GetInstance().GetDBConnectionPath(), Application.dataPath);
 
         int amount;
         using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn.ToString()))
@@ -119,7 +119,7 @@ public class CraftItemUIManager : APopupUI {
     private void SetCraftItemToUser(string itemID, string itemName, int itemAmount, string itemType)
     {
         StringBuilder conn = new StringBuilder();
-        conn.AppendFormat(GameDBHelper.GetInstance().GetDBConnectionPath(), Application.dataPath);
+        conn.AppendFormat(GameDBManager.GetInstance().GetDBConnectionPath(), Application.dataPath);
 
         StringBuilder sqlQuery = new StringBuilder();
         sqlQuery.AppendFormat("INSERT INTO USER_ITEM (name, type, amount, id) VALUES ('{0}',{1},{2},'{3}')",
@@ -159,7 +159,7 @@ public class CraftItemUIManager : APopupUI {
 
     private void SetUserMaterialAmount(string itemID, int itemAmount)
     {
-        string conn = GameDBHelper.GetInstance().GetDBConnectionPath();
+        string conn = GameDBManager.GetInstance().GetDBConnectionPath();
 
         using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
         {
@@ -176,7 +176,7 @@ public class CraftItemUIManager : APopupUI {
 
     private void DeleteUserMaterial(string itemID)
     {
-        string conn = GameDBHelper.GetInstance().GetDBConnectionPath();
+        string conn = GameDBManager.GetInstance().GetDBConnectionPath();
 
         using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
         {
@@ -208,7 +208,7 @@ public class CraftItemUIManager : APopupUI {
 
     private bool ChkMaterialAmount(string itemID, int needAmount)
     {
-        string conn = GameDBHelper.GetInstance().GetDBConnectionPath();
+        string conn = GameDBManager.GetInstance().GetDBConnectionPath();
 
         string sqlQuery = string.Format("SELECT amount FROM USER_ITEM WHERE id = '{0}'", itemID);
         using (IDbConnection dbconn = (IDbConnection)new SqliteConnection(conn))
