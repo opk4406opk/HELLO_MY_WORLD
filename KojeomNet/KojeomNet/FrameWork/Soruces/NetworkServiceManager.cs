@@ -52,7 +52,13 @@ namespace KojeomNet.FrameWork.Soruces
 
         private void OnReceiveCompleted(object sender, SocketAsyncEventArgs eventArgs)
         {
-
+            if(eventArgs.LastOperation == SocketAsyncOperation.Receive)
+            {
+                ProcessReceive(eventArgs);
+                return;
+            }
+            //
+            //error occurred..
         }
         private void OnSendCompleted(object sender, SocketAsyncEventArgs eventArgs)
         {
