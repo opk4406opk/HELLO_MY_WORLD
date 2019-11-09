@@ -18,8 +18,8 @@ namespace KojeomNet.FrameWork.Soruces
         private SocketAsyncEventArgs AcceptEventArgsInstance;
         private AutoResetEvent FlowControlEvent;
 
-        public delegate void Del_NewClientConnected(Socket clientSocket, object userToken);
-        public event Del_NewClientConnected OnNewClientConnected;
+        public delegate void DelegateNewClientConnected(Socket clientSocket, object userToken);
+        public event DelegateNewClientConnected OnNewClientConnected;
 
         public void StartListen()
         {

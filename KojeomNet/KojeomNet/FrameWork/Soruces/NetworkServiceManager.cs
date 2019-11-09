@@ -20,6 +20,9 @@ namespace KojeomNet.FrameWork.Soruces
         private BufferManager BufferManagerInstance;
         private ListenManager ListenManagerInstance;
 
+        public delegate void DelegateSessionCreated(UserToken userToken);
+        public DelegateSessionCreated OnSessionCreated;
+
         public void Initialize()
         {
             ListenManagerInstance = new ListenManager();
@@ -32,6 +35,7 @@ namespace KojeomNet.FrameWork.Soruces
             for(int idx = 0; idx < MaxConnection; idx++)
             {
                 UserToken userToken = new UserToken();
+                //
                 SocketAsyncEventArgs receiveArgs = new SocketAsyncEventArgs();
                 receiveArgs.UserToken = userToken;
                 receiveArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnReceiveCompleted);
@@ -57,7 +61,44 @@ namespace KojeomNet.FrameWork.Soruces
 
         private void OnNewClientConnected(Socket clientSocket, object userToken)
         {
+            SocketAsyncEventArgs receiveArgs = ReceiveSocketEventArgsPool.Pop();
+            SocketAsyncEventArgs sendArgs = SendSocketEventArgsPool.Pop();
+            //
+            OnSessionCreated?.Invoke(receiveArgs.UserToken as UserToken);
+            //
+            BeginReceive(clientSocket, receiveArgs, sendArgs);
+        }
 
+        private void BeginReceive(Socket socket, SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs)
+        {
+            UserToken userToken = receiveArgs.UserToken as UserToken;
+            userToken.SocketInstance = socket;
+            userToken.SetAsyncEventArgs(receiveArgs, sendArgs);
+
+            //
+            bool bPending = socket.ReceiveAsync(receiveArgs);
+            if(bPending == false)
+            {
+                ProcessReceive(receiveArgs);
+            }
+        }
+
+        private void ProcessReceive(SocketAsyncEventArgs receiveArgs)
+        {
+            UserToken userToken = receiveArgs.UserToken as UserToken;
+            if (receiveArgs.BytesTransferred > 0 && receiveArgs.SocketError == SocketError.Success)
+            {
+                userToken.OnReceive(receiveArgs.Buffer, receiveArgs.Offset, receiveArgs.BytesTransferred);
+                bool bPending = userToken.SocketInstance.ReceiveAsync(receiveArgs);
+                if(bPending == false)
+                {
+                    ProcessReceive(receiveArgs);
+                }
+            }
+            else
+            {
+                // error occurred.
+            }
         }
     }
 }
