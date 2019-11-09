@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29201.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KojeomNet", "KojeomNet\KojeomNet.csproj", "{8AC8DEEB-6406-4EB1-991D-1C9F5AD2C5F5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8AC8DEEB-6406-4EB1-991D-1C9F5AD2C5F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AC8DEEB-6406-4EB1-991D-1C9F5AD2C5F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AC8DEEB-6406-4EB1-991D-1C9F5AD2C5F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AC8DEEB-6406-4EB1-991D-1C9F5AD2C5F5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C8176053-638B-44AB-BEC1-610A08B5B179}
+	EndGlobalSection
+EndGlobal

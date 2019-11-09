@@ -13,31 +13,13 @@ public enum GAMEPLAYER_CHAR_STATE
     NONE,
     COUNT = NONE
 }
-public class GamePlayerController : MonoBehaviour {
-
+public class GamePlayerController : MonoBehaviour
+{
     private GamePlayer GamePlayerInstance;
-    private Camera PlayerCamera;
-    //
-    #region cam_option
-    private List<float> CamRotArrayX = new List<float>();
-    private List<float> CamRotArrayY = new List<float>();
-    private float CamRotationX = 0F;
-    private float CamRotationY = 0F;
-    public float minimumX = -360F;
-    public float maximumX = 360F;
-    public float minimumY = -60F;
-    public float maximumY = 60F;
-    private int FrameCounter = 20;
-    [Range(1.0f, 100.0f)]
-    public float camSensitivityY = 1.0f;
-    [Range(1.0f, 100.0f)]
-    public float camSensitivityX = 1.0f;
-    private Quaternion camOrigRotation;
-    private Quaternion playerOrigRotation;
-    #endregion
     [Range(3.5f, 15.5f)]
     public float MoveSpeed;
     private bool bControllProcessOn = false;
+    private Quaternion PlayerOrigRotation;
 
     private PlayerMoveState MoveState;
     private PlayerIdleState IdleState;
@@ -53,12 +35,8 @@ public class GamePlayerController : MonoBehaviour {
     {
         GamePlayerInstance = gamePlayer;
         CharacterInstance = characterInstance;
-        PlayerCamera = GamePlayerCameraManager.Instance.GetPlayerCamera();
-        PlayerCamera.transform.parent = CharacterInstance.transform;
-        //
-        camOrigRotation = PlayerCamera.transform.localRotation;
         // 게임 플레이어가 아닌, 하위 오브젝트인 캐릭터 인스턴스 방향을 변경해야한다.
-        playerOrigRotation = CharacterInstance.transform.localRotation;
+        PlayerOrigRotation = CharacterInstance.transform.localRotation;
         //
         MoveStateController = new StateMachineController();
         JumpStateController = new StateMachineController();
@@ -107,75 +85,16 @@ public class GamePlayerController : MonoBehaviour {
         return CurPlayerState;
     }
 
-    private void RotationCamAndPlayer()
-    {
-        float camRotAverageY = 0f;
-        float camRotAverageX = 0f;
-        if (Application.platform == RuntimePlatform.WindowsEditor ||
-            Application.platform == RuntimePlatform.WindowsPlayer)
-        {
-            CamRotationY += Input.GetAxis("Mouse Y") * camSensitivityY;
-            CamRotationX += Input.GetAxis("Mouse X") * camSensitivityX;
-        }
-        else if(Application.platform == RuntimePlatform.Android ||
-            Application.platform == RuntimePlatform.IPhonePlayer)
-        {
-            var virtualJoystick = VirtualJoystickManager.singleton;
-            if(virtualJoystick != null)
-            {
-                CamRotationY += virtualJoystick.GetLookDirection().y * camSensitivityY;
-                CamRotationX += virtualJoystick.GetLookDirection().x * camSensitivityX;
-            }
-        }
-        CamRotArrayY.Add(CamRotationY);
-        CamRotArrayX.Add(CamRotationX);
-
-        if (CamRotArrayY.Count >= FrameCounter)
-        {
-            CamRotArrayY.RemoveAt(0);
-        }
-        if (CamRotArrayX.Count >= FrameCounter)
-        {
-            CamRotArrayX.RemoveAt(0);
-        }
-
-        for (int j = 0; j < CamRotArrayY.Count; j++)
-        {
-            camRotAverageY += CamRotArrayY[j];
-        }
-        for (int i = 0; i < CamRotArrayX.Count; i++)
-        {
-            camRotAverageX += CamRotArrayX[i];
-        }
-
-        camRotAverageY /= CamRotArrayY.Count;
-        camRotAverageX /= CamRotArrayX.Count;
-
-        camRotAverageY = Mathf.Clamp(camRotAverageY, minimumY, maximumY);
-        // 좌우 움직임은 최대값/최소값 제한두지 않고 적용.
-        //camRotAverageX = Mathf.Clamp(camRotAverageX, minimumX, maximumX);
-
-        //KojeomLogger.DebugLog(string.Format("CamRotAvgX : {0}, CamRotAvgY : {1}", camRotAverageX, camRotAverageY), LOG_TYPE.DEBUG_TEST );
-
-        Quaternion yQuaternion = Quaternion.AngleAxis(camRotAverageY, Vector3.left);
-        Quaternion xQuaternion = Quaternion.AngleAxis(camRotAverageX, Vector3.up);
-
-        // rot cam (상하)
-        PlayerCamera.transform.localRotation = camOrigRotation * yQuaternion;
-        // rot player (좌우)
-        CharacterInstance.transform.localRotation = playerOrigRotation * xQuaternion;
-    }
-
     private void FixedUpdate()
     {
-        if (CharacterInstance == null || WorldAreaManager.Instance == null || PlayerCamera == null)
+        if (CharacterInstance == null || WorldAreaManager.Instance == null || GamePlayerCameraManager.Instance == null)
         {
             return;
         }
         //
         Vector3 playerPos = CharacterInstance.transform.position;
         playerPos.y += 2.0f;
-        PlayerCamera.transform.position = playerPos;
+        GamePlayerCameraManager.Instance.SetPosition(playerPos);
 
         SubWorld containWorld = WorldAreaManager.Instance.ContainedSubWorld(CharacterInstance.transform.position);
         if (containWorld == null)
@@ -249,7 +168,8 @@ public class GamePlayerController : MonoBehaviour {
                         MoveStateController.Tick(Time.deltaTime);
                         break;
                 }
-                RotationCamAndPlayer();
+                // rot player (좌우)
+                CharacterInstance.transform.localRotation = PlayerOrigRotation * GamePlayerCameraManager.Instance.CameraXQuaternion;
             }
         }
     }

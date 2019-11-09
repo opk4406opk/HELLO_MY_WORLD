@@ -639,6 +639,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b067d6d57b3a0c948aeae4f007dde699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minimumX: -360
+  maximumX: 360
+  minimumY: -60
+  maximumY: 60
+  CamSensitivityY: 1
+  CamSensitivityX: 1
 --- !u!1 &204995964
 GameObject:
   m_ObjectHideFlags: 0
@@ -1173,8 +1179,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveStickFront: {fileID: 610299726}
   lookStickFront: {fileID: 2058247484}
-  baseLookStickTrans: {fileID: 1831591763}
-  baseMoveStickTrans: {fileID: 131214039}
+  LookStickBackTrans: {fileID: 1831591763}
+  MoveStickBackTrans: {fileID: 131214039}
   moveStickCollider: {fileID: 2077917513}
   lookStickCollider: {fileID: 873709054}
 --- !u!1 &497352931

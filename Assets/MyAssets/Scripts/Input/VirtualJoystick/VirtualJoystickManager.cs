@@ -8,9 +8,9 @@ public class VirtualJoystickManager : MonoBehaviour {
     [SerializeField]
     private GameObject lookStickFront;
     [SerializeField]
-    private Transform baseLookStickTrans;
+    private Transform LookStickBackTrans;
     [SerializeField]
-    private Transform baseMoveStickTrans;
+    private Transform MoveStickBackTrans;
     [SerializeField]
     private BoxCollider moveStickCollider;
     [SerializeField]
@@ -84,7 +84,7 @@ public class VirtualJoystickManager : MonoBehaviour {
 
     public float GetMoveAxisX()
     {
-        Vector3 center = baseMoveStickTrans.position;
+        Vector3 center = MoveStickBackTrans.position;
         Vector3 dir = moveDirection.normalized;
         if(moveStickFront.transform.position.x < center.x)
         {
@@ -94,7 +94,7 @@ public class VirtualJoystickManager : MonoBehaviour {
     }
     public float GetMoveAxisY()
     {
-        Vector3 center = baseMoveStickTrans.position;
+        Vector3 center = MoveStickBackTrans.position;
         Vector3 dir = moveDirection.normalized;
         if (moveStickFront.transform.position.y < center.y)
         {
@@ -110,12 +110,12 @@ public class VirtualJoystickManager : MonoBehaviour {
 
     private void ResetMoveStickPos()
     {
-        moveStickFront.transform.position = baseMoveStickTrans.position;
+        moveStickFront.transform.position = MoveStickBackTrans.position;
         moveDirection = Vector3.zero;
     }
     private void ResetLookStickPos()
     {
-        lookStickFront.transform.position = baseLookStickTrans.position;
+        lookStickFront.transform.position = LookStickBackTrans.position;
         lookDirection = Vector3.zero;
     }
 
@@ -129,7 +129,7 @@ public class VirtualJoystickManager : MonoBehaviour {
                 break;
             case TouchPhase.Moved:
                 moveStickFront.transform.position = Vector3.Lerp(origin, touchPos, Time.deltaTime * stickMoveSpeed);
-                moveDirection = moveStickFront.transform.position - baseMoveStickTrans.position;
+                moveDirection = moveStickFront.transform.position - MoveStickBackTrans.position;
                 break;
             case TouchPhase.Ended:
                 ResetMoveStickPos();
@@ -139,7 +139,7 @@ public class VirtualJoystickManager : MonoBehaviour {
                 break;
             case TouchPhase.Stationary:
                 moveStickFront.transform.position = Vector3.Lerp(origin, touchPos, Time.deltaTime * stickMoveSpeed);
-                moveDirection = moveStickFront.transform.position - baseMoveStickTrans.position;
+                moveDirection = moveStickFront.transform.position - MoveStickBackTrans.position;
                 break;
             default:
                 ResetMoveStickPos();
@@ -156,7 +156,7 @@ public class VirtualJoystickManager : MonoBehaviour {
                 break;
             case TouchPhase.Moved:
                 lookStickFront.transform.position = Vector3.Lerp(origin, touchPos, Time.deltaTime * stickMoveSpeed);
-                lookDirection = lookStickFront.transform.position - baseLookStickTrans.position;
+                lookDirection = lookStickFront.transform.position - LookStickBackTrans.position;
                 break;
             case TouchPhase.Ended:
                 ResetLookStickPos();
