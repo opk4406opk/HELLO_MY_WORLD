@@ -34,5 +34,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FrameWork\Soruces\BufferManager.cs" />
+    <Compile Include="FrameWork\Soruces\ListenManager.cs" />
+    <Compile Include="FrameWork\Soruces\NetworkServiceManager.cs" />
+    <Compile Include="FrameWork\Soruces\SocketAsyncEventArgsPool.cs" />
+    <Compile Include="FrameWork\Soruces\UserToken.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
