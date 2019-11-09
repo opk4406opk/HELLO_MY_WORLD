@@ -42,16 +42,18 @@ public class GamePlayerCameraManager : MonoBehaviour
         //
         float camRotationX = 0f, camRotationY = 0f;
         float camRotAverageY = 0f, camRotAverageX = 0f;
-        if (Application.platform == RuntimePlatform.WindowsEditor ||
-            Application.platform == RuntimePlatform.WindowsPlayer || 
-            Application.platform == RuntimePlatform.LinuxEditor ||
-            Application.platform == RuntimePlatform.LinuxPlayer)
+        bool bMobilePlatform = Application.platform == RuntimePlatform.Android ||
+                               Application.platform == RuntimePlatform.IPhonePlayer;
+        bool bPCPlatform = Application.platform == RuntimePlatform.WindowsEditor ||
+                           Application.platform == RuntimePlatform.WindowsPlayer ||
+                           Application.platform == RuntimePlatform.LinuxEditor ||
+                           Application.platform == RuntimePlatform.LinuxPlayer;
+        if (bPCPlatform == true)
         {
             camRotationY += Input.GetAxis("Mouse Y") * CamSensitivityY;
             camRotationX += Input.GetAxis("Mouse X") * CamSensitivityX;
         }
-        else if (Application.platform == RuntimePlatform.Android ||
-            Application.platform == RuntimePlatform.IPhonePlayer)
+        else if (bMobilePlatform == true)
         {
             var virtualJoystick = VirtualJoystickManager.singleton;
             if (virtualJoystick != null)
@@ -88,19 +90,23 @@ public class GamePlayerCameraManager : MonoBehaviour
         camRotAverageY = Mathf.Clamp(camRotAverageY, minimumY, maximumY);
         // 좌우 움직임은 최대값/최소값 제한두지 않고 적용.
         //camRotAverageX = Mathf.Clamp(camRotAverageX, minimumX, maximumX);
-
         //KojeomLogger.DebugLog(string.Format("CamRotAvgX : {0}, CamRotAvgY : {1}", camRotAverageX, camRotAverageY), LOG_TYPE.DEBUG_TEST );
 
         CameraYQuaternion = Quaternion.AngleAxis(camRotAverageY, Vector3.left);
         CameraXQuaternion = Quaternion.AngleAxis(camRotAverageX, Vector3.up);
 
         // rot cam (상하좌우)
-        PlayerCamera.transform.localRotation = CameraOrigRotation * CameraYQuaternion * CameraXQuaternion;
+        PlayerCamera.transform.localRotation *= CameraYQuaternion;
     }
 
     public Camera GetPlayerCamera()
     {
         return PlayerCamera;
+    }
+
+    public void AttachTo(Transform toAttach)
+    {
+        PlayerCamera.transform.parent = toAttach;
     }
 
     public void SetPosition(Vector3 newPosition)

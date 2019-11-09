@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 // ref # 1 : http://wiki.unity3d.com/index.php/SmoothMouseLook
 
-public enum GAMEPLAYER_CHAR_STATE
+public enum GamePlayerState
 {
     MOVE = 0,
     IDLE = 1,
@@ -27,7 +27,7 @@ public class GamePlayerController : MonoBehaviour
     private StateMachineController MoveStateController;
     private StateMachineController JumpStateController;
     private StateMachineController PoseStateController;
-    private GAMEPLAYER_CHAR_STATE CurPlayerState;
+    private GamePlayerState CurPlayerState;
 
     public GameCharacterInstance CharacterInstance { get; private set; }
 
@@ -41,8 +41,12 @@ public class GamePlayerController : MonoBehaviour
         MoveStateController = new StateMachineController();
         JumpStateController = new StateMachineController();
         PoseStateController = new StateMachineController();
-        CurPlayerState = GAMEPLAYER_CHAR_STATE.IDLE;
+        CurPlayerState = GamePlayerState.IDLE;
         //
+        if(GamePlayerCameraManager.Instance != null)
+        {
+            GamePlayerCameraManager.Instance.AttachTo(CharacterInstance.transform);
+        }
     }
 
     public Vector3 GetPosition()
@@ -80,21 +84,21 @@ public class GamePlayerController : MonoBehaviour
         bControllProcessOn = false;
     }
 
-    public GAMEPLAYER_CHAR_STATE GetPlayerState()
+    public GamePlayerState GetPlayerState()
     {
         return CurPlayerState;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (CharacterInstance == null || WorldAreaManager.Instance == null || GamePlayerCameraManager.Instance == null)
         {
             return;
         }
         //
-        Vector3 playerPos = CharacterInstance.transform.position;
-        playerPos.y += 2.0f;
-        GamePlayerCameraManager.Instance.SetPosition(playerPos);
+        Vector3 camPosition = CharacterInstance.transform.position;
+        camPosition.y += 2.0f;
+        GamePlayerCameraManager.Instance.SetPosition(camPosition);
 
         SubWorld containWorld = WorldAreaManager.Instance.ContainedSubWorld(CharacterInstance.transform.position);
         if (containWorld == null)
@@ -124,41 +128,41 @@ public class GamePlayerController : MonoBehaviour
                 var inputData = InputManager.Instance.GetInputData();
                 if (inputData.InputState == INPUT_STATE.CHARACTER_MOVE)
                 {
-                    CurPlayerState = GAMEPLAYER_CHAR_STATE.MOVE;
+                    CurPlayerState = GamePlayerState.MOVE;
                 }
                 else if (inputData.InputState == INPUT_STATE.NONE)
                 {
-                    CurPlayerState = GAMEPLAYER_CHAR_STATE.IDLE;
+                    CurPlayerState = GamePlayerState.IDLE;
                 }
                 else if (inputData.InputState == INPUT_STATE.CHARACTER_JUMP &&
-                    CurPlayerState == GAMEPLAYER_CHAR_STATE.MOVE && bPlayerInGroundOrWater == true)
+                    CurPlayerState == GamePlayerState.MOVE && bPlayerInGroundOrWater == true)
                 {
-                    CurPlayerState = GAMEPLAYER_CHAR_STATE.MOVING_JUMP;
+                    CurPlayerState = GamePlayerState.MOVING_JUMP;
                 }
                 else if (inputData.InputState == INPUT_STATE.CHARACTER_JUMP &&
-                    CurPlayerState != GAMEPLAYER_CHAR_STATE.MOVE && bPlayerInGroundOrWater == true)
+                    CurPlayerState != GamePlayerState.MOVE && bPlayerInGroundOrWater == true)
                 {
-                    CurPlayerState = GAMEPLAYER_CHAR_STATE.JUMP;
+                    CurPlayerState = GamePlayerState.JUMP;
                 }
                 KojeomLogger.DebugLog(string.Format("current PlayerState : {0}", CurPlayerState), LOG_TYPE.USER_INPUT);
                 switch (CurPlayerState)
                 {
-                    case GAMEPLAYER_CHAR_STATE.MOVE:
+                    case GamePlayerState.MOVE:
                         MoveState = new PlayerMoveState(GamePlayerInstance, inputData);
                         MoveStateController.SetState(MoveState);
                         MoveStateController.Tick(Time.deltaTime);
                         break;
-                    case GAMEPLAYER_CHAR_STATE.JUMP:
+                    case GamePlayerState.JUMP:
                         JumpState = new PlayerJumpState(GamePlayerInstance, inputData);
                         JumpStateController.SetState(JumpState);
                         JumpStateController.Tick(Time.deltaTime);
                         break;
-                    case GAMEPLAYER_CHAR_STATE.IDLE:
+                    case GamePlayerState.IDLE:
                         IdleState = new PlayerIdleState(GamePlayerInstance, inputData);
                         PoseStateController.SetState(IdleState);
                         PoseStateController.Tick(Time.deltaTime);
                         break;
-                    case GAMEPLAYER_CHAR_STATE.MOVING_JUMP:
+                    case GamePlayerState.MOVING_JUMP:
                         JumpState = new PlayerJumpState(GamePlayerInstance, inputData);
                         JumpStateController.SetState(JumpState);
                         JumpStateController.Tick(Time.deltaTime);
@@ -168,8 +172,9 @@ public class GamePlayerController : MonoBehaviour
                         MoveStateController.Tick(Time.deltaTime);
                         break;
                 }
-                // rot player (좌우)
-                CharacterInstance.transform.localRotation = PlayerOrigRotation * GamePlayerCameraManager.Instance.CameraXQuaternion;
+
+                // 캐릭터 좌우 회전.
+                CharacterInstance.transform.localRotation *= GamePlayerCameraManager.Instance.CameraXQuaternion;
             }
         }
     }
