@@ -332,17 +332,22 @@ public class SubWorld : MonoBehaviour
     {
         Vector3 position = Vector3.zero;
         var worldConfig = WorldConfigFile.Instance.GetConfig();
-        int indexX = KojeomUtility.RandomInteger(0, worldConfig.SubWorldSizeX);
-        int indexZ = KojeomUtility.RandomInteger(0, worldConfig.SubWorldSizeZ);
-        for(int indexY = 0; indexY < worldConfig.SubWorldSizeY; indexY++)
+        bool bFind = false;
+        while(bFind == false)
         {
-            Block block = WorldBlockData[indexX, indexY, indexZ];
-            if ((BlockTileType)block.Type == BlockTileType.EMPTY)
+            int indexX = KojeomUtility.RandomInteger(0, worldConfig.SubWorldSizeX);
+            int indexZ = KojeomUtility.RandomInteger(0, worldConfig.SubWorldSizeZ);
+            for (int indexY = 1; indexY < worldConfig.SubWorldSizeY; indexY++)
             {
-                position.x = block.CenterX;
-                position.y = block.CenterY;
-                position.z = block.CenterZ;
-                break;
+                Block block = WorldBlockData[indexX, indexY, indexZ];
+                if ((BlockTileType)block.Type == BlockTileType.EMPTY)
+                {
+                    position.x = block.CenterX;
+                    position.y = block.CenterY;
+                    position.z = block.CenterZ;
+                    bFind = true;
+                    break;
+                }
             }
         }
         return position;

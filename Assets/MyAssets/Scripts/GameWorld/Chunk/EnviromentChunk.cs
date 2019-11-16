@@ -26,9 +26,9 @@ public class EnviromentChunk : AChunk
     {
         //This code will run for every block in the chunk
         var blockType = GetBlockType(blockIdxX, blockIdxY, blockIdxZ);
-        bool isEnviromentBlock = blockType == BlockTileType.NORMAL_TREE_LEAF || blockType == BlockTileType.SQAURE_TREE_LEAF;
-        bool isNotWaterBlock = blockType != BlockTileType.WATER;
-        if (isEnviromentBlock && isNotWaterBlock)
+        bool bEnviromentBlock = blockType == BlockTileType.NORMAL_TREE_LEAF || blockType == BlockTileType.SQAURE_TREE_LEAF;
+        bool bNotWaterBlock = blockType != BlockTileType.WATER;
+        if (bEnviromentBlock && bNotWaterBlock)
         {
             CubeTopFace(cubeX, cubeY, cubeZ, blockType);
             CubeBottomFace(cubeX, cubeY, cubeZ, blockType);
