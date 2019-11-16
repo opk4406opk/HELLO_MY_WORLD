@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AnimalWalkState : AActorState, IState
 {
-    public AnimalWalkState(Actor instance)
+    public AnimalWalkState(Actor instance, Vector3 targetPosition)
     {
         ActorInstance = instance;
     }

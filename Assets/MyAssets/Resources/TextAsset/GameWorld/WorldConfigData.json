@@ -6,6 +6,6 @@
   "SubWorld_Count_Y_Axis_Per_WorldArea": 32,
   "SubWorld_Count_Z_Axis_Per_WorldArea": 32,
   "ChunkSize": 8,
-  "ChunkLoadIntervalSeconds": 0.15,
+  "ChunkLoadIntervalSeconds": 0.2,
   "OneTileUnit": 0.0625
 }

@@ -67,7 +67,14 @@ public class BTNodeWandering : Node
         ElapsedTimeSec += DeltaTime;
         if(ElapsedTimeSec >= WakeupTimeSec)
         {
-            
+            Vector3 targetPos;
+            if(AIUtils.GetRandomWorldPositionFromActorPos(out targetPos, Controller) == true)
+            {
+                if(Controller.GetCurrentState() != ActorStateType.Run)
+                {
+                    Controller.StartRun(targetPos);
+                }
+            }
             ElapsedTimeSec = 0.0f;
         }
         return true;

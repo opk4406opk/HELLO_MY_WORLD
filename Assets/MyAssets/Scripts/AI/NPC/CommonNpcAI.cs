@@ -5,7 +5,9 @@ using UnityEngine;
 public sealed class CommonNpcAI : BehaviorTree
 {
     private Sequence SeqMoveForTarget = new Sequence();
+    private Sequence SeqWandering = new Sequence();
 
+    private BTNodeWandering WanderingNode;
     private BTNodeMoveForTarget MoveForTargetNode;
     private BTNodeTimer TargetPosUpdateNode;
 
@@ -15,6 +17,7 @@ public sealed class CommonNpcAI : BehaviorTree
         ActorControllerInstance = actorController;
         // create instance
         MoveForTargetNode = new BTNodeMoveForTarget(this, actorController);
+        WanderingNode = new BTNodeWandering(this, actorController);
         //
         TargetPosUpdateNode = new BTNodeTimer(this, actorController);
         TargetPosUpdateNode.SetCallbackAfterTimer(() => {
@@ -25,8 +28,11 @@ public sealed class CommonNpcAI : BehaviorTree
         });
         //
         RootNode.AddChild(SeqMoveForTarget);
+        RootNode.AddChild(SeqWandering);
         // 이동 시퀀스
         SeqMoveForTarget.AddChild(TargetPosUpdateNode);
         SeqMoveForTarget.AddChild(MoveForTargetNode);
+        // 주변 배회하기 시퀀스.
+        SeqWandering.AddChild(WanderingNode);
     }
 }

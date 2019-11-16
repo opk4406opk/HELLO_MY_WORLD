@@ -15,8 +15,8 @@ public abstract class ActorController : MonoBehaviour
     abstract public void Init(SubWorld world, Actor instance);
     abstract public Transform GetActorTransform();
     abstract public void Tick(float deltaTime);
-    abstract public void ChangeActorState(ActorStateType state);
 
+    protected Actor ActorInstance;
     protected ActorStateType CurStateType;
     protected AITypes CurAIType = AITypes.Common;
     protected BoxCollider BoxColliderInstance;
@@ -28,6 +28,10 @@ public abstract class ActorController : MonoBehaviour
     protected bool bContactEnvrioment = false;
     protected bool bContactActor = false;
     protected bool bContactWater = false;
+
+    abstract public void StartRun(Vector3 targetPosition);
+    abstract public void StartIdle();
+    abstract public void StartWalking(Vector3 targetPosition);
 
     public void PlayAnimation(string animName)
     {
@@ -129,10 +133,10 @@ public abstract class ActorController : MonoBehaviour
     {
         gameObject.transform.position = toPosition;
     }
-    public void Move(Vector3 dir, float speed)
+    public void Move(Vector3 dir, float speed, float deltaTime)
     {
         Vector3 newPos = gameObject.transform.position;
-        newPos += dir.normalized * Time.deltaTime * speed;
+        newPos += dir.normalized * deltaTime * speed;
         gameObject.transform.position = newPos;
     }
     public void LookAt(Vector3 dir)

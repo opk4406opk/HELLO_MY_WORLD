@@ -4,20 +4,14 @@ using UnityEngine;
 
 public class AnimalController : ActorController
 {
-    //states.
-    private AnimalIdleState IdleState;
-    private AnimalWalkState WalkState;
-    private AnimalRunState RunState;
 
     public override void Init(SubWorld world, Actor instance)
     {
+        ActorInstance = instance;
         ContainedWorld = world;
         AnimatorInstance = gameObject.GetComponent<Animator>();
         BoxColliderInstance = gameObject.GetComponent<BoxCollider>();
 
-        IdleState = new AnimalIdleState(instance);
-        WalkState = new AnimalWalkState(instance);
-        RunState = new AnimalRunState(instance);
         // AI 초기화 세팅.
         AIGroup[(int)AITypes.Common] = new CommonAnimalAI();
         AIGroup[(int)AITypes.Common].Initialize(this);
@@ -33,20 +27,18 @@ public class AnimalController : ActorController
         return transform;
     }
 
-    public override void ChangeActorState(ActorStateType state)
+    public override void StartRun(Vector3 targetPosition)
     {
-        CurStateType = state;
-        switch (state)
-        {
-            case ActorStateType.Idle:
-                StateMachineControllerInstance.SetState(IdleState);
-                break;
-            case ActorStateType.Walk:
-                StateMachineControllerInstance.SetState(WalkState);
-                break;
-            case ActorStateType.Run:
-                StateMachineControllerInstance.SetState(RunState);
-                break;
-        }
+        StateMachineControllerInstance.SetState(new AnimalRunState(ActorInstance, targetPosition));
+    }
+
+    public override void StartIdle()
+    {
+        StateMachineControllerInstance.SetState(new AnimalIdleState(ActorInstance));
+    }
+
+    public override void StartWalking(Vector3 targetPosition)
+    {
+        StateMachineControllerInstance.SetState(new AnimalWalkState(ActorInstance, targetPosition));
     }
 }
