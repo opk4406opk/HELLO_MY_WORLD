@@ -114,8 +114,13 @@ public class KojeomUtility
         if (randValue == 0) return false;
         return true;
     }
-
-    public static float DistinguishBetweenVec2Direction(Vector2 a, Vector2 b)
+    /// <summary>
+    /// 2차원 벡터 외적.
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <returns></returns>
+    public static float CrossVector2D(Vector2 a, Vector2 b)
     {
         return (a.x * b.y - a.y * b.x);
     }

@@ -27,6 +27,7 @@ public class NPCWalkState : AActorState, IState
         float dist = Vector3.Distance(ActorInstance.GetController().GetActorTransform().position, TargetPosition);
         if (dist >= 1.0f)
         {
+            ActorInstance.GetController().LookAt(DirectionToTarget);
             ActorInstance.GetController().Move(DirectionToTarget, 1.0f, deltaTime);
         }
     }

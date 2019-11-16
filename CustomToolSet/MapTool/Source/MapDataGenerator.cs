@@ -57,7 +57,7 @@ namespace MapTool.Source
         public static readonly int SubWorld_Count_Z_Axis_Per_WorldArea = 32;
         //
         public static readonly int ChunkSize = 8;
-        public static readonly float ChunkLoadIntervalSeconds = 0.2f;
+        public static readonly float ChunkLoadIntervalSeconds = 0.01f;
         public static readonly float OneTileUnit = 0.0625f;
         #endregion
 

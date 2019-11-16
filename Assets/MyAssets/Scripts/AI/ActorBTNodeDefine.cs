@@ -56,7 +56,7 @@ public class BTNodeMoveForTarget : Node
 // 이곳저곳 배회하는 노드.
 public class BTNodeWandering : Node
 {
-    private readonly float WakeupTimeSec = 5.0f;
+    private readonly float WakeupTimeSec = 3.0f;
     public BTNodeWandering(BehaviorTree behaviorTreeInstance, ActorController actorController)
     {
         Controller = actorController;
@@ -72,6 +72,7 @@ public class BTNodeWandering : Node
             {
                 if(Controller.GetCurrentState() != ActorStateType.Run)
                 {
+                    KojeomLogger.DebugLog(string.Format("Wandering start!"));
                     Controller.StartRun(targetPos);
                 }
             }

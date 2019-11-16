@@ -7,12 +7,17 @@ public class WorldAreaManager : MonoBehaviour
 {
     public Dictionary<string, WorldArea> WorldAreas { get; private set; } = new Dictionary<string, WorldArea>();
     public static WorldAreaManager Instance { get; private set; }
+    public bool bFinishLoad { get; private set; }
+    private int CountWorldArea = 0;
+    private int CurrentLoadFinishWorldArea = 0;
     public void Init()
     {
         //
         Instance = this;
         //
-        foreach(var worldAreaData in WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaDatas)
+        bFinishLoad = false;
+        CountWorldArea = WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaDatas.Count;
+        foreach (var worldAreaData in WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaDatas)
         {
             AsyncGenerateArea(worldAreaData);
         }
@@ -35,7 +40,17 @@ public class WorldAreaManager : MonoBehaviour
         WorldArea worldAreaInstance = newWorldArea.GetComponent<WorldArea>();
         worldAreaInstance.Init(worldAreaData, terrainValueData);
         WorldAreas.Add(worldAreaData.UniqueID, worldAreaInstance);
+        CountingFinishLoad();
         KojeomLogger.DebugLog(string.Format("WorldArea ID : {0} ({1} * {2}) Finish Generate Area.", worldAreaData.UniqueID, worldAreaSizeX, worldAreaSizeZ));
+    }
+
+    private void CountingFinishLoad()
+    {
+        CurrentLoadFinishWorldArea++;
+        if(CurrentLoadFinishWorldArea == CountWorldArea)
+        {
+            bFinishLoad = true;
+        }
     }
 
     private async Task<WorldGenAlgorithms.TerrainValue[,]> TaskGenerateAreaData(int areaSizeX, int areaSizeZ)

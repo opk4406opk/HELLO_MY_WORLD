@@ -21,7 +21,7 @@ public class GamePlayerManager : MonoBehaviour {
         KojeomLogger.DebugLog(string.Format("[GamePlayerManager] Start InitProcess"), LOG_TYPE.INFO);
         while(true)
         {
-            if(WorldAreaManager.Instance != null)
+            if(WorldAreaManager.Instance != null && WorldAreaManager.Instance.bFinishLoad == true)
             {
                 foreach(var worldArea in WorldAreaManager.Instance.WorldAreas)
                 {
@@ -41,7 +41,6 @@ public class GamePlayerManager : MonoBehaviour {
                             IsInitializeFinish = true;
                             break;
                         }
-                        yield return null;
                     }
                 }
               

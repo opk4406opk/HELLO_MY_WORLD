@@ -38,7 +38,7 @@ public class WorldGenAlgorithms
                 for (int z = 0; z < areaSizeZ; z++)
                 {
                     Vector2 point = new Vector2(x, z);
-                    float dirValue = KojeomUtility.DistinguishBetweenVec2Direction(lineVector, point);
+                    float dirValue = KojeomUtility.CrossVector2D(lineVector, point);
                     if (dirValue > 0)
                     {
                         if (KojeomUtility.RandomBool() == true) xzPlane[x, z]++;
