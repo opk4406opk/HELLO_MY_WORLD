@@ -37,6 +37,15 @@ public class RequestSpawnNPCMessage : RequestSpawnActorMessage
         NPCType = npcType;
     }
 }
+public class RequestSpawnAnimalMessage : RequestSpawnActorMessage
+{
+    public ANIMAL_TYPE AnimalType;
+    public RequestSpawnAnimalMessage(RequestSpawnActorData spawnData, ANIMAL_TYPE animalType)
+    {
+        SpawnData = spawnData;
+        AnimalType = animalType;
+    }
+}
 public class RequestSpawnMonsterMessage : RequestSpawnActorMessage
 {
     public MONSTER_TYPE MonsterType;
@@ -56,6 +65,7 @@ public class ActorSuperviosr : MonoBehaviour
     private Transform SpawnedGroupTransform;
     public bool IsRunningTick { get; private set; }
     public NPCManager NPCManagerInstance { get; private set; }
+    public AnimalManager AnimalManagerInstance { get; private set; }
     //
     private Queue<RequestSpawnActorMessage> RequestSpawnMessages;
 
@@ -81,6 +91,9 @@ public class ActorSuperviosr : MonoBehaviour
         RequestSpawnMessages = new Queue<RequestSpawnActorMessage>();
         NPCManagerInstance = gameObject.GetComponentInChildren<NPCManager>();
         NPCManagerInstance.Init();
+        //
+        AnimalManagerInstance = gameObject.GetComponentInChildren<AnimalManager>();
+        AnimalManagerInstance.Init();
     }
 
     public void Begin()
@@ -109,14 +122,19 @@ public class ActorSuperviosr : MonoBehaviour
         RequestSpawnMessages.Enqueue(msg);
     }
 
-    public void RequestSpawnRandomMonster(MONSTER_TYPE monsterType, string worldUniqueID, int num, bool spawnAndShow)
+    public void RequestSpawnRandomMonster(MONSTER_TYPE monsterType, string subWorldUniqueID, string worldAreaUniqueID, int num, bool spawnAndShow)
     {
         // to do.
     }
 
-    public void RequestSpawnRandomAnimal(ANIMAL_TYPE animalType, string worldUniqueID, int num, bool spawnAndShow)
+    public void RequestSpawnRandomAnimal(ANIMAL_TYPE animalType, string subWorldUniqueID, string worldAreaUniqueID, int num, bool spawnAndShow)
     {
-
+        WorldAreaManager.Instance.GetWorldArea(worldAreaUniqueID).SubWorldStates.TryGetValue(subWorldUniqueID, out SubWorldState worldState);
+        var data = new RequestSpawnActorData(subWorldUniqueID, worldAreaUniqueID,
+            KojeomUtility.RandomInteger(0, AnimalDataFile.Instance.AnimalSpawnDatas.Count - 1),
+            worldState.SubWorldInstance.RandomRealPositionAtSurface(), ACTOR_TYPE.ANIMAL, num, spawnAndShow);
+        RequestSpawnAnimalMessage msg = new RequestSpawnAnimalMessage(data, animalType);
+        RequestSpawnMessages.Enqueue(msg);
     }
 
     private IEnumerator Tick()
@@ -131,6 +149,12 @@ public class ActorSuperviosr : MonoBehaviour
                 switch (message.SpawnData.ActorType)
                 {
                     case ACTOR_TYPE.ANIMAL:
+                        AnimalManagerInstance.SpawnActor(message.SpawnData.ActorUniqueID,
+                            message.SpawnData.SubWorldUniqueID,
+                            message.SpawnData.WorldAreaUniqueID,
+                            message.SpawnData.SpawnPosition,
+                            message.SpawnData.Num,
+                            message.SpawnData.SpawnAndShow);
                         break;
                     case ACTOR_TYPE.MONSTER:
                         break;

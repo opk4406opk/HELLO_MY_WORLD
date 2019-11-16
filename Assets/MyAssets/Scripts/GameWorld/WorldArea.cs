@@ -208,6 +208,11 @@ public class WorldArea : MonoBehaviour
         {
             ActorSuperviosr.Instance.RequestSpawnRandomNPC(NPC_TYPE.Merchant, subWorldUniqueID, AreaUniqueID, 1, true);
         }
+        //Animal 생성 테스트. 
+        if (worldState.SubWorldInstance.bSurfaceWorld == true)
+        {
+            ActorSuperviosr.Instance.RequestSpawnRandomAnimal(ANIMAL_TYPE.Chick, subWorldUniqueID, AreaUniqueID, 1, true);
+        }
     }
 
     private void OnReleaseSubWorldInstance(string uniqueID)
