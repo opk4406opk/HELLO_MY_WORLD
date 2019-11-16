@@ -20,19 +20,20 @@ public class BTNodeMoveForTarget : Node
     public override bool Invoke(float DeltaTime)
     {
         ElapsedTimeSec += DeltaTime;
+        bool bRecalcPathFinding = BehaviorTreeInstance.GetBlackBoard().PathList.Count == 0 && ElapsedTimeSec >= ReCalcPathfindingTimeSec;
+        if (bRecalcPathFinding == true)
+        {
+            ElapsedTimeSec = 0.0f;
+            AsyncPathFinding(BehaviorTreeInstance.GetBlackBoard().PathFidningTargetPoint);
+        }
+
         if (BehaviorTreeInstance.GetBlackBoard().PathList.Count > 0)
         {
             // test code.
             PathNode3D node = BehaviorTreeInstance.GetBlackBoard().PathList.Pop();
             Controller.Teleport(node.GetWorldPosition());
         }
-
-        bool bReCalcPathFinding = BehaviorTreeInstance.GetBlackBoard().PathList.Count == 0 && ElapsedTimeSec >= ReCalcPathfindingTimeSec;
-        if (bReCalcPathFinding == true)
-        {
-            ElapsedTimeSec = 0.0f;
-            AsyncPathFinding(BehaviorTreeInstance.GetBlackBoard().PathFidningTargetPoint);
-        }
+       
         return true;
     }
     public void AsyncPathFinding(Vector3 goalWorldPosition)
@@ -50,6 +51,28 @@ public class BTNodeMoveForTarget : Node
     {
         BehaviorTreeInstance.GetBlackBoard().PathList = resultPath;
     }
+}
+
+// 이곳저곳 배회하는 노드.
+public class BTNodeWandering : Node
+{
+    private readonly float WakeupTimeSec = 5.0f;
+    public BTNodeWandering(BehaviorTree behaviorTreeInstance, ActorController actorController)
+    {
+        Controller = actorController;
+        BehaviorTreeInstance = behaviorTreeInstance;
+    }
+    public override bool Invoke(float DeltaTime)
+    {
+        ElapsedTimeSec += DeltaTime;
+        if(ElapsedTimeSec >= WakeupTimeSec)
+        {
+            
+            ElapsedTimeSec = 0.0f;
+        }
+        return true;
+    }
+
 }
 
 public class BTNodeTimer : Node

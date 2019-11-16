@@ -11,6 +11,7 @@ public class NPCWalkState : AActorState, IState
 
     public void InitState()
     {
+        ActorInstance.GetController().PlayAnimation(ActorAnimTypeString.Walking);
     }
 
     public void ReleaseState()

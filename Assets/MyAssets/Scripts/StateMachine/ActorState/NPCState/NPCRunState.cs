@@ -12,6 +12,7 @@ public class NPCRunState : AActorState, IState
 
     public void InitState()
     {
+        ActorInstance.GetController().PlayAnimation(ActorAnimTypeString.Running);
     }
 
     public void ReleaseState()

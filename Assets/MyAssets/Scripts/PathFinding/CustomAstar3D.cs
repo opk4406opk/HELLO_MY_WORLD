@@ -371,14 +371,15 @@ public class CustomAstar3D : MonoBehaviour
 
     private bool IsCanMoveNode(PathNode3D node)
     {
-        //int x = node.PathMapDataX;
-        //int y = node.PathMapDataY;
-        //int z = node.PathMapDataZ;
-        //BlockTileType blockType = (BlockTileType)PathFindingSettings.WorldBlockData[x, y, z].Type;
-        //if (blockType == BlockTileType.EMPTY)
-        //{
-        //    return false;
-        //}
+        int x = node.PathMapDataX;
+        int y = node.PathMapDataY;
+        int z = node.PathMapDataZ;
+        BlockTileType blockType = (BlockTileType)PathFindingSettings.WorldBlockData[x, y, z].Type;
+        if (blockType == BlockTileType.EMPTY)
+        {
+            ClosedList.Add(node);
+            return false;
+        }
 
         //int upperHeight = y + 1;
         //if (upperHeight < PathFindingNeedData.SubWorldOffsetY)
@@ -493,11 +494,16 @@ public class CustomAstar3D : MonoBehaviour
 
     private void InitLoopDirection()
     {
+        // 8방향으로만 계산.
         LoopDirections.Clear();
         LoopDirections.Add(new Vector3(0, 0, 1));
         LoopDirections.Add(new Vector3(0, 0, -1));
         LoopDirections.Add(new Vector3(1, 0, 0));
         LoopDirections.Add(new Vector3(-1, 0, 0));
+        LoopDirections.Add(new Vector3(1, 0, 1));
+        LoopDirections.Add(new Vector3(1, 0, -1));
+        LoopDirections.Add(new Vector3(-1, 0, 1));
+        LoopDirections.Add(new Vector3(-1, 0, -1));
         //LoopDirections.Add(new Vector3(0, -1, 1));
         //LoopDirections.Add(new Vector3(0, -1, -1));
         //LoopDirections.Add(new Vector3(1, -1, 0));
@@ -507,10 +513,6 @@ public class CustomAstar3D : MonoBehaviour
         //LoopDirections.Add(new Vector3(1, 1, 0));
         //LoopDirections.Add(new Vector3(-1, 1, 0));
         //
-        LoopDirections.Add(new Vector3(1, 0, 1));
-        LoopDirections.Add(new Vector3(1, 0, -1));
-        LoopDirections.Add(new Vector3(-1, 0, 1));
-        LoopDirections.Add(new Vector3(-1, 0, -1));
         //LoopDirections.Add(new Vector3(1, -1, 1));
         //LoopDirections.Add(new Vector3(1, -1, -1));
         //LoopDirections.Add(new Vector3(-1, -1, 1));

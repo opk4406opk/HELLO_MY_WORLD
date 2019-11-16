@@ -11,6 +11,7 @@ public class NPCIdleState : AActorState, IState
 
     public void InitState()
     {
+        ActorInstance.GetController().PlayAnimation(ActorAnimTypeString.Standing);
     }
 
     public void ReleaseState()

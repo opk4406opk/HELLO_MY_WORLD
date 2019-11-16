@@ -2,6 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class ActorAnimTypeString
+{
+    public static readonly string Walking = "Walking";
+    public static readonly string Running = "Running";
+    public static readonly string Jumping = "Jumping";
+    public static readonly string Standing = "Standing";
+}
+
 public abstract class ActorController : MonoBehaviour
 {
     abstract public void Init(SubWorld world, Actor instance);
@@ -20,6 +28,19 @@ public abstract class ActorController : MonoBehaviour
     protected bool bContactEnvrioment = false;
     protected bool bContactActor = false;
     protected bool bContactWater = false;
+
+    public void PlayAnimation(string animName)
+    {
+        if(AnimatorInstance != null)
+        {
+            AnimatorInstance.Play(animName);
+        }
+    }
+
+    public ActorStateType GetCurrentState()
+    {
+        return CurStateType;
+    }
 
     public bool IsContactTerrain()
     {
