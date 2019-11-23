@@ -87,7 +87,7 @@ public abstract class BehaviorTree
             bool bContactTerrainOrWater = ActorControllerInstance.IsContactTerrain() == true || ActorControllerInstance.IsContactWater() == true;
             if (ActorControllerInstance != null && bContactTerrainOrWater == true)
             {
-                RootNode.Invoke(Time.deltaTime);
+                if(RootNode != null) RootNode.Invoke(Time.deltaTime);
             }
             yield return null;
         }

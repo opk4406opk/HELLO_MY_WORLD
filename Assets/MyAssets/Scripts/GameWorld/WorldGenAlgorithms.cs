@@ -29,7 +29,6 @@ public class WorldGenAlgorithms
         startPoints[3] = new Vector2(areaSizeX, 0);
         for (int loop = 0; loop < generateNumber; loop++)
         {
-            //KojeomUtility.ChangeSeed();
             Vector2 point1 = startPoints[KojeomUtility.RandomInteger(0, 4)];
             Vector2 point2 = new Vector2(KojeomUtility.RandomInteger(areaSizeX / 3, areaSizeX), KojeomUtility.RandomInteger(areaSizeZ / 3, areaSizeZ));
             Vector2 lineVector = point2 - point1;

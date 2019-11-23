@@ -5,59 +5,59 @@ using UnityEngine;
 
 public class WorldAreaManager : MonoBehaviour
 {
+    private struct WorldAreaGenerateParam
+    {
+        public int AreaSizeX;
+        public int AreaSizeZ;
+    }
     public Dictionary<string, WorldArea> WorldAreas { get; private set; } = new Dictionary<string, WorldArea>();
     public static WorldAreaManager Instance { get; private set; }
     public bool bFinishLoad { get; private set; }
-    private int CountWorldArea = 0;
-    private int CurrentLoadFinishWorldArea = 0;
-    public void Init()
+
+    public async void Init()
     {
         //
         Instance = this;
         //
         bFinishLoad = false;
-        CountWorldArea = WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaDatas.Count;
+        List<WorldAreaGenerateParam> worldAreaGenParamGroup = new List<WorldAreaGenerateParam>();
         foreach (var worldAreaData in WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaDatas)
         {
-            AsyncGenerateArea(worldAreaData);
+            var worldConfig = WorldConfigFile.Instance.GetConfig();
+            var worldMapData = WorldMapDataFile.Instance.WorldMapDataInstance;
+            int worldAreaSizeX = worldMapData.SubWorldRow * worldConfig.SubWorldSizeX;
+            int worldAreaSizeZ = worldMapData.SubWorldColumn * worldConfig.SubWorldSizeZ;
+            WorldAreaGenerateParam param;
+            param.AreaSizeX = worldAreaSizeX;
+            param.AreaSizeZ = worldAreaSizeZ;
+            worldAreaGenParamGroup.Add(param);
         }
-    }
-
-    private async void AsyncGenerateArea(WorldAreaTerrainData worldAreaData)
-    {
-        var worldConfig = WorldConfigFile.Instance.GetConfig();
-        var worldMapData = WorldMapDataFile.Instance.WorldMapDataInstance;
-        int worldAreaSizeX = worldMapData.SubWorldRow * worldConfig.SubWorldSizeX;
-        int worldAreaSizeZ = worldMapData.SubWorldColumn * worldConfig.SubWorldSizeZ;
-        //
-        GameObject newWorldArea = Instantiate(GameResourceSupervisor.GetInstance().WorldAreaPrefab.LoadSynchro(), new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
-        newWorldArea.transform.parent = transform;
-        newWorldArea.gameObject.name = worldAreaData.AreaName;
-        //
-        KojeomLogger.DebugLog(string.Format("WorldArea ID : {0} ({1} * {2}) Start Generate Area.", worldAreaData.UniqueID, worldAreaSizeX, worldAreaSizeZ));
-        var terrainValueData = await TaskGenerateAreaData(worldAreaSizeX, worldAreaSizeZ);
-        //
-        WorldArea worldAreaInstance = newWorldArea.GetComponent<WorldArea>();
-        worldAreaInstance.Init(worldAreaData, terrainValueData);
-        WorldAreas.Add(worldAreaData.UniqueID, worldAreaInstance);
-        CountingFinishLoad();
-        KojeomLogger.DebugLog(string.Format("WorldArea ID : {0} ({1} * {2}) Finish Generate Area.", worldAreaData.UniqueID, worldAreaSizeX, worldAreaSizeZ));
-    }
-
-    private void CountingFinishLoad()
-    {
-        CurrentLoadFinishWorldArea++;
-        if(CurrentLoadFinishWorldArea == CountWorldArea)
+        // 모든 비동기 맵 데이터 생성이 완료되기를 기다린다.
+        var mapData = await AsyncGenerateAreaMapDatas(worldAreaGenParamGroup);
+        // 완료되면, 월드 아레아를 생성하며 해당 맵 데이터를 설정.
+        int idx = 0;
+        foreach (var worldAreaData in WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaDatas)
         {
-            bFinishLoad = true;
+            GameObject newWorldArea = Instantiate(GameResourceSupervisor.GetInstance().WorldAreaPrefab.LoadSynchro(), new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
+            newWorldArea.transform.parent = transform;
+            newWorldArea.gameObject.name = worldAreaData.AreaName;
+            WorldArea worldAreaInstance = newWorldArea.GetComponent<WorldArea>();
+            worldAreaInstance.Init(worldAreaData, mapData[idx]);
+            WorldAreas.Add(worldAreaData.UniqueID, worldAreaInstance);
+            idx++;
         }
+        bFinishLoad = true;
     }
 
-    private async Task<WorldGenAlgorithms.TerrainValue[,]> TaskGenerateAreaData(int areaSizeX, int areaSizeZ)
+    private async Task<List<WorldGenAlgorithms.TerrainValue[,]>> AsyncGenerateAreaMapDatas(List<WorldAreaGenerateParam> paramGroup)
     {
         return await Task.Run(() => {
-            WorldGenAlgorithms.TerrainValue[,] map = WorldGenAlgorithms.GenerateNormalTerrain(areaSizeX, areaSizeZ, 900);
-            return map;
+            List<WorldGenAlgorithms.TerrainValue[,]> mapDatas = new List<WorldGenAlgorithms.TerrainValue[,]>();
+            foreach(var param in paramGroup)
+            {
+                mapDatas.Add(WorldGenAlgorithms.GenerateNormalTerrain(param.AreaSizeX, param.AreaSizeZ, 900));
+            }
+            return mapDatas;    
         });
     }
 
