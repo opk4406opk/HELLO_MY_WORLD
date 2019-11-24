@@ -57,7 +57,7 @@ public struct SubWorldData
 public class WorldMapDataFile : BaseDataFile
 {
     private List<Dictionary<string, string>> JsonDataSheet;
-    public WorldMapData WorldMapDataInstance { get; private set; } = new WorldMapData();
+    public WorldMapData MapData { get; private set; } = new WorldMapData();
     //
     public static WorldMapDataFile Instance = null;
 
@@ -78,18 +78,18 @@ public class WorldMapDataFile : BaseDataFile
         //
         string extractedData;
         properties.TryGetValue("WorldAreaRow", out extractedData);
-        WorldMapDataInstance.WorldAreaRow = int.Parse(extractedData);
+        MapData.WorldAreaRow = int.Parse(extractedData);
         properties.TryGetValue("WorldAreaColumn", out extractedData);
-        WorldMapDataInstance.WorldAreaColumn = int.Parse(extractedData);
+        MapData.WorldAreaColumn = int.Parse(extractedData);
         properties.TryGetValue("WorldAreaLayer", out extractedData);
-        WorldMapDataInstance.WorldAreaLayer = int.Parse(extractedData);
+        MapData.WorldAreaLayer = int.Parse(extractedData);
         //
         properties.TryGetValue("SubWorldRow", out extractedData);
-        WorldMapDataInstance.SubWorldRow = int.Parse(extractedData);
+        MapData.SubWorldRow = int.Parse(extractedData);
         properties.TryGetValue("SubWorldColumn", out extractedData);
-        WorldMapDataInstance.SubWorldColumn = int.Parse(extractedData);
+        MapData.SubWorldColumn = int.Parse(extractedData);
         properties.TryGetValue("SubWorldLayer", out extractedData);
-        WorldMapDataInstance.SubWorldLayer = int.Parse(extractedData);
+        MapData.SubWorldLayer = int.Parse(extractedData);
         //
         foreach(var worldArea in worldAreaList)
         {
@@ -138,7 +138,7 @@ public class WorldMapDataFile : BaseDataFile
                 }
                 worldAreaData.SubWorldDataList.Add(subWorldData);
             }
-            WorldMapDataInstance.WorldAreaDatas.Add(worldAreaData);
+            MapData.WorldAreaDatas.Add(worldAreaData);
         }
     }
 }

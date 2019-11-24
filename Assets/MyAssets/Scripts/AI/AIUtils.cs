@@ -17,7 +17,7 @@ public class AIUtils : MonoBehaviour
         direcitons.Add(new Vector3(-1, 0, -1));
 
         Block[,,] blockData = actorController.GetContainedWorldBlockData();
-        Vector3 blockCoordinate = WorldAreaManager.GetRealCoordToWorldCoord(actorController.GetActorTransform().position);
+        Vector3 blockCoordinate = WorldAreaManager.GetRealCoordToWorldDataCoord(actorController.GetActorTransform().position);
 
         List<Vector3> candidates = new List<Vector3>();
         foreach (Vector3 dir in direcitons)

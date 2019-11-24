@@ -21,10 +21,10 @@ public class WorldAreaManager : MonoBehaviour
         //
         bFinishLoad = false;
         List<WorldAreaGenerateParam> worldAreaGenParamGroup = new List<WorldAreaGenerateParam>();
-        foreach (var worldAreaData in WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaDatas)
+        foreach (var worldAreaData in WorldMapDataFile.Instance.MapData.WorldAreaDatas)
         {
             var worldConfig = WorldConfigFile.Instance.GetConfig();
-            var worldMapData = WorldMapDataFile.Instance.WorldMapDataInstance;
+            var worldMapData = WorldMapDataFile.Instance.MapData;
             int worldAreaSizeX = worldMapData.SubWorldRow * worldConfig.SubWorldSizeX;
             int worldAreaSizeZ = worldMapData.SubWorldColumn * worldConfig.SubWorldSizeZ;
             WorldAreaGenerateParam param;
@@ -36,7 +36,7 @@ public class WorldAreaManager : MonoBehaviour
         var mapData = await AsyncGenerateAreaMapDatas(worldAreaGenParamGroup);
         // 완료되면, 월드 아레아를 생성하며 해당 맵 데이터를 설정.
         int idx = 0;
-        foreach (var worldAreaData in WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaDatas)
+        foreach (var worldAreaData in WorldMapDataFile.Instance.MapData.WorldAreaDatas)
         {
             GameObject newWorldArea = Instantiate(GameResourceSupervisor.GetInstance().WorldAreaPrefab.LoadSynchro(), new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
             newWorldArea.transform.parent = transform;
@@ -95,32 +95,40 @@ public class WorldAreaManager : MonoBehaviour
     public static string GetWorldAreaUniqueID(Vector3 objectPos)
     {
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        int x = (Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX) % WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaRow;
-        int y = (Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY) % WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaLayer;
-        int z = (Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ) % WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaColumn;
-        return MakeUniqueID(x, y, z);
+        int subWorldOffsetX = (Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX) % WorldMapDataFile.Instance.MapData.SubWorldRow;
+        int subWorldOffsetY = (Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY) % WorldMapDataFile.Instance.MapData.SubWorldLayer;
+        int subWorldOffsetZ = (Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ) % WorldMapDataFile.Instance.MapData.SubWorldColumn;
+        int areaOffsetX = subWorldOffsetX % WorldMapDataFile.Instance.MapData.WorldAreaRow;
+        int areaOffsetY = subWorldOffsetY % WorldMapDataFile.Instance.MapData.WorldAreaLayer;
+        int areaOffsetZ = subWorldOffsetZ % WorldMapDataFile.Instance.MapData.WorldAreaColumn;
+        return MakeUniqueID(areaOffsetX, areaOffsetY, areaOffsetZ);
     }
 
     /// <summary>
-    /// 게임 속 실제 좌표(=Real) 값을 월드배열 좌표값으로 변환.
+    /// 게임 속 실제 좌표(=Real) 값을 월드배열 인덱스값으로 변환.
     /// </summary>
     /// <param name="objectPos"></param>
     /// <returns></returns>
-    public static Vector3 GetRealCoordToWorldCoord(Vector3 objectPos)
+    public static Vector3 GetRealCoordToWorldDataCoord(Vector3 objectPos)
     {
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        int x = (Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX) % WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldRow % WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaRow;
-        int y = (Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY) % WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldLayer % WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaLayer;
-        int z = (Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ) % WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldColumn % WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaColumn;
+        int x = (Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX) / WorldMapDataFile.Instance.MapData.SubWorldRow / WorldMapDataFile.Instance.MapData.WorldAreaRow;
+        int y = (Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY) / WorldMapDataFile.Instance.MapData.SubWorldLayer / WorldMapDataFile.Instance.MapData.WorldAreaLayer;
+        int z = (Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ) / WorldMapDataFile.Instance.MapData.SubWorldColumn / WorldMapDataFile.Instance.MapData.WorldAreaColumn;
         return new Vector3(x, y, z);
     }
-
-    public static Vector3 GetWorldCoordToRealCoord(Vector3 worldCoord)
+    
+    /// <summary>
+    /// 월드배열 인덱스값을 게임 속 실제 좌표(=Real)로 변환.
+    /// </summary>
+    /// <param name="worldCoord"></param>
+    /// <returns></returns>
+    public static Vector3 GetWorldDataCoordToRealCoord(Vector3 worldCoord)
     {
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        int x = (Mathf.CeilToInt(worldCoord.x) * gameWorldConfig.SubWorldSizeX) * WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldRow * WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaRow;
-        int y = (Mathf.CeilToInt(worldCoord.y) * gameWorldConfig.SubWorldSizeY) * WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldLayer * WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaLayer;
-        int z = (Mathf.CeilToInt(worldCoord.z) * gameWorldConfig.SubWorldSizeZ) * WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldColumn * WorldMapDataFile.Instance.WorldMapDataInstance.WorldAreaColumn;
+        int x = (Mathf.CeilToInt(worldCoord.x) * gameWorldConfig.SubWorldSizeX) * WorldMapDataFile.Instance.MapData.SubWorldRow * WorldMapDataFile.Instance.MapData.WorldAreaRow;
+        int y = (Mathf.CeilToInt(worldCoord.y) * gameWorldConfig.SubWorldSizeY) * WorldMapDataFile.Instance.MapData.SubWorldLayer * WorldMapDataFile.Instance.MapData.WorldAreaLayer;
+        int z = (Mathf.CeilToInt(worldCoord.z) * gameWorldConfig.SubWorldSizeZ) * WorldMapDataFile.Instance.MapData.SubWorldColumn * WorldMapDataFile.Instance.MapData.WorldAreaColumn;
         return new Vector3(x, y, z);
     }
     /// <summary>

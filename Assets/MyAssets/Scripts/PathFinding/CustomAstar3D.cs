@@ -177,7 +177,7 @@ public class CustomAstar3D : MonoBehaviour
     private void InitializePathFinding()
     {
         // Offset 세팅.
-        var mapData = WorldMapDataFile.Instance.WorldMapDataInstance;
+        var mapData = WorldMapDataFile.Instance.MapData;
         OffsetX = (PathFindingSettings.SubWorldOffsetX * GameWorldConfing.SubWorldSizeX) + (PathFindingSettings.WorldAreaOffsetX * mapData.SubWorldRow * GameWorldConfing.SubWorldSizeX);
         OffsetY = (PathFindingSettings.SubWorldOffsetY * GameWorldConfing.SubWorldSizeY) + (PathFindingSettings.WorldAreaOffsetY * mapData.SubWorldColumn * GameWorldConfing.SubWorldSizeY);
         OffsetZ = (PathFindingSettings.SubWorldOffsetZ * GameWorldConfing.SubWorldSizeZ) + (PathFindingSettings.WorldAreaOffsetZ * mapData.SubWorldLayer * GameWorldConfing.SubWorldSizeZ);

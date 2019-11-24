@@ -93,7 +93,7 @@ public class WorldGenerateUtils
     public static BlockTileType CalcTerrainValueToBlockType(int terrainScalaValue)
     {
         BlockTileType blockType = BlockTileType.NONE;
-        int subWorldLayerNum = WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldLayer;
+        int subWorldLayerNum = WorldMapDataFile.Instance.MapData.SubWorldLayer;
         int subWorldSizeY = WorldConfigFile.Instance.GetConfig().SubWorldSizeY;
         int range = subWorldLayerNum * subWorldSizeY;
         int min = -1 * range;

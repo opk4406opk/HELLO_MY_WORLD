@@ -51,7 +51,7 @@ public struct CollideInfo
     public Block GetBlock()
     {
         var containWorld = WorldAreaManager.Instance.ContainedSubWorld(HitBlockCenter);
-        Vector3 worldCoord = WorldAreaManager.GetRealCoordToWorldCoord(HitBlockCenter);
+        Vector3 worldCoord = WorldAreaManager.GetRealCoordToWorldDataCoord(HitBlockCenter);
         return containWorld.WorldBlockData[(int)worldCoord.x, (int)worldCoord.y, (int)worldCoord.z];
     }
 }

@@ -17,7 +17,7 @@ public class WorldGenAlgorithms
     {
         int[,] xzPlane = new int[areaSizeX, areaSizeZ];
         //
-        int subWorldLayerNum = WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldLayer;
+        int subWorldLayerNum = WorldMapDataFile.Instance.MapData.SubWorldLayer;
         int subWorldSizeY = WorldConfigFile.Instance.GetConfig().SubWorldSizeY;
         int rangeValue = subWorldLayerNum * subWorldSizeY;
         int rangeHeightMin = -1 * rangeValue;

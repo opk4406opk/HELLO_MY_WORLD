@@ -64,7 +64,7 @@ public class SubWorld : MonoBehaviour
         UniqueID = subWorldData.UniqueID;
         OffsetCoordinate = new Vector3(subWorldData.OffsetX, subWorldData.OffsetY, subWorldData.OffsetZ);
         var configData = WorldConfigFile.Instance.GetConfig();
-        var mapData = WorldMapDataFile.Instance.WorldMapDataInstance;
+        var mapData = WorldMapDataFile.Instance.MapData;
         float realCoordX = (OffsetCoordinate.x * configData.SubWorldSizeX) + (WorldAreaInstance.OffsetCoordinate.x * mapData.SubWorldRow * configData.SubWorldSizeX);
         float realCoordY = (OffsetCoordinate.y * configData.SubWorldSizeY) + (WorldAreaInstance.OffsetCoordinate.y * mapData.SubWorldColumn * configData.SubWorldSizeY);
         float realCoordZ = (OffsetCoordinate.z * configData.SubWorldSizeZ) + (WorldAreaInstance.OffsetCoordinate.z * mapData.SubWorldLayer * configData.SubWorldSizeZ);
@@ -91,7 +91,7 @@ public class SubWorld : MonoBehaviour
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} is Tick Start.", UniqueID));
         while(bTicking)
         {
-            if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.IsInitializeFinish == true)
+            if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.bInitialize == true)
             {
                 var curPlayerWorld = WorldAreaInstance.ContainedSubWorld(GamePlayerManager.Instance.MyGamePlayer.Controller.GetPosition());
                 if (curPlayerWorld != null)

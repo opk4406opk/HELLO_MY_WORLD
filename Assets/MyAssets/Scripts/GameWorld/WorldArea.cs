@@ -257,7 +257,7 @@ public class WorldArea : MonoBehaviour
             // to do
             Vector3 playerPos = Vector3.zero;
             Vector3 offsetPos = Vector3.zero;
-            if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.IsInitializeFinish == true)
+            if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.bInitialize == true)
             {
                 playerPos = GamePlayerManager.Instance.MyGamePlayer.Controller.GetPosition();
                 offsetPos = SubWorldStates[GetSubWorldUniqueID(playerPos)].SubWorldInstance.OffsetCoordinate;
@@ -328,11 +328,13 @@ public class WorldArea : MonoBehaviour
     /// <returns></returns>
     public static string GetSubWorldUniqueID(Vector3 objectPos)
     {
+        // 0 ~ 32 ~ 64 ~ 96 ~ 128
+        //   #0   #1   #2   #3
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        int x = (Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX) % WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldRow;
-        int y = (Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY) % WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldLayer;
-        int z = (Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ) % WorldMapDataFile.Instance.WorldMapDataInstance.SubWorldColumn;
-        return WorldAreaManager.MakeUniqueID(x, y, z);
+        int subWorldOffsetX = (Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX) % WorldMapDataFile.Instance.MapData.SubWorldRow;
+        int subWorldOffsetY = (Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY) % WorldMapDataFile.Instance.MapData.SubWorldLayer;
+        int subWorldOffsetZ = (Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ) % WorldMapDataFile.Instance.MapData.SubWorldColumn;
+        return WorldAreaManager.MakeUniqueID(subWorldOffsetX, subWorldOffsetY, subWorldOffsetZ);
     }
 
 }

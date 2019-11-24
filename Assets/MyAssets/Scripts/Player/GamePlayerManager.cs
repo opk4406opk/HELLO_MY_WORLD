@@ -7,11 +7,11 @@ public class GamePlayerManager : MonoBehaviour {
 
     public GamePlayer MyGamePlayer { get; private set; }
     public static GamePlayerManager Instance { get; private set; }
-    public bool IsInitializeFinish { get; private set; }
+    public bool bInitialize { get; private set; }
 
     public void Init()
     {
-        IsInitializeFinish = false;
+        bInitialize = false;
         StartCoroutine(InitProcess());
         Instance = this;
     }
@@ -19,7 +19,7 @@ public class GamePlayerManager : MonoBehaviour {
     private IEnumerator InitProcess()
     {
         KojeomLogger.DebugLog(string.Format("[GamePlayerManager] Start InitProcess"), LOG_TYPE.INFO);
-        while(true)
+        while(bInitialize == false)
         {
             if(WorldAreaManager.Instance != null && WorldAreaManager.Instance.bFinishLoad == true)
             {
@@ -38,21 +38,16 @@ public class GamePlayerManager : MonoBehaviour {
                             //Player Manager 하위 종속으로 변경.
                             MyGamePlayer.transform.parent = gameObject.transform;
                             //
-                            IsInitializeFinish = true;
+                            bInitialize = true;
+                            KojeomLogger.DebugLog(string.Format("[GamePlayerManager] Finish InitProcess"), LOG_TYPE.INFO);
                             break;
                         }
                     }
-                }
-              
-                if(IsInitializeFinish == true)
-                {
-                    break;
+                    if (bInitialize == true) break;
                 }
             }
             yield return null;
         }
-       
-        KojeomLogger.DebugLog(string.Format("[GamePlayerManager] Finish InitProcess"), LOG_TYPE.INFO);
     }
 
    

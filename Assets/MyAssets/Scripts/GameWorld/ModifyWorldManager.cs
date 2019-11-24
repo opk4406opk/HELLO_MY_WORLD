@@ -12,7 +12,7 @@ using System.Text;
 /// 
 public class ModifyWorldManager : MonoBehaviour
 {
-    private SubWorld world;
+    private SubWorld SelectWorldInstance;
     private int chunkSize = 0;
     public void Init()
     {
@@ -47,7 +47,7 @@ public class ModifyWorldManager : MonoBehaviour
             if (CustomAABB.IsInterSectPoint(element.Value.SubWorldInstance.CustomOctreeInstance.RootMinBound,
                 element.Value.SubWorldInstance.CustomOctreeInstance.RootMaxBound, clickWorldPos))
             {
-                world = element.Value.SubWorldInstance;
+                SelectWorldInstance = element.Value.SubWorldInstance;
                 break;
             }
         }
@@ -55,17 +55,18 @@ public class ModifyWorldManager : MonoBehaviour
 
     private void RayCastingProcess(Ray ray, byte blockType, bool bCreate)
     {
-        CollideInfo collideInfo = world.CustomOctreeInstance.Collide(ray);
+        CollideInfo collideInfo = SelectWorldInstance.CustomOctreeInstance.Collide(ray);
         if (collideInfo.IsCollide)
         {
-            int blockX, blockY, blockZ;
-            blockX = (int)(collideInfo.HitBlockCenter.x);
-            blockY = (int)(collideInfo.HitBlockCenter.y);
-            blockZ = (int)(collideInfo.HitBlockCenter.z);
+            int blockX = (int)(collideInfo.HitBlockCenter.x);
+            int blockY = (int)(collideInfo.HitBlockCenter.y);
+            int blockZ = (int)(collideInfo.HitBlockCenter.z);
+
             var gameConfig = WorldConfigFile.Instance.GetConfig();
-            blockX -= (int)world.OffsetCoordinate.x * gameConfig.SubWorldSizeX;
-            blockY -= (int)world.OffsetCoordinate.y * gameConfig.SubWorldSizeY;
-            blockZ -= (int)world.OffsetCoordinate.z * gameConfig.SubWorldSizeZ;
+            blockX -= (int)SelectWorldInstance.OffsetCoordinate.x * gameConfig.SubWorldSizeX * (int)SelectWorldInstance.GetWorldAreaOffset().x;
+            blockY -= (int)SelectWorldInstance.OffsetCoordinate.y * gameConfig.SubWorldSizeY * (int)SelectWorldInstance.GetWorldAreaOffset().y;
+            blockZ -= (int)SelectWorldInstance.OffsetCoordinate.z * gameConfig.SubWorldSizeZ * (int)SelectWorldInstance.GetWorldAreaOffset().z;
+            KojeomLogger.DebugLog(string.Format("RayCasting blockX {0} blockY {1} blockZ {2}", blockX, blockY, blockZ));
             //-------------------------------------------------------------------------------
             if (bCreate == true)
             {
@@ -73,15 +74,15 @@ public class ModifyWorldManager : MonoBehaviour
                 //    Mathf.Ceil(collideInfo.collisionPoint.y),
                 //    Mathf.Ceil(collideInfo.collisionPoint.z));
                 // 임시코드
-                world.CustomOctreeInstance.Add(collideInfo.HitBlockCenter + new Vector3(0, 1.0f, 0));
+                SelectWorldInstance.CustomOctreeInstance.Add(collideInfo.HitBlockCenter + new Vector3(0, 1.0f, 0));
                 SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
-                world.WorldBlockData[blockX, blockY + 1, blockZ].bRendered = true;
+                SelectWorldInstance.WorldBlockData[blockX, blockY + 1, blockZ].bRendered = true;
             }
             else
             {
-                world.CustomOctreeInstance.Delete(collideInfo.HitBlockCenter);
+                SelectWorldInstance.CustomOctreeInstance.Delete(collideInfo.HitBlockCenter);
                 SetBlockForDelete(blockX, blockY, blockZ, blockType);
-                world.WorldBlockData[blockX, blockY, blockZ].bRendered = false;
+                SelectWorldInstance.WorldBlockData[blockX, blockY, blockZ].bRendered = false;
             }
         }
     }
@@ -94,8 +95,8 @@ public class ModifyWorldManager : MonoBehaviour
            (z < gameWorldConfig.SubWorldSizeZ) &&
            (x >= 0) && (y >= 0) && (z >= 0)) 
         {
-            world.WorldBlockData[x, y, z].Type = block;
-            world.WorldBlockData[x, y, z].bRendered = true;
+            SelectWorldInstance.WorldBlockData[x, y, z].Type = block;
+            SelectWorldInstance.WorldBlockData[x, y, z].bRendered = true;
             UpdateChunkAt(x, y, z, block);
         }
         else
@@ -168,8 +169,8 @@ public class ModifyWorldManager : MonoBehaviour
             // 블록을 삭제할때마다, DB를 접속해서 쿼리 날리고 갱신시키는건 너무 무거운 작업.
             // 비동기로 처리하는게 좋을 듯 싶다.
             //UpdateUserItem(world.WorldBlockData[x, y, z].Type);
-            world.WorldBlockData[x, y, z].Type = block;
-            world.WorldBlockData[x, y, z].bRendered = false;
+            SelectWorldInstance.WorldBlockData[x, y, z].Type = block;
+            SelectWorldInstance.WorldBlockData[x, y, z].bRendered = false;
             UpdateChunkAt(x, y, z, block);
         }
         else
@@ -189,40 +190,40 @@ public class ModifyWorldManager : MonoBehaviour
         updateX = Mathf.FloorToInt(x / chunkSize);
         updateY = Mathf.FloorToInt(y / chunkSize);
         updateZ = Mathf.FloorToInt(z / chunkSize);
-        if (world.ChunkSlots[updateX, updateY, updateZ].Chunks[(int)ChunkType.TERRAIN] == null)
+        if (SelectWorldInstance.ChunkSlots[updateX, updateY, updateZ].Chunks[(int)ChunkType.TERRAIN] == null)
         {
             return;
         }
-        world.ChunkSlots[updateX, updateY, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
+        SelectWorldInstance.ChunkSlots[updateX, updateY, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
 
         if (x - (chunkSize * updateX) == 0 && updateX != 0)
         {
-            world.ChunkSlots[updateX - 1, updateY, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
+            SelectWorldInstance.ChunkSlots[updateX - 1, updateY, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
         }
 
-        if (x - (chunkSize * updateX) == gameWorldConfig.ChunkSize && updateX != world.ChunkSlots.GetLength(0) - 1)
+        if (x - (chunkSize * updateX) == gameWorldConfig.ChunkSize && updateX != SelectWorldInstance.ChunkSlots.GetLength(0) - 1)
         {
-            world.ChunkSlots[updateX + 1, updateY, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
+            SelectWorldInstance.ChunkSlots[updateX + 1, updateY, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
         }
 
         if (y - (chunkSize * updateY) == 0 && updateY != 0)
         {
-            world.ChunkSlots[updateX, updateY - 1, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
+            SelectWorldInstance.ChunkSlots[updateX, updateY - 1, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
         }
 
-        if (y - (chunkSize * updateY) == gameWorldConfig.ChunkSize && updateY != world.ChunkSlots.GetLength(1) - 1)
+        if (y - (chunkSize * updateY) == gameWorldConfig.ChunkSize && updateY != SelectWorldInstance.ChunkSlots.GetLength(1) - 1)
         {
-            world.ChunkSlots[updateX, updateY + 1, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
+            SelectWorldInstance.ChunkSlots[updateX, updateY + 1, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
         }
 
         if (z - (chunkSize * updateZ) == 0 && updateZ != 0)
         {
-            world.ChunkSlots[updateX, updateY, updateZ - 1].Chunks[(int)ChunkType.TERRAIN].Update = true;
+            SelectWorldInstance.ChunkSlots[updateX, updateY, updateZ - 1].Chunks[(int)ChunkType.TERRAIN].Update = true;
         }
 
-        if (z - (chunkSize * updateZ) == gameWorldConfig.ChunkSize && updateZ != world.ChunkSlots.GetLength(2) - 1)
+        if (z - (chunkSize * updateZ) == gameWorldConfig.ChunkSize && updateZ != SelectWorldInstance.ChunkSlots.GetLength(2) - 1)
         {
-            world.ChunkSlots[updateX, updateY, updateZ + 1].Chunks[(int)ChunkType.TERRAIN].Update = true;
+            SelectWorldInstance.ChunkSlots[updateX, updateY, updateZ + 1].Chunks[(int)ChunkType.TERRAIN].Update = true;
         }
     }
 }
