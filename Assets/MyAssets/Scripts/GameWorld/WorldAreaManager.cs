@@ -95,12 +95,9 @@ public class WorldAreaManager : MonoBehaviour
     public static string GetWorldAreaUniqueID(Vector3 objectPos)
     {
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        int subWorldOffsetX = (Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX) % WorldMapDataFile.Instance.MapData.SubWorldRow;
-        int subWorldOffsetY = (Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY) % WorldMapDataFile.Instance.MapData.SubWorldLayer;
-        int subWorldOffsetZ = (Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ) % WorldMapDataFile.Instance.MapData.SubWorldColumn;
-        int areaOffsetX = subWorldOffsetX % WorldMapDataFile.Instance.MapData.WorldAreaRow;
-        int areaOffsetY = subWorldOffsetY % WorldMapDataFile.Instance.MapData.WorldAreaLayer;
-        int areaOffsetZ = subWorldOffsetZ % WorldMapDataFile.Instance.MapData.WorldAreaColumn;
+        int areaOffsetX = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX) / WorldMapDataFile.Instance.MapData.WorldAreaRow;
+        int areaOffsetY = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY) / WorldMapDataFile.Instance.MapData.WorldAreaLayer;
+        int areaOffsetZ = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ) / WorldMapDataFile.Instance.MapData.WorldAreaColumn;
         return MakeUniqueID(areaOffsetX, areaOffsetY, areaOffsetZ);
     }
 

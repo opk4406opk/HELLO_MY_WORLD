@@ -331,9 +331,9 @@ public class WorldArea : MonoBehaviour
         // 0 ~ 32 ~ 64 ~ 96 ~ 128
         //   #0   #1   #2   #3
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        int subWorldOffsetX = (Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX) % WorldMapDataFile.Instance.MapData.SubWorldRow;
-        int subWorldOffsetY = (Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY) % WorldMapDataFile.Instance.MapData.SubWorldLayer;
-        int subWorldOffsetZ = (Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ) % WorldMapDataFile.Instance.MapData.SubWorldColumn;
+        int subWorldOffsetX = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX) % WorldMapDataFile.Instance.MapData.SubWorldRow;
+        int subWorldOffsetY = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY) % WorldMapDataFile.Instance.MapData.SubWorldLayer;
+        int subWorldOffsetZ = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ) % WorldMapDataFile.Instance.MapData.SubWorldColumn;
         return WorldAreaManager.MakeUniqueID(subWorldOffsetX, subWorldOffsetY, subWorldOffsetZ);
     }
 
