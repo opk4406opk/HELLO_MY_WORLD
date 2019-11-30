@@ -85,8 +85,8 @@ public class BTNodeWandering : Node
 public class BTNodeTimer : Node
 {
     private float WakeupTimeSec = 2.0f;
-    public delegate void CallBackAfterTimer();
-    private CallBackAfterTimer CallBack;
+    public delegate void OnAfterTimer();
+    private OnAfterTimer CallBack;
 
     public BTNodeTimer(BehaviorTree behaviorTreeInstance, ActorController actorController)
     {
@@ -107,7 +107,7 @@ public class BTNodeTimer : Node
         return true;
     }
 
-    public void SetCallbackAfterTimer(CallBackAfterTimer callback)
+    public void SetCallbackAfterTimer(OnAfterTimer callback)
     {
         CallBack = callback;
     }
