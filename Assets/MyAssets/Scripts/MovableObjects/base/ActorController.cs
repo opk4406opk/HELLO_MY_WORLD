@@ -41,6 +41,11 @@ public abstract class ActorController : MonoBehaviour
         }
     }
 
+    public SubWorld GetContainedWorld()
+    {
+        return ContainedWorld;
+    }
+
     public ActorStateType GetCurrentState()
     {
         return CurStateType;
@@ -64,6 +69,11 @@ public abstract class ActorController : MonoBehaviour
         return bContactWater;
     }
 
+    public Vector3 GetPosition()
+    {
+        return transform.position;
+    }
+
     protected void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.TERRAIN_CHUNK_LAYER))
@@ -84,6 +94,7 @@ public abstract class ActorController : MonoBehaviour
         {
             bContactActor = true;
         }
+        ContainedWorld = collision.gameObject.GetComponent<AChunk>().SubWorldInstance;
     }
 
     protected void OnCollisionExit(Collision collision)
@@ -128,6 +139,7 @@ public abstract class ActorController : MonoBehaviour
         {
             bContactActor = true;
         }
+        ContainedWorld = collision.gameObject.GetComponent<AChunk>().SubWorldInstance;
     }
     public void Teleport(Vector3 toPosition)
     {

@@ -81,6 +81,26 @@ public class WorldAreaManager : MonoBehaviour
         return subWorldInstance;
     }
 
+    public SubWorld ContainedSubWorld(GamePlayerController playerController)
+    {
+        var subWorldInstance = WorldAreas[GetWorldAreaUniqueID(playerController)].ContainedSubWorld(playerController.GetPosition());
+        if (subWorldInstance == null)
+        {
+            return null;
+        }
+        return subWorldInstance;
+    }
+
+    public SubWorld ContainedSubWorld(ActorController actorController)
+    {
+        var subWorldInstance = WorldAreas[GetWorldAreaUniqueID(actorController)].ContainedSubWorld(actorController.GetPosition());
+        if (subWorldInstance == null)
+        {
+            return null;
+        }
+        return subWorldInstance;
+    }
+
     public WorldArea ContainedWorldArea(Vector3 pos)
     {
         var worldAreaInstnace = WorldAreas[GetWorldAreaUniqueID(pos)];
@@ -91,13 +111,36 @@ public class WorldAreaManager : MonoBehaviour
         return worldAreaInstnace;
     }
 
+    public static string GetWorldAreaUniqueID(GamePlayerController playerController)
+    {
+        if(playerController.CharacterInstance.ContainedWorld != null)
+        {
+            return playerController.CharacterInstance.ContainedWorld.GetWorldAreaUniqueID();
+        }
+        return "";
+    }
+
+    public static string GetWorldAreaUniqueID(ActorController actorController)
+    {
+        if(actorController.GetContainedWorld() != null)
+        {
+            return actorController.GetContainedWorld().GetWorldAreaUniqueID();
+        }
+        return "";
+    }
 
     public static string GetWorldAreaUniqueID(Vector3 objectPos)
     {
+        //
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
         int areaOffsetX = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX) / WorldMapDataFile.Instance.MapData.WorldAreaRow;
         int areaOffsetY = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY) / WorldMapDataFile.Instance.MapData.WorldAreaLayer;
         int areaOffsetZ = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ) / WorldMapDataFile.Instance.MapData.WorldAreaColumn;
+        // 테스트 코드........
+        areaOffsetX = Mathf.Clamp(areaOffsetX, 0, WorldMapDataFile.Instance.MapData.WorldAreaRow - 1);
+        areaOffsetY = Mathf.Clamp(areaOffsetY, 0, WorldMapDataFile.Instance.MapData.WorldAreaLayer - 1);
+        areaOffsetZ = Mathf.Clamp(areaOffsetZ, 0, WorldMapDataFile.Instance.MapData.WorldAreaColumn - 1);
+        //..................
         return MakeUniqueID(areaOffsetX, areaOffsetY, areaOffsetZ);
     }
 

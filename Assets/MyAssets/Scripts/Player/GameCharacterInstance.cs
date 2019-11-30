@@ -16,6 +16,8 @@ public class GameCharacterInstance : MonoBehaviour
     public bool bContactGround { get; private set; } = false;
     public bool bContactWater { get; private set; } = false;
 
+    public SubWorld ContainedWorld { get; private set; }
+
     public void Init()
     {
         QueryMecanimController = gameObject.GetComponent<QuerySDMecanimController>();
@@ -42,6 +44,7 @@ public class GameCharacterInstance : MonoBehaviour
         {
             bContactWater = true;
         }
+        ContainedWorld = collision.gameObject.GetComponent<AChunk>().SubWorldInstance;
     }
 
     private void OnCollisionExit(Collision collision)
@@ -66,6 +69,7 @@ public class GameCharacterInstance : MonoBehaviour
         {
             bContactWater = true;
         }
+        ContainedWorld = collision.gameObject.GetComponent<AChunk>().SubWorldInstance;
     }
 
     public CustomAABB GetCustomAABB(Vector3 moveSpeed)

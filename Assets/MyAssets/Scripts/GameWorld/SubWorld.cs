@@ -86,6 +86,11 @@ public class SubWorld : MonoBehaviour
         return WorldAreaInstance.OffsetCoordinate;
     }
 
+    public string GetWorldAreaUniqueID()
+    {
+        return WorldAreaInstance.AreaUniqueID;
+    }
+
     private IEnumerator Tick()
     {
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} is Tick Start.", UniqueID));
