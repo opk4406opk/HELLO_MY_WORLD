@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class ActorAnimTypeString
 {
-    public static readonly string Walking = "Walking";
-    public static readonly string Running = "Running";
-    public static readonly string Jumping = "Jumping";
-    public static readonly string Standing = "Standing";
+    public static readonly string Walking = "Walking@loop";
+    public static readonly string Running = "Running@loop";
+    public static readonly string Jumping = "Jumping@loop";
+    public static readonly string Standing = "Standing@loop";
 }
 
 public abstract class ActorController : MonoBehaviour

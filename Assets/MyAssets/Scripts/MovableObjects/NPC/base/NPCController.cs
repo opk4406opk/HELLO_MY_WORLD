@@ -28,16 +28,19 @@ public class NPCController : ActorController
 
     public override void StartRun(Vector3 targetPosition)
     {
+        CurStateType = ActorStateType.Run;
         StateMachineControllerInstance.SetState(new NPCRunState(ActorInstance, targetPosition));
     }
 
     public override void StartIdle()
     {
+        CurStateType = ActorStateType.Idle;
         StateMachineControllerInstance.SetState(new NPCIdleState(ActorInstance));
     }
 
     public override void StartWalking(Vector3 targetPosition)
     {
+        CurStateType = ActorStateType.Walk;
         StateMachineControllerInstance.SetState(new NPCWalkState(ActorInstance, targetPosition));
     }
 }

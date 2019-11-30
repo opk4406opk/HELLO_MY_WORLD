@@ -29,16 +29,19 @@ public class AnimalController : ActorController
 
     public override void StartRun(Vector3 targetPosition)
     {
+        CurStateType = ActorStateType.Run;
         StateMachineControllerInstance.SetState(new AnimalRunState(ActorInstance, targetPosition));
     }
 
     public override void StartIdle()
     {
+        CurStateType = ActorStateType.Idle;
         StateMachineControllerInstance.SetState(new AnimalIdleState(ActorInstance));
     }
 
     public override void StartWalking(Vector3 targetPosition)
     {
+        CurStateType = ActorStateType.Walk;
         StateMachineControllerInstance.SetState(new AnimalWalkState(ActorInstance, targetPosition));
     }
 }

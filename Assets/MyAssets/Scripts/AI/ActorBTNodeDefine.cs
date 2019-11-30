@@ -31,9 +31,8 @@ public class BTNodeMoveForTarget : Node
         {
             // test code.
             PathNode3D node = BehaviorTreeInstance.GetBlackBoard().PathList.Pop();
-            Controller.Teleport(node.GetWorldPosition());
+            Controller.StartRun(node.GetWorldPosition());
         }
-       
         return true;
     }
     public void AsyncPathFinding(Vector3 goalWorldPosition)
