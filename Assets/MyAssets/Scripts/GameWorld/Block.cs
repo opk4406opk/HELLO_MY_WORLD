@@ -10,6 +10,9 @@ public struct Block {
     public float CenterY;
     public float CenterZ;
     public bool bRendered;
+    public int worldDataIndexX;
+    public int worldDataIndexY;
+    public int worldDataIndexZ;
     // 복사 생성자.
     public Block(Block b)
     {
@@ -18,6 +21,9 @@ public struct Block {
         CenterY = b.CenterY;
         CenterZ = b.CenterZ;
         bRendered = b.bRendered;
+        worldDataIndexX = b.worldDataIndexX;
+        worldDataIndexY = b.worldDataIndexY;
+        worldDataIndexZ = b.worldDataIndexZ;
     }
 }
 

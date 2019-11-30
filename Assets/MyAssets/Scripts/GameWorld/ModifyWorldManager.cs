@@ -58,14 +58,10 @@ public class ModifyWorldManager : MonoBehaviour
         CollideInfo collideInfo = SelectWorldInstance.CustomOctreeInstance.Collide(ray);
         if (collideInfo.IsCollide)
         {
-            int blockX = (int)(collideInfo.HitBlockCenter.x);
-            int blockY = (int)(collideInfo.HitBlockCenter.y);
-            int blockZ = (int)(collideInfo.HitBlockCenter.z);
-
-            var gameConfig = WorldConfigFile.Instance.GetConfig();
-            blockX -= (int)SelectWorldInstance.OffsetCoordinate.x * gameConfig.SubWorldSizeX * (int)SelectWorldInstance.GetWorldAreaOffset().x;
-            blockY -= (int)SelectWorldInstance.OffsetCoordinate.y * gameConfig.SubWorldSizeY * (int)SelectWorldInstance.GetWorldAreaOffset().y;
-            blockZ -= (int)SelectWorldInstance.OffsetCoordinate.z * gameConfig.SubWorldSizeZ * (int)SelectWorldInstance.GetWorldAreaOffset().z;
+            Block hitBlock = collideInfo.GetBlock();
+            int blockX = hitBlock.worldDataIndexX;
+            int blockY = hitBlock.worldDataIndexY;
+            int blockZ = hitBlock.worldDataIndexZ;
             KojeomLogger.DebugLog(string.Format("RayCasting blockX {0} blockY {1} blockZ {2}", blockX, blockY, blockZ));
             //-------------------------------------------------------------------------------
             if (bCreate == true)

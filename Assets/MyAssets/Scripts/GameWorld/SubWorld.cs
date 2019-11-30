@@ -175,7 +175,10 @@ public class SubWorld : MonoBehaviour
                             WorldBlockData[x, y, z] = new Block
                             {
                                 Type = (byte)BlockTileType.EMPTY,
-                                bRendered = false
+                                bRendered = false,
+                                worldDataIndexX = x,
+                                worldDataIndexY = y,
+                                worldDataIndexZ = z
                             };
                         }
                     }

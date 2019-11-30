@@ -27,13 +27,29 @@ public class AIUtils : MonoBehaviour
             int blockY = (int)offsetIdx.y;
             int blockZ = (int)offsetIdx.z;
 
-            bool bInBoundX = 0 <= blockX && blockX < WorldConfigFile.Instance.GetConfig().SubWorldSizeX;
-            bool bInBoundY = 0 <= blockY && blockY < WorldConfigFile.Instance.GetConfig().SubWorldSizeY;
-            bool bInBoundZ = 0 <= blockZ && blockZ < WorldConfigFile.Instance.GetConfig().SubWorldSizeZ;
+            WorldConfig config = WorldConfigFile.Instance.GetConfig();
+            bool bInBoundX = 0 <= blockX && blockX < config.SubWorldSizeX;
+            bool bInBoundY = 0 <= blockY && blockY < config.SubWorldSizeY;
+            bool bInBoundZ = 0 <= blockZ && blockZ < config.SubWorldSizeZ;
             if (bInBoundX == true && bInBoundY == true && bInBoundZ == true)
             {
+                bool bEmptyUpBlock = true;
+                int upStairY = (blockY + 1);
+                bool bInBoundUpY = upStairY < config.SubWorldSizeY;
+                if(bInBoundUpY == true)
+                {
+                    Block upBlock = blockData[blockX, upStairY, blockZ];
+                    if(upBlock.Type != (byte)BlockTileType.EMPTY) bEmptyUpBlock = false;
+                }
+                else
+                {
+                    // 영역을 벗어나는 지점.
+                    bEmptyUpBlock = false;
+                }
                 Block block = blockData[blockX, blockY, blockZ];
-                if(block.Type != (byte)BlockTileType.EMPTY)
+                bool bNotEmptyToBlock = block.Type != (byte)BlockTileType.EMPTY;
+                // 목표 블록이 Empty가 아니면서 바로 위에 있는 블록이 Empty 라면 갈 수 있음.
+                if (bNotEmptyToBlock == true && bEmptyUpBlock == true)
                 {
                     // 중앙 좌표이므로 Y 값은 0.5 오프셋을 더함.
                     Vector3 position = new Vector3(block.CenterX, block.CenterY + 0.5f, block.CenterZ);

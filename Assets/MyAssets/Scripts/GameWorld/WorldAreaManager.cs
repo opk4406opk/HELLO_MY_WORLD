@@ -152,9 +152,21 @@ public class WorldAreaManager : MonoBehaviour
     public static Vector3 GetRealCoordToWorldDataCoord(Vector3 objectPos)
     {
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        int x = (Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX) / WorldMapDataFile.Instance.MapData.SubWorldRow / WorldMapDataFile.Instance.MapData.WorldAreaRow;
-        int y = (Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY) / WorldMapDataFile.Instance.MapData.SubWorldLayer / WorldMapDataFile.Instance.MapData.WorldAreaLayer;
-        int z = (Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ) / WorldMapDataFile.Instance.MapData.SubWorldColumn / WorldMapDataFile.Instance.MapData.WorldAreaColumn;
+        int ceilPosX = Mathf.CeilToInt(objectPos.x);
+        int ceilPosY = Mathf.CeilToInt(objectPos.y);
+        int ceilPosZ = Mathf.CeilToInt(objectPos.z);
+        // offset
+        int offsetX = ceilPosX / gameWorldConfig.SubWorldSizeX;
+        int offsetY = ceilPosY / gameWorldConfig.SubWorldSizeY;
+        int offsetZ = ceilPosZ / gameWorldConfig.SubWorldSizeZ;
+        // calc..
+        int x = ceilPosX - (offsetX * gameWorldConfig.SubWorldSizeX * WorldMapDataFile.Instance.MapData.WorldAreaRow);
+        int y = ceilPosY - (offsetY * gameWorldConfig.SubWorldSizeY * WorldMapDataFile.Instance.MapData.WorldAreaLayer);
+        int z = ceilPosZ - (offsetZ * gameWorldConfig.SubWorldSizeZ * WorldMapDataFile.Instance.MapData.WorldAreaColumn);
+        // clamp
+        x = Mathf.Clamp(x, 0, gameWorldConfig.SubWorldSizeX);
+        x = Mathf.Clamp(x, 0, gameWorldConfig.SubWorldSizeY);
+        x = Mathf.Clamp(x, 0, gameWorldConfig.SubWorldSizeZ);
         return new Vector3(x, y, z);
     }
     
@@ -166,9 +178,17 @@ public class WorldAreaManager : MonoBehaviour
     public static Vector3 GetWorldDataCoordToRealCoord(Vector3 worldCoord)
     {
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        int x = (Mathf.CeilToInt(worldCoord.x) * gameWorldConfig.SubWorldSizeX) * WorldMapDataFile.Instance.MapData.SubWorldRow * WorldMapDataFile.Instance.MapData.WorldAreaRow;
-        int y = (Mathf.CeilToInt(worldCoord.y) * gameWorldConfig.SubWorldSizeY) * WorldMapDataFile.Instance.MapData.SubWorldLayer * WorldMapDataFile.Instance.MapData.WorldAreaLayer;
-        int z = (Mathf.CeilToInt(worldCoord.z) * gameWorldConfig.SubWorldSizeZ) * WorldMapDataFile.Instance.MapData.SubWorldColumn * WorldMapDataFile.Instance.MapData.WorldAreaColumn;
+        int ceilPosX = Mathf.CeilToInt(worldCoord.x);
+        int ceilPosY = Mathf.CeilToInt(worldCoord.y);
+        int ceilPosZ = Mathf.CeilToInt(worldCoord.z);
+        // offset
+        int offsetX = ceilPosX / gameWorldConfig.SubWorldSizeX;
+        int offsetY = ceilPosY / gameWorldConfig.SubWorldSizeY;
+        int offsetZ = ceilPosZ / gameWorldConfig.SubWorldSizeZ;
+        //
+        int x = ceilPosX + (offsetX * gameWorldConfig.SubWorldSizeX * WorldMapDataFile.Instance.MapData.WorldAreaRow);
+        int y = ceilPosY + (offsetY * gameWorldConfig.SubWorldSizeY * WorldMapDataFile.Instance.MapData.WorldAreaLayer);
+        int z = ceilPosZ + (offsetZ * gameWorldConfig.SubWorldSizeZ * WorldMapDataFile.Instance.MapData.WorldAreaColumn);
         return new Vector3(x, y, z);
     }
     /// <summary>
