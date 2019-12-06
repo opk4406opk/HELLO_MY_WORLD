@@ -37,9 +37,11 @@
   <ItemGroup>
     <Compile Include="FrameWork\Soruces\BufferManager.cs" />
     <Compile Include="FrameWork\Soruces\ListenManager.cs" />
+    <Compile Include="FrameWork\Soruces\MessageResolver.cs" />
     <Compile Include="FrameWork\Soruces\NetworkServiceManager.cs" />
     <Compile Include="FrameWork\Soruces\SocketAsyncEventArgsPool.cs" />
     <Compile Include="FrameWork\Soruces\UserToken.cs" />
+    <Compile Include="FrameWork\Soruces\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
