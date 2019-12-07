@@ -17,12 +17,18 @@ namespace KojeomNet.FrameWork.Soruces
 
         public SocketAsyncEventArgs Pop()
         {
-            return PoolInstance.Pop();
+            lock(PoolInstance)
+            {
+                return PoolInstance.Pop();
+            }
         }
 
         public void Push(SocketAsyncEventArgs eventArgs)
         {
-            PoolInstance.Push(eventArgs);
+            lock(PoolInstance)
+            {
+                PoolInstance.Push(eventArgs);
+            }
         }
     }
 }
