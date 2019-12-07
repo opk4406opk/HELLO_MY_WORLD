@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace KojeomNet.FrameWork.Soruces
 {
-    class NetworkServiceManager
+    public class NetworkServiceManager
     {
         // 송수신.
         private SocketAsyncEventArgsPool ReceiveSocketEventArgsPool;
@@ -48,6 +48,11 @@ namespace KojeomNet.FrameWork.Soruces
                 BufferManagerInstance.SetBuffer(sendArgs);
                 SendSocketEventArgsPool.Push(sendArgs);
             }
+        }
+
+        public void StartListen(string ip, int port)
+        {
+            ListenManagerInstance.StartListen(ip, port);
         }
 
         private void OnReceiveCompleted(object sender, SocketAsyncEventArgs eventArgs)

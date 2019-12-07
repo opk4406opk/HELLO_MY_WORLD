@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KojeomNet.FrameWork.Soruces
 {
-    class Utils
+    public class Utils
     {
         /// <summary>
         /// C++ const 키워드를 흉내낸 구조체.

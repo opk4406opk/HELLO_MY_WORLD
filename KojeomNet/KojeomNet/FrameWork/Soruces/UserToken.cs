@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace KojeomNet.FrameWork.Soruces
 {
-    class UserToken
+    public class UserToken
     {
         public Socket SocketInstance { get; set; }
         private SocketAsyncEventArgs ReceiveArgs;
@@ -85,7 +85,10 @@ namespace KojeomNet.FrameWork.Soruces
 
         private void Close()
         {
-
+            SendingQueue = null;
+            SocketInstance = null;
+            SendArgs = null;
+            ReceiveArgs = null;
         }
 
         public void OnMessage(Utils.Const<byte[]> buffer)

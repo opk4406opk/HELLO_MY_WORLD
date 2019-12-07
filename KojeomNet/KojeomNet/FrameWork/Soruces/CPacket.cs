@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KojeomNet.FrameWork.Soruces
 {
-    class CPacket
+    public class CPacket
     {
         public UserToken Owner { get; private set; }
         public byte[] Buffer { get; private set; }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace KojeomNet.FrameWork.Soruces
 {
-    class SocketAsyncEventArgsPool
+    public class SocketAsyncEventArgsPool
     {
         private Stack<SocketAsyncEventArgs> PoolInstance;
         public SocketAsyncEventArgsPool(int poolCapacity)

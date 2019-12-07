@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace KojeomNet.FrameWork.Soruces
 {
-    class Defines
+    public class Defines
     {
         public static readonly short HEADER_SIZE = 2;
     }
-    class MessageResolver
+    public class MessageResolver
     {
         public delegate void CompletedMessageCallback(Utils.Const<byte[]> buffer);
         int MessageSize = 0;

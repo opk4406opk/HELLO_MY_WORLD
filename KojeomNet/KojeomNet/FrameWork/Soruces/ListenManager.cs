@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 
 namespace KojeomNet.FrameWork.Soruces
 {
-    class ListenManager
+    public class ListenManager
     {
         private Socket ListenSocket;
-        private readonly int ListenPort = 8000;
         private readonly int BackLog = 100;
         //
         private SocketAsyncEventArgs AcceptEventArgsInstance;
@@ -21,9 +20,9 @@ namespace KojeomNet.FrameWork.Soruces
         public delegate void DelegateNewClientConnected(Socket clientSocket, object userToken);
         public event DelegateNewClientConnected OnNewClientConnected;
 
-        public void StartListen()
+        public void StartListen(string ip, int port)
         {
-            IPEndPoint localEndpoint = new IPEndPoint(IPAddress.Any, ListenPort);
+            IPEndPoint localEndpoint = new IPEndPoint(IPAddress.Parse(ip), port);
             ListenSocket = new Socket(localEndpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             ListenSocket.Bind(localEndpoint);
             ListenSocket.Listen(BackLog);

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8AC8DEEB-6406-4EB1-991D-1C9F5AD2C5F5}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>KojeomNet</RootNamespace>
-    <AssemblyName>KojeomNet</AssemblyName>
+    <ProjectGuid>{5566CE75-4057-4E1B-803C-2F8D2FA1A692}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SimpleTestServer</RootNamespace>
+    <AssemblyName>SimpleTestServer</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -31,24 +31,17 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FrameWork\Soruces\BufferManager.cs" />
-    <Compile Include="FrameWork\Soruces\CPacket.cs" />
-    <Compile Include="FrameWork\Soruces\ListenManager.cs" />
-    <Compile Include="FrameWork\Soruces\MessageResolver.cs" />
-    <Compile Include="FrameWork\Soruces\NetworkServiceManager.cs" />
-    <Compile Include="FrameWork\Soruces\SocketAsyncEventArgsPool.cs" />
-    <Compile Include="FrameWork\Soruces\UserToken.cs" />
-    <Compile Include="FrameWork\Soruces\Utils.cs" />
+    <Compile Include="SimpleUser.cs" />
+    <Compile Include="TestServerMain.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System" />
+    <Reference Include="KojeomNet">
+      <HintPath>..\KojeomNet\bin\Debug\KojeomNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
