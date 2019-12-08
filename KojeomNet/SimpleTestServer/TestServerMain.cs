@@ -21,6 +21,17 @@ namespace SimpleTestServer
             Init();
             // listen
             NetworkServiceManagerInstance.StartListen("127.0.0.1", 8000);
+
+            Console.WriteLine("Started!");
+            while (true)
+            {
+                //Console.Write(".");
+                string input = Console.ReadLine();
+                if (input.Equals("users"))
+                {
+                }
+                System.Threading.Thread.Sleep(1000);
+            }
         }
 
         public static void Init()
@@ -39,7 +50,7 @@ namespace SimpleTestServer
             }
         }
 
-        private static void OnSessionRemoved(SimpleUser user)
+        public static void OnSessionRemoved(SimpleUser user)
         {
             lock (UserList)
             {

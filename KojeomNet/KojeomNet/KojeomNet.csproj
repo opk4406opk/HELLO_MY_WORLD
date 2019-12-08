@@ -39,7 +39,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FrameWork\Soruces\BufferManager.cs" />
+    <Compile Include="FrameWork\Soruces\Connector.cs" />
     <Compile Include="FrameWork\Soruces\CPacket.cs" />
+    <Compile Include="FrameWork\Soruces\IPeer.cs" />
     <Compile Include="FrameWork\Soruces\ListenManager.cs" />
     <Compile Include="FrameWork\Soruces\MessageResolver.cs" />
     <Compile Include="FrameWork\Soruces\NetworkServiceManager.cs" />
