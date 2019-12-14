@@ -24,36 +24,33 @@ namespace KojeomNet.FrameWork.Soruces
             OnConnectedHandler = null;
         }
 
-        public void connect(IPEndPoint remote_endpoint)
+        public void Connect(IPEndPoint remoteEndpoint)
         {
             ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             ClientSocket.NoDelay = true;
 
             // 비동기 접속을 위한 event args.
             SocketAsyncEventArgs eventArgs = new SocketAsyncEventArgs();
-            eventArgs.Completed += on_connect_completed;
-            eventArgs.RemoteEndPoint = remote_endpoint;
+            eventArgs.Completed += OnConnectCompleted;
+            eventArgs.RemoteEndPoint = remoteEndpoint;
             bool pending = this.ClientSocket.ConnectAsync(eventArgs);
-            if (!pending)
+            if (pending == false)
             {
-                on_connect_completed(null, eventArgs);
+                OnConnectCompleted(null, eventArgs);
             }
         }
 
-        void on_connect_completed(object sender, SocketAsyncEventArgs e)
+        void OnConnectCompleted(object sender, SocketAsyncEventArgs e)
         {
             if (e.SocketError == SocketError.Success)
             {
                 //Console.WriteLine("Connect completd!");
-                UserToken token = new UserToken(this.NetworkServiceManagerInstance.logic_entry);
+                UserToken token = new UserToken();
 
                 // 데이터 수신 준비.
-                this.NetworkServiceManagerInstance.on_connect_completed(this.ClientSocket, token);
+                //this.NetworkServiceManagerInstance.on_connect_completed(this.ClientSocket, token);
 
-                if (this.OnConnectedHandler != null)
-                {
-                    this.OnConnectedHandler(token);
-                }
+                this.OnConnectedHandler?.Invoke(token);
             }
             else
             {

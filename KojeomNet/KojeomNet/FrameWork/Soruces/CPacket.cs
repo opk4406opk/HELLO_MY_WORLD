@@ -13,7 +13,7 @@ namespace KojeomNet.FrameWork.Soruces
         public int Position { get; private set; }
         public int Size { get; private set; }
 
-        public Int16 protocol_id { get; private set; }
+        public Int16 ProtocolID { get; private set; }
 
         public static CPacket Create(Int16 protocol_id)
         {
@@ -40,7 +40,7 @@ namespace KojeomNet.FrameWork.Soruces
             this.Size = buffer.Count;
 
             // 프로토콜 아이디만 확인할 경우도 있으므로 미리 뽑아놓는다.
-            this.protocol_id = PopProtocolID();
+            this.ProtocolID = PopProtocolID();
             this.Position = Defines.HEADER_SIZE;
 
             this.Owner = owner;
@@ -70,7 +70,7 @@ namespace KojeomNet.FrameWork.Soruces
 
         public void CopyTo(CPacket target)
         {
-            target.SetProtocol(this.protocol_id);
+            target.SetProtocol(this.ProtocolID);
             target.Overwrite(this.Buffer, this.Position);
         }
 
@@ -125,7 +125,7 @@ namespace KojeomNet.FrameWork.Soruces
 
         public void SetProtocol(Int16 protocol_id)
         {
-            this.protocol_id = protocol_id;
+            this.ProtocolID = protocol_id;
             //this.buffer = new byte[1024];
 
             // 헤더는 나중에 넣을것이므로 데이터 부터 넣을 수 있도록 위치를 점프시켜놓는다.

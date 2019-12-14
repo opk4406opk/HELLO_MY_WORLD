@@ -10,10 +10,14 @@ namespace KojeomNet.FrameWork.Soruces
     public class UserToken
     {
         public Socket SocketInstance { get; set; }
-        private SocketAsyncEventArgs ReceiveArgs;
-        private SocketAsyncEventArgs SendArgs;
+        public SocketAsyncEventArgs ReceiveArgs { get; private set; }
+        public SocketAsyncEventArgs SendArgs { get; private set; }
         private MessageResolver MessageResolverInstance;
         private Queue<CPacket> SendingQueue;
+
+        public delegate void SessionClosedDelegate(UserToken token);
+        public SessionClosedDelegate OnSessionClosed;
+
         public UserToken()
         {
             MessageResolverInstance = new MessageResolver();
