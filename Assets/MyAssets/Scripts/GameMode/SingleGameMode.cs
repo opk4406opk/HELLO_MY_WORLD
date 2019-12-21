@@ -7,6 +7,8 @@ public class SingleGameMode : AGameModeBase
     public override void Init()
     {
         ModeState = GameModeState.SINGLE;
+        //
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     public override void Tick(float DeltaTime)

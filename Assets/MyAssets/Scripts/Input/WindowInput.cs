@@ -21,8 +21,10 @@ public class WindowInput : AInput
 
     protected override void CheckInputState()
     {
+        bool bAnyMouseButton = false;
         if (Input.GetMouseButtonDown(0))
         {
+            bAnyMouseButton = true;
             GetMouseInput();
             var actorCollideMgr = ActorCollideManager.singleton;
             if (actorCollideMgr != null && actorCollideMgr.IsNpcCollide(RayInstance))
@@ -40,6 +42,7 @@ public class WindowInput : AInput
         }
         if (Input.GetMouseButtonDown(1))
         {
+            bAnyMouseButton = true;
             GetMouseInput();
             //Delete block
             if (UIPopupSupervisor.bInGameAllPopupClose == true)
@@ -47,29 +50,46 @@ public class WindowInput : AInput
                 ModifyTerrainInstance.ReplaceBlockCursor(RayInstance, ClickPosition, (byte)BlockTileType.EMPTY);
             }
         }
+
+        // 마우스 아무 버튼이나 누르면 Confined 상태로 전환.
+        if (bAnyMouseButton == true)
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+        }
+        // 키보드 아무 버튼이나 누르면 Confined 상태로 전환.
+        if (Input.anyKey || Input.anyKeyDown)
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+        }
+
         ///////////////////////////////////////////////////////////////////////////////////////
         if (Input.GetKeyDown(KeyCode.I))
         {
             UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.inven);
         }
-        if (Input.GetKeyDown(KeyCode.F10))
+        else if (Input.GetKeyDown(KeyCode.F10))
         {
             UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMenu);
         }
-        if (Input.GetKeyDown(KeyCode.U))
+        else if (Input.GetKeyDown(KeyCode.U))
         {
             UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.craftItem);
         }
-        if (Input.GetKeyDown(KeyCode.F))
+        else if (Input.GetKeyDown(KeyCode.F))
         {
             UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.shop);
         }
-        if (Input.GetKey(KeyCode.BackQuote))
+        else if (Input.GetKey(KeyCode.BackQuote))
         {
             if (InGameUISupervisor.Singleton != null)
             {
                 InGameUISupervisor.Singleton.ToggleChattingLog();
             }
+        }
+        else if(Input.GetKey(KeyCode.Escape))
+        {
+            // 마우스 커서에 대한 잠금을 해제.
+            Cursor.lockState = CursorLockMode.None;
         }
         ///////////////////////////////////////////////////////////////////////////////////////
         List<KeyCode> moveKeyCodes = new List<KeyCode>();

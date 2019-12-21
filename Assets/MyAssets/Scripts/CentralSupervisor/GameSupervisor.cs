@@ -80,7 +80,12 @@ public class GameSupervisor : MonoBehaviour
         Instance = this;
         KojeomLogger.DebugLog(string.Format("GameModeState : {0}, DataMode : {1}", GameStatus.CurrentGameModeState, GameStatus.DetailSingleMode), LOG_TYPE.SYSTEM);
         GameModeGroup[(int)GameModeState.SINGLE] = new SingleGameMode();
-        GameModeGroup[(int)GameModeState.MULTI] = new SingleGameMode();
+        GameModeGroup[(int)GameModeState.MULTI] = new MultiGameMode();
+        // init mode.
+        for (int idx = 0; idx < (int)GameModeState.COUNT; idx++)
+        {
+            GameModeGroup[idx].Init();
+        }
         //
         InitSettings();
         GameDataManagerInstance.Initialize();
