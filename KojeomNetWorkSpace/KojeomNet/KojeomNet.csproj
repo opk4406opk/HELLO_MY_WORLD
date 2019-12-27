@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8AC8DEEB-6406-4EB1-991D-1C9F5AD2C5F5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>KojeomNet</RootNamespace>
+    <AssemblyName>KojeomNet</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FrameWork\Soruces\BufferManager.cs" />
+    <Compile Include="FrameWork\Soruces\Connector.cs" />
+    <Compile Include="FrameWork\Soruces\CPacket.cs" />
+    <Compile Include="FrameWork\Soruces\DoubleBufferingQueue.cs" />
+    <Compile Include="FrameWork\Soruces\HeartbeatSender.cs" />
+    <Compile Include="FrameWork\Soruces\ILogicQueue.cs" />
+    <Compile Include="FrameWork\Soruces\IMessageDispatcher.cs" />
+    <Compile Include="FrameWork\Soruces\IPeer.cs" />
+    <Compile Include="FrameWork\Soruces\ListenManager.cs" />
+    <Compile Include="FrameWork\Soruces\LogicMessageEntry.cs" />
+    <Compile Include="FrameWork\Soruces\MessageResolver.cs" />
+    <Compile Include="FrameWork\Soruces\NetworkServiceManager.cs" />
+    <Compile Include="FrameWork\Soruces\ServerUserManager.cs" />
+    <Compile Include="FrameWork\Soruces\SocketAsyncEventArgsPool.cs" />
+    <Compile Include="FrameWork\Soruces\UserToken.cs" />
+    <Compile Include="FrameWork\Soruces\Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
