@@ -47,6 +47,10 @@ public class GameNetworkManager : MonoBehaviour
         LockControlObject = new object();
     }
 
+    ~GameNetworkManager()
+    {
+    }
+
     public void ConnectToGameServer(string ip, int port)
     {
         IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse(ip), port);
@@ -68,6 +72,10 @@ public class GameNetworkManager : MonoBehaviour
         }
     }
 
+    public void DisConnectToGameServer()
+    {
+        ((RemoteServerPeer)GameServer).UserTokenInstance.Ban();
+    }
 }
 
 class RemoteServerPeer : IPeer

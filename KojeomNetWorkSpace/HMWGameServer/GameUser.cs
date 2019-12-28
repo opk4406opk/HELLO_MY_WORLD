@@ -9,7 +9,7 @@ namespace HMWGameServer
 {
     class GameUser : IPeer
     {
-        private UserToken Token;
+        public UserToken Token { get; private set; }
 
         public GameUser(UserToken userToken)
         {
@@ -18,6 +18,7 @@ namespace HMWGameServer
         }
         public void Disconnect()
         {
+            Token.Ban();
         }
 
         public void OnMessage(CPacket msg)
@@ -28,24 +29,10 @@ namespace HMWGameServer
                 case NetProtocol.CHAT_MSG_REQ:
                     {
                         string text = msg.PopString();
-                        Console.WriteLine(string.Format("text {0}", text));
 
                         CPacket response = CPacket.Create((short)NetProtocol.CHAT_MSG_ACK);
                         response.Push(text);
                         Send(response);
-
-                        if (text.Equals("exit"))
-                        {
-                            // 대량의 메시지를 한꺼번에 보낸 후 종료하는 시나리오 테스트.
-                            for (int i = 0; i < 1000; ++i)
-                            {
-                                CPacket dummy = CPacket.Create((short)NetProtocol.CHAT_MSG_ACK);
-                                dummy.Push(i.ToString());
-                                Send(dummy);
-                            }
-
-                            Token.Ban();
-                        }
                     }
                     break;
             }
@@ -58,6 +45,7 @@ namespace HMWGameServer
 
         public void Send(CPacket msg)
         {
+            Token.Send(msg);
         }
     }
 }

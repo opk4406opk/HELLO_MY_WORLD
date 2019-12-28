@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using UnityEditor;
 
 /// <summary>
 /// 게임 상태(single, multi, load, save)를 관리하는 클래스.

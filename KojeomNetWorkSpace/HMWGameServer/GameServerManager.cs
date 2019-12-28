@@ -10,7 +10,7 @@ namespace HMWGameServer
     class GameServerManager
     {
         private List<GameUser> GameUserList;
-        private NetworkServiceManager NetworkServiceManagerInstance;
+        private NetworkServiceManager NetworkServiceMgr;
 
         private static GameServerManager Instance = null;
 
@@ -27,15 +27,15 @@ namespace HMWGameServer
         private GameServerManager()
         {
             GameUserList = new List<GameUser>();
-            NetworkServiceManagerInstance = new NetworkServiceManager();
-            NetworkServiceManagerInstance.Initialize();
-            NetworkServiceManagerInstance.OnSessionCreated += OnSessionCreated;
+            NetworkServiceMgr = new NetworkServiceManager();
+            NetworkServiceMgr.Initialize();
+            NetworkServiceMgr.OnSessionCreated += OnSessionCreated;
         }
 
         public void StartListen()
         {
             // listen
-            NetworkServiceManagerInstance.StartListen("127.0.0.1", 8000);
+            NetworkServiceMgr.StartListen("127.0.0.1", 8000);
         }
 
         public void StartServer()
@@ -47,7 +47,7 @@ namespace HMWGameServer
                 string input = Console.ReadLine();
                 if (input.Equals("users"))
                 {
-                    Console.WriteLine("users count : " + NetworkServiceManagerInstance.ServerUserManagerInstance.GetTotalCount());
+                    Console.WriteLine("users count : " + NetworkServiceMgr.ServerUserManagerInstance.GetTotalCount());
                 }
                 System.Threading.Thread.Sleep(1000);
             }
@@ -55,10 +55,10 @@ namespace HMWGameServer
 
         private void OnSessionCreated(UserToken userToken)
         {
-            GameUser simpleUser = new GameUser(userToken);
+            GameUser user = new GameUser(userToken);
             lock (GameUserList)
             {
-                GameUserList.Add(simpleUser);
+                GameUserList.Add(user);
             }
         }
 

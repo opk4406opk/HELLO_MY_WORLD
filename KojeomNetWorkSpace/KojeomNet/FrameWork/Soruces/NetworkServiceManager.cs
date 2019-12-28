@@ -144,6 +144,8 @@ namespace KojeomNet.FrameWork.Soruces
 
         private void OnSessionClosed(UserToken token)
         {
+            // 세션 종료된 token 삭제.
+            ServerUserManagerInstance.Remove(token);
             // Free the SocketAsyncEventArg so they can be reused by another client
             // 버퍼는 반환할 필요가 없다. SocketAsyncEventArg가 버퍼를 물고 있기 때문에
             // 이것을 재사용 할 때 물고 있는 버퍼를 그대로 사용하면 되기 때문이다.
