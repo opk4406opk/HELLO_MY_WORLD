@@ -7,8 +7,8 @@ using System.Collections;
 /// </summary>
 public class GameStatus
 {
-    public static GameModeState CurrentGameModeState = GameModeState.SINGLE;
-    public static DetailSingleMode DetailSingleMode = DetailSingleMode.EDITOR_TEST_PLAY;
+    public static GameModeState CurrentGameModeState = GameModeState.NONE;
+    public static DetailSingleMode DetailSingleMode = DetailSingleMode.NONE;
 }
 
 public class GameLocalDataManager
@@ -77,15 +77,17 @@ public class GameSupervisor : MonoBehaviour
     private GameDataManager GameDataManagerInstance = new GameDataManager();
     private void Start ()
     {
+#if UNITY_EDITOR
+        GameStatus.CurrentGameModeState = GameModeState.SINGLE;
+        GameStatus.DetailSingleMode = DetailSingleMode.EDITOR_PLAY;
+#endif
         Instance = this;
-        KojeomLogger.DebugLog(string.Format("GameModeState : {0}, DataMode : {1}", GameStatus.CurrentGameModeState, GameStatus.DetailSingleMode), LOG_TYPE.SYSTEM);
+        KojeomLogger.DebugLog(string.Format("GameModeState : {0}, Detail : {1}", GameStatus.CurrentGameModeState, GameStatus.DetailSingleMode), LOG_TYPE.SYSTEM);
+
         GameModeGroup[(int)GameModeState.SINGLE] = new SingleGameMode();
         GameModeGroup[(int)GameModeState.MULTI] = new MultiGameMode();
-        // init mode.
-        for (int idx = 0; idx < (int)GameModeState.COUNT; idx++)
-        {
-            GameModeGroup[idx].Init();
-        }
+        //init game mode.
+        GameModeGroup[(int)GameStatus.CurrentGameModeState].Init();
         //
         InitSettings();
         GameDataManagerInstance.Initialize();

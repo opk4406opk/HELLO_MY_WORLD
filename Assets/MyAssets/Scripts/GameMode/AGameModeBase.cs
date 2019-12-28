@@ -11,7 +11,7 @@ public enum GameModeState
 public enum DetailSingleMode
 {
     NONE,
-    EDITOR_TEST_PLAY,
+    EDITOR_PLAY,
     SAVE_GAME,
     LOAD_GAME
 }

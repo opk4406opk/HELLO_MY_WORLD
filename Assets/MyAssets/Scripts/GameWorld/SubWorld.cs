@@ -208,7 +208,7 @@ public class SubWorld : MonoBehaviour
             {
                 case DetailSingleMode.SAVE_GAME:
                     break;
-                case DetailSingleMode.EDITOR_TEST_PLAY:
+                case DetailSingleMode.EDITOR_PLAY:
                 case DetailSingleMode.LOAD_GAME:
                     var worldConfig = WorldConfigFile.Instance.GetConfig();
                     for (int x = 0; x < worldConfig.SubWorldSizeX; x++)

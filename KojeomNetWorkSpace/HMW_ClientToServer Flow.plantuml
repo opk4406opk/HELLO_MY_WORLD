@@ -1,0 +1,6 @@
+@startuml
+title : Hello My World GameServer Client & Server Flow
+client -> server : connect to server
+client <-- server : success, 서버에 저장된 host 맵정보 및 actor 정보 전달.
+
+@enduml
