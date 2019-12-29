@@ -78,8 +78,12 @@ public class GameSupervisor : MonoBehaviour
     private void Start ()
     {
 #if UNITY_EDITOR
-        GameStatus.CurrentGameModeState = GameModeState.SINGLE;
-        GameStatus.DetailSingleMode = DetailSingleMode.EDITOR_PLAY;
+        bool bEditor = GameStatus.CurrentGameModeState == GameModeState.NONE && GameStatus.DetailSingleMode == DetailSingleMode.NONE;
+        if (bEditor == true)
+        {
+            GameStatus.CurrentGameModeState = GameModeState.SINGLE;
+            GameStatus.DetailSingleMode = DetailSingleMode.EDITOR_PLAY;
+        }
 #endif
         Instance = this;
         KojeomLogger.DebugLog(string.Format("GameModeState : {0}, Detail : {1}", GameStatus.CurrentGameModeState, GameStatus.DetailSingleMode), LOG_TYPE.SYSTEM);

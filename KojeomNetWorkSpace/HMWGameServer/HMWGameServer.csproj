@@ -37,6 +37,7 @@
   <ItemGroup>
     <Compile Include="GameServerManager.cs" />
     <Compile Include="GameUser.cs" />
+    <Compile Include="GameWorldMapManager.cs" />
     <Compile Include="MainEntry.cs" />
     <Compile Include="NetProtocol.cs" />
   </ItemGroup>
@@ -44,6 +45,7 @@
     <Reference Include="KojeomNet">
       <HintPath>..\KojeomNet\bin\Debug\KojeomNet.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

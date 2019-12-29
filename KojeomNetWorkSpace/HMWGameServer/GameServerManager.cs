@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Sockets;
 
 namespace HMWGameServer
 {
@@ -13,6 +14,11 @@ namespace HMWGameServer
         private NetworkServiceManager NetworkServiceMgr;
 
         private static GameServerManager Instance = null;
+
+        /// <summary>
+        /// 호스트에서 최초 맵 생성시에 사용된 Random Seed 값.
+        /// </summary>
+        public int WorldMapRandomSeed { get; set; }
 
         public static GameServerManager GetInstance()
         {
@@ -58,6 +64,7 @@ namespace HMWGameServer
             GameUser user = new GameUser(userToken);
             lock (GameUserList)
             {
+                Console.WriteLine(string.Format("New Session Created. {0}", userToken.SocketInstance.RemoteEndPoint.ToString()));
                 GameUserList.Add(user);
             }
         }

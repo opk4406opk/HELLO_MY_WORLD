@@ -102,6 +102,7 @@ namespace KojeomNet.FrameWork.Soruces
             // UserToken은 매번 새로 생성하여 깨끗한 인스턴스로 넣어준다.
             UserToken userToken = new UserToken(LogicEntry);
             userToken.OnSessionClosed += OnSessionClosed;
+            userToken.SocketInstance = clientSocket;
             //
             receiveArgs.UserToken = userToken;
             sendArgs.UserToken = userToken;

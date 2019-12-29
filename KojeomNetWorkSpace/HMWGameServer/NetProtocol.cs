@@ -10,8 +10,11 @@ namespace HMWGameServer
     {
         BEGIN = 0,
 
-        CHAT_MSG_REQ = 1,
-        CHAT_MSG_ACK = 2,
+        CHANGED_SUBWORLD_BLOCK_REQ = 1,
+        CHANGED_SUBWORLD_BLOCK_ACK = 2,
+
+        INIT_RANDOM_SEED_REQ = 3, // only host
+        INIT_RANDOM_SEED_ACK = 4, // only host
 
         END
     }

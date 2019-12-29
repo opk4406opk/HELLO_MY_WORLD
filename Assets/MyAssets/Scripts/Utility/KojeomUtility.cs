@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class KojeomUtility
 {
     //variables.
-    private static readonly int SeedValue = 0;
+    public static readonly int SeedValue = 0;
 
     //https://docs.microsoft.com/ko-kr/dotnet/csharp/programming-guide/generics/generic-methods
     /// <summary>
@@ -31,6 +32,44 @@ public class KojeomUtility
             }
         }
         return v;
+    }
+
+    public static byte[] StructureToByteArray(object obj)
+    {
+        int len = Marshal.SizeOf(obj);
+        byte[] arr = new byte[len];
+        IntPtr ptr = Marshal.AllocHGlobal(len);
+        Marshal.StructureToPtr(obj, ptr, true);
+        Marshal.Copy(ptr, arr, 0, len);
+        Marshal.FreeHGlobal(ptr);
+
+        return arr;
+    }
+
+    public static void ByteArrayToStructure(byte[] bytearray, ref object obj)
+    {
+        int len = Marshal.SizeOf(obj);
+        IntPtr i = Marshal.AllocHGlobal(len);
+
+        Marshal.Copy(bytearray, 0, i, len);
+        obj = Marshal.PtrToStructure(i, obj.GetType());
+        Marshal.FreeHGlobal(i);
+    }
+
+    public static byte[,,] BlockDataToByteArray(Block[,,] blockData)
+    {
+        byte[,,] byteArray = new byte[blockData.GetLength(0), blockData.GetLength(1), blockData.GetLength(2)];
+        for(int x = 0; x < blockData.GetLength(0); ++x)
+        {
+            for (int y = 0; y < blockData.GetLength(1); ++y)
+            {
+                for (int z = 0; z < blockData.GetLength(2); ++z)
+                {
+                    byteArray[x, y, z] = blockData[x, y, z].Type;
+                }
+            }
+        }
+        return byteArray;
     }
 
     // ref : https://stackoverflow.com/questions/16100/how-should-i-convert-a-string-to-an-enum-in-c

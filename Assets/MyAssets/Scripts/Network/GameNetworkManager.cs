@@ -4,19 +4,32 @@ using UnityEngine;
 using KojeomNet.FrameWork.Soruces;
 using System.Net;
 using System;
+using System.Runtime.InteropServices;
 
 public enum NetProtocol
 {
     BEGIN = 0,
 
-    CHAT_MSG_REQ = 1,
-    CHAT_MSG_ACK = 2,
+    CHANGED_SUBWORLD_BLOCK_REQ = 1,
+    CHANGED_SUBWORLD_BLOCK_ACK = 2,
+
+    INIT_RANDOM_SEED_REQ = 3, // only host
+    INIT_RANDOM_SEED_ACK = 4, // only host
 
     END
 }
 
+public struct SubWorldBlockPacketData
+{
+    public string AreaID;
+    public string SubWorldID;
+    public int BlockIndex_X;
+    public int BlockIndex_Y;
+    public int BlockIndex_Z;
+    public byte ToChangedTileValue;
+}
 
-public class GameNetworkManager : MonoBehaviour
+public class GameNetworkManager
 {
     private object LockControlObject;
     private IPeer GameServer = null;
@@ -68,8 +81,29 @@ public class GameNetworkManager : MonoBehaviour
             IPeer server = new RemoteServerPeer(serverToken);
             serverToken.OnConnected();
             GameServer = server;
-            KojeomLogger.DebugLog("Success Connect to Server", LOG_TYPE.P2P_NETWORK_CLIENT_INFO);
+            KojeomLogger.DebugLog("Success Connect to Server", LOG_TYPE.NETWORK_CLIENT_INFO);
+            // 접속 성공후, 맵 생성에 사용되는 랜덤 시드값을 보낸다.
+            RemoteServerPeer peer = GameServer as RemoteServerPeer;
+            CPacket seedPacket = new CPacket();
+            seedPacket.SetProtocol((short)NetProtocol.INIT_RANDOM_SEED_REQ);
+            seedPacket.PushInt16((short)KojeomUtility.SeedValue);
+            //
+            ((IPeer)peer).Send(seedPacket);
         }
+    }
+
+    /// <summary>
+    /// 서브월드에서 변경된 블록의 정보를 보냅니다.
+    /// </summary>
+    /// <param name="packetData"></param>
+    public void SendChangedSubWorldBlock(SubWorldBlockPacketData packetData)
+    {
+        RemoteServerPeer peer = GameServer as RemoteServerPeer;
+        //
+        CPacket packet = new CPacket();
+        packet.SetProtocol((short)NetProtocol.CHANGED_SUBWORLD_BLOCK_REQ);
+        //
+        ((IPeer)peer).Send(packet);
     }
 
     public void DisConnectToGameServer()
@@ -96,10 +130,14 @@ class RemoteServerPeer : IPeer
         NetProtocol protocolID = (NetProtocol)msg.PopProtocolID();
         switch (protocolID)
         {
-            case NetProtocol.CHAT_MSG_ACK:
+            case NetProtocol.CHANGED_SUBWORLD_BLOCK_ACK:
                 {
-                    string text = msg.PopString();
-                    //Console.WriteLine(string.Format("text {0}", text));
+                    KojeomLogger.DebugLog("Server received changed sub world data.", LOG_TYPE.NETWORK_CLIENT_INFO);
+                }
+                break;
+            case NetProtocol.INIT_RANDOM_SEED_ACK:
+                {
+                    KojeomLogger.DebugLog("Server received init random seed for create world map.", LOG_TYPE.NETWORK_CLIENT_INFO);
                 }
                 break;
         }
@@ -110,7 +148,7 @@ class RemoteServerPeer : IPeer
         //Console.WriteLine("Server removed.");
         //Console.WriteLine("recv count " + this.RecvCount);
     }
-
+   
     void IPeer.Send(CPacket msg)
     {
         msg.RecordSize();
@@ -121,4 +159,5 @@ class RemoteServerPeer : IPeer
     {
         UserTokenInstance.Disconnect();
     }
+   
 }
