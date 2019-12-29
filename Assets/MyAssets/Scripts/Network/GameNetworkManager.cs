@@ -19,6 +19,13 @@ public enum NetProtocol
     END
 }
 
+public enum GameNetIdentityType
+{
+    None,
+    Client,
+    Host,
+}
+
 public struct SubWorldBlockPacketData
 {
     public string AreaID;
@@ -35,9 +42,11 @@ public class GameNetworkManager
     private IPeer GameServer = null;
     private NetworkServiceManager ServiceManager = new NetworkServiceManager();
     private Connector ConnectorInstance = null;
-
+    //
     private static GameNetworkManager Instance = null;
-    
+    //
+    public GameNetIdentityType IdentityType = GameNetIdentityType.None;
+
     public static GameNetworkManager GetInstance()
     {
         if(Instance == null)

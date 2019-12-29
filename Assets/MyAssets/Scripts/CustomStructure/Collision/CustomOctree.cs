@@ -32,11 +32,11 @@ public class COTNode
     // 노드의 중점은 게임 내 존재하는 블록의 중점과 같다. ( aabb의 중점도 마찬가지로 동일.)
     public Vector3 Center { set; get; }
     public Vector3 Size { set; get; }
-    public bool IsCanDelete { set; get; }
+    public bool bCanDelete { set; get; }
 
     public COTNode()
     {
-        IsCanDelete = false;
+        bCanDelete = false;
     }
 }
 /// <summary>
@@ -44,7 +44,7 @@ public class COTNode
 /// </summary>
 public struct CollideInfo
 {
-    public bool IsCollide;
+    public bool bCollide;
     public Vector3 HitBlockCenter;
     public Vector3 CollisionPoint;
     public CustomAABB aabb;
@@ -137,14 +137,15 @@ public class CustomOctree
     private CollideInfo CollideWithPoint(Vector3 point, ref COTNode root)
     {
         CollideInfo info;
-        info.IsCollide = false;
+        info.bCollide = false;
         info.HitBlockCenter = Vector3.zero;
         info.CollisionPoint = Vector3.zero;
         info.aabb = root.aabb;
         if (root.Size == BlockMinSize)
         {
-            info.IsCollide = true;
+            info.bCollide = true;
             info.HitBlockCenter = root.Center;
+            info.CollisionPoint = root.Center;
             return info;
         }
         for (int i = 0; i < 8; i++)
@@ -165,14 +166,14 @@ public class CustomOctree
 
         // init.
         CollideInfo info;
-        info.IsCollide = false;
+        info.bCollide = false;
         info.HitBlockCenter = Vector3.zero;
         info.CollisionPoint = Vector3.zero;
         info.aabb = Root.aabb;
         if (collideCandidate.Count > 0)
         {
             float minDist = Vector3.Distance(ray.origin, collideCandidate[0].HitBlockCenter);
-            info.IsCollide = true;
+            info.bCollide = true;
             info.HitBlockCenter = collideCandidate[0].HitBlockCenter;
             info.CollisionPoint = collideCandidate[0].CollisionPoint;
             for (int i = 1; i < collideCandidate.Count; i++)
@@ -198,13 +199,13 @@ public class CustomOctree
         if (root == null) return;
 
         CollideInfo info;
-        info.IsCollide = false;
+        info.bCollide = false;
         info.HitBlockCenter = Vector3.zero;
         info.CollisionPoint = Vector3.zero;
         info.aabb = root.aabb;
         if (root.Size == BlockMinSize)
         {
-            info.IsCollide = true;
+            info.bCollide = true;
             info.HitBlockCenter = root.Center;
             info.CollisionPoint = root.aabb.HitPointWithRay;
             collideCandidate.Add(info);
@@ -232,13 +233,13 @@ public class CustomOctree
     private CollideInfo CollideNodeWithAABB(ref CustomAABB other, ref COTNode root)
     {
         CollideInfo info;
-        info.IsCollide = false;
+        info.bCollide = false;
         info.HitBlockCenter = Vector3.zero;
         info.CollisionPoint = Vector3.zero;
         info.aabb = root.aabb;
         if (root.Size == BlockMinSize) 
         {
-            info.IsCollide = true;
+            info.bCollide = true;
             info.HitBlockCenter = root.Center;
             return info;
         }
@@ -258,7 +259,7 @@ public class CustomOctree
         if (root.Center == pos)
         {
             for (int i = 0; i < 8; i++) root.Childs[i] = null;
-            root.IsCanDelete = true;
+            root.bCanDelete = true;
             return;
         }
         else if ((root.Center.x > pos.x) &&
@@ -269,7 +270,7 @@ public class CustomOctree
             if (root.Childs[0] != null)
             {
                 DeleteNode(pos, ref root.Childs[0]);
-                if (root.Childs[0].IsCanDelete) root.Childs[0] = null;
+                if (root.Childs[0].bCanDelete) root.Childs[0] = null;
             }
         }
         else if ((root.Center.x < pos.x) &&
@@ -280,7 +281,7 @@ public class CustomOctree
             if (root.Childs[1] != null)
             {
                 DeleteNode(pos, ref root.Childs[1]);
-                if (root.Childs[1].IsCanDelete) root.Childs[1] = null;
+                if (root.Childs[1].bCanDelete) root.Childs[1] = null;
             }
         }
         else if ((root.Center.x < pos.x) &&
@@ -291,7 +292,7 @@ public class CustomOctree
             if (root.Childs[2] != null)
             {
                 DeleteNode(pos, ref root.Childs[2]);
-                if (root.Childs[2].IsCanDelete) root.Childs[2] = null;
+                if (root.Childs[2].bCanDelete) root.Childs[2] = null;
             }
         }
         else if ((root.Center.x > pos.x) &&
@@ -302,7 +303,7 @@ public class CustomOctree
             if (root.Childs[3] != null)
             {
                 DeleteNode(pos, ref root.Childs[3]);
-                if (root.Childs[3].IsCanDelete) root.Childs[3] = null;
+                if (root.Childs[3].bCanDelete) root.Childs[3] = null;
             }
         }
         else if ((root.Center.x > pos.x) &&
@@ -313,7 +314,7 @@ public class CustomOctree
             if (root.Childs[4] != null)
             {
                 DeleteNode(pos, ref root.Childs[4]);
-                if (root.Childs[4].IsCanDelete) root.Childs[4] = null;
+                if (root.Childs[4].bCanDelete) root.Childs[4] = null;
             }
         }
         else if ((root.Center.x < pos.x) &&
@@ -324,7 +325,7 @@ public class CustomOctree
             if (root.Childs[5] != null)
             {
                 DeleteNode(pos, ref root.Childs[5]);
-                if (root.Childs[5].IsCanDelete) root.Childs[5] = null;
+                if (root.Childs[5].bCanDelete) root.Childs[5] = null;
             }
         }
         else if ((root.Center.x < pos.x) &&
@@ -335,7 +336,7 @@ public class CustomOctree
             if (root.Childs[6] != null)
             {
                 DeleteNode(pos, ref root.Childs[6]);
-                if (root.Childs[6].IsCanDelete) root.Childs[6] = null;
+                if (root.Childs[6].bCanDelete) root.Childs[6] = null;
             }
         }
         else if ((root.Center.x > pos.x) &&
@@ -346,7 +347,7 @@ public class CustomOctree
             if (root.Childs[7] != null)
             {
                 DeleteNode(pos, ref root.Childs[7]);
-                if (root.Childs[7].IsCanDelete) root.Childs[7] = null;
+                if (root.Childs[7].bCanDelete) root.Childs[7] = null;
             }
         }
     }

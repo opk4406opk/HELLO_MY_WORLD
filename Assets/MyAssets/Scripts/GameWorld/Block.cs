@@ -25,6 +25,11 @@ public struct Block {
         worldDataIndexY = b.worldDataIndexY;
         worldDataIndexZ = b.worldDataIndexZ;
     }
+
+    public Vector3 GetCenterPosition()
+    {
+        return new Vector3(CenterX, CenterY, CenterZ);
+    }
 }
 
 //public enum BlockFace

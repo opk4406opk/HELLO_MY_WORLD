@@ -20,12 +20,48 @@ public class ModifyWorldManager : MonoBehaviour
         chunkSize = gameWorldConfig.ChunkSize;
     }
 
-    public void ReplaceBlockCursor(Ray ray, Vector3 clickWorldPos, byte blockType)
+    public void ModifySpecificSubWorld(string areaID, string subWorldID, int blockIndex_X, int blockIndex_Y, int blockIndex_Z, byte modifiedTileValue)
+    {
+        if(WorldAreaManager.Instance != null)
+        {
+            WorldAreaManager.Instance.WorldAreas.TryGetValue(areaID, out WorldArea area);
+            area.SubWorldStates.TryGetValue(subWorldID, out SubWorldState subWorldState);
+            //
+            SubWorld subWorld = subWorldState.SubWorldInstance;
+            //
+            Block[,,] blockArray = subWorld.WorldBlockData;
+            blockArray[blockIndex_X, blockIndex_Y, blockIndex_Z].Type = modifiedTileValue;
+            Vector3 centerPos = blockArray[blockIndex_X, blockIndex_Y, blockIndex_Z].GetCenterPosition();
+            if ((BlockTileType)modifiedTileValue == BlockTileType.EMPTY)
+            {
+                blockArray[blockIndex_X, blockIndex_Y, blockIndex_Z].bRendered = false;
+                // 지워진 블록에 옥트리 노드가 남아있다면 삭제.
+                CollideInfo col = subWorld.CustomOctreeInstance.Collide(centerPos);
+                if (col.bCollide == true)
+                {
+                    subWorld.CustomOctreeInstance.Delete(col.CollisionPoint);
+                }
+            }
+            else
+            {
+                blockArray[blockIndex_X, blockIndex_Y, blockIndex_Z].bRendered = true;
+                // 블록 타입이 변경된 지점에 옥트리 노드가 없다면 새로 생성.
+                CollideInfo col = subWorld.CustomOctreeInstance.Collide(centerPos);
+                if (col.bCollide == false)
+                {
+                    subWorld.CustomOctreeInstance.Add(col.CollisionPoint);
+                }
+            }
+            UpdateChunkAt(blockIndex_X, blockIndex_Y, blockIndex_Z, modifiedTileValue, subWorld.ChunkSlots);
+        }
+    }
+
+    public void DeleteBlockByInput(Ray ray, Vector3 clickWorldPos, byte blockType)
     {
         DeleteBlockAt(ray, clickWorldPos, blockType);
     }
 
-    public void AddBlockCursor(Ray ray, Vector3 clickWorldPos, byte blockType)
+    public void AddBlockByInput(Ray ray, Vector3 clickWorldPos, byte blockType)
     {
         AddBlockAt(ray, clickWorldPos, blockType);
     }
@@ -56,14 +92,19 @@ public class ModifyWorldManager : MonoBehaviour
     private void RayCastingProcess(Ray ray, byte blockType, bool bCreate)
     {
         CollideInfo collideInfo = SelectWorldInstance.CustomOctreeInstance.Collide(ray);
-        if (collideInfo.IsCollide)
+        if (collideInfo.bCollide)
         {
             Block hitBlock = collideInfo.GetBlock();
             int blockX = hitBlock.worldDataIndexX;
             int blockY = hitBlock.worldDataIndexY;
             int blockZ = hitBlock.worldDataIndexZ;
             KojeomLogger.DebugLog(string.Format("RayCasting blockX {0} blockY {1} blockZ {2}", blockX, blockY, blockZ));
-            //-------------------------------------------------------------------------------
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // 블록 변경 패킷.
+            SubWorldBlockPacketData packetData;
+            packetData.AreaID = SelectWorldInstance.GetWorldAreaUniqueID();
+            packetData.SubWorldID = SelectWorldInstance.UniqueID;
+            packetData.ToChangedTileValue = blockType;
             if (bCreate == true)
             {
                 //Vector3 createPosition = new Vector3(Mathf.Ceil(collideInfo.collisionPoint.x),
@@ -73,13 +114,21 @@ public class ModifyWorldManager : MonoBehaviour
                 SelectWorldInstance.CustomOctreeInstance.Add(collideInfo.HitBlockCenter + new Vector3(0, 1.0f, 0));
                 SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
                 SelectWorldInstance.WorldBlockData[blockX, blockY + 1, blockZ].bRendered = true;
+                packetData.BlockIndex_X = blockX;
+                packetData.BlockIndex_Y = blockY + 1;
+                packetData.BlockIndex_Z = blockZ;
             }
             else
             {
                 SelectWorldInstance.CustomOctreeInstance.Delete(collideInfo.HitBlockCenter);
                 SetBlockForDelete(blockX, blockY, blockZ, blockType);
                 SelectWorldInstance.WorldBlockData[blockX, blockY, blockZ].bRendered = false;
+                packetData.BlockIndex_X = blockX;
+                packetData.BlockIndex_Y = blockY;
+                packetData.BlockIndex_Z = blockZ;
             }
+            // 패킷 전송.
+            GameNetworkManager.GetInstance().SendChangedSubWorldBlock(packetData);
         }
     }
 
@@ -176,6 +225,51 @@ public class ModifyWorldManager : MonoBehaviour
             UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMessage);
         }
         
+    }
+
+    private void UpdateChunkAt(int x, int y, int z, byte block, ChunkSlot[,,] chunkSlots)
+    {
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
+        // world data 인덱스를 chunkGroup 인덱스로 변환한다. 
+        int updateX, updateY, updateZ;
+        updateX = Mathf.FloorToInt(x / chunkSize);
+        updateY = Mathf.FloorToInt(y / chunkSize);
+        updateZ = Mathf.FloorToInt(z / chunkSize);
+        if (chunkSlots[updateX, updateY, updateZ].Chunks[(int)ChunkType.TERRAIN] == null)
+        {
+            return;
+        }
+        chunkSlots[updateX, updateY, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
+
+        if (x - (chunkSize * updateX) == 0 && updateX != 0)
+        {
+            chunkSlots[updateX - 1, updateY, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
+        }
+
+        if (x - (chunkSize * updateX) == gameWorldConfig.ChunkSize && updateX != chunkSlots.GetLength(0) - 1)
+        {
+            chunkSlots[updateX + 1, updateY, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
+        }
+
+        if (y - (chunkSize * updateY) == 0 && updateY != 0)
+        {
+            chunkSlots[updateX, updateY - 1, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
+        }
+
+        if (y - (chunkSize * updateY) == gameWorldConfig.ChunkSize && updateY != chunkSlots.GetLength(1) - 1)
+        {
+            chunkSlots[updateX, updateY + 1, updateZ].Chunks[(int)ChunkType.TERRAIN].Update = true;
+        }
+
+        if (z - (chunkSize * updateZ) == 0 && updateZ != 0)
+        {
+            chunkSlots[updateX, updateY, updateZ - 1].Chunks[(int)ChunkType.TERRAIN].Update = true;
+        }
+
+        if (z - (chunkSize * updateZ) == gameWorldConfig.ChunkSize && updateZ != chunkSlots.GetLength(2) - 1)
+        {
+            chunkSlots[updateX, updateY, updateZ + 1].Chunks[(int)ChunkType.TERRAIN].Update = true;
+        }
     }
 
     private void UpdateChunkAt(int x, int y, int z, byte block)

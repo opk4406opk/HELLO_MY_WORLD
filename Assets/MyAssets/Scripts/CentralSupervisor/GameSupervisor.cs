@@ -5,7 +5,7 @@ using UnityEditor;
 /// <summary>
 /// 게임 상태(single, multi, load, save)를 관리하는 클래스.
 /// </summary>
-public class GameStatus
+public struct GameStatus
 {
     public static GameModeState CurrentGameModeState = GameModeState.NONE;
     public static DetailSingleMode DetailSingleMode = DetailSingleMode.NONE;
@@ -83,6 +83,7 @@ public class GameSupervisor : MonoBehaviour
         {
             GameStatus.CurrentGameModeState = GameModeState.SINGLE;
             GameStatus.DetailSingleMode = DetailSingleMode.EDITOR_PLAY;
+            GameNetworkManager.GetInstance().IdentityType = GameNetIdentityType.Host;
         }
 #endif
         Instance = this;

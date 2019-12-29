@@ -36,7 +36,7 @@ public class WindowInput : AInput
                 //Create block
                 if (UIPopupSupervisor.bInGameAllPopupClose == true)
                 {
-                    ModifyTerrainInstance.AddBlockCursor(RayInstance, ClickPosition, BeltItemSelector.singleton.curSelectBlockType);
+                    ModifyTerrainInstance.AddBlockByInput(RayInstance, ClickPosition, BeltItemSelector.singleton.curSelectBlockType);
                 }
             }
         }
@@ -47,7 +47,7 @@ public class WindowInput : AInput
             //Delete block
             if (UIPopupSupervisor.bInGameAllPopupClose == true)
             {
-                ModifyTerrainInstance.ReplaceBlockCursor(RayInstance, ClickPosition, (byte)BlockTileType.EMPTY);
+                ModifyTerrainInstance.DeleteBlockByInput(RayInstance, ClickPosition, (byte)BlockTileType.EMPTY);
             }
         }
 
