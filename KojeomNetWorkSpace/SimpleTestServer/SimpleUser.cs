@@ -30,7 +30,8 @@ namespace SimpleTestServer
                 case NetProtocol.PROTOCOL.CHAT_MSG_REQ:
                     {
                         string text = msg.PopString();
-                        Console.WriteLine(string.Format("text {0}", text));
+                        var intValue = msg.PopInt32();
+                        Console.WriteLine(string.Format("text {0}, value : {1}", text, intValue));
 
                         CPacket response = CPacket.Create((short)NetProtocol.PROTOCOL.CHAT_MSG_ACK);
                         response.Push(text);

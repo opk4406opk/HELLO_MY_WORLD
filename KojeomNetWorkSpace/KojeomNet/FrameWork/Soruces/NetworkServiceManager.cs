@@ -72,17 +72,7 @@ namespace KojeomNet.FrameWork.Soruces
             ServerUserManagerInstance.StartHeartbeatChecking(checkInterval, checkInterval);
         }
 
-        private void OnReceiveCompleted(object sender, SocketAsyncEventArgs eventArgs)
-        {
-            if(eventArgs.LastOperation == SocketAsyncOperation.Receive)
-            {
-                ProcessReceive(eventArgs);
-                return;
-            }
-            //
-            //error occurred..
-            throw new ArgumentException("The last operation completed on the socket was not a receive.");
-        }
+     
         private void OnSendCompleted(object sender, SocketAsyncEventArgs eventArgs)
         {
             try
@@ -162,27 +152,30 @@ namespace KojeomNet.FrameWork.Soruces
 
             token.SetAsyncEventArgs(null, null);
         }
-
+       
         private void BeginReceive(Socket socket, SocketAsyncEventArgs receiveArgs, SocketAsyncEventArgs sendArgs)
         {
             UserToken userToken = receiveArgs.UserToken as UserToken;
             userToken.SocketInstance = socket;
             userToken.SetAsyncEventArgs(receiveArgs, sendArgs);
 
-            if(socket == null)
+            bool bPending = socket.ReceiveAsync(receiveArgs);
+            if (bPending == false)
             {
-                Console.WriteLine("BeginReceive - socket is null");
-            }
-            else
-            {
-                bool bPending = socket.ReceiveAsync(receiveArgs);
-                if (bPending == false)
-                {
-                    ProcessReceive(receiveArgs);
-                }
+                ProcessReceive(receiveArgs);
             }
         }
-
+        private void OnReceiveCompleted(object sender, SocketAsyncEventArgs eventArgs)
+        {
+            if (eventArgs.LastOperation == SocketAsyncOperation.Receive)
+            {
+                ProcessReceive(eventArgs);
+                return;
+            }
+            //
+            //error occurred..
+            throw new ArgumentException("The last operation completed on the socket was not a receive.");
+        }
         private void ProcessReceive(SocketAsyncEventArgs receiveArgs)
         {
             UserToken userToken = receiveArgs.UserToken as UserToken;
@@ -198,6 +191,14 @@ namespace KojeomNet.FrameWork.Soruces
             else
             {
                 // error occurred.
+                try
+                {
+                    userToken.Close();
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Already closed this socket.");
+                }
             }
         }
     }

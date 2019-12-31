@@ -42,8 +42,10 @@
     <Compile Include="NetProtocol.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="KojeomNet">
-      <HintPath>..\KojeomNet\bin\Debug\KojeomNet.dll</HintPath>
+    <Reference Include="KojeomNet, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Assets\Plugins\NetworkLib\KojeomNet.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

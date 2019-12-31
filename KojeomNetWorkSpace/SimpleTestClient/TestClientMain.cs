@@ -37,6 +37,7 @@ namespace SimpleTestClient
 
                 CPacket msg = CPacket.Create((short)NetProtocol.PROTOCOL.CHAT_MSG_REQ);
                 msg.Push(line);
+                msg.Push(123);
                 GameServers[0].Send(msg);
             }
 

@@ -79,7 +79,7 @@ namespace KojeomNet.FrameWork.Soruces
                     this.PositionToRead = Defines.HEADER_SIZE;
 
                     completed = ReadUntil(buffer, ref src_position);
-                    if (!completed)
+                    if (completed == false)
                     {
                         // 아직 다 못읽었으므로 다음 receive를 기다린다.
                         return;
@@ -110,7 +110,7 @@ namespace KojeomNet.FrameWork.Soruces
                 // 메시지를 읽는다.
                 completed = ReadUntil(buffer, ref src_position);
 
-                if (completed)
+                if (completed == true)
                 {
                     // 패킷 하나를 완성 했다.
                     byte[] clone = new byte[this.PositionToRead];

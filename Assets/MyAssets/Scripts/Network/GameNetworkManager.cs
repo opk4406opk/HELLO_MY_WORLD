@@ -92,12 +92,11 @@ public class GameNetworkManager
             GameServer = server;
             KojeomLogger.DebugLog("Success Connect to Server", LOG_TYPE.NETWORK_CLIENT_INFO);
             // 접속 성공후, 맵 생성에 사용되는 랜덤 시드값을 보낸다.
-            RemoteServerPeer peer = GameServer as RemoteServerPeer;
             CPacket seedPacket = new CPacket();
             seedPacket.SetProtocol((short)NetProtocol.INIT_RANDOM_SEED_REQ);
-            seedPacket.PushInt16((short)KojeomUtility.SeedValue);
+            seedPacket.Push(KojeomUtility.SeedValue);
             //
-            ((IPeer)peer).Send(seedPacket);
+            GameServer.Send(seedPacket);
         }
     }
 
@@ -107,12 +106,19 @@ public class GameNetworkManager
     /// <param name="packetData"></param>
     public void SendChangedSubWorldBlock(SubWorldBlockPacketData packetData)
     {
-        RemoteServerPeer peer = GameServer as RemoteServerPeer;
+        CPacket packet = CPacket.Create((short)NetProtocol.CHANGED_SUBWORLD_BLOCK_REQ);
+        // 1) areaID
+        // 2) subWorldID
+        // 3) BlockIndex_X, Y, Z
+        // 4) block byte value
+        packet.Push(packetData.AreaID);
+        packet.Push(packetData.SubWorldID);
+        packet.Push(packetData.BlockIndex_X);
+        packet.Push(packetData.BlockIndex_Y);
+        packet.Push(packetData.BlockIndex_Z);
+        packet.Push(packetData.ToChangedTileValue);
         //
-        CPacket packet = new CPacket();
-        packet.SetProtocol((short)NetProtocol.CHANGED_SUBWORLD_BLOCK_REQ);
-        //
-        ((IPeer)peer).Send(packet);
+        GameServer.Send(packet);
     }
 
     public void DisConnectToGameServer()

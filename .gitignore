@@ -430,3 +430,8 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/Assets/Plugins/NetworkLib/KojeomNet.dll.config
+/Assets/Plugins/NetworkLib/KojeomNet.dll.config.meta
+/Assets/Plugins/NetworkLib/KojeomNet.dll.mdb
+/Assets/Plugins/NetworkLib/KojeomNet.dll.mdb.meta
+/Assets/Plugins/NetworkLib/KojeomNet.pdb.meta

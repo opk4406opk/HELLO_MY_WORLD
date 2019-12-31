@@ -43,7 +43,7 @@ namespace KojeomNet.FrameWork.Soruces
         // heartbeat.
         public long LatestHeartbeatTime { get; private set; }
         HeartbeatSender HeartbeatSenderInstance;
-        bool AutoHeartbeat;
+        bool bAutoHeartbeat;
 
         // session객체. 어플리케이션 딴에서 구현하여 사용.
         IPeer PeerInstance;
@@ -203,10 +203,10 @@ namespace KojeomNet.FrameWork.Soruces
         {
             CurrentState = State.Connected;
             bIsClosed = 0;
-            AutoHeartbeat = true;
+            bAutoHeartbeat = true;
         }
 
-        private void Close()
+        public void Close()
         {
             // 중복 수행을 막는다.
             if (Interlocked.CompareExchange(ref bIsClosed, 1, 0) == 1)
@@ -283,7 +283,7 @@ namespace KojeomNet.FrameWork.Soruces
                         byte interval = msg.Popbyte();
                         HeartbeatSenderInstance = new HeartbeatSender(this, interval);
 
-                        if (AutoHeartbeat)
+                        if (bAutoHeartbeat == true)
                         {
                             StartHearBeat();
                         }
