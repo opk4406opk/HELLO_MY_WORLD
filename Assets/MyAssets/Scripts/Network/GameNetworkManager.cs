@@ -118,11 +118,13 @@ public class GameNetworkManager
         packet.Push(packetData.BlockIndex_Z);
         packet.Push(packetData.ToChangedTileValue);
         //
+        KojeomLogger.DebugLog("Send to Server (Changed Block Data) ", LOG_TYPE.NETWORK_CLIENT_INFO);
         GameServer.Send(packet);
     }
 
     public void DisConnectToGameServer()
     {
+        KojeomLogger.DebugLog("DisConnectToGameServer ", LOG_TYPE.NETWORK_CLIENT_INFO);
         ((RemoteServerPeer)GameServer).UserTokenInstance.Ban();
     }
 }
