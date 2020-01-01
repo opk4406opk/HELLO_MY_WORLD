@@ -25,11 +25,18 @@ namespace KojeomNet.FrameWork.Soruces
 
         public void Push(SocketAsyncEventArgs eventArgs)
         {
-            lock(PoolInstance)
+            if(eventArgs == null) { throw new ArgumentNullException("Items added to a SocketAsyncEventArgsPool cannot be null"); }
+
+            lock (PoolInstance)
             {
                 if(PoolInstance.Contains(eventArgs) == false) PoolInstance.Push(eventArgs);
                 else throw new Exception("Already exist item.");
             }
+        }
+
+        public int Count()
+        {
+            return PoolInstance.Count;
         }
     }
 }

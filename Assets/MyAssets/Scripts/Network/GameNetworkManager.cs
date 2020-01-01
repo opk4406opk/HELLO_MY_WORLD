@@ -30,9 +30,9 @@ public struct SubWorldBlockPacketData
 {
     public string AreaID;
     public string SubWorldID;
-    public int BlockIndex_X;
-    public int BlockIndex_Y;
-    public int BlockIndex_Z;
+    public Int32 BlockIndex_X;
+    public Int32 BlockIndex_Y;
+    public Int32 BlockIndex_Z;
     public byte ToChangedTileValue;
 }
 

@@ -29,13 +29,16 @@ namespace HMWGameServer
                 case NetProtocol.CHANGED_SUBWORLD_BLOCK_REQ:
                     {
                         SubWorldBlockPacketData receivedData;
-                        //receivedData.ToChangedTileValue = msg.Popbyte();
-                        //receivedData.BlockIndex_Z = msg.PopInt32();
-                        //receivedData.BlockIndex_Y = msg.PopInt32();
-                        receivedData.BlockIndex_X = msg.PopInt32();
+                        receivedData.AreaID = msg.PopString();
                         receivedData.SubWorldID = msg.PopString();
-                        //receivedData.AreaID = msg.PopString();
-                        //Console.WriteLine(string.Format("AreaID: {0}, SubWorldID : {1}", receivedData.AreaID, receivedData.SubWorldID));
+                        receivedData.BlockIndex_X = msg.PopInt32();
+                        receivedData.BlockIndex_Y = msg.PopInt32();
+                        receivedData.BlockIndex_Z = msg.PopInt32();
+                        receivedData.ToChangedTileValue = msg.Popbyte();
+                        //
+                        Console.WriteLine(string.Format("AreaID: {0}, SubWorldID : {1}, BlockIndex x : {2} y : {3} z : {4}, BlockType : {5}",
+                            receivedData.AreaID, receivedData.SubWorldID,
+                            receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z, receivedData.ToChangedTileValue));
                         CPacket response = CPacket.Create((short)NetProtocol.CHANGED_SUBWORLD_BLOCK_ACK);
                         Send(response);
                     }
