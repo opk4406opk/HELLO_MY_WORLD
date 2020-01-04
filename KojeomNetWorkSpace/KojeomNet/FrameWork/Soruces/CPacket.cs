@@ -101,6 +101,13 @@ namespace KojeomNet.FrameWork.Soruces
             return data;
         }
 
+        public Int64 PopInt64()
+        {
+            Int64 data = BitConverter.ToInt64(this.Buffer, this.Position);
+            this.Position += sizeof(Int64);
+            return data;
+        }
+
         public string PopString()
         {
             // 문자열 길이는 최대 2바이트 까지. 0 ~ 32767
@@ -163,6 +170,13 @@ namespace KojeomNet.FrameWork.Soruces
         }
 
         public void Push(Int32 data)
+        {
+            byte[] temp_buffer = BitConverter.GetBytes(data);
+            temp_buffer.CopyTo(this.Buffer, this.Position);
+            this.Position += temp_buffer.Length;
+        }
+
+        public void Push(Int64 data)
         {
             byte[] temp_buffer = BitConverter.GetBytes(data);
             temp_buffer.CopyTo(this.Buffer, this.Position);

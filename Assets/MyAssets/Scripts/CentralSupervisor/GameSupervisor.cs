@@ -83,7 +83,7 @@ public class GameSupervisor : MonoBehaviour
         {
             GameStatus.CurrentGameModeState = GameModeState.SINGLE;
             GameStatus.DetailSingleMode = DetailSingleMode.EDITOR_PLAY;
-            GameNetworkManager.GetInstance().IdentityType = GameNetIdentityType.Host;
+            GameNetworkManager.GetInstance().UserNetType = GameUserNetType.Host;
         }
 #endif
         Instance = this;

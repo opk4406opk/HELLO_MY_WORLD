@@ -101,10 +101,11 @@ public class ModifyWorldManager : MonoBehaviour
             KojeomLogger.DebugLog(string.Format("RayCasting blockX {0} blockY {1} blockZ {2}", blockX, blockY, blockZ));
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // 블록 변경 패킷.
-            SubWorldBlockChangedData packetData;
+            SubWorldBlockPacketData packetData;
             packetData.AreaID = SelectWorldInstance.GetWorldAreaUniqueID();
             packetData.SubWorldID = SelectWorldInstance.UniqueID;
-            packetData.ToChangedTileValue = blockType;
+            packetData.BlockTypeValue = blockType;
+            packetData.TimeStampTicks = GameNetworkManager.INVALID_TIMESTAMP_TICKS;
             if (bCreate == true)
             {
                 //Vector3 createPosition = new Vector3(Mathf.Ceil(collideInfo.collisionPoint.x),

@@ -6,18 +6,20 @@ using System.Threading.Tasks;
 
 namespace HMWGameServer
 {
-    struct SubWorldBlockChangedData
+    struct SubWorldBlockPacketData
     {
+        // 실제 패킷 데이터.
         public string AreaID;
         public string SubWorldID;
         public int BlockIndex_X;
         public int BlockIndex_Y;
         public int BlockIndex_Z;
-        public byte ToChangedTileValue;
+        public byte BlockTypeValue;
+        // 서버에서 기록하는 타임스탬프.
+        public long TimeStampTicks;
     }
     class GameWorldMapManager
     {
-        public List<SubWorldBlockChangedData> ChangedWorldBlockHistory { get; private set; }
         private static GameWorldMapManager Instance;
         public static GameWorldMapManager GetInstance()
         {
@@ -29,7 +31,11 @@ namespace HMWGameServer
         }
         private GameWorldMapManager()
         {
-            ChangedWorldBlockHistory = new List<SubWorldBlockChangedData>();
+        }
+
+        public void AddSubWorldData(SubWorldBlockPacketData packetData)
+        {
+
         }
     }
 }

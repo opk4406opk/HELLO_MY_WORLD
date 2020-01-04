@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HMWGameServer
 {
-    public enum GameNetIdentityType
+    public enum GameUserNetType
     {
         None,
         Client,
@@ -18,7 +18,7 @@ namespace HMWGameServer
         public UserToken Token { get; private set; }
 
         //
-        private GameNetIdentityType NetIdentity = GameNetIdentityType.None;
+        private GameUserNetType NetType = GameUserNetType.None;
 
         public GameUser(UserToken userToken)
         {
@@ -37,18 +37,20 @@ namespace HMWGameServer
             {
                 case NetProtocol.CHANGED_SUBWORLD_BLOCK_REQ:
                     {
-                        SubWorldBlockChangedData receivedData;
+                        // 클라이언트 에서 보내준 패킷 정보를 세팅.
+                        SubWorldBlockPacketData receivedData;
                         receivedData.AreaID = msg.PopString();
                         receivedData.SubWorldID = msg.PopString();
                         receivedData.BlockIndex_X = msg.PopInt32();
                         receivedData.BlockIndex_Y = msg.PopInt32();
                         receivedData.BlockIndex_Z = msg.PopInt32();
-                        receivedData.ToChangedTileValue = msg.Popbyte();
-                        GameWorldMapManager.GetInstance().ChangedWorldBlockHistory.Add(receivedData);
+                        receivedData.BlockTypeValue = msg.Popbyte();
+                        // 해당 패킷에 대한 타임스탬프를 기록.
+                        receivedData.TimeStampTicks = DateTime.Now.Ticks;
                         //
                         Console.WriteLine(string.Format("AreaID: {0}, SubWorldID : {1}, BlockIndex x : {2} y : {3} z : {4}, BlockType : {5}",
                             receivedData.AreaID, receivedData.SubWorldID,
-                            receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z, receivedData.ToChangedTileValue));
+                            receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z, receivedData.BlockTypeValue));
                         CPacket response = CPacket.Create((short)NetProtocol.CHANGED_SUBWORLD_BLOCK_ACK);
                         Send(response);
                     }
@@ -61,11 +63,11 @@ namespace HMWGameServer
                         Send(response);
                     }
                     break;
-                case NetProtocol.USER_IDENTITY_REQ:
+                case NetProtocol.USER_NET_TYPE_REQ:
                     {
-                        short identityEnum = msg.PopInt16();
-                        NetIdentity = (GameNetIdentityType)identityEnum;
-                        CPacket response = CPacket.Create((short)NetProtocol.USER_IDENTITY_ACK);
+                        short netType = msg.PopInt16();
+                        NetType = (GameUserNetType)netType;
+                        CPacket response = CPacket.Create((short)NetProtocol.USER_NET_TYPE_ACK);
                         Send(response);
                     }
                     break;

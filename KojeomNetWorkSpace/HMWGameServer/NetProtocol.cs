@@ -16,8 +16,8 @@ namespace HMWGameServer
         INIT_RANDOM_SEED_REQ, // only host
         INIT_RANDOM_SEED_ACK, // only host
 
-        USER_IDENTITY_REQ,
-        USER_IDENTITY_ACK,
+        USER_NET_TYPE_REQ,
+        USER_NET_TYPE_ACK,
         
         CHANGED_WORLD_HISTORY_REQ,
         CHANGED_WORLD_HISTORY_ACK, 

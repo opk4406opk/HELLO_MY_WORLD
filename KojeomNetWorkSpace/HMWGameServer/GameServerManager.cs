@@ -66,18 +66,6 @@ namespace HMWGameServer
             {
                 Console.WriteLine(string.Format("New Session Created. {0}", userToken.SocketInstance.RemoteEndPoint.ToString()));
                 GameUserList.Add(user);
-                // 새로 접속한 유저에게는 게임 월드 변경 히스토리를 전부 패킷으로 전달.
-                foreach(SubWorldBlockChangedData data in GameWorldMapManager.GetInstance().ChangedWorldBlockHistory)
-                {
-                    CPacket historyPacket = CPacket.Create((short)NetProtocol.CHANGED_WORLD_HISTORY_ACK);
-                    historyPacket.Push(data.AreaID);
-                    historyPacket.Push(data.SubWorldID);
-                    historyPacket.Push(data.BlockIndex_X);
-                    historyPacket.Push(data.BlockIndex_Y);
-                    historyPacket.Push(data.BlockIndex_Z);
-                    historyPacket.Push(data.ToChangedTileValue);
-                    user.Send(historyPacket);
-                }
             }
         }
 

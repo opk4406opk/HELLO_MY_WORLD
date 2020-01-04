@@ -16,8 +16,8 @@ public enum NetProtocol
     INIT_RANDOM_SEED_REQ, // only host
     INIT_RANDOM_SEED_ACK, // only host
 
-    USER_IDENTITY_REQ,
-    USER_IDENTITY_ACK,
+    USER_NET_TYPE_REQ,
+    USER_NET_TYPE_ACK,
 
     CHANGED_WORLD_HISTORY_REQ,
     CHANGED_WORLD_HISTORY_ACK,
@@ -25,25 +25,32 @@ public enum NetProtocol
     END
 }
 
-public enum GameNetIdentityType
+public enum GameUserNetType
 {
     None,
     Client,
     Host,
 }
 
-public struct SubWorldBlockChangedData
+
+public struct SubWorldBlockPacketData
 {
+    // 패킷 데이터.
     public string AreaID;
     public string SubWorldID;
     public Int32 BlockIndex_X;
     public Int32 BlockIndex_Y;
     public Int32 BlockIndex_Z;
-    public byte ToChangedTileValue;
+    public byte BlockTypeValue;
+    // 서버에서 기록하는 타임스탬프.
+    public long TimeStampTicks;
 }
 
 public class GameNetworkManager
 {
+    //
+    public static long INVALID_TIMESTAMP_TICKS = 0;
+    //
     private object LockControlObject;
     private IPeer GameServer = null;
     private NetworkServiceManager ServiceManager = new NetworkServiceManager();
@@ -51,7 +58,7 @@ public class GameNetworkManager
     //
     private static GameNetworkManager Instance = null;
     //
-    public GameNetIdentityType IdentityType = GameNetIdentityType.None;
+    public GameUserNetType UserNetType = GameUserNetType.None;
 
     public static GameNetworkManager GetInstance()
     {
@@ -102,11 +109,11 @@ public class GameNetworkManager
             seedPacket.SetProtocol((short)NetProtocol.INIT_RANDOM_SEED_REQ);
             seedPacket.Push(KojeomUtility.SeedValue);
             GameServer.Send(seedPacket);
-            // 호스트/클라이언트 구분자 패킷을 보낸다.
-            CPacket identityPacket = new CPacket();
-            identityPacket.SetProtocol((short)NetProtocol.USER_IDENTITY_REQ);
-            identityPacket.Push((short)IdentityType);
-            GameServer.Send(identityPacket);
+            // 호스트/클라이언트 Type 패킷을 보낸다.
+            CPacket typePacket = new CPacket();
+            typePacket.SetProtocol((short)NetProtocol.USER_NET_TYPE_REQ);
+            typePacket.Push((short)UserNetType);
+            GameServer.Send(typePacket);
         }
     }
 
@@ -114,7 +121,7 @@ public class GameNetworkManager
     /// 서브월드에서 변경된 블록의 정보를 보냅니다.
     /// </summary>
     /// <param name="packetData"></param>
-    public void SendChangedSubWorldBlock(SubWorldBlockChangedData packetData)
+    public void SendChangedSubWorldBlock(SubWorldBlockPacketData packetData)
     {
         CPacket packet = CPacket.Create((short)NetProtocol.CHANGED_SUBWORLD_BLOCK_REQ);
         // 1) areaID
@@ -126,7 +133,7 @@ public class GameNetworkManager
         packet.Push(packetData.BlockIndex_X);
         packet.Push(packetData.BlockIndex_Y);
         packet.Push(packetData.BlockIndex_Z);
-        packet.Push(packetData.ToChangedTileValue);
+        packet.Push(packetData.BlockTypeValue);
         //
         KojeomLogger.DebugLog("Send to Server (Changed Block Data) ", LOG_TYPE.NETWORK_CLIENT_INFO);
         GameServer.Send(packet);
@@ -167,20 +174,21 @@ class RemoteServerPeer : IPeer
                     KojeomLogger.DebugLog("Server received init random seed for create world map.", LOG_TYPE.NETWORK_CLIENT_INFO);
                 }
                 break;
-            case NetProtocol.USER_IDENTITY_ACK:
+            case NetProtocol.USER_NET_TYPE_ACK:
                 {
                     KojeomLogger.DebugLog("Server received user identity enum value.", LOG_TYPE.NETWORK_CLIENT_INFO);
                 }
                 break;
             case NetProtocol.CHANGED_WORLD_HISTORY_ACK:
                 {
-                    SubWorldBlockChangedData packetData;
+                    SubWorldBlockPacketData packetData;
                     packetData.AreaID = msg.PopString();
                     packetData.SubWorldID = msg.PopString();
                     packetData.BlockIndex_X = msg.PopInt32();
                     packetData.BlockIndex_Y = msg.PopInt32();
                     packetData.BlockIndex_Z = msg.PopInt32();
-                    packetData.ToChangedTileValue = msg.Popbyte();
+                    packetData.BlockTypeValue = msg.Popbyte();
+                    packetData.TimeStampTicks = msg.PopInt64();
                 }
                 break;
         }
