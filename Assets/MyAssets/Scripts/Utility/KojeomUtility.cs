@@ -171,6 +171,10 @@ public class KojeomUtility
     {
         RandomInstance = new System.Random(DateTime.Now.Millisecond);
     }
+    public static void ChangeSeed(int newSeed)
+    {
+        RandomInstance = new System.Random(newSeed);
+    }
     /// <summary>
     /// 
     /// </summary>

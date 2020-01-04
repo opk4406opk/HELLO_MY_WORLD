@@ -7,9 +7,18 @@ using System.Threading.Tasks;
 
 namespace HMWGameServer
 {
+    public enum GameNetIdentityType
+    {
+        None,
+        Client,
+        Host,
+    }
     class GameUser : IPeer
     {
         public UserToken Token { get; private set; }
+
+        //
+        private GameNetIdentityType NetIdentity = GameNetIdentityType.None;
 
         public GameUser(UserToken userToken)
         {
@@ -28,13 +37,14 @@ namespace HMWGameServer
             {
                 case NetProtocol.CHANGED_SUBWORLD_BLOCK_REQ:
                     {
-                        SubWorldBlockPacketData receivedData;
+                        SubWorldBlockChangedData receivedData;
                         receivedData.AreaID = msg.PopString();
                         receivedData.SubWorldID = msg.PopString();
                         receivedData.BlockIndex_X = msg.PopInt32();
                         receivedData.BlockIndex_Y = msg.PopInt32();
                         receivedData.BlockIndex_Z = msg.PopInt32();
                         receivedData.ToChangedTileValue = msg.Popbyte();
+                        GameWorldMapManager.GetInstance().ChangedWorldBlockHistory.Add(receivedData);
                         //
                         Console.WriteLine(string.Format("AreaID: {0}, SubWorldID : {1}, BlockIndex x : {2} y : {3} z : {4}, BlockType : {5}",
                             receivedData.AreaID, receivedData.SubWorldID,
@@ -48,6 +58,14 @@ namespace HMWGameServer
                         short seed = msg.PopInt16();
                         GameServerManager.GetInstance().WorldMapRandomSeed = seed;
                         CPacket response = CPacket.Create((short)NetProtocol.INIT_RANDOM_SEED_ACK);
+                        Send(response);
+                    }
+                    break;
+                case NetProtocol.USER_IDENTITY_REQ:
+                    {
+                        short identityEnum = msg.PopInt16();
+                        NetIdentity = (GameNetIdentityType)identityEnum;
+                        CPacket response = CPacket.Create((short)NetProtocol.USER_IDENTITY_ACK);
                         Send(response);
                     }
                     break;

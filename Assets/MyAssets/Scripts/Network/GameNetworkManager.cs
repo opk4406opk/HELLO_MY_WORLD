@@ -10,11 +10,17 @@ public enum NetProtocol
 {
     BEGIN = 0,
 
-    CHANGED_SUBWORLD_BLOCK_REQ = 1,
-    CHANGED_SUBWORLD_BLOCK_ACK = 2,
+    CHANGED_SUBWORLD_BLOCK_REQ,
+    CHANGED_SUBWORLD_BLOCK_ACK,
 
-    INIT_RANDOM_SEED_REQ = 3, // only host
-    INIT_RANDOM_SEED_ACK = 4, // only host
+    INIT_RANDOM_SEED_REQ, // only host
+    INIT_RANDOM_SEED_ACK, // only host
+
+    USER_IDENTITY_REQ,
+    USER_IDENTITY_ACK,
+
+    CHANGED_WORLD_HISTORY_REQ,
+    CHANGED_WORLD_HISTORY_ACK,
 
     END
 }
@@ -26,7 +32,7 @@ public enum GameNetIdentityType
     Host,
 }
 
-public struct SubWorldBlockPacketData
+public struct SubWorldBlockChangedData
 {
     public string AreaID;
     public string SubWorldID;
@@ -95,8 +101,12 @@ public class GameNetworkManager
             CPacket seedPacket = new CPacket();
             seedPacket.SetProtocol((short)NetProtocol.INIT_RANDOM_SEED_REQ);
             seedPacket.Push(KojeomUtility.SeedValue);
-            //
             GameServer.Send(seedPacket);
+            // 호스트/클라이언트 구분자 패킷을 보낸다.
+            CPacket identityPacket = new CPacket();
+            identityPacket.SetProtocol((short)NetProtocol.USER_IDENTITY_REQ);
+            identityPacket.Push((short)IdentityType);
+            GameServer.Send(identityPacket);
         }
     }
 
@@ -104,7 +114,7 @@ public class GameNetworkManager
     /// 서브월드에서 변경된 블록의 정보를 보냅니다.
     /// </summary>
     /// <param name="packetData"></param>
-    public void SendChangedSubWorldBlock(SubWorldBlockPacketData packetData)
+    public void SendChangedSubWorldBlock(SubWorldBlockChangedData packetData)
     {
         CPacket packet = CPacket.Create((short)NetProtocol.CHANGED_SUBWORLD_BLOCK_REQ);
         // 1) areaID
@@ -155,6 +165,22 @@ class RemoteServerPeer : IPeer
             case NetProtocol.INIT_RANDOM_SEED_ACK:
                 {
                     KojeomLogger.DebugLog("Server received init random seed for create world map.", LOG_TYPE.NETWORK_CLIENT_INFO);
+                }
+                break;
+            case NetProtocol.USER_IDENTITY_ACK:
+                {
+                    KojeomLogger.DebugLog("Server received user identity enum value.", LOG_TYPE.NETWORK_CLIENT_INFO);
+                }
+                break;
+            case NetProtocol.CHANGED_WORLD_HISTORY_ACK:
+                {
+                    SubWorldBlockChangedData packetData;
+                    packetData.AreaID = msg.PopString();
+                    packetData.SubWorldID = msg.PopString();
+                    packetData.BlockIndex_X = msg.PopInt32();
+                    packetData.BlockIndex_Y = msg.PopInt32();
+                    packetData.BlockIndex_Z = msg.PopInt32();
+                    packetData.ToChangedTileValue = msg.Popbyte();
                 }
                 break;
         }

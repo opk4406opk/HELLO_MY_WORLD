@@ -10,11 +10,18 @@ namespace HMWGameServer
     {
         BEGIN = 0,
 
-        CHANGED_SUBWORLD_BLOCK_REQ = 1,
-        CHANGED_SUBWORLD_BLOCK_ACK = 2,
+        CHANGED_SUBWORLD_BLOCK_REQ,
+        CHANGED_SUBWORLD_BLOCK_ACK,
 
-        INIT_RANDOM_SEED_REQ = 3, // only host
-        INIT_RANDOM_SEED_ACK = 4, // only host
+        INIT_RANDOM_SEED_REQ, // only host
+        INIT_RANDOM_SEED_ACK, // only host
+
+        USER_IDENTITY_REQ,
+        USER_IDENTITY_ACK,
+        
+        CHANGED_WORLD_HISTORY_REQ,
+        CHANGED_WORLD_HISTORY_ACK, 
+
 
         END
     }

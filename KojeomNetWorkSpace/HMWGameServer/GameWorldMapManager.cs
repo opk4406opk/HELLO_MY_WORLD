@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HMWGameServer
 {
-    struct SubWorldBlockPacketData
+    struct SubWorldBlockChangedData
     {
         public string AreaID;
         public string SubWorldID;
@@ -17,7 +17,7 @@ namespace HMWGameServer
     }
     class GameWorldMapManager
     {
-        public Dictionary<string, SubWorldBlockPacketData> ChangedWorldBlockHistory { get; private set; }
+        public List<SubWorldBlockChangedData> ChangedWorldBlockHistory { get; private set; }
         private static GameWorldMapManager Instance;
         public static GameWorldMapManager GetInstance()
         {
@@ -29,7 +29,7 @@ namespace HMWGameServer
         }
         private GameWorldMapManager()
         {
-            ChangedWorldBlockHistory = new Dictionary<string, SubWorldBlockPacketData>();
+            ChangedWorldBlockHistory = new List<SubWorldBlockChangedData>();
         }
     }
 }

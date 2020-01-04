@@ -101,7 +101,7 @@ public class ModifyWorldManager : MonoBehaviour
             KojeomLogger.DebugLog(string.Format("RayCasting blockX {0} blockY {1} blockZ {2}", blockX, blockY, blockZ));
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // 블록 변경 패킷.
-            SubWorldBlockPacketData packetData;
+            SubWorldBlockChangedData packetData;
             packetData.AreaID = SelectWorldInstance.GetWorldAreaUniqueID();
             packetData.SubWorldID = SelectWorldInstance.UniqueID;
             packetData.ToChangedTileValue = blockType;
