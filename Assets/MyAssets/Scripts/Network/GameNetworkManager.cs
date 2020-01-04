@@ -19,9 +19,6 @@ public enum NetProtocol
     USER_NET_TYPE_REQ,
     USER_NET_TYPE_ACK,
 
-    CHANGED_WORLD_HISTORY_REQ,
-    CHANGED_WORLD_HISTORY_ACK,
-
     END
 }
 
@@ -177,18 +174,6 @@ class RemoteServerPeer : IPeer
             case NetProtocol.USER_NET_TYPE_ACK:
                 {
                     KojeomLogger.DebugLog("Server received user identity enum value.", LOG_TYPE.NETWORK_CLIENT_INFO);
-                }
-                break;
-            case NetProtocol.CHANGED_WORLD_HISTORY_ACK:
-                {
-                    SubWorldBlockPacketData packetData;
-                    packetData.AreaID = msg.PopString();
-                    packetData.SubWorldID = msg.PopString();
-                    packetData.BlockIndex_X = msg.PopInt32();
-                    packetData.BlockIndex_Y = msg.PopInt32();
-                    packetData.BlockIndex_Z = msg.PopInt32();
-                    packetData.BlockTypeValue = msg.Popbyte();
-                    packetData.TimeStampTicks = msg.PopInt64();
                 }
                 break;
         }

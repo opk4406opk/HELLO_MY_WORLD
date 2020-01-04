@@ -18,10 +18,6 @@ namespace HMWGameServer
 
         USER_NET_TYPE_REQ,
         USER_NET_TYPE_ACK,
-        
-        CHANGED_WORLD_HISTORY_REQ,
-        CHANGED_WORLD_HISTORY_ACK, 
-
 
         END
     }
