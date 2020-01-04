@@ -38,7 +38,6 @@ public class GameSupervisor : MonoBehaviour
 
     #region simple config.
     public bool bSoundOn = false;
-    public bool bSubWorldDataSave = false;
     public bool bLockCursor = false;
     #endregion
     //

@@ -13,8 +13,8 @@ using UnityEngine;
 [Serializable]
 public class SubWorldExternalDataFile
 {
-    public int WorldDataArrayIndex;
-    public string UniqueID;  
+    public string AreaUniqueID;
+    public string SubWorldUniqueID;  
     public Block[,,] BlockData;
 }
 
@@ -68,42 +68,55 @@ public class WorldArea : MonoBehaviour
         RealCoordinate = OffsetCoordinate;
         //
         CreateArea(worldAreaData);
-        if (GameSupervisor.Instance != null && GameSupervisor.Instance.bSubWorldDataSave == true)
-        {
-            SaveAllSubWorld();
-        }
         StartCoroutine(DynamicSubWorldLoader());
         KojeomLogger.DebugLog("WorldArea 생성을 종료합니다.");
+    }
+
+    private async void AsyncSaveAllSubWorld()
+    {
+        bool bSuccessAllSave = await TaskSaveAllSubWorld();
+        if (bSuccessAllSave == true) KojeomLogger.DebugLog("Success Async Save All SubWorld.", LOG_TYPE.INFO);
+        else KojeomLogger.DebugLog("Failed Async Save All SubWorld.", LOG_TYPE.ERROR);
     }
  
     /// <summary>
     /// C# sereialization 기능을 이용한
-    /// subWorld를 외부파일로 저장하는 메소드.
+    /// 모든 SubWorld를 외부파일로 저장하는 메소드.
     /// </summary>
-    private void SaveAllSubWorld()
+    private async Task<bool> TaskSaveAllSubWorld()
     {
-        Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
-        int idx = 0;
-        foreach(var element in SubWorldStates)
+        return await Task.Run(() => 
         {
-            string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", element.Value.SubWorldInstance.WorldName);
-            // 파일 생성.
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream fileStream = File.Open(savePath, FileMode.OpenOrCreate);
-
-            SubWorldExternalDataFile dataFile = new SubWorldExternalDataFile
+            Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
+            int idx = 0;
+            foreach (var element in SubWorldStates)
             {
-                BlockData = element.Value.SubWorldInstance.WorldBlockData,
-                UniqueID = element.Value.SubWorldInstance.UniqueID
-            };
-            // 시리얼라이징.
-            bf.Serialize(fileStream, dataFile);
-            fileStream.Close();
-            //
-            idx++;
-        }
+                string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", element.Value.SubWorldInstance.WorldName);
+                // 파일 생성.
+                BinaryFormatter bf = new BinaryFormatter();
+                FileStream fileStream = File.Open(savePath, FileMode.OpenOrCreate);
+
+                SubWorldExternalDataFile dataFile = new SubWorldExternalDataFile
+                {
+                    BlockData = element.Value.SubWorldInstance.WorldBlockData,
+                    SubWorldUniqueID = element.Value.SubWorldInstance.UniqueID,
+                    AreaUniqueID = element.Value.SubWorldInstance.GetWorldAreaUniqueID()
+                };
+                // 시리얼라이징.
+                bf.Serialize(fileStream, dataFile);
+                fileStream.Close();
+                //
+                idx++;
+            }
+            return true;
+        });
     }
 
+    /// <summary>
+    /// 특정 서브월드만 외부파일로 저장.
+    /// </summary>
+    /// <param name="uniqueID"></param>
+    /// <returns></returns>
     private async Task<bool> TaskSaveSpecificSubWorld(string uniqueID)
     {
         return await Task.Run(() => {
@@ -118,7 +131,7 @@ public class WorldArea : MonoBehaviour
             SubWorldExternalDataFile dataFile = new SubWorldExternalDataFile
             {
                 BlockData = state.SubWorldInstance.WorldBlockData,
-                UniqueID = state.SubWorldInstance.UniqueID
+                SubWorldUniqueID = state.SubWorldInstance.UniqueID
             };
             // 시리얼라이징.
             bf.Serialize(fileStream, dataFile);
