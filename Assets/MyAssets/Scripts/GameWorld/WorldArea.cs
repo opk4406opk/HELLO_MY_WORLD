@@ -117,7 +117,7 @@ public class WorldArea : MonoBehaviour
     /// </summary>
     /// <param name="uniqueID"></param>
     /// <returns></returns>
-    private async Task<bool> TaskSaveSpecificSubWorld(string uniqueID)
+    public async Task<bool> TaskSaveSpecificSubWorld(string uniqueID)
     {
         return await Task.Run(() => {
             Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
@@ -180,7 +180,7 @@ public class WorldArea : MonoBehaviour
         var loadedWorldData = await TaskLoadSubWorldFile(uniqueID);
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} Finish Waiting Async Load from file.", uniqueID));
         // 읽어들인 파일을 이용해 서브월드 로딩.
-        worldState.SubWorldInstance.AsyncLoading(loadedWorldData.BlockData);
+        worldState.SubWorldInstance.AsyncLoading(loadedWorldData.BlockData, false);
     }
 
     private void CreateArea(WorldAreaTerrainData worldAreaData)
@@ -307,7 +307,7 @@ public class WorldArea : MonoBehaviour
                                     break;
                                 case SubWorldRealTimeStatus.ReadyToFirstLoad:
                                     SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Loading;
-                                    SubWorldStates[uniqueID].SubWorldInstance.AsyncLoading();
+                                    SubWorldStates[uniqueID].SubWorldInstance.AsyncLoading(null, true);
                                     break;
                                 case SubWorldRealTimeStatus.ReleaseFinish:
                                     SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Loading;

@@ -152,9 +152,13 @@ public class SubWorld : MonoBehaviour
         OnFinishRelease(UniqueID);
     }
 
-    public async void AsyncLoading(Block[,,] newBlockData = null)
+    public async void AsyncLoading(Block[,,] newBlockData, bool bSave)
     {
-        var isSuccess = await TaskLoadSubWorldTerrain(newBlockData);
+        var bSuccessLoad = await TaskLoadSubWorldTerrain(newBlockData);
+        if(bSave == true)
+        {
+            var bSuccessSave = await WorldAreaInstance.TaskSaveSpecificSubWorld(UniqueID);
+        }
         StartCoroutine(LoadTerrainChunks());
     }
 

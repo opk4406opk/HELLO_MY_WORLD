@@ -3032,7 +3032,7 @@ MonoBehaviour:
   anchorOffset: 0
   softBorderPadding: 1
   renderQueue: 0
-  startingRenderQueue: 3003
+  startingRenderQueue: 3004
   mClipTexture: {fileID: 0}
   mAlpha: 1
   mClipping: 3
@@ -4535,7 +4535,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bSoundOn: 0
-  bSubWorldDataSave: 0
   bLockCursor: 0
   playerManager: {fileID: 213506647}
   beltItemSelector: {fileID: 713839329}
