@@ -71,6 +71,24 @@ namespace HMWGameServer
                         Send(response);
                     }
                     break;
+                case NetProtocol.WORLD_MAP_PROPERTIES_REQ:
+                    {
+                        WorldMapPropertiesPacketData packetData;
+                        packetData.WorldAreaRow = msg.PopInt32();
+                        packetData.WorldAreaColumn = msg.PopInt32();
+                        packetData.WorldAreaLayer = msg.PopInt32();
+                        packetData.SubWorldRow = msg.PopInt32();
+                        packetData.SubWorldColumn = msg.PopInt32();
+                        packetData.SubWorldLayer = msg.PopInt32();
+                        packetData.SubWorldSizeX = msg.PopInt32();
+                        packetData.SubWorldSizeY = msg.PopInt32();
+                        packetData.SubWorldSizeZ = msg.PopInt32();
+                        GameWorldMapManager.GetInstance().WorldMapProperties = packetData;
+
+                        CPacket response = CPacket.Create((short)NetProtocol.WORLD_MAP_PROPERTIES_ACK);
+                        Send(response);
+                    }
+                    break;
             }
         }
 

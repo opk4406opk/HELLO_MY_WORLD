@@ -19,6 +19,9 @@ namespace HMWGameServer
         USER_NET_TYPE_REQ,
         USER_NET_TYPE_ACK,
 
+        WORLD_MAP_PROPERTIES_REQ,
+        WORLD_MAP_PROPERTIES_ACK,
+
         END
     }
 }

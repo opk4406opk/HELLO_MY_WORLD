@@ -6,6 +6,30 @@ using System.Threading.Tasks;
 
 namespace HMWGameServer
 {
+    [Serializable]
+    struct WorldArea
+    {
+        public string UniqueID;
+        public Dictionary<string, SubWorld> SubWorlds;
+    }
+    [Serializable]
+    struct SubWorld
+    {
+        public string UniqueID;
+        public byte[,,] Blocks;
+    }
+    struct WorldMapPropertiesPacketData
+    {
+        public int WorldAreaRow;
+        public int WorldAreaColumn;
+        public int WorldAreaLayer;
+        public int SubWorldRow;
+        public int SubWorldColumn;
+        public int SubWorldLayer;
+        public int SubWorldSizeX;
+        public int SubWorldSizeY;
+        public int SubWorldSizeZ;
+    }
     struct SubWorldBlockPacketData
     {
         // 실제 패킷 데이터.
@@ -29,8 +53,16 @@ namespace HMWGameServer
             }
             return Instance;
         }
+
+        public WorldMapPropertiesPacketData WorldMapProperties { get; set; }
+
         private GameWorldMapManager()
         {
+        }
+
+        public bool MakeWorldMap()
+        {
+            return true;
         }
 
         public void AddSubWorldData(SubWorldBlockPacketData packetData)

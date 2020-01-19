@@ -19,6 +19,9 @@ public enum NetProtocol
     USER_NET_TYPE_REQ,
     USER_NET_TYPE_ACK,
 
+    WORLD_MAP_PROPERTIES_REQ,
+    WORLD_MAP_PROPERTIES_ACK,
+
     END
 }
 
@@ -29,7 +32,18 @@ public enum GameUserNetType
     Host,
 }
 
-
+struct WorldMapPropertiesPacketData
+{
+    public int WorldAreaRow;
+    public int WorldAreaColumn;
+    public int WorldAreaLayer;
+    public int SubWorldRow;
+    public int SubWorldColumn;
+    public int SubWorldLayer;
+    public int SubWorldSizeX;
+    public int SubWorldSizeY;
+    public int SubWorldSizeZ;
+}
 public struct SubWorldBlockPacketData
 {
     // 패킷 데이터.
@@ -111,6 +125,11 @@ public class GameNetworkManager
             typePacket.SetProtocol((short)NetProtocol.USER_NET_TYPE_REQ);
             typePacket.Push((short)UserNetType);
             GameServer.Send(typePacket);
+            // 호스트 라면, 월드맵 프로퍼티 정보를 보낸다.
+            if(UserNetType == GameUserNetType.Host)
+            {
+                SendWorldMapProperties();
+            }
         }
     }
 
@@ -133,6 +152,37 @@ public class GameNetworkManager
         packet.Push(packetData.BlockTypeValue);
         //
         KojeomLogger.DebugLog("Send to Server (Changed Block Data) ", LOG_TYPE.NETWORK_CLIENT_INFO);
+        GameServer.Send(packet);
+    }
+
+    public void SendWorldMapProperties()
+    {
+        WorldConfig config = WorldConfigFile.Instance.GetConfig();
+        WorldMapData data = WorldMapDataFile.Instance.MapData;
+
+        WorldMapPropertiesPacketData packetData;
+        packetData.WorldAreaRow = data.WorldAreaRow;
+        packetData.WorldAreaColumn = data.WorldAreaColumn;
+        packetData.WorldAreaLayer = data.WorldAreaLayer;
+        packetData.SubWorldRow = data.SubWorldRow;
+        packetData.SubWorldColumn = data.SubWorldColumn;
+        packetData.SubWorldLayer = data.SubWorldLayer;
+        packetData.SubWorldSizeX = config.SubWorldSizeX;
+        packetData.SubWorldSizeY = config.SubWorldSizeY;
+        packetData.SubWorldSizeZ = config.SubWorldSizeZ;
+
+        CPacket packet = CPacket.Create((short)NetProtocol.WORLD_MAP_PROPERTIES_REQ);
+        packet.Push(packetData.WorldAreaRow);
+        packet.Push(packetData.WorldAreaColumn);
+        packet.Push(packetData.WorldAreaLayer);
+        packet.Push(packetData.SubWorldRow);
+        packet.Push(packetData.SubWorldColumn);
+        packet.Push(packetData.SubWorldLayer);
+        packet.Push(packetData.SubWorldSizeX);
+        packet.Push(packetData.SubWorldSizeY);
+        packet.Push(packetData.SubWorldSizeZ);
+        //
+        KojeomLogger.DebugLog("Send to Server (World map properties) ", LOG_TYPE.NETWORK_CLIENT_INFO);
         GameServer.Send(packet);
     }
 
@@ -174,6 +224,11 @@ class RemoteServerPeer : IPeer
             case NetProtocol.USER_NET_TYPE_ACK:
                 {
                     KojeomLogger.DebugLog("Server received user identity enum value.", LOG_TYPE.NETWORK_CLIENT_INFO);
+                }
+                break;
+            case NetProtocol.WORLD_MAP_PROPERTIES_ACK:
+                {
+                    KojeomLogger.DebugLog("Server received host map properties.", LOG_TYPE.NETWORK_CLIENT_INFO);
                 }
                 break;
         }
