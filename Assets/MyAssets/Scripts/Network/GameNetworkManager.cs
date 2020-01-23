@@ -34,15 +34,15 @@ public enum GameUserNetType
 
 struct WorldMapPropertiesPacketData
 {
-    public int WorldAreaRow;
-    public int WorldAreaColumn;
-    public int WorldAreaLayer;
-    public int SubWorldRow;
-    public int SubWorldColumn;
-    public int SubWorldLayer;
-    public int SubWorldSizeX;
-    public int SubWorldSizeY;
-    public int SubWorldSizeZ;
+    public Int32 WorldAreaRow;
+    public Int32 WorldAreaColumn;
+    public Int32 WorldAreaLayer;
+    public Int32 SubWorldRow;
+    public Int32 SubWorldColumn;
+    public Int32 SubWorldLayer;
+    public Int32 SubWorldSizeX;
+    public Int32 SubWorldSizeY;
+    public Int32 SubWorldSizeZ;
 }
 public struct SubWorldBlockPacketData
 {
@@ -125,11 +125,6 @@ public class GameNetworkManager
             typePacket.SetProtocol((short)NetProtocol.USER_NET_TYPE_REQ);
             typePacket.Push((short)UserNetType);
             GameServer.Send(typePacket);
-            // 호스트 라면, 월드맵 프로퍼티 정보를 보낸다.
-            if(UserNetType == GameUserNetType.Host)
-            {
-                SendWorldMapProperties();
-            }
         }
     }
 

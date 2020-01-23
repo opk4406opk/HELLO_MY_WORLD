@@ -41,6 +41,7 @@
     <Compile Include="GameWorldMapManager.cs" />
     <Compile Include="MainEntry.cs" />
     <Compile Include="NetProtocol.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="KojeomNet, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">

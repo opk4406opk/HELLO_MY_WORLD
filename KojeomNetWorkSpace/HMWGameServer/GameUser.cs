@@ -48,9 +48,12 @@ namespace HMWGameServer
                         // 해당 패킷에 대한 타임스탬프를 기록.
                         receivedData.TimeStampTicks = DateTime.Now.Ticks;
                         //
+                        GameWorldMapManager.GetInstance().AddSubWorldData(receivedData);
+                        //
                         Console.WriteLine(string.Format("AreaID: {0}, SubWorldID : {1}, BlockIndex x : {2} y : {3} z : {4}, BlockType : {5}",
                             receivedData.AreaID, receivedData.SubWorldID,
                             receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z, receivedData.BlockTypeValue));
+                        //
                         CPacket response = CPacket.Create((short)NetProtocol.CHANGED_SUBWORLD_BLOCK_ACK);
                         Send(response);
                     }
@@ -84,6 +87,13 @@ namespace HMWGameServer
                         packetData.SubWorldSizeY = msg.PopInt32();
                         packetData.SubWorldSizeZ = msg.PopInt32();
                         GameWorldMapManager.GetInstance().WorldMapProperties = packetData;
+                        GameWorldMapManager.GetInstance().MakeWorldMap();
+                        //
+                        Console.WriteLine(string.Format("MAP_PROPERTIES : WorldAreaRow : {0}, Column : {1}, Layer : {2}," +
+                            " SubWorldRow : {3}, Column : {4}, Layer : {5}, SubWorldSizeX : {6}, SizeY : {7}, SizeZ : {8}", 
+                            packetData.WorldAreaRow, packetData.WorldAreaColumn, packetData.WorldAreaLayer,
+                             packetData.SubWorldRow, packetData.SubWorldColumn, packetData.SubWorldLayer,
+                             packetData.SubWorldSizeX, packetData.SubWorldSizeY, packetData.SubWorldSizeZ));
 
                         CPacket response = CPacket.Create((short)NetProtocol.WORLD_MAP_PROPERTIES_ACK);
                         Send(response);

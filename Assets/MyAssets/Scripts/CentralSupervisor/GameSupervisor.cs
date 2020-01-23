@@ -96,6 +96,11 @@ public class GameSupervisor : MonoBehaviour
         InitSettings();
         GameDataManagerInstance.Initialize();
         InitManagers();
+        //
+        if(GameNetworkManager.GetInstance().UserNetType == GameUserNetType.Host)
+        {
+            GameNetworkManager.GetInstance().SendWorldMapProperties();
+        }
     }
 
     private void Update()
