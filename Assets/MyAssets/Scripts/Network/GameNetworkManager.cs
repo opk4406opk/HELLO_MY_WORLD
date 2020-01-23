@@ -121,12 +121,12 @@ public class GameNetworkManager
             CPacket seedPacket = new CPacket();
             seedPacket.SetProtocol((short)NetProtocol.INIT_RANDOM_SEED_REQ);
             seedPacket.Push(KojeomUtility.SeedValue);
-            GameServer.Send(seedPacket);
+            if (GameServer != null) GameServer.Send(seedPacket);
             // 호스트/클라이언트 Type 패킷을 보낸다.
             CPacket typePacket = new CPacket();
             typePacket.SetProtocol((short)NetProtocol.USER_NET_TYPE_REQ);
             typePacket.Push((short)UserNetType);
-            GameServer.Send(typePacket);
+            if (GameServer != null) GameServer.Send(typePacket);
         }
     }
 
@@ -149,7 +149,7 @@ public class GameNetworkManager
         packet.Push(packetData.BlockTypeValue);
         //
         KojeomLogger.DebugLog("Send to Server (Changed Block Data) ", LOG_TYPE.NETWORK_CLIENT_INFO);
-        GameServer.Send(packet);
+        if (GameServer != null) GameServer.Send(packet);
     }
 
     public void SendWorldMapProperties()
@@ -180,7 +180,7 @@ public class GameNetworkManager
         packet.Push(packetData.SubWorldSizeZ);
         //
         KojeomLogger.DebugLog("Send to Server (World map properties) ", LOG_TYPE.NETWORK_CLIENT_INFO);
-        GameServer.Send(packet);
+        if(GameServer != null) GameServer.Send(packet);
     }
 
     public void DisConnectToGameServer()
