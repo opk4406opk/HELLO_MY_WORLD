@@ -56,6 +56,14 @@ namespace HMWGameServer
                         //
                         CPacket response = CPacket.Create((short)NetProtocol.CHANGED_SUBWORLD_BLOCK_ACK);
                         Send(response);
+
+                        CPacket changeBlock = CPacket.Create((short)NetProtocol.CHANGE_SUBWORLD_BLOCK_PUSH);
+                        changeBlock.Push(receivedData.AreaID);
+                        changeBlock.Push(receivedData.SubWorldID);
+                        changeBlock.Push(receivedData.BlockIndex_X);
+                        changeBlock.Push(receivedData.BlockIndex_Y);
+                        changeBlock.Push(receivedData.BlockIndex_Z);
+                        GameServerManager.GetInstance().BroadCasting(changeBlock, this);
                     }
                     break;
                 case NetProtocol.INIT_RANDOM_SEED_REQ:

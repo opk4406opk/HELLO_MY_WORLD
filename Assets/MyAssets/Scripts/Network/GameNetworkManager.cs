@@ -22,6 +22,8 @@ public enum NetProtocol
     WORLD_MAP_PROPERTIES_REQ,
     WORLD_MAP_PROPERTIES_ACK,
 
+    CHANGE_SUBWORLD_BLOCK_PUSH,
+
     END
 }
 
@@ -224,6 +226,27 @@ class RemoteServerPeer : IPeer
             case NetProtocol.WORLD_MAP_PROPERTIES_ACK:
                 {
                     KojeomLogger.DebugLog("Server received host map properties.", LOG_TYPE.NETWORK_CLIENT_INFO);
+                }
+                break;
+            case NetProtocol.CHANGE_SUBWORLD_BLOCK_PUSH:
+                {
+                    KojeomLogger.DebugLog("Other user changed block.", LOG_TYPE.NETWORK_CLIENT_INFO);
+                    SubWorldBlockPacketData receivedData;
+                    receivedData.AreaID = msg.PopString();
+                    receivedData.SubWorldID = msg.PopString();
+                    receivedData.BlockIndex_X = msg.PopInt32();
+                    receivedData.BlockIndex_Y = msg.PopInt32();
+                    receivedData.BlockIndex_Z = msg.PopInt32();
+                    receivedData.BlockTypeValue = msg.Popbyte();
+                    WorldAreaManager.Instance.WorldAreas.TryGetValue(receivedData.AreaID, out WorldArea worldArea);
+                    if (worldArea != null)
+                    {
+                        worldArea.SubWorldStates.TryGetValue(receivedData.SubWorldID, out SubWorldState subWorldState);
+                        if (subWorldState != null)
+                        {
+                            subWorldState.SubWorldInstance.WorldBlockData[receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z].Type = receivedData.BlockTypeValue;
+                        }
+                    }
                 }
                 break;
         }
