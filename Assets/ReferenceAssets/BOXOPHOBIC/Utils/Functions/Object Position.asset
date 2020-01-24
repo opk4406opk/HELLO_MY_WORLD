@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: Object Position
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor\n// Available at the Unity Asset
+    Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=15407\n1927;29;1906;1014;1141;507;1;True;False\nNode;AmplifyShaderEditor.CustomExpressionNode;1;-512,-128;Half;False;unity_ObjectToWorld[0].w;1;False;0;unity_ObjectToWorld[0].w;True;False;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.DynamicAppendNode;6;-192,-256;Float;False;FLOAT3;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.CustomExpressionNode;3;-512,0;Half;False;unity_ObjectToWorld[2].w;1;False;0;unity_ObjectToWorld[2].w;True;False;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.CustomExpressionNode;2;-512,-64;Half;False;unity_ObjectToWorld[1].w;1;False;0;unity_ObjectToWorld[1].w;True;False;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;0;0,-128;Float;False;True;X;1;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;7;0,-256;Float;False;False;XYZ;0;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.FunctionOutput;5;0,0;Float;False;False;Z;3;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;4;0,-64;Float;False;False;Y;2;False;1;0;FLOAT;0;False;1;FLOAT;0\nWireConnection;6;0;1;0\nWireConnection;6;1;2;0\nWireConnection;6;2;3;0\nWireConnection;0;0;1;0\nWireConnection;7;0;6;0\nWireConnection;5;0;3;0\nWireConnection;4;0;2;0\nASEEND*/\n//CHKSM=18928686835E67C5777AC2B654DC6C7223FE2CF1"
+  m_functionName: 
+  m_description: Object Base position in World Space.
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 0
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 10
+  m_customNodeCategory: 
+  m_previewPosition: 0

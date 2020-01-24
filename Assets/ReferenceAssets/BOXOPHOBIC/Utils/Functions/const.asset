@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: const
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor\n// Available at the Unity Asset
+    Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=16203\n1927;29;1906;1014;916;272;1;True;False\nNode;AmplifyShaderEditor.RangedFloatNode;1;-384,0;Half;False;Constant;_Float0;Float
+    0;0;0;Create;True;0;0;False;0;0;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionSubtitle;2;-176,0;Float;False;0;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;5;-384,64;Half;False;Constant;_Float1;Float
+    1;0;0;Create;True;0;0;False;0;1;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;6;-384,128;Half;False;Constant;_Float2;Float
+    2;0;0;Create;True;0;0;False;0;-1;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionSwitch;3;127,-1;Float;False;Constant;False;0;6;-1;Zero;One;Minus
+    One;Zero Point Five;Close To 0;Close To 1;Object;-1;9;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionSubtitle;4;-176,64;Float;False;1;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;12;-384,448;Half;False;Constant;_Float4;Float
+    4;0;0;Create;True;0;0;False;0;0.9999;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionSubtitle;7;-176,128;Float;False;-1;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;13;-384,256;Half;False;Constant;_Float5;Float
+    5;0;0;Create;True;0;0;False;0;0.5;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionSubtitle;14;-176,256;Float;False;0.5;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionSubtitle;11;-192,448;Float;False;0.9999;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionSubtitle;9;-192,384;Float;False;0.0001;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode;10;-384,384;Half;False;Constant;_Float3;Float
+    3;0;0;Create;True;0;0;False;0;0.0001;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput;0;512,0;Float;False;True;;0;True;1;0;FLOAT;0;False;1;FLOAT;0\nWireConnection;2;0;1;0\nWireConnection;3;0;2;0\nWireConnection;3;1;4;0\nWireConnection;3;2;7;0\nWireConnection;3;3;14;0\nWireConnection;3;4;9;0\nWireConnection;3;5;11;0\nWireConnection;4;0;5;0\nWireConnection;7;0;6;0\nWireConnection;14;0;13;0\nWireConnection;11;0;12;0\nWireConnection;9;0;10;0\nWireConnection;0;0;3;0\nASEEND*/\n//CHKSM=84857032A82228E29384ADA0938CC26F1864CAD2"
+  m_functionName: 
+  m_description: 
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 0
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 2
+  m_customNodeCategory: 
+  m_previewPosition: 0
+  m_hidden: 0
