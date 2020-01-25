@@ -84,6 +84,22 @@ public class KojeomUtility
         return value.ToString();
     }
 
+    public static GameParticleType GetParticleTypeFromAssetPath(string assetPath)
+    {
+        string prefabName = assetPath.Substring(assetPath.LastIndexOf('/') + 1);
+        var splits = prefabName.Split('.');
+        var tokens = splits[0].Split('_');
+        return StringToEnum<GameParticleType>(tokens[2]);
+    }
+
+    public static GameParticeEffectCategory GetParticleCategoryFromAssetPath(string assetPath)
+    {
+        string prefabName = assetPath.Substring(assetPath.LastIndexOf('/') + 1);
+        var splits = prefabName.Split('.');
+        var tokens = splits[0].Split('_');
+        return StringToEnum<GameParticeEffectCategory>(tokens[1]);
+    }
+
     public static T GetActorDetailTypeFromAssetPath<T>(string assetPath)
     {
         string prefabName = assetPath.Substring(assetPath.LastIndexOf('/') + 1);

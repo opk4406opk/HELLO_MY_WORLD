@@ -114,6 +114,10 @@ public class ConstFilePath
     /// </summary>
     public readonly static string PLAYER_CAMERA_PREFAB = "GamePrefabs/Camera/PlayerCamera";
 
+    /// <summary>
+    /// 게임에서 사용되는 파티클 프리팹 에셋 경로.
+    /// </summary>
+    public readonly static string GAME_FX_ASSET_PATH = "Assets/MyAssets/Resources/GamePrefabs/FX";
 }
 
 

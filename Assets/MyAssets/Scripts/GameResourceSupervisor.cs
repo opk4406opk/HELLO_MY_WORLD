@@ -27,17 +27,12 @@ public class ActorResourceGroup
 
 /*  파티클 이펙트 프리팹 이름 규칙.
  *  
- *  [Category]_[Name]
+ *  FX_[Category]_[Type]
  */
 
 public class ParticleEffectCategoryContainer
 {
-    public ParticleEffectResourceGroup[] PartiecleEffectResources;
-}
-
-public class ParticleEffectResourceGroup
-{
-    public Dictionary<string, SoftObjectPtr> Resources = new Dictionary<string, SoftObjectPtr>();
+    public Dictionary<GameParticleType, SoftObjectPtr> Resources = new Dictionary<GameParticleType, SoftObjectPtr>();
 }
 
 /// <summary>
@@ -86,9 +81,18 @@ public class GameResourceSupervisor
         EnviromentChunkPrefab = new SoftObjectPtr(ConstFilePath.ENVIROMENT_CHUNK_PREFAB_RESOURCE_PATH);
 
         // 게임 파티클.
-        for(int idx = 0; idx < (int)GameParticeEffectCategory.COUNT; idx++)
+        var particleGuids = AssetDatabase.FindAssets("FX", new[] { ConstFilePath.GAME_FX_ASSET_PATH });
+        foreach(var guid in particleGuids)
         {
-            ParticleEffectPrefabs[idx] = new ParticleEffectCategoryContainer();
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            GameParticeEffectCategory category = KojeomUtility.GetParticleCategoryFromAssetPath(path);
+            GameParticleType type = KojeomUtility.GetParticleTypeFromAssetPath(path);
+            string resorucePath = KojeomUtility.ConvertAssetPathToResourcePath(path);
+            if(ParticleEffectPrefabs[(int)category] == null)
+            {
+                ParticleEffectPrefabs[(int)category] = new ParticleEffectCategoryContainer();
+            }
+            ParticleEffectPrefabs[(int)category].Resources.Add(type, new SoftObjectPtr(resorucePath));
         }
 
         // 액터.
