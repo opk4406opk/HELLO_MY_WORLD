@@ -34,7 +34,7 @@ public class MultiPlayLobbyManager : MonoBehaviour {
 
     public void OnClickConnectToHostWithIP()
     {
-        UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.promptServerIP);
+        UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.PromptServerIP);
     }
 
     private void UpdateServerList()

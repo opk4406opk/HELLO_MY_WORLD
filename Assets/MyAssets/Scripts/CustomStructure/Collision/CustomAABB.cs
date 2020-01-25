@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// AABB
+/// ( 1 x 1 x 1(unit) )
+/// </summary>
 public struct CustomAABB {
     public float vx;
     public float vy;

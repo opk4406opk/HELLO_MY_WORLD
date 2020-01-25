@@ -19,16 +19,13 @@ public class GameMessage
     }
 
     private static MESSAGE_TYPE _curGameMsgType = MESSAGE_TYPE.NONE;
-    public static MESSAGE_TYPE SetGameMsgType
-    {
-        set { _curGameMsgType = value; }
-    }
-
+   
     private static string curKeyString;
 
-    public static void SetMessage(string _message)
+    public static void SetMessage(string _message, MESSAGE_TYPE msgType)
     {
-        switch(_curGameMsgType)
+        _curGameMsgType = msgType;
+        switch (_curGameMsgType)
         {
             case MESSAGE_TYPE.WORLD_LOAD_FAIL:
                 PlayerPrefs.SetString("WORLD_LOAD_FAIL", _message);
@@ -90,6 +87,6 @@ public class MessageManager : APopupUI {
 
     protected override void CallBackPopupClose()
     {
-        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.gameMessage);
+        UIPopupSupervisor.ClosePopupUI(UI_POPUP_TYPE.GameMessage);
     }
 }

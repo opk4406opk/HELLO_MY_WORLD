@@ -41,6 +41,29 @@ namespace HMWGameServer
         public byte BlockTypeValue;
         // 서버에서 기록하는 타임스탬프.
         public long TimeStampTicks;
+
+
+        public static bool operator ==(SubWorldBlockPacketData a, SubWorldBlockPacketData b)
+        {
+            bool bAreaID = a.AreaID == b.AreaID;
+            bool bSubWorldID = a.SubWorldID == b.SubWorldID;
+            bool bIndexX = a.BlockIndex_X == b.BlockIndex_X;
+            bool bIndexY = a.BlockIndex_Y == b.BlockIndex_Y;
+            bool bIndexZ = a.BlockIndex_Z == b.BlockIndex_Z;
+
+            return bAreaID ^ bSubWorldID ^ bIndexX ^ bIndexY ^ bIndexZ;
+        }
+        public static bool operator !=(SubWorldBlockPacketData a, SubWorldBlockPacketData b)
+        {
+            bool bAreaID = a.AreaID == b.AreaID;
+            bool bSubWorldID = a.SubWorldID == b.SubWorldID;
+            bool bIndexX = a.BlockIndex_X == b.BlockIndex_X;
+            bool bIndexY = a.BlockIndex_Y == b.BlockIndex_Y;
+            bool bIndexZ = a.BlockIndex_Z == b.BlockIndex_Z;
+
+            return !(bAreaID ^ bSubWorldID ^ bIndexX ^ bIndexY ^ bIndexZ);
+        }
+
     }
     class GameWorldMapManager
     {

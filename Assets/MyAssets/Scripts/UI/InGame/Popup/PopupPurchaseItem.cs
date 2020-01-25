@@ -109,6 +109,6 @@ public class PopupPurchaseItem : APopupUI {
 
     protected override void CallBackPopupClose()
     {
-        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.purchaseItem);
+        UIPopupSupervisor.ClosePopupUI(UI_POPUP_TYPE.PurchaseItem);
     }
 }

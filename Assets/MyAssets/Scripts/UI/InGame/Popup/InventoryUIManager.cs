@@ -132,11 +132,11 @@ public class InventoryUIManager : APopupUI {
     private void OnClickItem(UIItemData itemData)
     {
         lastestSelectItem = itemData;
-        UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.itemData);
+        UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.ItemData);
     }
 
     protected override void CallBackPopupClose()
     {
-        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.inven);
+        UIPopupSupervisor.ClosePopupUI(UI_POPUP_TYPE.Inventory);
     }
 }

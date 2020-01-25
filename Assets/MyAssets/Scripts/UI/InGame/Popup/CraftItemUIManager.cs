@@ -76,15 +76,13 @@ public class CraftItemUIManager : APopupUI {
             ItemInfo itemInfo = ItemTableReader.GetInstance().GetItemInfo(item.CraftItemID);
             SetCraftItemToUser(item.CraftItemID, item.CraftItemName, int.Parse(selectQuantityList.value), itemInfo.Type.ToString());
 
-            GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.CRAFT_ITEM_SUCCESS;
-            GameMessage.SetMessage("아이템 제작에 성공했습니다.");
-            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMessage);
+            GameMessage.SetMessage("아이템 제작에 성공했습니다.", GameMessage.MESSAGE_TYPE.CRAFT_ITEM_SUCCESS);
+            UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.GameMessage);
         }
         else
         {
-            GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.CRAFT_ITEM_FAIL;
-            GameMessage.SetMessage("수량부족으로 아이템 제작이 불가능합니다.");
-            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMessage);
+            GameMessage.SetMessage("수량부족으로 아이템 제작이 불가능합니다.", GameMessage.MESSAGE_TYPE.CRAFT_ITEM_FAIL);
+            UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.GameMessage);
         }
     }
 
@@ -313,7 +311,7 @@ public class CraftItemUIManager : APopupUI {
     private void OnClickItem(UIItemData itemData)
     {
         lastestSelectItem = itemData;
-        UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.itemData);
+        UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.ItemData);
     }
 
     private void ClearItemSlot()
@@ -353,6 +351,6 @@ public class CraftItemUIManager : APopupUI {
 
     protected override void CallBackPopupClose()
     {
-        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.craftItem);
+        UIPopupSupervisor.ClosePopupUI(UI_POPUP_TYPE.CraftItem);
     }
 }

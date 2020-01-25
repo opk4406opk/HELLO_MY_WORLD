@@ -29,7 +29,7 @@ public class WindowInput : AInput
             var actorCollideMgr = ActorCollideManager.singleton;
             if (actorCollideMgr != null && actorCollideMgr.IsNpcCollide(RayInstance))
             {
-                UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.shop);
+                UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.Shop);
             }
             else
             {
@@ -65,19 +65,19 @@ public class WindowInput : AInput
         ///////////////////////////////////////////////////////////////////////////////////////
         if (Input.GetKeyDown(KeyCode.I))
         {
-            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.inven);
+            UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.Inventory);
         }
         else if (Input.GetKeyDown(KeyCode.F10))
         {
-            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMenu);
+            UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.GameMenu);
         }
         else if (Input.GetKeyDown(KeyCode.U))
         {
-            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.craftItem);
+            UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.CraftItem);
         }
         else if (Input.GetKeyDown(KeyCode.F))
         {
-            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.shop);
+            UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.Shop);
         }
         else if (Input.GetKey(KeyCode.BackQuote))
         {

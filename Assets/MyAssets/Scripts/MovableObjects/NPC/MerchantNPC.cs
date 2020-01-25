@@ -56,6 +56,6 @@ public class MerchantNPC : NPCActor, IMerchantNPC
     {
         // to do.
         OnClickedActor(this);
-        UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.shop);
+        UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.Shop);
     }
 }

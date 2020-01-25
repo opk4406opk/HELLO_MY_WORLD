@@ -28,13 +28,14 @@ public class ModifyWorldManager : MonoBehaviour
             area.SubWorldStates.TryGetValue(subWorldID, out SubWorldState subWorldState);
             //
             SubWorld subWorld = subWorldState.SubWorldInstance;
+            BlockTileInfo blockTileInfo = BlockTileDataFile.Instance.GetBlockTileInfo((BlockTileType)modifiedTileValue);
             //
-            Block[,,] blockArray = subWorld.WorldBlockData;
-            blockArray[blockIndex_X, blockIndex_Y, blockIndex_Z].Type = modifiedTileValue;
-            Vector3 centerPos = blockArray[blockIndex_X, blockIndex_Y, blockIndex_Z].GetCenterPosition();
+            subWorld.WorldBlockData[blockIndex_X, blockIndex_Y, blockIndex_Z].Type = modifiedTileValue;
+            subWorld.WorldBlockData[blockIndex_X, blockIndex_Y, blockIndex_Z].Durability = blockTileInfo.Durability;
+            Vector3 centerPos = subWorld.WorldBlockData[blockIndex_X, blockIndex_Y, blockIndex_Z].GetCenterPosition();
             if ((BlockTileType)modifiedTileValue == BlockTileType.EMPTY)
             {
-                blockArray[blockIndex_X, blockIndex_Y, blockIndex_Z].bRendered = false;
+                subWorld.WorldBlockData[blockIndex_X, blockIndex_Y, blockIndex_Z].bRendered = false;
                 // 지워진 블록에 옥트리 노드가 남아있다면 삭제.
                 CollideInfo col = subWorld.CustomOctreeInstance.Collide(centerPos);
                 if (col.bCollide == true)
@@ -44,7 +45,7 @@ public class ModifyWorldManager : MonoBehaviour
             }
             else
             {
-                blockArray[blockIndex_X, blockIndex_Y, blockIndex_Z].bRendered = true;
+                subWorld.WorldBlockData[blockIndex_X, blockIndex_Y, blockIndex_Z].bRendered = true;
                 // 블록 타입이 변경된 지점에 옥트리 노드가 없다면 새로 생성.
                 CollideInfo col = subWorld.CustomOctreeInstance.Collide(centerPos);
                 if (col.bCollide == false)
@@ -95,9 +96,9 @@ public class ModifyWorldManager : MonoBehaviour
         if (collideInfo.bCollide)
         {
             Block hitBlock = collideInfo.GetBlock();
-            int blockX = hitBlock.worldDataIndexX;
-            int blockY = hitBlock.worldDataIndexY;
-            int blockZ = hitBlock.worldDataIndexZ;
+            int blockX = hitBlock.WorldDataIndexX;
+            int blockY = hitBlock.WorldDataIndexY;
+            int blockZ = hitBlock.WorldDataIndexZ;
             KojeomLogger.DebugLog(string.Format("RayCasting blockX {0} blockY {1} blockZ {2}", blockX, blockY, blockZ));
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // 블록 변경 패킷.
@@ -141,15 +142,16 @@ public class ModifyWorldManager : MonoBehaviour
            (z < gameWorldConfig.SubWorldSizeZ) &&
            (x >= 0) && (y >= 0) && (z >= 0)) 
         {
+            BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo((BlockTileType)block);
             SelectWorldInstance.WorldBlockData[x, y, z].Type = block;
+            SelectWorldInstance.WorldBlockData[x, y, z].Durability = tileInfo.Durability;
             SelectWorldInstance.WorldBlockData[x, y, z].bRendered = true;
             UpdateChunkAt(x, y, z, block);
         }
         else
         {
-            GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.CANT_CREATE_BLOCK;
-            GameMessage.SetMessage("허용 범위를 벗어나 블록 생성이 불가능합니다. (구조적 문제로 인해 수정중입니다. 기다려주세요.)");
-            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMessage);
+            GameMessage.SetMessage("허용 범위를 벗어나 블록 생성이 불가능합니다.", GameMessage.MESSAGE_TYPE.CANT_CREATE_BLOCK);
+            UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.GameMessage);
         }
     }
     private void SetBlockForDelete(int x, int y, int z, byte block)
@@ -215,15 +217,16 @@ public class ModifyWorldManager : MonoBehaviour
             // 블록을 삭제할때마다, DB를 접속해서 쿼리 날리고 갱신시키는건 너무 무거운 작업.
             // 비동기로 처리하는게 좋을 듯 싶다.
             //UpdateUserItem(world.WorldBlockData[x, y, z].Type);
+            BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo((BlockTileType)block);
             SelectWorldInstance.WorldBlockData[x, y, z].Type = block;
+            SelectWorldInstance.WorldBlockData[x, y, z].Durability = tileInfo.Durability;
             SelectWorldInstance.WorldBlockData[x, y, z].bRendered = false;
             UpdateChunkAt(x, y, z, block);
         }
         else
         {
-            GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.CANT_CREATE_BLOCK;
-            GameMessage.SetMessage("허용 범위를 벗어나 블록 생성이 불가능합니다. (구조적 문제로 인해 수정중입니다. 기다려주세요.)");
-            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMessage);
+            GameMessage.SetMessage("허용 범위를 벗어나 블록 생성이 불가능합니다.", GameMessage.MESSAGE_TYPE.CANT_CREATE_BLOCK);
+            UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.GameMessage);
         }
         
     }

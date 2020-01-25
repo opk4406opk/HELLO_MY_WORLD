@@ -2,66 +2,79 @@
   "1": {
     "posX": "0",
     "posY": "0",
-    "type_name": "EMPTY"
+    "type_name": "EMPTY",
+	"durability" : "0"
   },
   "2": {
     "posX": "0",
     "posY": "15",
-    "type_name": "GRASS"
+    "type_name": "GRASS",
+	"durability" : "1"
   },
   "3": {
     "posX": "0",
     "posY": "14",
-    "type_name": "STONE_BIG"
+    "type_name": "STONE_BIG",
+	"durability" : "2"
   },
   "4": {
     "posX": "1",
     "posY": "14",
-    "type_name": "STONE_SMALL"
+    "type_name": "STONE_SMALL",
+	"durability" : "2"
   },
   "5": {
     "posX": "0",
     "posY": "4",
-    "type_name": "SAND"
+    "type_name": "SAND",
+	"durability" : "1"
   },
   "6": {
     "posX": "0",
     "posY": "1",
-    "type_name": "RED_STONE"
+    "type_name": "RED_STONE",
+	"durability" : "2"
   },
   "7": {
     "posX": "2",
     "posY": "15",
-    "type_name": "WOOD"
+    "type_name": "WOOD",
+	"durability" : "1"
   },
   "8": {
     "posX": "0",
     "posY": "13",
-    "type_name": "STONE_GOLD"
+    "type_name": "STONE_GOLD",
+	"durability" : "3"
   },
   "9": {
     "posX": "2",
     "posY": "13",
-    "type_name": "STONE_IRON"
+    "type_name": "STONE_IRON",
+	"durability" : "2"
   },
   "10": {
     "posX": "0",
     "posY": "11",
-    "type_name": "STONE_SILVER"
+    "type_name": "STONE_SILVER",
+	"durability" : "2"
   },
   "11": {
     "posX": "4",
     "posY": "12",
-    "type_name": "NORMAL_TREE_LEAF"
+    "type_name": "NORMAL_TREE_LEAF",
+	"durability" : "1"
   },
   "12": {
     "posX": "4",
     "posY": "7",
-    "type_name": "SQAURE_TREE_LEAF"
+    "type_name": "SQAURE_TREE_LEAF",
+	"durability" : "1"
   },
   "13": {
     "posX": "0",
     "posY": "0",
-    "type_name": "WATER"
+    "type_name": "WATER",
+	"durability" : "0"
   }
 }

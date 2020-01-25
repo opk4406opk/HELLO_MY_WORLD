@@ -60,6 +60,6 @@ public class PopupSellItem : APopupUI {
 
     protected override void CallBackPopupClose()
     {
-        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.sellItem);
+        UIPopupSupervisor.ClosePopupUI(UI_POPUP_TYPE.SellItem);
     }
 }

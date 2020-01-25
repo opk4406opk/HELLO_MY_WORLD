@@ -38,15 +38,15 @@ public class MobileInput : AInput
 
     public void OnTouchMenu()
     {
-        UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMenu);
+        UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.GameMenu);
     }
     public void OnTouchInventory()
     {
-        UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.inven);
+        UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.Inventory);
     }
     public void OnTouchCraftItem()
     {
-        UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.craftItem);
+        UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.CraftItem);
     }
 
     public override void UpdateProcess()

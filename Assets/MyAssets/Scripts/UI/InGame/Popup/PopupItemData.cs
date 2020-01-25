@@ -45,6 +45,6 @@ public class PopupItemData : APopupUI
 
     protected override void CallBackPopupClose()
     {
-        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.itemData);
+        UIPopupSupervisor.ClosePopupUI(UI_POPUP_TYPE.ItemData);
     }
 }

@@ -2,6 +2,10 @@
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// Block
+/// (1 x 1 x 1(unit))
+/// </summary>
 [Serializable]
 public struct Block {
 
@@ -10,9 +14,10 @@ public struct Block {
     public float CenterY;
     public float CenterZ;
     public bool bRendered;
-    public int worldDataIndexX;
-    public int worldDataIndexY;
-    public int worldDataIndexZ;
+    public int WorldDataIndexX;
+    public int WorldDataIndexY;
+    public int WorldDataIndexZ;
+    public int Durability;
     // 복사 생성자.
     public Block(Block b)
     {
@@ -21,9 +26,10 @@ public struct Block {
         CenterY = b.CenterY;
         CenterZ = b.CenterZ;
         bRendered = b.bRendered;
-        worldDataIndexX = b.worldDataIndexX;
-        worldDataIndexY = b.worldDataIndexY;
-        worldDataIndexZ = b.worldDataIndexZ;
+        WorldDataIndexX = b.WorldDataIndexX;
+        WorldDataIndexY = b.WorldDataIndexY;
+        WorldDataIndexZ = b.WorldDataIndexZ;
+        Durability = b.Durability;
     }
 
     public Vector3 GetCenterPosition()

@@ -31,6 +31,7 @@ public struct BlockTileInfo
     public int PositionX;
     public int PositionY;
     public BlockTileType Type;
+    public int Durability; // 0 : 파괴되지 않음, 1 ~ (내구성)
 }
 
 /// <summary>
@@ -82,6 +83,8 @@ public class BlockTileDataFile : BaseDataFile
                     tileInfo.PositionX = int.Parse(extractedInfo);
                     data.TryGetValue("posY", out extractedInfo);
                     tileInfo.PositionY = int.Parse(extractedInfo);
+                    data.TryGetValue("durability", out extractedInfo);
+                    tileInfo.Durability = int.Parse(extractedInfo);
                     //
                     TileDatas.Add(tileInfo.Type, tileInfo);
                 }

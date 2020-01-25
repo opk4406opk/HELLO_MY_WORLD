@@ -46,7 +46,7 @@ public class ChSelectManager : MonoBehaviour
     private void OnClickChCard(CharacterData chData)
     {
         lastestSelectChar = chData;
-        UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.charInfo);
+        UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.CharInfo);
     }
     
     private void LoadCharDatas()

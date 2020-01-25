@@ -180,9 +180,10 @@ public class SubWorld : MonoBehaviour
                             {
                                 Type = (byte)BlockTileType.EMPTY,
                                 bRendered = false,
-                                worldDataIndexX = x,
-                                worldDataIndexY = y,
-                                worldDataIndexZ = z
+                                WorldDataIndexX = x,
+                                WorldDataIndexY = y,
+                                WorldDataIndexZ = z,
+                                Durability = 0
                             };
                         }
                     }
@@ -227,7 +228,11 @@ public class SubWorld : MonoBehaviour
                             byte blockType = (byte)terrainValue.BlockType;
                             for (int y = 0; y < rangeY; y++)
                             {
+                                // 블록 타입 세팅.
                                 WorldBlockData[x, y, z].Type = blockType;
+                                // 블록 내구도 세팅.
+                                BlockTileInfo blockTypeInfo = BlockTileDataFile.Instance.GetBlockTileInfo((BlockTileType)blockType);
+                                WorldBlockData[x, y, z].Durability = blockTypeInfo.Durability;
                             }
                         }
                     }

@@ -130,6 +130,6 @@ public class PopupChData : APopupUI
 
     protected override void CallBackPopupClose()
     {
-        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.charInfo);
+        UIPopupSupervisor.ClosePopupUI(UI_POPUP_TYPE.CharInfo);
     }
 }

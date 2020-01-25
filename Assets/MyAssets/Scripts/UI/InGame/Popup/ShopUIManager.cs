@@ -128,7 +128,7 @@ public class ShopUIManager : APopupUI {
     private void OnClickShopItem(UIItemData itemData)
     {
         lastestSelectItem = itemData;
-        UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.purchaseItem);
+        UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.PurchaseItem);
     }
 
     private void SettingUserItem()
@@ -195,11 +195,11 @@ public class ShopUIManager : APopupUI {
     private void OnClickUserItem(UIItemData itemData)
     {
         lastestSelectItem = itemData;
-        UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.sellItem);
+        UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.SellItem);
     }
 
     protected override void CallBackPopupClose()
     {
-        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.shop);
+        UIPopupSupervisor.ClosePopupUI(UI_POPUP_TYPE.Shop);
     }
 }

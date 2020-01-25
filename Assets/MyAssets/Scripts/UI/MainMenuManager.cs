@@ -107,7 +107,7 @@ public class MainMenuManager : MonoBehaviour {
             KojeomLogger.DebugLog("Waiting LoginServer TimeOut!", LOG_TYPE.ERROR);
 		}
         // 일단 http 로그인 서버에 접속이 실패 or 성공에 상관없이 다음 화면으로 넘어간다.
-        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.waitingConnect);
+        UIPopupSupervisor.ClosePopupUI(UI_POPUP_TYPE.WaitingConnect);
         GameSoundManager.GetInstnace().StopSound(GAME_SOUND_TYPE.BGM_mainMenu);
         GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.SELECT_CHARACTERS);
 	}
@@ -124,10 +124,9 @@ public class MainMenuManager : MonoBehaviour {
         }
         else
         {
-            GameMessage.SetGameMsgType = GameMessage.MESSAGE_TYPE.WORLD_LOAD_FAIL;
-            GameMessage.SetMessage("게임 로딩에 실패했습니다.");
+            GameMessage.SetMessage("게임 로딩에 실패했습니다.", GameMessage.MESSAGE_TYPE.WORLD_LOAD_FAIL);
 			KojeomLogger.DebugLog("GameLoading Failed", LOG_TYPE.ERROR);
-            UIPopupSupervisor.OpenPopupUI(POPUP_TYPE.gameMessage);
+            UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.GameMessage);
         }
     }
     

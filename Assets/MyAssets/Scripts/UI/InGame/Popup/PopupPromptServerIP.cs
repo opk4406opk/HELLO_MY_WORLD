@@ -30,6 +30,6 @@ public class PopupPromptServerIP : APopupUI {
 
     protected override void CallBackPopupClose()
     {
-        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.promptServerIP);
+        UIPopupSupervisor.ClosePopupUI(UI_POPUP_TYPE.PromptServerIP);
     }
 }

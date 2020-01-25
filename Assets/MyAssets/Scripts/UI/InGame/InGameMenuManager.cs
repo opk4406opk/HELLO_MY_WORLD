@@ -57,6 +57,6 @@ public class InGameMenuManager : APopupUI
 
     protected override void CallBackPopupClose()
     {
-        UIPopupSupervisor.ClosePopupUI(POPUP_TYPE.gameMenu);
+        UIPopupSupervisor.ClosePopupUI(UI_POPUP_TYPE.GameMenu);
     }
 }
