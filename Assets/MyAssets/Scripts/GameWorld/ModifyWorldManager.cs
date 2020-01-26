@@ -122,6 +122,15 @@ public class ModifyWorldManager : MonoBehaviour
             }
             else
             {
+                // 파티클 테스트.
+                ParticleEffectSpawnParams spawnParams;
+                spawnParams.ParticleType = GameParticleType.DirtSplatter;
+                spawnParams.SpawnLocation = collideInfo.CollisionPoint;
+                spawnParams.SpawnRotation = Quaternion.identity;
+                spawnParams.bLooping = false;
+                spawnParams.bStart = true;
+                GameParticleEffectManager.Instance.SpawnParticleEffect(spawnParams);
+                //
                 SelectWorldInstance.CustomOctreeInstance.Delete(collideInfo.HitBlockCenter);
                 SetBlockForDelete(blockX, blockY, blockZ, blockType);
                 SelectWorldInstance.WorldBlockData[blockX, blockY, blockZ].bRendered = false;
