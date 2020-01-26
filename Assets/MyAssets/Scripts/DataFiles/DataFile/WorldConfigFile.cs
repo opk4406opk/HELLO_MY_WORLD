@@ -37,7 +37,7 @@ public class WorldConfigFile : BaseDataFile
     public override void Init ()
     {
         Instance = this;
-        JsonFile = Resources.Load(ConstFilePath.TXT_WORLD_CONFIG_DATA) as TextAsset;
+        JsonFile = Resources.Load(ConstFilePath.TXT_RESOURCE_WORLD_CONFIG_DATA) as TextAsset;
         JsonObject = new JSONObject(JsonFile.text);
         AccessData(JsonObject);
     }

@@ -38,7 +38,6 @@ public class GameSupervisor : MonoBehaviour
 
     #region simple config.
     public bool bSoundOn = false;
-    public bool bLockCursor = false;
     #endregion
     //
     #region Inspector variables.
@@ -86,14 +85,22 @@ public class GameSupervisor : MonoBehaviour
         }
 #endif
         Instance = this;
-        KojeomLogger.DebugLog(string.Format("GameModeState : {0}, Detail : {1}", GameStatus.CurrentGameModeState, GameStatus.DetailSingleMode), LOG_TYPE.SYSTEM);
-
         GameModeGroup[(int)GameModeState.SINGLE] = new SingleGameMode();
         GameModeGroup[(int)GameModeState.MULTI] = new MultiGameMode();
         //init game mode.
         GameModeGroup[(int)GameStatus.CurrentGameModeState].Init();
         //
-        InitSettings();
+        switch (GameStatus.CurrentGameModeState)
+        {
+            case GameModeState.SINGLE:
+                KojeomLogger.DebugLog(string.Format("GameModeState : {0}, Detail : {1}, User Network Type : {2}",
+                    GameStatus.CurrentGameModeState, GameStatus.DetailSingleMode, GameNetworkManager.GetInstance().UserNetType), LOG_TYPE.SYSTEM);
+                break;
+            case GameModeState.MULTI:
+                KojeomLogger.DebugLog(string.Format("GameModeState : {0}, User Network Type : {1}",
+                    GameStatus.CurrentGameModeState, GameNetworkManager.GetInstance().UserNetType), LOG_TYPE.SYSTEM);
+                break;
+        }
         GameDataManagerInstance.Initialize();
         InitManagers();
         //
@@ -108,14 +115,6 @@ public class GameSupervisor : MonoBehaviour
         if(GameModeGroup[(int)GameStatus.CurrentGameModeState] != null)
         {
             GameModeGroup[(int)GameStatus.CurrentGameModeState].Tick(Time.deltaTime);
-        }
-    }
-
-    private void InitSettings()
-    {
-        if(bLockCursor == true)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
         }
     }
 

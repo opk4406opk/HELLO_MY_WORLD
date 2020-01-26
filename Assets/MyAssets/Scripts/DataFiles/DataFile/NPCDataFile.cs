@@ -12,7 +12,7 @@ public class NPCDataFile : BaseDataFile
 
 	public override void Init()
     {
-        JsonFile = Resources.Load(ConstFilePath.TXT_NPC_DATAS) as TextAsset;
+        JsonFile = Resources.Load(ConstFilePath.TXT_RESOURCE_NPC_DATAS) as TextAsset;
         JsonObject = new JSONObject(JsonFile.text);
         AccessData(JsonObject);
 

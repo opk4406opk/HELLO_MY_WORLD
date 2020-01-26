@@ -52,7 +52,7 @@ public class ChSelectManager : MonoBehaviour
     private void LoadCharDatas()
     {
         jsonDataSheet = new List<Dictionary<string, string>>();
-        jsonFile = Resources.Load(ConstFilePath.TXT_CHARACTER_DATAS) as TextAsset;
+        jsonFile = Resources.Load(ConstFilePath.TXT_RESOURCE_CHARACTER_DATAS) as TextAsset;
         charDatajsonObj = new JSONObject(jsonFile.text);
         AccessData(charDatajsonObj);
     }

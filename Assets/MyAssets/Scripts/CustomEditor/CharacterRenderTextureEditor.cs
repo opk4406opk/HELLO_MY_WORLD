@@ -175,7 +175,7 @@ public class CharacterRenderTextureEditor : EditorWindow
     private void LoadChDatas()
     {
         jsonDataSheet = new List<Dictionary<string, string>>();
-        jsonFile = Resources.Load(ConstFilePath.TXT_CHARACTER_DATAS) as TextAsset;
+        jsonFile = Resources.Load(ConstFilePath.TXT_RESOURCE_CHARACTER_DATAS) as TextAsset;
         chDataJsonObj = new JSONObject(jsonFile.text);
         AccessData(chDataJsonObj);
     }

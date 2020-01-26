@@ -73,12 +73,17 @@ public class WorldAreaManager : MonoBehaviour
     /// <returns></returns>
     public SubWorld ContainedSubWorld(Vector3 pos)
     {
-        var subWorldInstance = WorldAreas[GetWorldAreaUniqueID(pos)].ContainedSubWorld(pos);
-        if (subWorldInstance == null)
+        var worldArea = WorldAreas[GetWorldAreaUniqueID(pos)];
+        if(worldArea != null)
         {
-            return null;
+            var subWorldInstance = worldArea.ContainedSubWorld(pos);
+            if (subWorldInstance == null)
+            {
+                return null;
+            }
+            return subWorldInstance;
         }
-        return subWorldInstance;
+        return null;
     }
 
     public SubWorld ContainedSubWorld(GamePlayerController playerController)

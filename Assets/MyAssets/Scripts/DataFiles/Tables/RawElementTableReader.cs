@@ -17,7 +17,7 @@ public class RawElementTableReader : ATableReader<RawElementTableReader, RawElem
     public override void Initialize(string TablePath)
     {
         Instance = this;
-        using (var reader = new StreamReader(TablePath, Encoding.GetEncoding("euc-kr")))
+        using (var reader = new StreamReader(new MemoryStream(Resources.Load<TextAsset>(TablePath).bytes), Encoding.GetEncoding("euc-kr")))
         {
             using (var csv = new CsvReader(reader, DefaultConfiguration))
             {

@@ -32,7 +32,7 @@ public class CraftItemListDataFile : BaseDataFile
 
     public override void Init()
     {
-        JsonFile = Resources.Load(ConstFilePath.TXT_CRAFT_ITEM_LIST_DATAS) as TextAsset;
+        JsonFile = Resources.Load(ConstFilePath.TXT_RESOURCE_CRAFT_ITEM_LIST_DATAS) as TextAsset;
         JsonObject = new JSONObject(JsonFile.text);
         AccessData(JsonObject);
 

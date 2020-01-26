@@ -11,9 +11,8 @@ public enum GameModeState
 public enum DetailSingleMode
 {
     NONE,
-    EDITOR_PLAY,
-    SAVE_GAME,
-    LOAD_GAME
+    EDITOR_PLAY, // 에디터에서 곧 바로 플레이.
+    LOAD_GAME // 저장된 데이터 불러오고 플레이.
 }
 public abstract class AGameModeBase
 {

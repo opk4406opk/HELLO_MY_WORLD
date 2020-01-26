@@ -22,7 +22,7 @@ public class GameConfigDataFile : BaseDataFile
     public override void Init()
     {
         _Instance = this;
-        JsonFile = Resources.Load<TextAsset>(ConstFilePath.TXT_GAME_CONFIG_DATA);
+        JsonFile = Resources.Load<TextAsset>(ConstFilePath.TXT_RESOURCE_GAME_CONFIG_DATA);
         JsonObject = new JSONObject(JsonFile.text);
         AccessData(JsonObject);
     }

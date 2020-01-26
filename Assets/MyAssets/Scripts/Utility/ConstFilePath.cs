@@ -2,22 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 게임에서 사용되는 여러가지 파일 경로.
+/// <br> 1) 유니티 예약 폴더 'Resoruces' 에서는 파일 확장자명은 필요없음. </br>
+/// </summary>
 public class ConstFilePath
 {
-    // 상대경로. Json 형식의 데이터 파일 path 모음.
-    public readonly static string TXT_NPC_DATAS = "TextAsset/ActorData/NPCDatas";
-    public readonly static string TXT_ANIMAL_DATAS = "TextAsset/ActorData/AnimalDatas";
-    public readonly static string TXT_CHARACTER_DATAS = "TextAsset/ChDatas/CharacterDatas";
-    public readonly static string TXT_CRAFT_ITEM_LIST_DATAS = "TextAsset/ItemDatas/CraftItemListDatas";
-    public readonly static string TXT_WORLD_MAP_DATAS = "TextAsset/GameWorld/WorldMapData";
-    public readonly static string TXT_WORLD_CONFIG_DATA = "TextAsset/GameWorld/WorldConfigData";
-    public readonly static string TXT_BLOCK_TILE_DATAS = "TextAsset/TileDatas/BlockTileDatas";
-    public readonly static string TXT_GAME_CONFIG_DATA = "TextAsset/GameConfigData";
-    public readonly static string TXT_GAME_SERVER_DATA = "TextAsset/GameServerData";
+    // 상대경로. Json 형식의 데이터 파일 리소스 경로 모음.
+    public readonly static string TXT_RESOURCE_NPC_DATAS = "TextAsset/ActorData/NPCDatas";
+    public readonly static string TXT_RESOURCE_ANIMAL_DATAS = "TextAsset/ActorData/AnimalDatas";
+    public readonly static string TXT_RESOURCE_CHARACTER_DATAS = "TextAsset/ChDatas/CharacterDatas";
+    public readonly static string TXT_RESOURCE_CRAFT_ITEM_LIST_DATAS = "TextAsset/ItemDatas/CraftItemListDatas";
+    public readonly static string TXT_RESOURCE_WORLD_MAP_DATAS = "TextAsset/GameWorld/WorldMapData";
+    public readonly static string TXT_RESOURCE_WORLD_CONFIG_DATA = "TextAsset/GameWorld/WorldConfigData";
+    public readonly static string TXT_RESOURCE_BLOCK_TILE_DATAS = "TextAsset/TileDatas/BlockTileDatas";
+    public readonly static string TXT_RESOURCE_GAME_CONFIG_DATA = "TextAsset/GameConfigData";
+    public readonly static string TXT_RESOURCE_GAME_SERVER_DATA = "TextAsset/GameServerData";
     // 데이터 Table path.
-    public readonly static string RAW_ELEMENT_TABLE_PATH = "Assets/MyAssets/Resources/TextAsset/Tables/RawElementTable.csv";
-    public readonly static string BLOCK_PRODUCT_TABLE_PATH = "Assets/MyAssets/Resources/TextAsset/Tables/BlockProductTable.csv";
-    public readonly static string ITEM_TABLE_PATH = "Assets/MyAssets/Resources/TextAsset/Tables/ItemTable.csv";
+    public readonly static string TXT_RESOURCE_RAW_ELEMENT_TABLE_PATH = "TextAsset/Tables/RawElementTable";
+    public readonly static string TXT_RESOURCE_BLOCK_PRODUCT_TABLE_PATH = "TextAsset/Tables/BlockProductTable";
+    public readonly static string TXT_RESOURCE_ITEM_TABLE_PATH = "TextAsset/Tables/ItemTable";
 
     //캐릭터 렌더링 텍스처 베이스 파일이 있는 상대경로 directory.
     public readonly static string CH_RT_BASE_FILE_WITH_EXT = "Assets/MyAssets/Resources/Texture(RT)/userCharacters/CharRTBase.renderTexture";
@@ -27,7 +31,7 @@ public class ConstFilePath
     // ..\ 현재 폴더의 상위폴더
     // .\ 현재 폴더.
     /// <summary>
-    /// 윈도우 탐색기경로로 표현한. 캐릭터 데이타 파일 상대경로.
+    /// 윈도우 탐색기경로로 표현한. 캐릭터 데이타 파일 상대경로. ( Editor only )
     /// </summary>
     public readonly static string WINDOW_PATH_CHARACTER_DATAS_FILE = ".\\Assets\\MyAssets\\Resources\\TextAsset\\ChDatas\\characterDatas.json";
 
@@ -42,11 +46,11 @@ public class ConstFilePath
     public readonly static string PREFAB_CHARACTER_RESOURCE_PATH = "GamePrefabs/Characters/user/";
 
     /// <summary>
-    ///  RenderTexture에 사용될 캐릭터 프리팹이 저장될 path.
+    ///  RenderTexture에 사용될 캐릭터 프리팹이 저장될 path. ( Editor only )
     /// </summary>
     public readonly static string SAVE_PATH_FOR_SELECT_CHARS_PREFAB = "Assets/MyAssets/Resources/GamePrefabs/SelectChars/{0}.prefab";
     /// <summary>
-    /// 렌더텍스처 생성에 사용되는 SelectChara 프리팹 리소스 path.
+    /// 렌더텍스처 생성에 사용되는 SelectChara 프리팹 리소스 path. 
     /// </summary>
     public readonly static string SELECT_CHARS_PREFAB_RESOURCE_PATH = "GamePrefabs/SelectChars/SelectCharacters";
 
@@ -120,28 +124,40 @@ public class ConstFilePath
     public readonly static string GAME_FX_ASSET_PATH = "Assets/MyAssets/Resources/GamePrefabs/FX";
 
     /// <summary>
-    /// FX 에셋 파일 경로 리스트.
+    /// FX 에셋 파일 경로 리스트. ( Editor only )
     /// </summary>
-    public readonly static string FX_ASSET_LIST_FILE_PATH = "Assets/MyAssets/Resources/TextAsset/AssetPathList/FX_AssetPathList.json";
-    //public readonly static string TXT_FX_ASSET_LIST_PATH = "TextAsset/AssetPathList/FX_AssetPathList";
+    public readonly static string FX_ASSET_LIST_FILE_PATH = "Assets/MyAssets/Resources/TextAsset/AssetPathList/FX_AssetPathList";
+    /// <summary>
+    /// FX 에셋 리소스 경로 리스트.
+    /// </summary>
+    public readonly static string TXT_RESOURCE_FX_ASSET_LIST_PATH = "TextAsset/AssetPathList/FX_AssetPathList";
 
     /// <summary>
-    /// Monster 에셋 파일 경로 리스트.
+    /// Monster 에셋 파일 경로 리스트. ( Editor only )
     /// </summary>
-    public readonly static string MONSTER_ASSET_LIST_FILE_PATH = "Assets/MyAssets/Resources/TextAsset/AssetPathList/Mon_AssetPathList.json";
-    //public readonly static string TXT_MONSTER_ASSET_LIST_PATH = "TextAsset/AssetPathList/Mon_AssetPathList";
+    public readonly static string MONSTER_ASSET_LIST_FILE_PATH = "Assets/MyAssets/Resources/TextAsset/AssetPathList/Mon_AssetPathList";
+    /// <summary>
+    /// Monster 에셋 리소스 경로 리스트.
+    /// </summary>
+    public readonly static string TXT_RESOURCE_MONSTER_ASSET_LIST_PATH = "TextAsset/AssetPathList/Mon_AssetPathList";
 
     /// <summary>
-    /// ANIMAL 에셋 파일 경로 리스트.
+    /// ANIMAL 에셋 파일 경로 리스트. ( Editor only )
     /// </summary>
-    public readonly static string ANIMAL_ASSET_LIST_FILE_PATH = "Assets/MyAssets/Resources/TextAsset/AssetPathList/Animal_AssetPathList.json";
-    //public readonly static string TXT_ANIMAL_ASSET_LIST_PATH = "TextAsset/AssetPathList/Animal_AssetPathList";
+    public readonly static string ANIMAL_ASSET_LIST_FILE_PATH = "Assets/MyAssets/Resources/TextAsset/AssetPathList/Animal_AssetPathList";
+    /// <summary>
+    /// ANIMAL 에셋 리소스 경로 리스트.
+    /// </summary>
+    public readonly static string TXT_RESOURCE_ANIMAL_ASSET_LIST_PATH = "TextAsset/AssetPathList/Animal_AssetPathList";
 
     /// <summary>
-    /// NPC 에셋 파일 경로 리스트.
+    /// NPC 에셋 파일 경로 리스트. ( Editor only )
     /// </summary>
-    public readonly static string NPC_ASSET_LIST_FILE_PATH = "Assets/MyAssets/Resources/TextAsset/AssetPathList/Npc_AssetPathList.json";
-    //public readonly static string TXT_NPC_ASSET_LIST_PATH = "TextAsset/AssetPathList/Npc_AssetPathList";
+    public readonly static string NPC_ASSET_LIST_FILE_PATH = "Assets/MyAssets/Resources/TextAsset/AssetPathList/Npc_AssetPathList";
+    /// <summary>
+    /// NPC 에셋 리소스 경로 리스트.
+    /// </summary>
+    public readonly static string TXT_RESOURCE_NPC_ASSET_LIST_PATH = "TextAsset/AssetPathList/Npc_AssetPathList";
 }
 
 

@@ -48,7 +48,7 @@ public class BlockTileDataFile : BaseDataFile
         Instance = this;
         //
         TileDatas = new Dictionary<BlockTileType, BlockTileInfo>();
-        JsonFile = Resources.Load(ConstFilePath.TXT_BLOCK_TILE_DATAS) as TextAsset;
+        JsonFile = Resources.Load(ConstFilePath.TXT_RESOURCE_BLOCK_TILE_DATAS) as TextAsset;
         JsonObject = new JSONObject(JsonFile.text);
         AccessData(JsonObject);
     }

@@ -233,34 +233,26 @@ public class SubWorld : MonoBehaviour
                 }
             }
 
-            switch (GameStatus.DetailSingleMode)
+            var worldConfig = WorldConfigFile.Instance.GetConfig();
+            for (int x = 0; x < worldConfig.SubWorldSizeX; x++)
             {
-                case DetailSingleMode.SAVE_GAME:
-                    break;
-                case DetailSingleMode.EDITOR_PLAY:
-                case DetailSingleMode.LOAD_GAME:
-                    var worldConfig = WorldConfigFile.Instance.GetConfig();
-                    for (int x = 0; x < worldConfig.SubWorldSizeX; x++)
+                for (int z = 0; z < worldConfig.SubWorldSizeZ; z++)
+                {
+                    int mapX = ((int)OffsetCoordinate.x * worldConfig.SubWorldSizeX) + x;
+                    int mapZ = ((int)OffsetCoordinate.z * worldConfig.SubWorldSizeZ) + z;
+                    //
+                    WorldGenAlgorithms.TerrainValue terrainValue = WorldAreaInstance.XZPlaneDataArray[mapX, mapZ];
+                    int rangeY = terrainValue.Layers[(int)OffsetCoordinate.y];
+                    byte blockType = (byte)terrainValue.BlockType;
+                    for (int y = 0; y < rangeY; y++)
                     {
-                        for (int z = 0; z < worldConfig.SubWorldSizeZ; z++)
-                        {
-                            int mapX = ((int)OffsetCoordinate.x * worldConfig.SubWorldSizeX) + x;
-                            int mapZ = ((int)OffsetCoordinate.z * worldConfig.SubWorldSizeZ) + z;
-                            //
-                            WorldGenAlgorithms.TerrainValue terrainValue = WorldAreaInstance.XZPlaneDataArray[mapX, mapZ];
-                            int rangeY = terrainValue.Layers[(int)OffsetCoordinate.y];
-                            byte blockType = (byte)terrainValue.BlockType;
-                            for (int y = 0; y < rangeY; y++)
-                            {
-                                // 블록 타입 세팅.
-                                WorldBlockData[x, y, z].Type = blockType;
-                                // 블록 내구도 세팅.
-                                BlockTileInfo blockTypeInfo = BlockTileDataFile.Instance.GetBlockTileInfo((BlockTileType)blockType);
-                                WorldBlockData[x, y, z].Durability = blockTypeInfo.Durability;
-                            }
-                        }
+                        // 블록 타입 세팅.
+                        WorldBlockData[x, y, z].Type = blockType;
+                        // 블록 내구도 세팅.
+                        BlockTileInfo blockTypeInfo = BlockTileDataFile.Instance.GetBlockTileInfo((BlockTileType)blockType);
+                        WorldBlockData[x, y, z].Durability = blockTypeInfo.Durability;
                     }
-                    break;
+                }
             }
             //
             return true;

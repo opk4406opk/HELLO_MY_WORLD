@@ -23,9 +23,9 @@ public class GameDataManager
     {
         KojeomLogger.DebugLog("게임 데이터 파일 초기화 시작.");
         // init tables.
-        RawElementTableReaderInstance.Initialize(ConstFilePath.RAW_ELEMENT_TABLE_PATH);
-        BlockProductTableReaderInstance.Initialize(ConstFilePath.BLOCK_PRODUCT_TABLE_PATH);
-        ItemTableReaderInstance.Initialize(ConstFilePath.ITEM_TABLE_PATH);
+        RawElementTableReaderInstance.Initialize(ConstFilePath.TXT_RESOURCE_RAW_ELEMENT_TABLE_PATH);
+        BlockProductTableReaderInstance.Initialize(ConstFilePath.TXT_RESOURCE_BLOCK_PRODUCT_TABLE_PATH);
+        ItemTableReaderInstance.Initialize(ConstFilePath.TXT_RESOURCE_ITEM_TABLE_PATH);
         //GameDataFiles Init
         WorldConfigDataFileInstance.Init();
         GameConfigDataFileInstance.Init();

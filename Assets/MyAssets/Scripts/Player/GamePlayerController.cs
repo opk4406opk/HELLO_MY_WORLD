@@ -91,10 +91,8 @@ public class GamePlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (CharacterInstance == null || WorldAreaManager.Instance == null || GamePlayerCameraManager.Instance == null)
-        {
-            return;
-        }
+        if (bControllProcessOn == false) return;
+        if (CharacterInstance == null || WorldAreaManager.Instance == null || GamePlayerCameraManager.Instance == null) return;
         //
         Vector3 camPosition = CharacterInstance.transform.position;
         camPosition.y += 2.0f;
@@ -112,12 +110,7 @@ public class GamePlayerController : MonoBehaviour
 
         KojeomLogger.DebugLog(string.Format("Player's contain world : {0}, position : {1}", 
             containWorld.name, containWorld.OffsetCoordinate), LOG_TYPE.DEBUG_TEST);
-        //
-        if (bControllProcessOn == false)
-        {
-            return;
-        }
-
+       
         if (InGameUISupervisor.Singleton != null)
         {
             var state = InGameUISupervisor.Singleton.ChattingBoardState;

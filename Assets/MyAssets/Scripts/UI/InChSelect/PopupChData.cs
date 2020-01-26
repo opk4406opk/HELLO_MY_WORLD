@@ -74,7 +74,7 @@ public class PopupChData : APopupUI
     {
         try
         {
-            string sqlQuery = string.Format("INSERT INTO USER_SELECTED_CHAR_HISTORY(name, level, type) VALUES('{0}','{1}','{2}'",
+            string sqlQuery = string.Format("INSERT INTO USER_SELECTED_CHAR_HISTORY(name, level, type) VALUES('{0}',{1},{2})",
                     chName.text, chLevel.text, chType.text);
             dbcmd.CommandText = sqlQuery;
             dbcmd.ExecuteNonQuery();
@@ -98,7 +98,7 @@ public class PopupChData : APopupUI
             if (reader.Read())
             {
                 reader.Close();
-                sqlQuery = string.Format("UPDATE USER_SELECT_CHARACTER SET name ='{0}', level ='{1}', type = '{2}'",
+                sqlQuery = string.Format("UPDATE USER_SELECT_CHARACTER SET name ='{0}', level ={1}, type = {2}",
                     chName.text, chLevel.text, chType.text);
                 dbcmd.CommandText = sqlQuery;
                 dbcmd.ExecuteNonQuery();
@@ -106,7 +106,7 @@ public class PopupChData : APopupUI
             else
             {
                 reader.Close();
-                sqlQuery = string.Format("INSERT INTO USER_SELECT_CHARACTER(name, level, type) VALUES('{0}','{1}','{2}'",
+                sqlQuery = string.Format("INSERT INTO USER_SELECT_CHARACTER(name, level, type) VALUES('{0}',{1},{2})",
                     chName.text, chLevel.text, chType.text);
                 dbcmd.CommandText = sqlQuery;
                 dbcmd.ExecuteNonQuery();

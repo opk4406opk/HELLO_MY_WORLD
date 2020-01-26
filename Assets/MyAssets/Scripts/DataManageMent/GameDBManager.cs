@@ -49,7 +49,7 @@ public class GameDBManager
                 KojeomLogger.DebugLog("DB file is Not Exist", LOG_TYPE.ERROR);
                 WWW www = new WWW(dbFilePath);
                 var downloaded = www.bytesDownloaded;
-                while (!www.isDone) ;
+                while (!www.isDone);
                 KojeomLogger.DebugLog(string.Format("downloaded bytes cnt : {0}", www.bytes.Length), LOG_TYPE.DATABASE);
                 dbFilePath = string.Format("{0}{1}", Application.persistentDataPath, "/userDB.db");
                 KojeomLogger.DebugLog(string.Format("New DB file Path : {0}", dbFilePath), LOG_TYPE.DATABASE);

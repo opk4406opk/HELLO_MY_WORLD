@@ -79,6 +79,7 @@ public class GameResourceSupervisor
     private static GameResourceSupervisor Instance = null;
     private GameResourceSupervisor()
     {
+        KojeomLogger.DebugLog("GameResourceSupervisor 초기화 시작합니다.");
         GamePlayerPrefab = new SoftObjectPtr(ConstFilePath.GAME_NET_PLAYER_PREFAB_RESOURCE_PATH);
         GamePlayerCameraPrefab = new SoftObjectPtr(ConstFilePath.PLAYER_CAMERA_PREFAB);
         //
@@ -161,7 +162,7 @@ public class GameResourceSupervisor
             }
             ActorPrefabs[(int)ACTOR_TYPE.ANIMAL].ActorResourceGroups[(int)type].Resoruces.Add(resourceID, new SoftObjectPtr(resourcePath));
         }
-
+        KojeomLogger.DebugLog("GameResourceSupervisor 초기화 완료했습니다.");
     }
 
     public static GameResourceSupervisor GetInstance()
@@ -180,29 +181,24 @@ public class GameResourceSupervisor
 
     private List<string> GetAssetPaths(AssetPathType pathType)
     {
-        string filePath = "";
+        string resorucePath = "";
         switch (pathType)
         {
             case AssetPathType.Fx:
-                filePath = ConstFilePath.FX_ASSET_LIST_FILE_PATH;
+                resorucePath = ConstFilePath.TXT_RESOURCE_FX_ASSET_LIST_PATH;
                 break;
             case AssetPathType.Monster:
-                filePath = ConstFilePath.MONSTER_ASSET_LIST_FILE_PATH;
+                resorucePath = ConstFilePath.TXT_RESOURCE_MONSTER_ASSET_LIST_PATH;
                 break;
             case AssetPathType.Animal:
-                filePath = ConstFilePath.ANIMAL_ASSET_LIST_FILE_PATH;
+                resorucePath = ConstFilePath.TXT_RESOURCE_ANIMAL_ASSET_LIST_PATH;
                 break;
             case AssetPathType.Npc:
-                filePath = ConstFilePath.NPC_ASSET_LIST_FILE_PATH;
+                resorucePath = ConstFilePath.TXT_RESOURCE_NPC_ASSET_LIST_PATH;
                 break;
         }
-        List<string> assetsPath = new List<string>();
-        // deserialize JSON directly from a file
-        using (StreamReader file = new StreamReader(File.Open(filePath, FileMode.Open, FileAccess.Read)))
-        {
-            JsonSerializer serializer = new JsonSerializer();
-            assetsPath = (List<string>)serializer.Deserialize(file, typeof(List<string>));
-        }
+
+        List<string> assetsPath = JsonConvert.DeserializeObject<List<string>>(Resources.Load<TextAsset>(resorucePath).text);
         return assetsPath;
     }
 #if UNITY_EDITOR
@@ -215,7 +211,6 @@ public class GameResourceSupervisor
             assetsPath.Add(path);
         }
         //
-        // serialize JSON directly to a file
         string filePath = "";
         switch (pathType)
         {
@@ -232,7 +227,7 @@ public class GameResourceSupervisor
                 filePath = ConstFilePath.NPC_ASSET_LIST_FILE_PATH;
                 break;
         }
-        using (StreamWriter file = new StreamWriter(File.Open(filePath, FileMode.OpenOrCreate, FileAccess.Write)))
+        using (StreamWriter file = new StreamWriter(File.Open(filePath + ".json", FileMode.OpenOrCreate, FileAccess.Write)))
         {
             JsonSerializer serializer = new JsonSerializer();
             serializer.Formatting = Formatting.Indented;

@@ -12,7 +12,7 @@ public class AnimalDataFile : BaseDataFile
 
     public override void Init()
     {
-        JsonFile = Resources.Load(ConstFilePath.TXT_ANIMAL_DATAS) as TextAsset;
+        JsonFile = Resources.Load(ConstFilePath.TXT_RESOURCE_ANIMAL_DATAS) as TextAsset;
         JsonObject = new JSONObject(JsonFile.text);
         AccessData(JsonObject);
 

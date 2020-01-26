@@ -4600,7 +4600,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bSoundOn: 0
-  bLockCursor: 0
   playerManager: {fileID: 213506647}
   beltItemSelector: {fileID: 713839329}
   WorldAreaManager: {fileID: 1590980996}

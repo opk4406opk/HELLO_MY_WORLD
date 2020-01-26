@@ -64,7 +64,7 @@ public class WorldMapDataFile : BaseDataFile
     public override void Init()
     {
         JsonDataSheet = new List<Dictionary<string, string>>();
-        JsonFile = Resources.Load(ConstFilePath.TXT_WORLD_MAP_DATAS) as TextAsset;
+        JsonFile = Resources.Load(ConstFilePath.TXT_RESOURCE_WORLD_MAP_DATAS) as TextAsset;
         JsonObject = new JSONObject(JsonFile.text);
         AccessData(JsonObject);
 

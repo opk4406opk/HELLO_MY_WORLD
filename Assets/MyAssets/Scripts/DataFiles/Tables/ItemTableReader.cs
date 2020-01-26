@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 public enum EItemType
 {
@@ -43,7 +44,7 @@ public class ItemTableReader : ATableReader<ItemTableReader, ItemTableRow>
     public override void Initialize(string TablePath)
     {
         Instance = this;
-        using (var reader = new StreamReader(TablePath, Encoding.GetEncoding("euc-kr")))
+        using (var reader = new StreamReader(new MemoryStream(Resources.Load<TextAsset>(TablePath).bytes), Encoding.GetEncoding("euc-kr")))
         {
             using (var csv = new CsvReader(reader, DefaultConfiguration))
             {

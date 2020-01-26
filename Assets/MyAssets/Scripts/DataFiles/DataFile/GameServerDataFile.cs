@@ -27,7 +27,7 @@ public class GameServerDataFile : BaseDataFile
 
     private GameServerDataFile()
     {
-        JsonFile = Resources.Load<TextAsset>(ConstFilePath.TXT_GAME_SERVER_DATA);
+        JsonFile = Resources.Load<TextAsset>(ConstFilePath.TXT_RESOURCE_GAME_SERVER_DATA);
         JsonObject = new JSONObject(JsonFile.text);
         AccessData(JsonObject);
     }

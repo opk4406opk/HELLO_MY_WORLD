@@ -29,6 +29,7 @@ public class MultiPlayLobbyManager : MonoBehaviour {
         // ... ( 외부 프로세스를 실행?)
         // 인스턴스로 호스트 접속.
         GameNetworkManager.GetInstance().ConnectToGameServer("127.0.0.1", 8000, GameUserNetType.Host);
+        GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.InGame);
     }
 
     public void OnClickUpdateServerList()

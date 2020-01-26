@@ -18,30 +18,38 @@ public class GameSceneLoader
     }
     public static void LoadGameSceneAsync(SCENE_TYPE sceneType, LoadSceneMode loadMode = LoadSceneMode.Single)
     {
+        AsyncOperation operation = null;
         switch (sceneType)
         {
             case SCENE_TYPE.MainMenu:
-                SceneManager.LoadSceneAsync("MainMenu", loadMode);
+                operation = SceneManager.LoadSceneAsync("MainMenu", loadMode);
                 break;
             case SCENE_TYPE.MultiPlayGameLobby:
-                SceneManager.LoadSceneAsync("MultiPlayGameLobby", loadMode);
+                operation = SceneManager.LoadSceneAsync("MultiPlayGameLobby", loadMode);
                 break;
             case SCENE_TYPE.SelectCharacter:
-                SceneManager.LoadSceneAsync("SelectCharacter", loadMode);
+                operation = SceneManager.LoadSceneAsync("SelectCharacter", loadMode);
                 break;
             case SCENE_TYPE.InGame:
-                SceneManager.LoadSceneAsync("InGame", loadMode);
+                operation = SceneManager.LoadSceneAsync("InGame", loadMode);
                 break;
             case SCENE_TYPE.GameLoading:
-                SceneManager.LoadSceneAsync("GameLoading", loadMode);
+                operation = SceneManager.LoadSceneAsync("GameLoading", loadMode);
                 break;
-            default:
-                break;
+        }
+        if(operation != null)
+        {
+            operation.completed += (op) => 
+            {
+                if(op.isDone == true) KojeomLogger.DebugLog(string.Format("Loading Completed! SceneType : {0}, LoadMode : {1}",
+                    KojeomUtility.EnumToString<SCENE_TYPE>(sceneType), KojeomUtility.EnumToString<LoadSceneMode>(loadMode)));
+            };
         }
     }
 
     public static void UnLoadGameSceneAsync(SCENE_TYPE sceneType)
     {
+        AsyncOperation operation = null;
         switch (sceneType)
         {
             case SCENE_TYPE.MainMenu:
@@ -61,6 +69,13 @@ public class GameSceneLoader
                 break;
             default:
                 break;
+        }
+        if (operation != null)
+        {
+            operation.completed += (op) =>
+            {
+                if (op.isDone == true) KojeomLogger.DebugLog(string.Format("UnLoading Completed! SceneType : {0}", KojeomUtility.EnumToString<SCENE_TYPE>(sceneType)));
+            };
         }
     }
 }
