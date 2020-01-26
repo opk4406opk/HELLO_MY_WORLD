@@ -92,6 +92,7 @@ namespace HMWGameServer
             return Instance;
         }
 
+        public int RandomSeedValue { get; private set; } = 1;
         public bool bInitMakeWorldMap = false;
 
         public Dictionary<string, WorldArea> WorldAreaMap = new Dictionary<string, WorldArea>();
@@ -175,7 +176,7 @@ namespace HMWGameServer
         private string SaveSubWorldFile(SubWorld subWorld, string AreaID)
         {
             Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
-            string savePath = Path.Combine(ConstFilePath.RAW_SUB_WORLD_DATA_PATH, string.Format("Area({0})_SubWorld({1}).dat",
+            string savePath = Path.Combine(ConstFilePath.RAW_SUB_WORLD_DATA_PATH, string.Format("Area({0})_SubWorld({1}).MapFile",
                 Utils.ConvertUniqueIDToFileName(AreaID), Utils.ConvertUniqueIDToFileName(subWorld.UniqueID)));
             // 파일 생성.
             BinaryFormatter bf = new BinaryFormatter();
@@ -190,7 +191,7 @@ namespace HMWGameServer
             // 시리얼라이징.
             bf.Serialize(fileStream, dataFile);
             fileStream.Close();
-
+            // return path.
             return savePath;
         }
 

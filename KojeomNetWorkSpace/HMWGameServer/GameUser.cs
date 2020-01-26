@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace HMWGameServer
 {
+    
     public enum GameUserNetType
     {
         None,
@@ -66,37 +67,14 @@ namespace HMWGameServer
                         GameServerManager.GetInstance().BroadCasting(changeBlock, this);
                     }
                     break;
-                case NetProtocol.INIT_RANDOM_SEED_REQ:
+                case NetProtocol.AFTER_SESSION_INIT_REQ:
                     {
-                        short seed = msg.PopInt16();
-                        GameServerManager.GetInstance().WorldMapRandomSeed = seed;
-                        CPacket response = CPacket.Create((short)NetProtocol.INIT_RANDOM_SEED_ACK);
-                        Send(response);
-                    }
-                    break;
-                case NetProtocol.USER_NET_TYPE_REQ:
-                    {
-                        short netType = msg.PopInt16();
-                        NetType = (GameUserNetType)netType;
-                        CPacket response = CPacket.Create((short)NetProtocol.USER_NET_TYPE_ACK);
-                        Send(response);
-                        // Host가 아닌 Client로 접속한 경우라면.
-                        if (NetType == GameUserNetType.Client)
-                        {
-                            var mapData = GameWorldMapManager.GetInstance().GetWorldMapData();
-                            foreach (var data in mapData)
-                            {
-                                CPacket pushSubWorldData = CPacket.Create((short)NetProtocol.SUBWORLD_DATA_PUSH, data.SubWorldDataFileBytes.Length);
-                                // size.
-                                pushSubWorldData.Push(data.SubWorldDataFileBytes.Length);
-                                // file bytes.
-                                for (int idx = 0; idx < data.SubWorldDataFileBytes.Length; idx++)
-                                {
-                                    pushSubWorldData.Push(data.SubWorldDataFileBytes[idx]);
-                                }
-                                Send(pushSubWorldData);
-                            }
-                        }
+                        GameUserNetType clientNetType = (GameUserNetType)msg.Popbyte();
+                        NetType = clientNetType;
+
+                        CPacket initPacket = CPacket.Create((short)NetProtocol.AFTER_SESSION_INIT_ACK);
+                        initPacket.Push(GameWorldMapManager.GetInstance().RandomSeedValue);
+                        Send(initPacket);
                     }
                     break;
                 case NetProtocol.WORLD_MAP_PROPERTIES_REQ:
@@ -122,6 +100,27 @@ namespace HMWGameServer
 
                         CPacket response = CPacket.Create((short)NetProtocol.WORLD_MAP_PROPERTIES_ACK);
                         Send(response);
+                    }
+                    break;
+                case NetProtocol.SUBWORLD_DATAS_REQ:
+                    {
+                        // Host가 아닌 Client로 접속한 경우에만 서브월드 데이터 리스트를 전송.
+                        if (NetType == GameUserNetType.Client)
+                        {
+                            var mapData = GameWorldMapManager.GetInstance().GetWorldMapData();
+                            foreach (var data in mapData)
+                            {
+                                CPacket pushSubWorldData = CPacket.Create((short)NetProtocol.SUBWORLD_DATAS_ACK, data.SubWorldDataFileBytes.Length);
+                                // size.
+                                pushSubWorldData.Push(data.SubWorldDataFileBytes.Length);
+                                // file bytes.
+                                for (int idx = 0; idx < data.SubWorldDataFileBytes.Length; idx++)
+                                {
+                                    pushSubWorldData.Push(data.SubWorldDataFileBytes[idx]);
+                                }
+                                Send(pushSubWorldData);
+                            }
+                        }
                     }
                     break;
             }

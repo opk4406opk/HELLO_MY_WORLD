@@ -13,17 +13,16 @@ namespace HMWGameServer
         CHANGED_SUBWORLD_BLOCK_REQ,
         CHANGED_SUBWORLD_BLOCK_ACK,
 
-        INIT_RANDOM_SEED_REQ, // only host
-        INIT_RANDOM_SEED_ACK, // only host
-
-        USER_NET_TYPE_REQ,
-        USER_NET_TYPE_ACK,
+        AFTER_SESSION_INIT_REQ,
+        AFTER_SESSION_INIT_ACK,
 
         WORLD_MAP_PROPERTIES_REQ,
         WORLD_MAP_PROPERTIES_ACK,
 
         CHANGE_SUBWORLD_BLOCK_PUSH,
-        SUBWORLD_DATA_PUSH,
+
+        SUBWORLD_DATAS_REQ,
+        SUBWORLD_DATAS_ACK,
 
         END
     }

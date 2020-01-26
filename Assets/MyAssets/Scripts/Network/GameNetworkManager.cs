@@ -8,6 +8,12 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
+/// <summary>
+/// 네트워크 프로토콜.
+/// REQ : 요청
+/// ACK : 응답
+/// PUSH : 서버 -> 클라이언트
+/// </summary>
 public enum NetProtocol
 {
     BEGIN = 0,
@@ -15,17 +21,16 @@ public enum NetProtocol
     CHANGED_SUBWORLD_BLOCK_REQ,
     CHANGED_SUBWORLD_BLOCK_ACK,
 
-    INIT_RANDOM_SEED_REQ, // only host
-    INIT_RANDOM_SEED_ACK, // only host
-
-    USER_NET_TYPE_REQ,
-    USER_NET_TYPE_ACK,
+    AFTER_SESSION_INIT_REQ,
+    AFTER_SESSION_INIT_ACK,
 
     WORLD_MAP_PROPERTIES_REQ,
     WORLD_MAP_PROPERTIES_ACK,
 
     CHANGE_SUBWORLD_BLOCK_PUSH,
-    SUBWORLD_DATA_PUSH,
+
+    SUBWORLD_DATAS_REQ,
+    SUBWORLD_DATAS_ACK,
 
     END
 }
@@ -136,16 +141,10 @@ public class GameNetworkManager
             serverToken.OnConnected();
             GameServer = server;
             KojeomLogger.DebugLog("Success Connect to Server", LOG_TYPE.NETWORK_CLIENT_INFO);
-            // 접속 성공후, 맵 생성에 사용되는 랜덤 시드값을 보낸다.
-            CPacket seedPacket = new CPacket();
-            seedPacket.SetProtocol((short)NetProtocol.INIT_RANDOM_SEED_REQ);
-            seedPacket.Push(KojeomUtility.SeedValue);
-            if (GameServer != null) GameServer.Send(seedPacket);
-            // 호스트/클라이언트 Type 패킷을 보낸다.
-            CPacket typePacket = new CPacket();
-            typePacket.SetProtocol((short)NetProtocol.USER_NET_TYPE_REQ);
-            typePacket.Push((short)UserNetType);
-            if (GameServer != null) GameServer.Send(typePacket);
+            // 서버에 세션을 접속 완료후에, 초기화 요청 패킷을 보낸다.
+            CPacket initPacket = CPacket.Create((short)NetProtocol.AFTER_SESSION_INIT_REQ);
+            initPacket.Push((byte)UserNetType); // 유저의 NetType을 보낸다.
+            if (GameServer != null) GameServer.Send(initPacket);
         }
     }
 
@@ -232,14 +231,15 @@ class RemoteServerPeer : IPeer
                     KojeomLogger.DebugLog("Server received changed sub world data.", LOG_TYPE.NETWORK_CLIENT_INFO);
                 }
                 break;
-            case NetProtocol.INIT_RANDOM_SEED_ACK:
+            case NetProtocol.AFTER_SESSION_INIT_ACK:
                 {
-                    KojeomLogger.DebugLog("Server received init random seed for create world map.", LOG_TYPE.NETWORK_CLIENT_INFO);
-                }
-                break;
-            case NetProtocol.USER_NET_TYPE_ACK:
-                {
-                    KojeomLogger.DebugLog("Server received user identity enum value.", LOG_TYPE.NETWORK_CLIENT_INFO);
+                    KojeomLogger.DebugLog("Receive after session information from server.", LOG_TYPE.NETWORK_CLIENT_INFO);
+                    int seedValue = msg.PopInt32();
+                    KojeomUtility.ChangeSeed(seedValue);
+                    // 서버에서 Seed값을 받았고 유저 타입또한 송신했으므로, 
+                    // 클라이언트라면, 서버에서 맵 정보를 받아야한다.
+                    CPacket reqWorldMap = CPacket.Create((short)NetProtocol.SUBWORLD_DATAS_REQ);
+                    UserTokenInstance.Send(reqWorldMap);
                 }
                 break;
             case NetProtocol.WORLD_MAP_PROPERTIES_ACK:
@@ -268,9 +268,9 @@ class RemoteServerPeer : IPeer
                     }
                 }
                 break;
-            case NetProtocol.SUBWORLD_DATA_PUSH:
+            case NetProtocol.SUBWORLD_DATAS_ACK:
                 {
-                    KojeomLogger.DebugLog("SubWorld Data received from server", LOG_TYPE.NETWORK_CLIENT_INFO);
+                    KojeomLogger.DebugLog("SubWorld Datas received from server", LOG_TYPE.NETWORK_CLIENT_INFO);
                     SubWorldPacketData packetData;
                     packetData.Size = msg.PopInt32();
                     byte[] fileBytes = new byte[packetData.Size];

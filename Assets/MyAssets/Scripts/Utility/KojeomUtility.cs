@@ -6,9 +6,6 @@ using UnityEngine;
 
 public class KojeomUtility
 {
-    //variables.
-    public static readonly int SeedValue = 0;
-
     //https://docs.microsoft.com/ko-kr/dotnet/csharp/programming-guide/generics/generic-methods
     /// <summary>
     /// T타입의 모든 자식 컴포넌트들을 리턴합니다.
@@ -181,7 +178,7 @@ public class KojeomUtility
     }
 
     // Seed 값은 일정하게 0으로 고정.
-    private static System.Random RandomInstance = new System.Random(SeedValue);
+    private static System.Random RandomInstance = new System.Random(0);
 
     public static void ChangeSeed()
     {
