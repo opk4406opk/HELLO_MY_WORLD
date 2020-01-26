@@ -109,7 +109,7 @@ public class MainMenuManager : MonoBehaviour {
         // 일단 http 로그인 서버에 접속이 실패 or 성공에 상관없이 다음 화면으로 넘어간다.
         UIPopupSupervisor.ClosePopupUI(UI_POPUP_TYPE.WaitingConnect);
         GameSoundManager.GetInstnace().StopSound(GAME_SOUND_TYPE.BGM_mainMenu);
-        GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.SELECT_CHARACTERS);
+        GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.SelectCharacter);
 	}
 	
     /// <summary>

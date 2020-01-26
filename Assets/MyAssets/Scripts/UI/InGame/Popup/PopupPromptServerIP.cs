@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PopupPromptServerIP : APopupUI {
-
+public class PopupPromptServerIP : APopupUI
+{
     [SerializeField]
     private UIInput InputPrompt;
     private string ServerIP;
@@ -16,7 +16,6 @@ public class PopupPromptServerIP : APopupUI {
     public void OnSubmitIP()
     {
         ServerIP = InputPrompt.value;
-        
     }
 
     public void OnChangeIP()
@@ -27,7 +26,8 @@ public class PopupPromptServerIP : APopupUI {
     public void OnClickConnect()
     {
         ScaleDownEffect("CallBackPopupClose");
-        GameNetworkManager.GetInstance().ConnectToGameServer(ServerIP, 8000);
+        GameNetworkManager.GetInstance().ConnectToGameServer(ServerIP, 8000, GameUserNetType.Client);
+        GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.InGame);
     }
 
     protected override void CallBackPopupClose()

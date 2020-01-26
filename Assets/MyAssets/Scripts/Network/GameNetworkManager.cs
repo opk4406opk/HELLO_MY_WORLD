@@ -123,8 +123,9 @@ public class GameNetworkManager
     {
     }
 
-    public void ConnectToGameServer(string ip, int port)
+    public void ConnectToGameServer(string ip, int port, GameUserNetType netType)
     {
+        UserNetType = netType;
         IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse(ip), port);
         ConnectorInstance.Connect(endpoint);
     }

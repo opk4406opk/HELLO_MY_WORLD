@@ -25,6 +25,10 @@ public class MultiPlayLobbyManager : MonoBehaviour {
     public void OnClickStartHost()
     {
         KojeomLogger.DebugLog("StartHost", LOG_TYPE.INFO);
+        // 서버 인스턴스 생성
+        // ... ( 외부 프로세스를 실행?)
+        // 인스턴스로 호스트 접속.
+        GameNetworkManager.GetInstance().ConnectToGameServer("127.0.0.1", 8000, GameUserNetType.Host);
     }
 
     public void OnClickUpdateServerList()

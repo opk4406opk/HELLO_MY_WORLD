@@ -10,29 +10,29 @@ public class GameSceneLoader
     public enum SCENE_TYPE
     {
         //
-        MAIN_MENU = 0,
-        MULTIPLAY_GAME_LOBBY = 1,
-        SELECT_CHARACTERS = 2,
-        IN_GAME = 3,
-        GAME_LOADING = 4,
+        MainMenu = 0,
+        MultiPlayGameLobby = 1,
+        SelectCharacter = 2,
+        InGame = 3,
+        GameLoading = 4,
     }
     public static void LoadGameSceneAsync(SCENE_TYPE sceneType, LoadSceneMode loadMode = LoadSceneMode.Single)
     {
         switch (sceneType)
         {
-            case SCENE_TYPE.MAIN_MENU:
+            case SCENE_TYPE.MainMenu:
                 SceneManager.LoadSceneAsync("MainMenu", loadMode);
                 break;
-            case SCENE_TYPE.MULTIPLAY_GAME_LOBBY:
+            case SCENE_TYPE.MultiPlayGameLobby:
                 SceneManager.LoadSceneAsync("MultiPlayGameLobby", loadMode);
                 break;
-            case SCENE_TYPE.SELECT_CHARACTERS:
+            case SCENE_TYPE.SelectCharacter:
                 SceneManager.LoadSceneAsync("SelectCharacter", loadMode);
                 break;
-            case SCENE_TYPE.IN_GAME:
+            case SCENE_TYPE.InGame:
                 SceneManager.LoadSceneAsync("InGame", loadMode);
                 break;
-            case SCENE_TYPE.GAME_LOADING:
+            case SCENE_TYPE.GameLoading:
                 SceneManager.LoadSceneAsync("GameLoading", loadMode);
                 break;
             default:
@@ -44,19 +44,19 @@ public class GameSceneLoader
     {
         switch (sceneType)
         {
-            case SCENE_TYPE.MAIN_MENU:
+            case SCENE_TYPE.MainMenu:
                 SceneManager.UnloadSceneAsync("MainMenu");
                 break;
-            case SCENE_TYPE.MULTIPLAY_GAME_LOBBY:
+            case SCENE_TYPE.MultiPlayGameLobby:
                 SceneManager.UnloadSceneAsync("MultiPlayGameLobby");
                 break;
-            case SCENE_TYPE.SELECT_CHARACTERS:
+            case SCENE_TYPE.SelectCharacter:
                 SceneManager.UnloadSceneAsync("SelectCharacter");
                 break;
-            case SCENE_TYPE.IN_GAME:
+            case SCENE_TYPE.InGame:
                 SceneManager.UnloadSceneAsync("InGame");
                 break;
-            case SCENE_TYPE.GAME_LOADING:
+            case SCENE_TYPE.GameLoading:
                 SceneManager.UnloadSceneAsync("GameLoading");
                 break;
             default:

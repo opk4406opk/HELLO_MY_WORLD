@@ -58,7 +58,7 @@ public class PopupChData : APopupUI
 
     private void CallBackGoToLobby()
     {
-        GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.MULTIPLAY_GAME_LOBBY);
+        GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.MultiPlayGameLobby);
     }
 
     /// <summary>
