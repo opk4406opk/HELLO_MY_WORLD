@@ -118,6 +118,30 @@ public class ConstFilePath
     /// 게임에서 사용되는 파티클 프리팹 에셋 경로.
     /// </summary>
     public readonly static string GAME_FX_ASSET_PATH = "Assets/MyAssets/Resources/GamePrefabs/FX";
+
+    /// <summary>
+    /// FX 에셋 파일 경로 리스트.
+    /// </summary>
+    public readonly static string FX_ASSET_LIST_FILE_PATH = "Assets/MyAssets/Resources/TextAsset/AssetPathList/FX_AssetPathList.json";
+    //public readonly static string TXT_FX_ASSET_LIST_PATH = "TextAsset/AssetPathList/FX_AssetPathList";
+
+    /// <summary>
+    /// Monster 에셋 파일 경로 리스트.
+    /// </summary>
+    public readonly static string MONSTER_ASSET_LIST_FILE_PATH = "Assets/MyAssets/Resources/TextAsset/AssetPathList/Mon_AssetPathList.json";
+    //public readonly static string TXT_MONSTER_ASSET_LIST_PATH = "TextAsset/AssetPathList/Mon_AssetPathList";
+
+    /// <summary>
+    /// ANIMAL 에셋 파일 경로 리스트.
+    /// </summary>
+    public readonly static string ANIMAL_ASSET_LIST_FILE_PATH = "Assets/MyAssets/Resources/TextAsset/AssetPathList/Animal_AssetPathList.json";
+    //public readonly static string TXT_ANIMAL_ASSET_LIST_PATH = "TextAsset/AssetPathList/Animal_AssetPathList";
+
+    /// <summary>
+    /// NPC 에셋 파일 경로 리스트.
+    /// </summary>
+    public readonly static string NPC_ASSET_LIST_FILE_PATH = "Assets/MyAssets/Resources/TextAsset/AssetPathList/Npc_AssetPathList.json";
+    //public readonly static string TXT_NPC_ASSET_LIST_PATH = "TextAsset/AssetPathList/Npc_AssetPathList";
 }
 
 

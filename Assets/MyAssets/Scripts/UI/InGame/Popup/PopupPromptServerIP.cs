@@ -25,7 +25,11 @@ public class PopupPromptServerIP : APopupUI
 
     public void OnClickConnect()
     {
+        // effect.
         ScaleDownEffect("CallBackPopupClose");
+        // connect.
+        if (InputPrompt.value == "") ServerIP = "127.0.0.1";
+        else ServerIP = InputPrompt.value;
         GameNetworkManager.GetInstance().ConnectToGameServer(ServerIP, 8000, GameUserNetType.Client);
         GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.InGame);
     }

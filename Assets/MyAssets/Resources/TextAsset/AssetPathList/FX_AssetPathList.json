@@ -1,0 +1,19 @@
+[
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Action_BloodSplatter.prefab",
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Enviroment_DirtSplatter.prefab",
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Enviroment_Dust01.prefab",
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Enviroment_Dust02.prefab",
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Enviroment_Dust03.prefab",
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Enviroment_Fire.prefab",
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Enviroment_FireworksBlueLarge.prefab",
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Enviroment_FireworksBlueSmall .prefab",
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Enviroment_FireworksGreenLarge.prefab",
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Enviroment_FireworksGreenSmall.prefab",
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Enviroment_FireworksYellowLarge.prefab",
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Enviroment_FireworksYellowSmall.prefab",
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Enviroment_Smoke.prefab",
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Enviroment_Steam.prefab",
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Enviroment_TireSmoke.prefab",
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Enviroment_WaterSplash.prefab",
+  "Assets/MyAssets/Resources/GamePrefabs/FX/FX_Enviroment_WaterSplatter.prefab"
+]

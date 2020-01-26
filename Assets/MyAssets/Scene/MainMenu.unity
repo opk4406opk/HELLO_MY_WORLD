@@ -391,12 +391,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a0413fa47a2caf48a995c3cdcc6a077, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maximumWaitSec: 1
+  MaximumWaitSec: 3
   btn_singleGameStart: {fileID: 1899175705}
   btn_multiGameStart: {fileID: 36330386}
   btn_settings: {fileID: 396441242}
   btn_exit: {fileID: 307408099}
-  isSoundOn: 0
+  bSoundOn: 0
 --- !u!1 &307408096
 GameObject:
   m_ObjectHideFlags: 0
@@ -1697,4 +1697,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ListenerNumber: 0

@@ -11,7 +11,7 @@ using System;
 public class MainMenuManager : MonoBehaviour {
 
     [Range(1, 300)]
-    public int maximumWaitSec = 8;
+    public int MaximumWaitSec = 2;
     [SerializeField]
     private UIButton btn_singleGameStart;
     [SerializeField]
@@ -21,11 +21,11 @@ public class MainMenuManager : MonoBehaviour {
     [SerializeField]
     private UIButton btn_exit;
 
-    public bool isSoundOn = false;
+    public bool bSoundOn = false;
 
     private void Start()
     {
-        if(isSoundOn == true)
+        if(bSoundOn == true)
         {
             GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_mainMenu);
         }
@@ -42,8 +42,7 @@ public class MainMenuManager : MonoBehaviour {
         GameStartProcess();
     }
 
-    private bool isSuccessProcessRun = false;
-    private bool isSuccessLogin = false;
+    private bool bSuccessLogin = false;
     /// <summary>
     /// 싱글플레이.
     /// </summary>
@@ -61,9 +60,8 @@ public class MainMenuManager : MonoBehaviour {
     private void GameStartProcess()
     {
         EnableButtons(false);
-        //P2PNetworkManager.PostHttpRequest += PostLoginRequest;
-        //P2PNetworkManager.ConnectLoginServer();
-        if (isSuccessProcessRun == false) StartCoroutine(LoginProcess());
+        UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.WaitingConnect);
+        StartCoroutine(LoginProcess());
     }
 
     private void EnableButtons(bool enable)
@@ -76,29 +74,26 @@ public class MainMenuManager : MonoBehaviour {
 
 	private void PostLoginRequest(bool isSuccess)
 	{
-		if (isSuccess) isSuccessLogin = true;
-		else isSuccessLogin = false;
+		if (isSuccess) bSuccessLogin = true;
+		else bSuccessLogin = false;
 	}
 	private IEnumerator LoginProcess()
 	{
-        isSuccessProcessRun = true;
-
-        bool isTimeOut = false;
+        bool bTimeOut = false;
 		int waitSec = 0;
-		while (!isSuccessLogin)
+		while (bSuccessLogin == false)
 		{
-			//to do.
 			//waiting connect to login-server (http-Request).
-			if (waitSec == maximumWaitSec)
+			if (waitSec == MaximumWaitSec)
 			{
-				isTimeOut = true;
+				bTimeOut = true;
 				break;
 			}
 			KojeomLogger.DebugLog("Waiting LoginServer...");
 			yield return new WaitForSeconds(1.0f);
 			waitSec++;
 		}
-		if(isTimeOut == false)
+		if(bTimeOut == false)
 		{
 			KojeomLogger.DebugLog("Success Login_server");
 		}
@@ -117,10 +112,10 @@ public class MainMenuManager : MonoBehaviour {
     /// </summary>
     public void OnClickLoad()
     {
-        if(ChkIsFile())
+        if(CheckIsFile())
         {
             GameStatus.DetailSingleMode = DetailSingleMode.LOAD_GAME;
-            SceneManager.LoadSceneAsync("GameLoading");
+            GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.GameLoading);
         }
         else
         {
@@ -140,7 +135,7 @@ public class MainMenuManager : MonoBehaviour {
         Application.Quit();
     }
      
-    private bool ChkIsFile()
+    private bool CheckIsFile()
     {
         BinaryFormatter bf;
         FileStream fileStream;

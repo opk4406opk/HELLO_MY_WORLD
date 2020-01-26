@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Newtonsoft.Json;
+using System.IO;
 
 /*   게임에서 사용되는 액터 프리팹 이름 규칙. ( = Naming Rule)
  * 
@@ -33,6 +35,14 @@ public class ActorResourceGroup
 public class ParticleEffectCategoryContainer
 {
     public Dictionary<GameParticleType, SoftObjectPtr> Resources = new Dictionary<GameParticleType, SoftObjectPtr>();
+}
+
+public enum AssetPathType
+{
+    Fx,
+    Monster,
+    Animal,
+    Npc
 }
 
 /// <summary>
@@ -80,11 +90,23 @@ public class GameResourceSupervisor
         WaterChunkPrefab = new SoftObjectPtr(ConstFilePath.WATER_CHUNK_PREFAB_RESOURCE_PATH);
         EnviromentChunkPrefab = new SoftObjectPtr(ConstFilePath.ENVIROMENT_CHUNK_PREFAB_RESOURCE_PATH);
 
-        // 게임 파티클.
+#if UNITY_EDITOR
         var particleGuids = AssetDatabase.FindAssets("FX", new[] { ConstFilePath.GAME_FX_ASSET_PATH });
-        foreach(var guid in particleGuids)
+        MakeAssetPaths(particleGuids, AssetPathType.Fx);
+        //
+        var npcGuids = AssetDatabase.FindAssets("NPC", new[] { ConstFilePath.NPC_PREFABS_ASSET_PATH });
+        MakeAssetPaths(npcGuids, AssetPathType.Npc);
+        //
+        var monsterGuids = AssetDatabase.FindAssets("MONSTER", new[] { ConstFilePath.MONSTER_PREFABS_ASSET_PATH });
+        MakeAssetPaths(monsterGuids, AssetPathType.Monster);
+        //
+        var animalGuids = AssetDatabase.FindAssets("ANIMAL", new[] { ConstFilePath.ANIMAL_PREFABS_ASSET_PATH });
+        MakeAssetPaths(animalGuids, AssetPathType.Animal);
+#endif
+
+        // 게임 파티클.
+        foreach (var path in GetAssetPaths(AssetPathType.Fx))
         {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
             GameParticeEffectCategory category = KojeomUtility.GetParticleCategoryFromAssetPath(path);
             GameParticleType type = KojeomUtility.GetParticleTypeFromAssetPath(path);
             string resorucePath = KojeomUtility.ConvertAssetPathToResourcePath(path);
@@ -95,16 +117,15 @@ public class GameResourceSupervisor
             ParticleEffectPrefabs[(int)category].Resources.Add(type, new SoftObjectPtr(resorucePath));
         }
 
-        // 액터.
+        // 액터 그룹 할당.
         for (int idx = 0; idx < (int)ACTOR_TYPE.COUNT; idx++)
         {
             ActorPrefabs[idx] = new ActorTypeGroup();
         }
+        //
         ActorPrefabs[(int)ACTOR_TYPE.NPC].ActorResourceGroups = new ActorResourceGroup[(int)NPC_TYPE.COUNT];
-        var npcGuids = AssetDatabase.FindAssets("NPC", new[] { ConstFilePath.NPC_PREFABS_ASSET_PATH });
-        foreach (var guid in npcGuids)
+        foreach (var path in GetAssetPaths(AssetPathType.Npc))
         {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
             NPC_TYPE type = KojeomUtility.GetActorDetailTypeFromAssetPath<NPC_TYPE>(path);
             string resourceID = KojeomUtility.GetResourceIDFromAssetPath(path);
             string resourcePath = KojeomUtility.ConvertAssetPathToResourcePath(path);
@@ -116,10 +137,8 @@ public class GameResourceSupervisor
         }
 
         ActorPrefabs[(int)ACTOR_TYPE.MONSTER].ActorResourceGroups = new ActorResourceGroup[(int)MONSTER_TYPE.COUNT];
-        var monsterGuids = AssetDatabase.FindAssets("MONSTER", new[] { ConstFilePath.MONSTER_PREFABS_ASSET_PATH });
-        foreach (var guid in monsterGuids)
+        foreach (var path in GetAssetPaths(AssetPathType.Monster))
         {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
             MONSTER_TYPE type = KojeomUtility.GetActorDetailTypeFromAssetPath<MONSTER_TYPE>(path);
             string resourceID = KojeomUtility.GetResourceIDFromAssetPath(path);
             string resourcePath = KojeomUtility.ConvertAssetPathToResourcePath(path);
@@ -131,10 +150,8 @@ public class GameResourceSupervisor
         }
 
         ActorPrefabs[(int)ACTOR_TYPE.ANIMAL].ActorResourceGroups = new ActorResourceGroup[(int)ANIMAL_TYPE.COUNT];
-        var animalGuids = AssetDatabase.FindAssets("ANIMAL", new[] { ConstFilePath.ANIMAL_PREFABS_ASSET_PATH });
-        foreach (var guid in animalGuids)
+        foreach (var path in GetAssetPaths(AssetPathType.Animal))
         {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
             ANIMAL_TYPE type = KojeomUtility.GetActorDetailTypeFromAssetPath<ANIMAL_TYPE>(path);
             string resourceID = KojeomUtility.GetResourceIDFromAssetPath(path);
             string resourcePath = KojeomUtility.ConvertAssetPathToResourcePath(path);
@@ -160,4 +177,67 @@ public class GameResourceSupervisor
     {
         return CharacterPrefabs[characterType];
     }
+
+    private List<string> GetAssetPaths(AssetPathType pathType)
+    {
+        string filePath = "";
+        switch (pathType)
+        {
+            case AssetPathType.Fx:
+                filePath = ConstFilePath.FX_ASSET_LIST_FILE_PATH;
+                break;
+            case AssetPathType.Monster:
+                filePath = ConstFilePath.MONSTER_ASSET_LIST_FILE_PATH;
+                break;
+            case AssetPathType.Animal:
+                filePath = ConstFilePath.ANIMAL_ASSET_LIST_FILE_PATH;
+                break;
+            case AssetPathType.Npc:
+                filePath = ConstFilePath.NPC_ASSET_LIST_FILE_PATH;
+                break;
+        }
+        List<string> assetsPath = new List<string>();
+        // deserialize JSON directly from a file
+        using (StreamReader file = new StreamReader(File.Open(filePath, FileMode.Open, FileAccess.Read)))
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            assetsPath = (List<string>)serializer.Deserialize(file, typeof(List<string>));
+        }
+        return assetsPath;
+    }
+#if UNITY_EDITOR
+    private void MakeAssetPaths(string[] guids, AssetPathType pathType)
+    {
+        List<string> assetsPath = new List<string>();
+        foreach(var guid in guids)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            assetsPath.Add(path);
+        }
+        //
+        // serialize JSON directly to a file
+        string filePath = "";
+        switch (pathType)
+        {
+            case AssetPathType.Fx:
+                filePath = ConstFilePath.FX_ASSET_LIST_FILE_PATH;
+                break;
+            case AssetPathType.Monster:
+                filePath = ConstFilePath.MONSTER_ASSET_LIST_FILE_PATH;
+                break;
+            case AssetPathType.Animal:
+                filePath = ConstFilePath.ANIMAL_ASSET_LIST_FILE_PATH;
+                break;
+            case AssetPathType.Npc:
+                filePath = ConstFilePath.NPC_ASSET_LIST_FILE_PATH;
+                break;
+        }
+        using (StreamWriter file = new StreamWriter(File.Open(filePath, FileMode.OpenOrCreate, FileAccess.Write)))
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.Formatting = Formatting.Indented;
+            serializer.Serialize(file, assetsPath);
+        }
+    }
+#endif
 }
