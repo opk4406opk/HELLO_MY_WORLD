@@ -24,6 +24,15 @@ namespace KojeomNet.FrameWork.Soruces
             return packet;
         }
 
+        public static CPacket Create(Int16 protocol_id, int bufferSize)
+        {
+            CPacket packet = new CPacket(bufferSize);
+            //todo:다음 리팩토링 대상은 바로 여기다. CPacketBufferManager!!!
+            //CPacket packet = CPacketBufferManager.pop();
+            packet.SetProtocol(protocol_id);
+            return packet;
+        }
+
         public static void Destroy(CPacket packet)
         {
             //CPacketBufferManager.push(packet);
@@ -61,6 +70,11 @@ namespace KojeomNet.FrameWork.Soruces
         public CPacket()
         {
             this.Buffer = new byte[1024];
+        }
+
+        public CPacket(int bufferSize)
+        {
+            this.Buffer = new byte[bufferSize];
         }
 
         public Int16 PopProtocolID()

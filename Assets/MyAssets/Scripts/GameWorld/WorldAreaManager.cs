@@ -215,7 +215,8 @@ public class WorldAreaManager : MonoBehaviour
 
     public static Vector3 DisassembleUniqueID(string uniqueID)
     {
-        var sub = uniqueID.Substring(uniqueID.IndexOf("_"));
+        // basic form : unique_0:0:0  ( x:y:z )
+        var sub = uniqueID.Substring(uniqueID.IndexOf("_") + 1);
         var split = sub.Split(':');
         return new Vector3(float.Parse(split[0]), float.Parse(split[1]), float.Parse(split[2]));
     }

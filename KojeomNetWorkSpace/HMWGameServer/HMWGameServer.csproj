@@ -36,6 +36,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConstFilePath.cs" />
     <Compile Include="GameServerManager.cs" />
     <Compile Include="GameUser.cs" />
     <Compile Include="GameWorldMapManager.cs" />

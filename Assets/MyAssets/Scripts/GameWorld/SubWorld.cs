@@ -91,6 +91,30 @@ public class SubWorld : MonoBehaviour
         return WorldAreaInstance.AreaUniqueID;
     }
 
+    /// <summary>
+    ///  모든 Block Type을 업데이트.
+    /// </summary>
+    /// <param name="blockBytes"></param>
+    /// <param name="bUpdateRender"></param>
+    public void UpdateBlocks(byte[,,] blockTypeBytes, bool bUpdateRender)
+    {
+        var worldConfig = WorldConfigFile.Instance.GetConfig();
+        for (int x = 0; x < worldConfig.SubWorldSizeX; x++)
+        {
+            for (int z = 0; z < worldConfig.SubWorldSizeZ; z++)
+            {
+                for (int y = 0; y < worldConfig.SubWorldSizeY; y++)
+                {
+                    WorldBlockData[x, y, z].Type = blockTypeBytes[x, y, z];
+                }
+            }
+        }
+
+        if(bUpdateRender == true)
+        {
+            // 렌더링 리프레쉬.
+        }
+    }
     private IEnumerator Tick()
     {
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} is Tick Start.", UniqueID));

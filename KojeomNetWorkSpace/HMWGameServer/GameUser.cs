@@ -80,6 +80,23 @@ namespace HMWGameServer
                         NetType = (GameUserNetType)netType;
                         CPacket response = CPacket.Create((short)NetProtocol.USER_NET_TYPE_ACK);
                         Send(response);
+                        // Host가 아닌 Client로 접속한 경우라면.
+                        if (NetType == GameUserNetType.Client)
+                        {
+                            var mapData = GameWorldMapManager.GetInstance().GetWorldMapData();
+                            foreach (var data in mapData)
+                            {
+                                CPacket pushSubWorldData = CPacket.Create((short)NetProtocol.SUBWORLD_DATA_PUSH, data.SubWorldDataFileBytes.Length);
+                                // size.
+                                pushSubWorldData.Push(data.SubWorldDataFileBytes.Length);
+                                // file bytes.
+                                for (int idx = 0; idx < data.SubWorldDataFileBytes.Length; idx++)
+                                {
+                                    pushSubWorldData.Push(data.SubWorldDataFileBytes[idx]);
+                                }
+                                Send(pushSubWorldData);
+                            }
+                        }
                     }
                     break;
                 case NetProtocol.WORLD_MAP_PROPERTIES_REQ:
@@ -95,7 +112,7 @@ namespace HMWGameServer
                         packetData.SubWorldSizeY = msg.PopInt32();
                         packetData.SubWorldSizeZ = msg.PopInt32();
                         GameWorldMapManager.GetInstance().WorldMapProperties = packetData;
-                        GameWorldMapManager.GetInstance().MakeWorldMap();
+                        GameWorldMapManager.GetInstance().AsyncMakeMap();
                         //
                         Console.WriteLine(string.Format("MAP_PROPERTIES : WorldAreaRow : {0}, Column : {1}, Layer : {2}," +
                             " SubWorldRow : {3}, Column : {4}, Layer : {5}, SubWorldSizeX : {6}, SizeY : {7}, SizeZ : {8}", 

@@ -23,6 +23,7 @@ namespace HMWGameServer
         WORLD_MAP_PROPERTIES_ACK,
 
         CHANGE_SUBWORLD_BLOCK_PUSH,
+        SUBWORLD_DATA_PUSH,
 
         END
     }

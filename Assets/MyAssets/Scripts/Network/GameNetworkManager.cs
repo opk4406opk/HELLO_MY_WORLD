@@ -5,6 +5,8 @@ using KojeomNet.FrameWork.Soruces;
 using System.Net;
 using System;
 using System.Runtime.InteropServices;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public enum NetProtocol
 {
@@ -23,6 +25,7 @@ public enum NetProtocol
     WORLD_MAP_PROPERTIES_ACK,
 
     CHANGE_SUBWORLD_BLOCK_PUSH,
+    SUBWORLD_DATA_PUSH,
 
     END
 }
@@ -32,6 +35,22 @@ public enum GameUserNetType
     None,
     Client,
     Host,
+}
+
+/// <summary>
+/// 서버에서 수신한 SubWorld File 포멧.
+/// </summary>
+class SubWorldDataFileFormat
+{
+    public string AreaID;
+    public string SubWorldID;
+    public byte[,,] BlockTypes;
+}
+
+struct SubWorldPacketData
+{
+    public int Size;
+    public byte[] SubWorldDataFileBytes;
 }
 
 struct WorldMapPropertiesPacketData
@@ -245,6 +264,31 @@ class RemoteServerPeer : IPeer
                         if (subWorldState != null)
                         {
                             subWorldState.SubWorldInstance.WorldBlockData[receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z].Type = receivedData.BlockTypeValue;
+                        }
+                    }
+                }
+                break;
+            case NetProtocol.SUBWORLD_DATA_PUSH:
+                {
+                    KojeomLogger.DebugLog("SubWorld Data received from server", LOG_TYPE.NETWORK_CLIENT_INFO);
+                    SubWorldPacketData packetData;
+                    packetData.Size = msg.PopInt32();
+                    byte[] fileBytes = new byte[packetData.Size];
+                    for(int idx = 0; idx < packetData.Size; idx++)
+                    {
+                        fileBytes[idx] = msg.Popbyte();
+                    }
+                    // bytes to stream.
+                    Stream stream = new MemoryStream(fileBytes);
+                    BinaryFormatter bf = new BinaryFormatter();
+                    SubWorldDataFileFormat fileFormat = bf.Deserialize(stream) as SubWorldDataFileFormat;
+                    WorldArea worldArea = WorldAreaManager.Instance.GetWorldArea(fileFormat.AreaID);
+                    if(worldArea != null)
+                    {
+                        worldArea.SubWorldStates.TryGetValue(fileFormat.SubWorldID, out SubWorldState subWorldState);
+                        if(subWorldState != null)
+                        {
+                            subWorldState.SubWorldInstance.UpdateBlocks(fileFormat.BlockTypes, false);
                         }
                     }
                 }
