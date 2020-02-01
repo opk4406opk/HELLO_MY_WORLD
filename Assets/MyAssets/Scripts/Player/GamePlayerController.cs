@@ -108,8 +108,8 @@ public class GamePlayerController : MonoBehaviour
             return;
         }
 
-        KojeomLogger.DebugLog(string.Format("Player's contain world : {0}, position : {1}", 
-            containWorld.name, containWorld.OffsetCoordinate), LOG_TYPE.DEBUG_TEST);
+       // KojeomLogger.DebugLog(string.Format("Player's contain world : {0}, position : {1}", 
+       //     containWorld.name, containWorld.OffsetCoordinate), LOG_TYPE.DEBUG_TEST);
        
         if (InGameUISupervisor.Singleton != null)
         {

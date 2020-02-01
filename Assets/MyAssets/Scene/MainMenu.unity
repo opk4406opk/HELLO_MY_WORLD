@@ -94,8 +94,8 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaDirect: 0.5
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
-    m_ShowResolutionOverlay: 1
     m_ExportTrainingData: 0
+    m_TrainingDataDestination: TrainingData
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 0
 --- !u!196 &4
@@ -391,7 +391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a0413fa47a2caf48a995c3cdcc6a077, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaximumWaitSec: 3
+  MaximumWaitSec: 1
   btn_singleGameStart: {fileID: 1899175705}
   btn_multiGameStart: {fileID: 36330386}
   btn_settings: {fileID: 396441242}

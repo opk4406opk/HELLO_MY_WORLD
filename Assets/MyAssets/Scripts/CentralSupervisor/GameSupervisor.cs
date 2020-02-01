@@ -101,6 +101,7 @@ public class GameSupervisor : MonoBehaviour
                     GameStatus.CurrentGameModeState, GameNetworkManager.GetInstance().UserNetType), LOG_TYPE.SYSTEM);
                 break;
         }
+        //
         GameDataManagerInstance.Initialize();
         InitManagers();
         //

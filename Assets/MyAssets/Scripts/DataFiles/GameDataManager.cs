@@ -2,6 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * 
+ * Unity PC(Editor)상에서는 문제없이 한글로 인코딩 되는 문제가, 모바일 운영체제로 가면 안되는 문제가 발생한다.
+이 문제를 해결하는 방법은 인코딩과 관련된 dll을 Plugins폴더로 복사하면 된다.
+해당 dll은 유니티 설치 폴더인 Unity\Editor\Data\Mono\lib\mono\unity에 있으며,
+파일 이름은 [ I18N.dll ], [ I18N.CJK.dll ]이다.
+이 둘을 복사하면 아래와 같이 인코딩 값을 가져올 수 있다.
+Encoding enkr = Encoding.GetEncoding(51949);
+출처: https://202psj.tistory.com/1297 
+ */
+
 public class GameDataManager
 {
     #region data file.
