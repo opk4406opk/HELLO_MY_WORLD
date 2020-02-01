@@ -82,6 +82,7 @@ namespace HMWGameServer
     }
     class GameWorldMapManager
     {
+        private object LockObject = null;
         private static GameWorldMapManager Instance;
         public static GameWorldMapManager GetInstance()
         {
@@ -100,6 +101,7 @@ namespace HMWGameServer
 
         private GameWorldMapManager()
         {
+            LockObject = new object();
         }
 
         public async void AsyncMakeMap()
@@ -138,22 +140,25 @@ namespace HMWGameServer
 
         private List<SubWorld> MakeSubWorld(string areaID)
         {
-            List<SubWorld> subworldList = new List<SubWorld>();
-            for (int x = 0; x < WorldMapProperties.SubWorldRow; ++x)
+            lock(LockObject)
             {
-                for (int y = 0; y < WorldMapProperties.SubWorldLayer; ++y)
+                List<SubWorld> subworldList = new List<SubWorld>();
+                for (int x = 0; x < WorldMapProperties.SubWorldRow; ++x)
                 {
-                    for (int z = 0; z < WorldMapProperties.SubWorldColumn; ++z)
+                    for (int y = 0; y < WorldMapProperties.SubWorldLayer; ++y)
                     {
-                        SubWorld subWorld = new SubWorld();
-                        subWorld.UniqueID = Utils.MakeUniqueID(x, y, z);
-                        subWorld.Blocks = new byte[WorldMapProperties.SubWorldSizeX, WorldMapProperties.SubWorldSizeY, WorldMapProperties.SubWorldSizeZ];
-                        subWorld.SavePath = SaveSubWorldFile(subWorld, areaID); // make data file.
-                        subworldList.Add(subWorld); 
+                        for (int z = 0; z < WorldMapProperties.SubWorldColumn; ++z)
+                        {
+                            SubWorld subWorld = new SubWorld();
+                            subWorld.UniqueID = Utils.MakeUniqueID(x, y, z);
+                            subWorld.Blocks = new byte[WorldMapProperties.SubWorldSizeX, WorldMapProperties.SubWorldSizeY, WorldMapProperties.SubWorldSizeZ];
+                            subWorld.SavePath = SaveSubWorldFile(subWorld, areaID); // make data file.
+                            subworldList.Add(subWorld);
+                        }
                     }
                 }
+                return subworldList;
             }
-            return subworldList;
         }
 
         private SubWorldDataFileFormat LoadSubWorldFile(string filePath)
@@ -197,29 +202,36 @@ namespace HMWGameServer
 
         public void AddSubWorldData(SubWorldBlockPacketData packetData)
         {
-            WorldAreaMap.TryGetValue(packetData.AreaID, out WorldArea worldArea);
-            worldArea.SubWorlds.TryGetValue(packetData.SubWorldID, out SubWorld subWorld);
-            subWorld.Blocks[packetData.BlockIndex_X, packetData.BlockIndex_Y, packetData.BlockIndex_Z] = packetData.BlockTypeValue;
-            // save subworld.
-            SaveSubWorldFile(subWorld, packetData.AreaID);
+            lock(LockObject)
+            {
+                WorldAreaMap.TryGetValue(packetData.AreaID, out WorldArea worldArea);
+                worldArea.SubWorlds.TryGetValue(packetData.SubWorldID, out SubWorld subWorld);
+                subWorld.Blocks[packetData.BlockIndex_X, packetData.BlockIndex_Y, packetData.BlockIndex_Z] = packetData.BlockTypeValue;
+                // save subworld.
+                SaveSubWorldFile(subWorld, packetData.AreaID);
+            }
+           
         }
 
         public List<SubWorldPacketData> GetWorldMapData()
         {
-            List<SubWorldPacketData> packetDatas = new List<SubWorldPacketData>();
-            foreach(var area in WorldAreaMap)
+            lock(LockObject)
             {
-                WorldArea worldArea = area.Value;
-                foreach(var sub in worldArea.SubWorlds)
+                List<SubWorldPacketData> packetDatas = new List<SubWorldPacketData>();
+                foreach (var area in WorldAreaMap)
                 {
-                    SubWorld subWorld = sub.Value;
-                    SubWorldPacketData packetData;
-                    packetData.SubWorldDataFileBytes = LoadSubWorldFileBytes(subWorld.SavePath);
-                    packetData.Size = packetData.SubWorldDataFileBytes.Length;
-                    packetDatas.Add(packetData);
+                    WorldArea worldArea = area.Value;
+                    foreach (var sub in worldArea.SubWorlds)
+                    {
+                        SubWorld subWorld = sub.Value;
+                        SubWorldPacketData packetData;
+                        packetData.SubWorldDataFileBytes = LoadSubWorldFileBytes(subWorld.SavePath);
+                        packetData.Size = packetData.SubWorldDataFileBytes.Length;
+                        packetDatas.Add(packetData);
+                    }
                 }
+                return packetDatas;
             }
-            return packetDatas;
         }
     }
 }

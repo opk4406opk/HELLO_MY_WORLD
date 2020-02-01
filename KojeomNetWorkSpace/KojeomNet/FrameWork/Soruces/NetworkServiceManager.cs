@@ -179,7 +179,7 @@ namespace KojeomNet.FrameWork.Soruces
         private void ProcessReceive(SocketAsyncEventArgs receiveArgs)
         {
             UserToken userToken = receiveArgs.UserToken as UserToken;
-            if (receiveArgs.BytesTransferred > 0 && receiveArgs.SocketError == SocketError.Success)
+            if (/*receiveArgs.BytesTransferred > 0 && */receiveArgs.SocketError == SocketError.Success && userToken != null)
             {
                 userToken.OnReceive(receiveArgs.Buffer, receiveArgs.Offset, receiveArgs.BytesTransferred);
                 bool bPending = userToken.SocketInstance.ReceiveAsync(receiveArgs);

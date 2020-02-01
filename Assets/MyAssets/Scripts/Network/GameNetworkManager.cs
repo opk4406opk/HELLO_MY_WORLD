@@ -125,6 +125,7 @@ public class GameNetworkManager
 
     public void ConnectToGameServer(string ip, int port, GameUserNetType netType)
     {
+        KojeomLogger.DebugLog(string.Format("Connect to server ip : {0}, port : {1}, NetType : {2}", ip, port, netType), LOG_TYPE.NETWORK_CLIENT_INFO);
         UserNetType = netType;
         IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse(ip), port);
         ConnectorInstance.Connect(endpoint);
