@@ -54,6 +54,7 @@ namespace HMWGameServer
         public int BlockIndex_Y;
         public int BlockIndex_Z;
         public byte BlockTypeValue;
+        public byte OwnerChunkType;
         // 서버에서 기록하는 타임스탬프.
         public long TimeStampTicks;
 

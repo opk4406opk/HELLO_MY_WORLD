@@ -18,6 +18,7 @@ public struct Block {
     public int WorldDataIndexY;
     public int WorldDataIndexZ;
     public int Durability;
+    public ChunkType OwnerChunkType; // 이 블록을 소유한 청크의 타입.
     // 복사 생성자.
     public Block(Block b)
     {
@@ -30,6 +31,7 @@ public struct Block {
         WorldDataIndexY = b.WorldDataIndexY;
         WorldDataIndexZ = b.WorldDataIndexZ;
         Durability = b.Durability;
+        OwnerChunkType = b.OwnerChunkType;
     }
 
     public Vector3 GetCenterPosition()

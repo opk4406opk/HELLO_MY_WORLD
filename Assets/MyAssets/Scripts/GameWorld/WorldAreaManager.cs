@@ -197,6 +197,26 @@ public class WorldAreaManager : MonoBehaviour
         return new Vector3(x, y, z);
     }
     /// <summary>
+    /// 블록 인덱스를 청크 인덱스로 변환.
+    /// </summary>
+    /// <param name="blockIndex"></param>
+    /// <returns></returns>
+    public static Vector3 ConvertBlockIdxToChunkIdx(Vector3 blockIndex)
+    {
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
+        return new Vector3(blockIndex.x / gameWorldConfig.ChunkSize, blockIndex.y / gameWorldConfig.ChunkSize, blockIndex.z / gameWorldConfig.ChunkSize);
+    }
+    /// <summary>
+    /// 블록 인덱스를 청크 인덱스로 변환.
+    /// </summary>
+    /// <param name="blockIndex"></param>
+    /// <returns></returns>
+    public static Vector3 ConvertBlockIdxToChunkIdx(int x, int y, int z)
+    {
+        var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
+        return new Vector3(x / gameWorldConfig.ChunkSize, y / gameWorldConfig.ChunkSize, z / gameWorldConfig.ChunkSize);
+    }
+    /// <summary>
     /// UniqueID를 생성합니다.
     /// </summary>
     /// <param name="xyz"></param>

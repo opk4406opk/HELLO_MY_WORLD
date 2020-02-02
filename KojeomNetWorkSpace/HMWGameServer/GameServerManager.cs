@@ -75,13 +75,13 @@ namespace HMWGameServer
             }
         }
 
-        public void BroadCasting(CPacket packet, GameUser exceptUser)
+        public void BroadCasting(CPacket packet, int exceptUserID)
         {
             lock(GameUserList)
             {
                 foreach (var user in GameUserList)
                 {
-                    if (exceptUser != user)
+                    if (user.NetIdentity != exceptUserID)
                     {
                         user.Send(packet);
                     }

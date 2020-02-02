@@ -119,6 +119,7 @@ public class ModifyWorldManager : MonoBehaviour
                 packetData.BlockIndex_X = blockX;
                 packetData.BlockIndex_Y = blockY + 1;
                 packetData.BlockIndex_Z = blockZ;
+                packetData.OwnerChunkType = (byte)SelectWorldInstance.WorldBlockData[blockX, blockY + 1, blockZ].OwnerChunkType;
             }
             else
             {
@@ -137,6 +138,7 @@ public class ModifyWorldManager : MonoBehaviour
                 packetData.BlockIndex_X = blockX;
                 packetData.BlockIndex_Y = blockY;
                 packetData.BlockIndex_Z = blockZ;
+                packetData.OwnerChunkType = (byte)SelectWorldInstance.WorldBlockData[blockX, blockY, blockZ].OwnerChunkType;
             }
             // 패킷 전송.
             GameNetworkManager.GetInstance().SendChangedSubWorldBlock(packetData);

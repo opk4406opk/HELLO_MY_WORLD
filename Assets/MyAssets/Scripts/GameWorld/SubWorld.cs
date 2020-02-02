@@ -112,7 +112,14 @@ public class SubWorld : MonoBehaviour
 
         if(bUpdateRender == true)
         {
-            // 렌더링 리프레쉬.
+            // 렌더링 리프레쉬.\
+            foreach(ChunkSlot slot in ChunkSlots)
+            {
+                foreach(var chunk in slot.Chunks)
+                {
+                    chunk.Update = true;
+                }
+            }
         }
     }
     private IEnumerator Tick()

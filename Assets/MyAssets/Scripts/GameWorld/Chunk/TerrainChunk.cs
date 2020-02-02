@@ -53,6 +53,7 @@ public class TerrainChunk : AChunk
             //points[7] = new Vector3(cubeX, cubeY - 1, cubeZ + 1);
             //
             SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].bRendered = true;
+            SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].OwnerChunkType = ChunkType.TERRAIN;
             // 월드맵에 생성된 블록의 중앙점을 이용해 Octree의 노드를 생성합니다.
             SubWorldInstance.CustomOctreeInstance.Add(new Vector3(blockCenterX, blockCenterY, blockCenterZ));
         }

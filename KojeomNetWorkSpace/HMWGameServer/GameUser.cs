@@ -47,14 +47,16 @@ namespace HMWGameServer
                         receivedData.BlockIndex_Y = msg.PopInt32();
                         receivedData.BlockIndex_Z = msg.PopInt32();
                         receivedData.BlockTypeValue = msg.Popbyte();
+                        receivedData.OwnerChunkType = msg.Popbyte();
                         // 해당 패킷에 대한 타임스탬프를 기록.
                         receivedData.TimeStampTicks = DateTime.Now.Ticks;
                         //
                         GameWorldMapManager.GetInstance().AddSubWorldData(receivedData);
                         //
-                        Console.WriteLine(string.Format("AreaID: {0}, SubWorldID : {1}, BlockIndex x : {2} y : {3} z : {4}, BlockType : {5}",
+                        Console.WriteLine(string.Format("Modified User ID : {0}, AreaID: {1}, SubWorldID : {2}, BlockIndex x : {3} y : {4} z : {5}, BlockType : {6}",
                             receivedData.AreaID, receivedData.SubWorldID,
-                            receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z, receivedData.BlockTypeValue));
+                            receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z,
+                            receivedData.BlockTypeValue, NetIdentity));
                         //
                         CPacket response = CPacket.Create((short)NetProtocol.CHANGED_SUBWORLD_BLOCK_ACK);
                         Send(response);
@@ -65,7 +67,9 @@ namespace HMWGameServer
                         changeBlock.Push(receivedData.BlockIndex_X);
                         changeBlock.Push(receivedData.BlockIndex_Y);
                         changeBlock.Push(receivedData.BlockIndex_Z);
-                        GameServerManager.GetInstance().BroadCasting(changeBlock, this);
+                        changeBlock.Push(receivedData.BlockTypeValue);
+                        changeBlock.Push(receivedData.OwnerChunkType);
+                        GameServerManager.GetInstance().BroadCasting(changeBlock, NetIdentity);
                     }
                     break;
                 case NetProtocol.AFTER_SESSION_INIT_REQ:

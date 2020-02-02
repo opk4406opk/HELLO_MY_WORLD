@@ -49,6 +49,7 @@ public class WaterChunk : AChunk
             //points[7] = new Vector3(cubeX, cubeY - 1, cubeZ + 1);
             //                       
             SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].bRendered = true;
+            SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].OwnerChunkType = ChunkType.WATER;
         }
     }
 

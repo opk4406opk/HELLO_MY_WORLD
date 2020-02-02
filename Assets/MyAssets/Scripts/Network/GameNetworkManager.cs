@@ -79,6 +79,7 @@ public struct SubWorldBlockPacketData
     public Int32 BlockIndex_Y;
     public Int32 BlockIndex_Z;
     public byte BlockTypeValue;
+    public byte OwnerChunkType;
     // 서버에서 기록하는 타임스탬프.
     public long TimeStampTicks;
 }
@@ -167,6 +168,7 @@ public class GameNetworkManager
         packet.Push(packetData.BlockIndex_Y);
         packet.Push(packetData.BlockIndex_Z);
         packet.Push(packetData.BlockTypeValue);
+        packet.Push(packetData.OwnerChunkType);
         //
         KojeomLogger.DebugLog("Send to Server (Changed Block Data) ", LOG_TYPE.NETWORK_CLIENT_INFO);
         if (GameServer != null) GameServer.Send(packet);
@@ -259,6 +261,7 @@ class RemoteServerPeer : IPeer
                     receivedData.BlockIndex_Y = msg.PopInt32();
                     receivedData.BlockIndex_Z = msg.PopInt32();
                     receivedData.BlockTypeValue = msg.Popbyte();
+                    receivedData.OwnerChunkType = msg.Popbyte();
                     WorldAreaManager.Instance.WorldAreas.TryGetValue(receivedData.AreaID, out WorldArea worldArea);
                     if (worldArea != null)
                     {
@@ -266,6 +269,12 @@ class RemoteServerPeer : IPeer
                         if (subWorldState != null)
                         {
                             subWorldState.SubWorldInstance.WorldBlockData[receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z].Type = receivedData.BlockTypeValue;
+                            Vector3 chunkIndex = WorldAreaManager.ConvertBlockIdxToChunkIdx(receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z);
+                            int chunkIdxX = (int)chunkIndex.x;
+                            int chunkIdxY = (int)chunkIndex.y;
+                            int chunkIdxZ = (int)chunkIndex.z;
+                            int ownerChunkType = (int)receivedData.OwnerChunkType;
+                            subWorldState.SubWorldInstance.ChunkSlots[chunkIdxX, chunkIdxY, chunkIdxZ].Chunks[ownerChunkType].Update = true;
                         }
                     }
                 }
