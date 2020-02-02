@@ -54,9 +54,9 @@ namespace HMWGameServer
                         GameWorldMapManager.GetInstance().AddSubWorldData(receivedData);
                         //
                         Console.WriteLine(string.Format("Modified User ID : {0}, AreaID: {1}, SubWorldID : {2}, BlockIndex x : {3} y : {4} z : {5}, BlockType : {6}",
-                            receivedData.AreaID, receivedData.SubWorldID,
+                            NetIdentity, receivedData.AreaID, receivedData.SubWorldID,
                             receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z,
-                            receivedData.BlockTypeValue, NetIdentity));
+                            receivedData.BlockTypeValue));
                         //
                         CPacket response = CPacket.Create((short)NetProtocol.CHANGED_SUBWORLD_BLOCK_ACK);
                         Send(response);

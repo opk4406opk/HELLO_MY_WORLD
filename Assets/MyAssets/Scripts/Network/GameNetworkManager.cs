@@ -299,7 +299,7 @@ class RemoteServerPeer : IPeer
                         worldArea.SubWorldStates.TryGetValue(fileFormat.SubWorldID, out SubWorldState subWorldState);
                         if(subWorldState != null)
                         {
-                            subWorldState.SubWorldInstance.UpdateBlocks(fileFormat.BlockTypes, false);
+                            subWorldState.SubWorldInstance.UpdateBlocks(fileFormat.BlockTypes, true);
                         }
                     }
                 }
