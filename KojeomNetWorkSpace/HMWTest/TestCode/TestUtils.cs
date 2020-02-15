@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HMWGameServer
+namespace HMWTest.TestCode
 {
-    struct Vector3
+    public struct Vector3
     {
         public float x;
         public float y;
@@ -20,7 +20,7 @@ namespace HMWGameServer
             z = _z;
         }
     }
-    class Utils
+    public class TestUtils
     {
         // Seed 값은 일정하게 0으로 고정.
         private static System.Random RandomInstance = new System.Random(0);

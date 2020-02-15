@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTestClient", "SimpleT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HMWGameServer", "HMWGameServer\HMWGameServer.csproj", "{344DA573-7EE9-4820-81F3-474356602390}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HMWTest", "HMWTest\HMWTest.csproj", "{03764960-85CA-4C2E-B3A2-AA8C48F54E2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{344DA573-7EE9-4820-81F3-474356602390}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{344DA573-7EE9-4820-81F3-474356602390}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{344DA573-7EE9-4820-81F3-474356602390}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03764960-85CA-4C2E-B3A2-AA8C48F54E2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03764960-85CA-4C2E-B3A2-AA8C48F54E2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03764960-85CA-4C2E-B3A2-AA8C48F54E2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03764960-85CA-4C2E-B3A2-AA8C48F54E2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

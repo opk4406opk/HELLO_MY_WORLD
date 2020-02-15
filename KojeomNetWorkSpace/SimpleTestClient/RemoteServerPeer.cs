@@ -13,7 +13,7 @@ namespace SimpleTestClient
             this.UserTokenInstance.SetPeer(this);
         }
 
-        int RecvCount = 0;
+        private int RecvCount = 0;
         void IPeer.OnMessage(CPacket msg)
         {
             System.Threading.Interlocked.Increment(ref this.RecvCount);
