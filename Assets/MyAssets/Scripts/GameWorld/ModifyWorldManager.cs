@@ -106,7 +106,7 @@ public class ModifyWorldManager : MonoBehaviour
             packetData.AreaID = SelectWorldInstance.GetWorldAreaUniqueID();
             packetData.SubWorldID = SelectWorldInstance.UniqueID;
             packetData.BlockTypeValue = blockType;
-            packetData.TimeStampTicks = GameNetworkManager.INVALID_TIMESTAMP_TICKS;
+            //packetData.TimeStampTicks = GameNetworkManager.INVALID_TIMESTAMP_TICKS;
             if (bCreate == true)
             {
                 //Vector3 createPosition = new Vector3(Mathf.Ceil(collideInfo.collisionPoint.x),

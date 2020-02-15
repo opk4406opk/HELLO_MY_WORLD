@@ -56,7 +56,7 @@ namespace HMWGameServer
         public byte BlockTypeValue;
         public byte OwnerChunkType;
         // 서버에서 기록하는 타임스탬프.
-        public long TimeStampTicks;
+        //public long TimeStampTicks;
 
 
         public static bool operator ==(SubWorldBlockPacketData a, SubWorldBlockPacketData b)

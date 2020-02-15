@@ -49,7 +49,7 @@ namespace HMWGameServer
                         receivedData.BlockTypeValue = msg.Popbyte();
                         receivedData.OwnerChunkType = msg.Popbyte();
                         // 해당 패킷에 대한 타임스탬프를 기록.
-                        receivedData.TimeStampTicks = DateTime.Now.Ticks;
+                        //receivedData.TimeStampTicks = DateTime.Now.Ticks;
                         //
                         GameWorldMapManager.GetInstance().AddSubWorldData(receivedData);
                         //
@@ -69,7 +69,7 @@ namespace HMWGameServer
                         changeBlock.Push(receivedData.BlockIndex_Z);
                         changeBlock.Push(receivedData.BlockTypeValue);
                         changeBlock.Push(receivedData.OwnerChunkType);
-                        GameServerManager.GetInstance().BroadCasting(changeBlock, NetIdentity);
+                        GameServerManager.GetInstance().BroadCasting(changeBlock);
                     }
                     break;
                 case NetProtocol.AFTER_SESSION_INIT_REQ:

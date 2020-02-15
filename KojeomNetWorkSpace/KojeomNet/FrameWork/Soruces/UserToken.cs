@@ -121,7 +121,7 @@ namespace KojeomNet.FrameWork.Soruces
 
         private void StartSend()
         {
-            //lock(CSSendingListLock)
+            try
             {
                 SendArgs.BufferList = SendingList;
                 bool bPending = SocketInstance.SendAsync(SendArgs);
@@ -129,6 +129,17 @@ namespace KojeomNet.FrameWork.Soruces
                 {
                     ProcessSend(SendArgs);
                 }
+            }
+            catch (Exception e)
+            {
+                if (this.SocketInstance == null)
+                {
+                    Close();
+                    return;
+                }
+
+                Console.WriteLine("send error!! close socket. " + e.Message);
+                throw new Exception(e.Message, e);
             }
         }
 

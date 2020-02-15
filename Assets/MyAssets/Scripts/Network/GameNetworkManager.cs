@@ -81,7 +81,7 @@ public struct SubWorldBlockPacketData
     public byte BlockTypeValue;
     public byte OwnerChunkType;
     // 서버에서 기록하는 타임스탬프.
-    public long TimeStampTicks;
+    //public long TimeStampTicks;
 }
 
 public class GameNetworkManager
@@ -170,8 +170,11 @@ public class GameNetworkManager
         packet.Push(packetData.BlockTypeValue);
         packet.Push(packetData.OwnerChunkType);
         //
-        KojeomLogger.DebugLog("Send to Server (Changed Block Data) ", LOG_TYPE.NETWORK_CLIENT_INFO);
-        if (GameServer != null) GameServer.Send(packet);
+        if (GameServer != null)
+        {
+            KojeomLogger.DebugLog("Send to Server (Changed Block Data) ", LOG_TYPE.NETWORK_CLIENT_INFO);
+            GameServer.Send(packet);
+        }
     }
 
     public void SendWorldMapProperties()
@@ -201,8 +204,11 @@ public class GameNetworkManager
         packet.Push(packetData.SubWorldSizeY);
         packet.Push(packetData.SubWorldSizeZ);
         //
-        KojeomLogger.DebugLog("Send to Server (World map properties) ", LOG_TYPE.NETWORK_CLIENT_INFO);
-        if(GameServer != null) GameServer.Send(packet);
+        if (GameServer != null)
+        {
+            KojeomLogger.DebugLog("Send to Server (World map properties) ", LOG_TYPE.NETWORK_CLIENT_INFO);
+            GameServer.Send(packet);
+        }
     }
 
     public void DisConnectToGameServer()
@@ -253,7 +259,7 @@ class RemoteServerPeer : IPeer
                 break;
             case NetProtocol.CHANGE_SUBWORLD_BLOCK_PUSH:
                 {
-                    KojeomLogger.DebugLog("Other user changed block.", LOG_TYPE.NETWORK_CLIENT_INFO);
+                    KojeomLogger.DebugLog("CHANGE_SUBWORLD_BLOCK_PUSH packet received", LOG_TYPE.NETWORK_CLIENT_INFO);
                     SubWorldBlockPacketData receivedData;
                     receivedData.AreaID = msg.PopString();
                     receivedData.SubWorldID = msg.PopString();
@@ -275,7 +281,16 @@ class RemoteServerPeer : IPeer
                             int chunkIdxZ = (int)chunkIndex.z;
                             int ownerChunkType = (int)receivedData.OwnerChunkType;
                             subWorldState.SubWorldInstance.ChunkSlots[chunkIdxX, chunkIdxY, chunkIdxZ].Chunks[ownerChunkType].Update = true;
+                            KojeomLogger.DebugLog("CHANGE_SUBWORLD_BLOCK_PUSH -> Success Block Update.", LOG_TYPE.INFO);
                         }
+                        else
+                        {
+                            KojeomLogger.DebugLog("CHANGE_SUBWORLD_BLOCK_PUSH -> Error( SubWorldState is null )", LOG_TYPE.ERROR);
+                        }
+                    }
+                    else
+                    {
+                        KojeomLogger.DebugLog("CHANGE_SUBWORLD_BLOCK_PUSH -> Error( WorldArea is null )", LOG_TYPE.ERROR);
                     }
                 }
                 break;

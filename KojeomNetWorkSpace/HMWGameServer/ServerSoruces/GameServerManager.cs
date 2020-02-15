@@ -89,6 +89,17 @@ namespace HMWGameServer
             }
         }
 
+        public void BroadCasting(CPacket packet)
+        {
+            lock (GameUserList)
+            {
+                foreach (var user in GameUserList)
+                {
+                    user.Send(packet);
+                }
+            }
+        }
+
         public void OnSessionRemoved(GameUser user)
         {
             lock (GameUserList)
