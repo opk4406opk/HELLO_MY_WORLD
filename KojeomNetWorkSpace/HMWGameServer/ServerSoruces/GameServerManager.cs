@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using System.Net;
 
 namespace HMWGameServer
 {
@@ -46,7 +47,9 @@ namespace HMWGameServer
         public void StartListen()
         {
             // listen
-            NetworkServiceMgr.StartListen("127.0.0.1", 8000);
+            string localIP = GetLocalIP();
+            NetworkServiceMgr.StartListen(localIP, 8000);
+            Console.WriteLine(string.Format("Listen with : {0}", localIP));
         }
 
         public void StartServer()
@@ -70,7 +73,7 @@ namespace HMWGameServer
             lock (GameUserList)
             {
                 Console.WriteLine(string.Format("New Session Created. {0}", userToken.SocketInstance.RemoteEndPoint.ToString()));
-                user.NetIdentity = AssignNetID++;
+                user.NetIdentityNumber = AssignNetID++;
                 GameUserList.Add(user);
             }
         }
@@ -81,8 +84,11 @@ namespace HMWGameServer
             {
                 foreach (var user in GameUserList)
                 {
-                    if (user.NetIdentity != exceptUserID)
+                    if (user.NetIdentityNumber != exceptUserID)
                     {
+                        Console.WriteLine(string.Format("BroadCasting to user(ID : {0}, IPAdreess: {1})", 
+                            user.NetIdentityNumber,
+                            user.Token.SocketInstance.RemoteEndPoint.ToString()));
                         user.Send(packet);
                     }
                 }
@@ -106,6 +112,20 @@ namespace HMWGameServer
             {
                 GameUserList.Remove(user);
             }
+        }
+        public static string GetLocalIP()
+        {
+            string localIP = "Not available, please check your network settings!";
+            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    localIP = ip.ToString();
+                    break;
+                }
+            }
+            return localIP;
         }
     }
 }

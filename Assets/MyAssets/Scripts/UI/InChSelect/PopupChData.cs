@@ -46,7 +46,7 @@ public class PopupChData : APopupUI
             }
         };
         InsertInfo();
-        if (GameStatus.CurrentGameModeState == GameModeState.MULTI)
+        if (GameStatusManager.CurrentGameModeState == GameModeState.MULTI)
         {
             ScaleDownEffect("CallBackGoToLobby");
         }

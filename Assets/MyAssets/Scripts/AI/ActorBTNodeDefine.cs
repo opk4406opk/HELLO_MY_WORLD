@@ -71,7 +71,7 @@ public class BTNodeWandering : Node
             {
                 if(Controller.GetCurrentState() != ActorStateType.Run)
                 {
-                    KojeomLogger.DebugLog(string.Format("Wandering start!"));
+                    //KojeomLogger.DebugLog(string.Format("Wandering start!"));
                     Controller.StartRun(targetPos);
                 }
             }

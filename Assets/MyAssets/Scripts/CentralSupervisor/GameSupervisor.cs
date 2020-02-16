@@ -5,7 +5,7 @@ using UnityEditor;
 /// <summary>
 /// 게임 상태(single, multi, load, save)를 관리하는 클래스.
 /// </summary>
-public struct GameStatus
+public struct GameStatusManager
 {
     public static GameModeState CurrentGameModeState = GameModeState.NONE;
     public static DetailSingleMode DetailSingleMode = DetailSingleMode.NONE;
@@ -34,10 +34,9 @@ public class GameLocalDataManager
 /// </summary>
 public class GameSupervisor : MonoBehaviour
 {
-   
-
     #region simple config.
-    public bool bSoundOn = false;
+    public bool IsSoundOn = false;
+    public bool IsHostPlay = false;
     #endregion
     //
     #region Inspector variables.
@@ -76,35 +75,38 @@ public class GameSupervisor : MonoBehaviour
     private void Start ()
     {
 #if UNITY_EDITOR
-        bool bEditor = GameStatus.CurrentGameModeState == GameModeState.NONE && GameStatus.DetailSingleMode == DetailSingleMode.NONE;
+        bool bEditor = GameStatusManager.CurrentGameModeState == GameModeState.NONE &&
+                       GameStatusManager.DetailSingleMode == DetailSingleMode.NONE;
         if (bEditor == true)
         {
-            GameStatus.CurrentGameModeState = GameModeState.SINGLE;
-            GameStatus.DetailSingleMode = DetailSingleMode.EDITOR_PLAY;
-            GameNetworkManager.GetInstance().UserNetType = GameUserNetType.Host;
+            GameStatusManager.CurrentGameModeState = GameModeState.SINGLE;
+            GameStatusManager.DetailSingleMode = DetailSingleMode.EDITOR_PLAY;
+            GameNetworkManager.GetInstance().UserNetType = IsHostPlay ? GameUserNetType.Host : GameUserNetType.Client;
+            GameNetworkManager.GetInstance().ConnectToGameServer(GameNetworkManager.GetLocalIP(), 8000, GameNetworkManager.GetInstance().UserNetType);
+            KojeomLogger.DebugLog(string.Format("UNITY_EDITOR Play. NetType : {0}", GameNetworkManager.GetInstance().UserNetType), LOG_TYPE.SYSTEM);
         }
 #endif
         Instance = this;
         GameModeGroup[(int)GameModeState.SINGLE] = new SingleGameMode();
         GameModeGroup[(int)GameModeState.MULTI] = new MultiGameMode();
         //init game mode.
-        GameModeGroup[(int)GameStatus.CurrentGameModeState].Init();
+        GameModeGroup[(int)GameStatusManager.CurrentGameModeState].Init();
         //
-        switch (GameStatus.CurrentGameModeState)
+        switch (GameStatusManager.CurrentGameModeState)
         {
             case GameModeState.SINGLE:
                 KojeomLogger.DebugLog(string.Format("GameModeState : {0}, Detail : {1}, User Network Type : {2}",
-                    GameStatus.CurrentGameModeState, GameStatus.DetailSingleMode, GameNetworkManager.GetInstance().UserNetType), LOG_TYPE.SYSTEM);
+                    GameStatusManager.CurrentGameModeState, GameStatusManager.DetailSingleMode, GameNetworkManager.GetInstance().UserNetType), LOG_TYPE.SYSTEM);
                 break;
             case GameModeState.MULTI:
                 KojeomLogger.DebugLog(string.Format("GameModeState : {0}, User Network Type : {1}",
-                    GameStatus.CurrentGameModeState, GameNetworkManager.GetInstance().UserNetType), LOG_TYPE.SYSTEM);
+                    GameStatusManager.CurrentGameModeState, GameNetworkManager.GetInstance().UserNetType), LOG_TYPE.SYSTEM);
                 break;
         }
         //
         GameDataManagerInstance.Initialize();
         InitManagers();
-        //
+        // 호스트라면 서버 프로세스로 맵 프로퍼티 값들을 전송.
         if(GameNetworkManager.GetInstance().UserNetType == GameUserNetType.Host)
         {
             GameNetworkManager.GetInstance().SendWorldMapProperties();
@@ -113,9 +115,9 @@ public class GameSupervisor : MonoBehaviour
 
     private void Update()
     {
-        if(GameModeGroup[(int)GameStatus.CurrentGameModeState] != null)
+        if(GameModeGroup[(int)GameStatusManager.CurrentGameModeState] != null)
         {
-            GameModeGroup[(int)GameStatus.CurrentGameModeState].Tick(Time.deltaTime);
+            GameModeGroup[(int)GameStatusManager.CurrentGameModeState].Tick(Time.deltaTime);
         }
     }
 
@@ -126,7 +128,7 @@ public class GameSupervisor : MonoBehaviour
     {
         KojeomLogger.DebugLog("게임매니저 클래스들을 초기화 합니다.");
         // sound init.
-        if(bSoundOn == true)
+        if(IsSoundOn == true)
         {
             GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_InGame);
         }
@@ -155,7 +157,7 @@ public class GameSupervisor : MonoBehaviour
         // 프로토타입의 수준으로 기능이 매우 미흡한 수준임.
         WeatherManager.Init();
 
-        if (GameStatus.DetailSingleMode == DetailSingleMode.LOAD_GAME)
+        if (GameStatusManager.DetailSingleMode == DetailSingleMode.LOAD_GAME)
         {
             // 게임을 로드?.
         }

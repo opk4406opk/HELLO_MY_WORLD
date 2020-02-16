@@ -4599,7 +4599,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31fa737f5d38f9c488417f06280e0e61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bSoundOn: 0
+  IsSoundOn: 0
+  IsHostPlay: 1
   playerManager: {fileID: 213506647}
   beltItemSelector: {fileID: 713839329}
   WorldAreaManager: {fileID: 1590980996}

@@ -38,7 +38,7 @@ public class MainMenuManager : MonoBehaviour {
     public void OnClickMultiPlay()
     {
         //멀티플레이로 값 설정.
-        GameStatus.CurrentGameModeState = GameModeState.MULTI;
+        GameStatusManager.CurrentGameModeState = GameModeState.MULTI;
         GameStartProcess();
     }
 
@@ -48,8 +48,8 @@ public class MainMenuManager : MonoBehaviour {
     /// </summary>
 	public void OnClickSinglePlay()
 	{
-        // 싱글플레이-> sing host 플레이로 설정.
-        GameStatus.CurrentGameModeState = GameModeState.SINGLE;
+        // 싱글플레이
+        GameStatusManager.CurrentGameModeState = GameModeState.SINGLE;
         GameStartProcess();
     }
 
@@ -114,7 +114,7 @@ public class MainMenuManager : MonoBehaviour {
     {
         if(CheckIsFile())
         {
-            GameStatus.DetailSingleMode = DetailSingleMode.LOAD_GAME;
+            GameStatusManager.DetailSingleMode = DetailSingleMode.LOAD_GAME;
             GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.GameLoading);
         }
         else

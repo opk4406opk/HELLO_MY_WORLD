@@ -148,7 +148,7 @@ namespace KojeomNet.FrameWork.Soruces
             if (e.BytesTransferred <= 0 || e.SocketError != SocketError.Success)
             {
                 // 연결이 끊겨서 이미 소켓이 종료된 경우일 것이다.
-                //Console.WriteLine(string.Format("Failed to send. error {0}, transferred {1}", e.SocketError, e.BytesTransferred));
+                Console.WriteLine(string.Format("Failed to send. error {0}, transferred {1}", e.SocketError, e.BytesTransferred));
                 return;
             }
 
@@ -323,8 +323,9 @@ namespace KojeomNet.FrameWork.Soruces
                             break;
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Console.WriteLine(e.ToString());
                     Close();
                 }
             }

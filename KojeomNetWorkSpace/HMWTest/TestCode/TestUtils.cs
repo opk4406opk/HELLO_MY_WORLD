@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -65,6 +67,21 @@ namespace HMWTest.TestCode
         {
             // basic form : unique_0:0:0  ( x:y:z )
             return string.Format("unique_{0}:{1}:{2}", pos.x, pos.y, pos.z);
+        }
+
+        public static string GetLocalIP()
+        {
+            string localIP = "Not available, please check your network settings!";
+            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    localIP = ip.ToString();
+                    break;
+                }
+            }
+            return localIP;
         }
 
         /// <summary>

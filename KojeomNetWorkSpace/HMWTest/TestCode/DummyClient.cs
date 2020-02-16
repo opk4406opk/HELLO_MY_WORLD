@@ -85,29 +85,41 @@ namespace HMWTest.TestCode
             NetProtocol protocolID = (NetProtocol)msg.PopProtocolID();
             switch (protocolID)
             {
-                case NetProtocol.CHANGED_SUBWORLD_BLOCK_REQ:
-                    Console.WriteLine("CHANGED_SUBWORLD_BLOCK_REQ packet received.");
-                    break;
                 case NetProtocol.CHANGED_SUBWORLD_BLOCK_ACK:
                     Console.WriteLine("CHANGED_SUBWORLD_BLOCK_ACK packet received.");
                     break;
-                case NetProtocol.AFTER_SESSION_INIT_REQ:
-                    Console.WriteLine("AFTER_SESSION_INIT_REQ packet received.");
-                    break;
                 case NetProtocol.AFTER_SESSION_INIT_ACK:
                     Console.WriteLine("AFTER_SESSION_INIT_ACK packet received.");
-                    break;
-                case NetProtocol.WORLD_MAP_PROPERTIES_REQ:
-                    Console.WriteLine("WORLD_MAP_PROPERTIES_REQ packet received.");
+                    // test.
+                    //WorldMapPropertiesPacketData packetData;
+                    //packetData.WorldAreaRow = 1;
+                    //packetData.WorldAreaColumn = 1;
+                    //packetData.WorldAreaLayer = 1;
+                    //packetData.SubWorldRow = 2;
+                    //packetData.SubWorldColumn = 2;
+                    //packetData.SubWorldLayer = 2;
+                    //packetData.SubWorldSizeX = 32;
+                    //packetData.SubWorldSizeY = 32;
+                    //packetData.SubWorldSizeZ = 32;
+
+                    //CPacket packet = CPacket.Create((short)NetProtocol.WORLD_MAP_PROPERTIES_REQ);
+                    //packet.Push(packetData.WorldAreaRow);
+                    //packet.Push(packetData.WorldAreaColumn);
+                    //packet.Push(packetData.WorldAreaLayer);
+                    //packet.Push(packetData.SubWorldRow);
+                    //packet.Push(packetData.SubWorldColumn);
+                    //packet.Push(packetData.SubWorldLayer);
+                    //packet.Push(packetData.SubWorldSizeX);
+                    //packet.Push(packetData.SubWorldSizeY);
+                    //packet.Push(packetData.SubWorldSizeZ);
+                    ////
+                    //UserTokenInstance.Send(packet);
                     break;
                 case NetProtocol.WORLD_MAP_PROPERTIES_ACK:
                     Console.WriteLine("WORLD_MAP_PROPERTIES_ACK packet received.");
                     break;
                 case NetProtocol.CHANGE_SUBWORLD_BLOCK_PUSH:
                     Console.WriteLine("CHANGE_SUBWORLD_BLOCK_PUSH packet received.");
-                    break;
-                case NetProtocol.SUBWORLD_DATAS_REQ:
-                    Console.WriteLine("SUBWORLD_DATAS_REQ packet received.");
                     break;
                 case NetProtocol.SUBWORLD_DATAS_ACK:
                     Console.WriteLine("SUBWORLD_DATAS_ACK packet received.");

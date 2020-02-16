@@ -137,7 +137,8 @@ public class GamePlayerController : MonoBehaviour
                 {
                     CurPlayerState = GamePlayerState.JUMP;
                 }
-                KojeomLogger.DebugLog(string.Format("current PlayerState : {0}", CurPlayerState), LOG_TYPE.USER_INPUT);
+                // 로깅 주석처리.
+                //KojeomLogger.DebugLog(string.Format("current PlayerState : {0}", CurPlayerState), LOG_TYPE.USER_INPUT);
                 switch (CurPlayerState)
                 {
                     case GamePlayerState.MOVE:

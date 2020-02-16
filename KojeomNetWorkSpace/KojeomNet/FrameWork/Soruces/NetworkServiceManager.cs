@@ -26,14 +26,14 @@ namespace KojeomNet.FrameWork.Soruces
         public ServerUserManager ServerUserManagerInstance { get; private set; }
         public LogicMessageEntry LogicEntry { get; private set; }
 
-        public NetworkServiceManager(bool bUseLogciEntry = false)
+        public NetworkServiceManager(bool bUseLogicEntry = false)
         {
             ListenManagerInstance = new ListenManager();
             ListenManagerInstance.OnNewClientConnected += OnNewClientConnected;
             //
             ServerUserManagerInstance = new ServerUserManager();
             //
-            if (bUseLogciEntry == true)
+            if (bUseLogicEntry == true)
             {
                 LogicEntry = new LogicMessageEntry(this);
                 LogicEntry.Start();

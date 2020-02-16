@@ -238,12 +238,12 @@ public class CustomAstar3D : MonoBehaviour
     {
         if (bAlreadyAsyncCalcPaths == true) return;
         //
-        KojeomLogger.DebugLog("비동기 경로탐색을 시작합니다.");
+        //KojeomLogger.DebugLog("비동기 경로탐색을 시작합니다.");
         bAlreadyAsyncCalcPaths = true;
         var resultPath = await TaskAsyncNavigating(goalWorldPosition);
         OnFinishAsyncPathFinding(resultPath);
         bAlreadyAsyncCalcPaths = false;
-        KojeomLogger.DebugLog(string.Format("비동기 경로탐색이 완료되었습니다. [탐색 경로 Count : {0}]", resultPath.Count));
+        //KojeomLogger.DebugLog(string.Format("비동기 경로탐색이 완료되었습니다. [탐색 경로 Count : {0}]", resultPath.Count));
     }
 
     private async Task<Stack<PathNode3D>> TaskAsyncNavigating(Vector3 goalWorldPosition)

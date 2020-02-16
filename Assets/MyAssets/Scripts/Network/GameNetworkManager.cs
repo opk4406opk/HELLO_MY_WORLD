@@ -7,6 +7,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Net.Sockets;
 
 /// <summary>
 /// 네트워크 프로토콜.
@@ -124,6 +125,21 @@ public class GameNetworkManager
     {
     }
 
+    public static string GetLocalIP()
+    {
+        string localIP = "Not available, please check your network settings!";
+        IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+        foreach (IPAddress ip in host.AddressList)
+        {
+            if (ip.AddressFamily == AddressFamily.InterNetwork)
+            {
+                localIP = ip.ToString();
+                break;
+            }
+        }
+        return localIP;
+    }
+
     public void ConnectToGameServer(string ip, int port, GameUserNetType netType)
     {
         KojeomLogger.DebugLog(string.Format("Connect to server ip : {0}, port : {1}, NetType : {2}", ip, port, netType), LOG_TYPE.NETWORK_CLIENT_INFO);
@@ -144,7 +160,7 @@ public class GameNetworkManager
             serverToken.OnConnected();
             GameServer = server;
             KojeomLogger.DebugLog("Success Connect to Server", LOG_TYPE.NETWORK_CLIENT_INFO);
-            // 서버에 세션을 접속 완료후에, 초기화 요청 패킷을 보낸다.
+            // 접속 완료후에, 초기화 요청 패킷을 보낸다.
             CPacket initPacket = CPacket.Create((short)NetProtocol.AFTER_SESSION_INIT_REQ);
             initPacket.Push((byte)UserNetType); // 유저의 NetType을 보낸다.
             if (GameServer != null) GameServer.Send(initPacket);

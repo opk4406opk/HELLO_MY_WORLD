@@ -22,7 +22,7 @@ namespace HMWTest.TestCode
             Connector connector = new Connector(service);
             // 접속 성공시 호출될 콜백 매소드 지정.
             connector.OnConnectedHandler += OnConnectedGameServer;
-            IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
+            IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse(TestUtils.GetLocalIP()), 8000);
             connector.Connect(endpoint);
             //System.Threading.Thread.Sleep(10);
 

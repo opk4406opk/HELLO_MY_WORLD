@@ -206,10 +206,18 @@ namespace HMWGameServer
             lock(LockObject)
             {
                 WorldAreaMap.TryGetValue(packetData.AreaID, out WorldArea worldArea);
-                worldArea.SubWorlds.TryGetValue(packetData.SubWorldID, out SubWorld subWorld);
-                subWorld.Blocks[packetData.BlockIndex_X, packetData.BlockIndex_Y, packetData.BlockIndex_Z] = packetData.BlockTypeValue;
-                // save subworld.
-                SaveSubWorldFile(subWorld, packetData.AreaID);
+                if(worldArea != null)
+                {
+                    worldArea.SubWorlds.TryGetValue(packetData.SubWorldID, out SubWorld subWorld);
+                    subWorld.Blocks[packetData.BlockIndex_X, packetData.BlockIndex_Y, packetData.BlockIndex_Z] = packetData.BlockTypeValue;
+                    // save subworld.
+                    SaveSubWorldFile(subWorld, packetData.AreaID);
+                }
+                else
+                {
+                    Console.WriteLine("[ERROR] AddSubWorldData - WorldArea is Null");
+                }
+               
             }
            
         }

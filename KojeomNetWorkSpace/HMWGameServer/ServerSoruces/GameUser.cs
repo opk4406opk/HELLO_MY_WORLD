@@ -18,7 +18,7 @@ namespace HMWGameServer
     {
         public UserToken Token { get; private set; }
 
-        public int NetIdentity = 0;
+        public int NetIdentityNumber = 0;
         //
         private GameUserNetType NetType = GameUserNetType.None;
 
@@ -54,7 +54,7 @@ namespace HMWGameServer
                         GameWorldMapManager.GetInstance().AddSubWorldData(receivedData);
                         //
                         Console.WriteLine(string.Format("Modified User ID : {0}, AreaID: {1}, SubWorldID : {2}, BlockIndex x : {3} y : {4} z : {5}, BlockType : {6}",
-                            NetIdentity, receivedData.AreaID, receivedData.SubWorldID,
+                            NetIdentityNumber, receivedData.AreaID, receivedData.SubWorldID,
                             receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z,
                             receivedData.BlockTypeValue));
                         //
@@ -69,7 +69,7 @@ namespace HMWGameServer
                         changeBlock.Push(receivedData.BlockIndex_Z);
                         changeBlock.Push(receivedData.BlockTypeValue);
                         changeBlock.Push(receivedData.OwnerChunkType);
-                        GameServerManager.GetInstance().BroadCasting(changeBlock);
+                        GameServerManager.GetInstance().BroadCasting(changeBlock, NetIdentityNumber);
                     }
                     break;
                 case NetProtocol.AFTER_SESSION_INIT_REQ:
@@ -112,6 +112,7 @@ namespace HMWGameServer
                         // Host가 아닌 Client로 접속한 경우에만 서브월드 데이터 리스트를 전송.
                         if (NetType == GameUserNetType.Client)
                         {
+                            Console.WriteLine(string.Format("User : {0} requested subWorld datas. and then push data to user.", NetIdentityNumber));
                             AsyncMakeSubWorldDataPackets();
                         }
                     }
@@ -152,7 +153,7 @@ namespace HMWGameServer
 
         public void OnRemoved()
         {
-            Console.WriteLine(string.Format("Session is stop. NetType : {0} ,NetID : {1}", NetType, NetIdentity));
+            Console.WriteLine(string.Format("Session is stop. NetType : {0} ,NetID : {1}", NetType, NetIdentityNumber));
             GameServerManager.GetInstance().OnSessionRemoved(this);
         }
 

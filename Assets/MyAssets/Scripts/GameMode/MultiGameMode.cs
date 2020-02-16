@@ -7,7 +7,6 @@ public class MultiGameMode : AGameModeBase
     public override void Init()
     {
         ModeState = GameModeState.MULTI;
-        //
         Cursor.lockState = CursorLockMode.Confined;
     }
 
