@@ -82,6 +82,7 @@ namespace KojeomNet.FrameWork.Soruces
             }
             catch (Exception)
             {
+                Logger.SimpleConsoleWriteLine("OnSendCompleted -> token send procces is failed.");
             }
         }
 
@@ -197,7 +198,7 @@ namespace KojeomNet.FrameWork.Soruces
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Already closed this socket.");
+                    Logger.SimpleConsoleWriteLine("Already closed this socket.");
                 }
             }
         }

@@ -104,6 +104,7 @@ namespace KojeomNet.FrameWork.Soruces
 
                 if (SendingList.Count > 1)
                 {
+                    Logger.SimpleConsoleWriteLine(string.Format("SendingList has somethings, Count : {0}", SendingList.Count));
                     // 큐에 무언가가 들어 있다면 아직 이전 전송이 완료되지 않은 상태이므로 큐에 추가만 하고 리턴한다.
                     // 현재 수행중인 SendAsync가 완료된 이후에 큐를 검사하여 데이터가 있으면 SendAsync를 호출하여 전송해줄 것이다.
                     return;
@@ -134,11 +135,12 @@ namespace KojeomNet.FrameWork.Soruces
             {
                 if (this.SocketInstance == null)
                 {
+                    Logger.SimpleConsoleWriteLine("SocketInstance nullptr close socket. " + e.Message);
                     Close();
                     return;
                 }
 
-                Console.WriteLine("send error!! close socket. " + e.Message);
+                Logger.SimpleConsoleWriteLine("send error!! close socket. " + e.Message);
                 throw new Exception(e.Message, e);
             }
         }
@@ -148,31 +150,32 @@ namespace KojeomNet.FrameWork.Soruces
             if (e.BytesTransferred <= 0 || e.SocketError != SocketError.Success)
             {
                 // 연결이 끊겨서 이미 소켓이 종료된 경우일 것이다.
-                Console.WriteLine(string.Format("Failed to send. error {0}, transferred {1}", e.SocketError, e.BytesTransferred));
+                Logger.SimpleConsoleWriteLine(string.Format("Failed to send. error {0}, transferred {1}", e.SocketError, e.BytesTransferred));
                 return;
             }
-
+           
             lock (CSSendingListLock)
             {
                 // 리스트에 들어있는 데이터의 총 바이트 수.
-                var size = SendingList.Sum(obj => obj.Count);
-
+                var totalBytes = SendingList.Sum(obj => obj.Count);
+                // logging.
+                //Logger.SimpleConsoleWriteLine(string.Format("ProccessSend is Start!. Sending totalBytes : {0}, BytesTransferred : {1}", totalBytes, e.BytesTransferred));
                 // 전송이 완료되기 전에 추가 전송 요청을 했다면 sending_list에 무언가 더 들어있을 것이다.
-                if (e.BytesTransferred != size)
+                if (e.BytesTransferred != totalBytes)
                 {
                     //todo:세그먼트 하나를 다 못보낸 경우에 대한 처리도 해줘야 함.
                     // 일단 close시킴.
                     if (e.BytesTransferred < SendingList[0].Count)
                     {
-                        string error = string.Format("Need to send more! transferred {0},  packet size {1}", e.BytesTransferred, size);
-                        Console.WriteLine(error);
+                        string error = string.Format("Need to send more! transferred {0},  packet size {1}", e.BytesTransferred, totalBytes);
+                        Logger.SimpleConsoleWriteLine(error);
 
                         Close();
                         return;
                     }
 
                     // 보낸 만큼 빼고 나머지 대기중인 데이터들을 한방에 보내버린다.
-                    int sent_index = 0;
+                    int sentedIndex = 0;
                     int sum = 0;
                     for (int i = 0; i < SendingList.Count; ++i)
                     {
@@ -180,14 +183,14 @@ namespace KojeomNet.FrameWork.Soruces
                         if (sum <= e.BytesTransferred)
                         {
                             // 여기 까지는 전송 완료된 데이터 인덱스.
-                            sent_index = i;
+                            sentedIndex = i;
                             continue;
                         }
 
                         break;
                     }
                     // 전송 완료된것은 리스트에서 삭제한다.
-                    SendingList.RemoveRange(0, sent_index + 1);
+                    SendingList.RemoveRange(0, sentedIndex + 1);
 
                     // 나머지 데이터들을 한방에 보낸다.
                     StartSend();
@@ -325,7 +328,7 @@ namespace KojeomNet.FrameWork.Soruces
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.ToString());
+                    Logger.SimpleConsoleWriteLine(e.ToString());
                     Close();
                 }
             }

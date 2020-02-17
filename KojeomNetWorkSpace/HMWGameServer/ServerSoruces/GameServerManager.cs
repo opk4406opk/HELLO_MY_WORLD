@@ -39,7 +39,7 @@ namespace HMWGameServer
         private GameServerManager()
         {
             GameUserList = new List<GameUser>();
-            NetworkServiceMgr = new NetworkServiceManager();
+            NetworkServiceMgr = new NetworkServiceManager(true);
             NetworkServiceMgr.Initialize();
             NetworkServiceMgr.OnSessionCreated += OnSessionCreated;
         }
