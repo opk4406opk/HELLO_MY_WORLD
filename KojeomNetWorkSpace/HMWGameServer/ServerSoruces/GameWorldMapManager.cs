@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HMWGameServer.ServerSoruces.DataFiles;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,18 +34,7 @@ namespace HMWGameServer
         public int Size;
         public byte[] SubWorldDataFileBytes;
     }
-    struct WorldMapPropertiesPacketData
-    {
-        public int WorldAreaRow;
-        public int WorldAreaColumn;
-        public int WorldAreaLayer;
-        public int SubWorldRow;
-        public int SubWorldColumn;
-        public int SubWorldLayer;
-        public int SubWorldSizeX;
-        public int SubWorldSizeY;
-        public int SubWorldSizeZ;
-    }
+
     struct SubWorldBlockPacketData
     {
         // 실제 패킷 데이터.
@@ -98,7 +88,6 @@ namespace HMWGameServer
         public bool bInitMakeWorldMap = false;
 
         public Dictionary<string, WorldArea> WorldAreaMap = new Dictionary<string, WorldArea>();
-        public WorldMapPropertiesPacketData WorldMapProperties { get; set; }
 
         private GameWorldMapManager()
         {
@@ -107,7 +96,11 @@ namespace HMWGameServer
 
         public async void AsyncMakeMap()
         {
+            GameLogger.SimpleConsoleWriteLineNoFileInfo("Start Async MakeMap.");
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             bInitMakeWorldMap = await MakeWorldMap();
+            watch.Stop();
+            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Finish Async MakeMap. (takes time : {0} ms)", watch.ElapsedMilliseconds));
         }
 
         private async Task<bool> MakeWorldMap()
@@ -117,11 +110,11 @@ namespace HMWGameServer
                 // init
                 WorldAreaMap = new Dictionary<string, WorldArea>();
                 // make.
-                for (int areaX = 0; areaX < WorldMapProperties.WorldAreaRow; ++areaX)
+                for (int areaX = 0; areaX < GameConfigDataFile.GetInstance().GetConfig().WorldAreaRow; ++areaX)
                 {
-                    for (int areaY = 0; areaY < WorldMapProperties.WorldAreaLayer; ++areaY)
+                    for (int areaY = 0; areaY < GameConfigDataFile.GetInstance().GetConfig().WorldAreaLayer; ++areaY)
                     {
-                        for (int areaZ = 0; areaZ < WorldMapProperties.WorldAreaColumn; ++areaZ)
+                        for (int areaZ = 0; areaZ < GameConfigDataFile.GetInstance().GetConfig().WorldAreaColumn; ++areaZ)
                         {
                             WorldArea worldArea = new WorldArea();
                             worldArea.UniqueID = Utils.MakeUniqueID(areaX, areaY, areaZ);
@@ -144,15 +137,17 @@ namespace HMWGameServer
             lock(LockObject)
             {
                 List<SubWorld> subworldList = new List<SubWorld>();
-                for (int x = 0; x < WorldMapProperties.SubWorldRow; ++x)
+                for (int x = 0; x < GameConfigDataFile.GetInstance().GetConfig().SubWorldRow; ++x)
                 {
-                    for (int y = 0; y < WorldMapProperties.SubWorldLayer; ++y)
+                    for (int y = 0; y < GameConfigDataFile.GetInstance().GetConfig().SubWorldLayer; ++y)
                     {
-                        for (int z = 0; z < WorldMapProperties.SubWorldColumn; ++z)
+                        for (int z = 0; z < GameConfigDataFile.GetInstance().GetConfig().SubWorldColumn; ++z)
                         {
                             SubWorld subWorld = new SubWorld();
                             subWorld.UniqueID = Utils.MakeUniqueID(x, y, z);
-                            subWorld.Blocks = new byte[WorldMapProperties.SubWorldSizeX, WorldMapProperties.SubWorldSizeY, WorldMapProperties.SubWorldSizeZ];
+                            subWorld.Blocks = new byte[GameConfigDataFile.GetInstance().GetConfig().SubWorldSizeX,
+                                                       GameConfigDataFile.GetInstance().GetConfig().SubWorldSizeY,
+                                                       GameConfigDataFile.GetInstance().GetConfig().SubWorldSizeZ];
                             subWorld.SavePath = SaveSubWorldFile(subWorld, areaID); // make data file.
                             subworldList.Add(subWorld);
                         }

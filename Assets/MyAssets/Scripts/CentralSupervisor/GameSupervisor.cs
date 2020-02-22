@@ -106,11 +106,6 @@ public class GameSupervisor : MonoBehaviour
         //
         GameDataManagerInstance.Initialize();
         InitManagers();
-        // 호스트라면 서버 프로세스로 맵 프로퍼티 값들을 전송.
-        if(GameNetworkManager.GetInstance().UserNetType == GameUserNetType.Host)
-        {
-            GameNetworkManager.GetInstance().SendWorldMapProperties();
-        }
     }
 
     private void Update()

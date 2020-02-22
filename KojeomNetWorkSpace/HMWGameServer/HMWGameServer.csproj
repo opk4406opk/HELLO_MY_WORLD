@@ -37,13 +37,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ServerSoruces\ConstFilePath.cs" />
+    <Compile Include="ServerSoruces\DataFiles\GameConfigDataFile.cs" />
     <Compile Include="ServerSoruces\GameServerManager.cs" />
     <Compile Include="ServerSoruces\GameUser.cs" />
     <Compile Include="ServerSoruces\GameWorldMapManager.cs" />
     <Compile Include="ServerSoruces\GameLogger.cs" />
     <Compile Include="ServerSoruces\MainEntry.cs" />
     <Compile Include="ServerSoruces\NetProtocol.cs" />
-    <Compile Include="ServerSoruces\Utils.cs" />
+    <Compile Include="ServerSoruces\Util\GameFilePath.cs" />
+    <Compile Include="ServerSoruces\Util\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="KojeomNet, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">

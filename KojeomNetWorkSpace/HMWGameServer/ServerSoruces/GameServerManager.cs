@@ -55,8 +55,10 @@ namespace HMWGameServer
         public void StartServer()
         {
             GameLogger.SimpleConsoleWriteLineNoFileInfo("Hello my World GameServer Started!");
+            GameWorldMapManager.GetInstance().AsyncMakeMap();
             while (true)
             {
+                if (GameWorldMapManager.GetInstance().bInitMakeWorldMap == false) continue;
                 //Console.Write(".");
                 string input = Console.ReadLine();
                 if (input.Equals("users"))

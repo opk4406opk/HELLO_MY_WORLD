@@ -83,31 +83,6 @@ namespace HMWGameServer
                         Send(initPacket);
                     }
                     break;
-                case NetProtocol.WORLD_MAP_PROPERTIES_REQ:
-                    {
-                        WorldMapPropertiesPacketData packetData;
-                        packetData.WorldAreaRow = msg.PopInt32();
-                        packetData.WorldAreaColumn = msg.PopInt32();
-                        packetData.WorldAreaLayer = msg.PopInt32();
-                        packetData.SubWorldRow = msg.PopInt32();
-                        packetData.SubWorldColumn = msg.PopInt32();
-                        packetData.SubWorldLayer = msg.PopInt32();
-                        packetData.SubWorldSizeX = msg.PopInt32();
-                        packetData.SubWorldSizeY = msg.PopInt32();
-                        packetData.SubWorldSizeZ = msg.PopInt32();
-                        GameWorldMapManager.GetInstance().WorldMapProperties = packetData;
-                        GameWorldMapManager.GetInstance().AsyncMakeMap();
-                        //
-                        GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("MAP_PROPERTIES : WorldAreaRow : {0}, Column : {1}, Layer : {2}," +
-                            " SubWorldRow : {3}, Column : {4}, Layer : {5}, SubWorldSizeX : {6}, SizeY : {7}, SizeZ : {8}", 
-                            packetData.WorldAreaRow, packetData.WorldAreaColumn, packetData.WorldAreaLayer,
-                             packetData.SubWorldRow, packetData.SubWorldColumn, packetData.SubWorldLayer,
-                             packetData.SubWorldSizeX, packetData.SubWorldSizeY, packetData.SubWorldSizeZ));
-
-                        CPacket response = CPacket.Create((short)NetProtocol.WORLD_MAP_PROPERTIES_ACK);
-                        Send(response);
-                    }
-                    break;
                 case NetProtocol.SUBWORLD_DATAS_REQ:
                     {
                         // Host가 아닌 Client로 접속한 경우에만 서브월드 데이터 리스트를 전송.

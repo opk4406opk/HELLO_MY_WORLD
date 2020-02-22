@@ -25,9 +25,6 @@ public enum NetProtocol
     AFTER_SESSION_INIT_REQ,
     AFTER_SESSION_INIT_ACK,
 
-    WORLD_MAP_PROPERTIES_REQ,
-    WORLD_MAP_PROPERTIES_ACK,
-
     CHANGE_SUBWORLD_BLOCK_PUSH,
 
     SUBWORLD_DATAS_REQ,
@@ -59,18 +56,6 @@ struct SubWorldPacketData
     public byte[] SubWorldDataFileBytes;
 }
 
-struct WorldMapPropertiesPacketData
-{
-    public Int32 WorldAreaRow;
-    public Int32 WorldAreaColumn;
-    public Int32 WorldAreaLayer;
-    public Int32 SubWorldRow;
-    public Int32 SubWorldColumn;
-    public Int32 SubWorldLayer;
-    public Int32 SubWorldSizeX;
-    public Int32 SubWorldSizeY;
-    public Int32 SubWorldSizeZ;
-}
 public struct SubWorldBlockPacketData
 {
     // 패킷 데이터.
@@ -193,40 +178,6 @@ public class GameNetworkManager
         }
     }
 
-    public void SendWorldMapProperties()
-    {
-        WorldConfig config = WorldConfigFile.Instance.GetConfig();
-        WorldMapData data = WorldMapDataFile.Instance.MapData;
-
-        WorldMapPropertiesPacketData packetData;
-        packetData.WorldAreaRow = data.WorldAreaRow;
-        packetData.WorldAreaColumn = data.WorldAreaColumn;
-        packetData.WorldAreaLayer = data.WorldAreaLayer;
-        packetData.SubWorldRow = data.SubWorldRow;
-        packetData.SubWorldColumn = data.SubWorldColumn;
-        packetData.SubWorldLayer = data.SubWorldLayer;
-        packetData.SubWorldSizeX = config.SubWorldSizeX;
-        packetData.SubWorldSizeY = config.SubWorldSizeY;
-        packetData.SubWorldSizeZ = config.SubWorldSizeZ;
-
-        CPacket packet = CPacket.Create((short)NetProtocol.WORLD_MAP_PROPERTIES_REQ);
-        packet.Push(packetData.WorldAreaRow);
-        packet.Push(packetData.WorldAreaColumn);
-        packet.Push(packetData.WorldAreaLayer);
-        packet.Push(packetData.SubWorldRow);
-        packet.Push(packetData.SubWorldColumn);
-        packet.Push(packetData.SubWorldLayer);
-        packet.Push(packetData.SubWorldSizeX);
-        packet.Push(packetData.SubWorldSizeY);
-        packet.Push(packetData.SubWorldSizeZ);
-        //
-        if (GameServer != null)
-        {
-            KojeomLogger.DebugLog("Send to Server (World map properties) ", LOG_TYPE.NETWORK_CLIENT_INFO);
-            GameServer.Send(packet);
-        }
-    }
-
     public void DisConnectToGameServer()
     {
         KojeomLogger.DebugLog("DisConnectToGameServer ", LOG_TYPE.NETWORK_CLIENT_INFO);
@@ -264,13 +215,11 @@ class RemoteServerPeer : IPeer
                     KojeomUtility.ChangeSeed(seedValue);
                     // 서버에서 Seed값을 받았고 유저 타입또한 송신했으므로, 
                     // 클라이언트라면, 서버에서 맵 정보를 받아야한다.
-                    CPacket reqWorldMap = CPacket.Create((short)NetProtocol.SUBWORLD_DATAS_REQ);
-                    UserTokenInstance.Send(reqWorldMap);
-                }
-                break;
-            case NetProtocol.WORLD_MAP_PROPERTIES_ACK:
-                {
-                    KojeomLogger.DebugLog("[ACK] Server received host map properties.", LOG_TYPE.NETWORK_CLIENT_INFO);
+                    if(GameNetworkManager.GetInstance().UserNetType == GameUserNetType.Client)
+                    {
+                        CPacket reqWorldMap = CPacket.Create((short)NetProtocol.SUBWORLD_DATAS_REQ);
+                        UserTokenInstance.Send(reqWorldMap);
+                    }
                 }
                 break;
             case NetProtocol.CHANGE_SUBWORLD_BLOCK_PUSH:
