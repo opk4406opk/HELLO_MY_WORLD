@@ -254,12 +254,12 @@ class RemoteServerPeer : IPeer
         {
             case NetProtocol.CHANGED_SUBWORLD_BLOCK_ACK:
                 {
-                    KojeomLogger.DebugLog("Server received changed sub world data.", LOG_TYPE.NETWORK_CLIENT_INFO);
+                    KojeomLogger.DebugLog("[ACK] Server received changed sub world data.", LOG_TYPE.NETWORK_CLIENT_INFO);
                 }
                 break;
             case NetProtocol.AFTER_SESSION_INIT_ACK:
                 {
-                    KojeomLogger.DebugLog("Receive after session information from server.", LOG_TYPE.NETWORK_CLIENT_INFO);
+                    KojeomLogger.DebugLog("[ACK] Receive after session information from server.", LOG_TYPE.NETWORK_CLIENT_INFO);
                     int seedValue = msg.PopInt32();
                     KojeomUtility.ChangeSeed(seedValue);
                     // 서버에서 Seed값을 받았고 유저 타입또한 송신했으므로, 
@@ -270,12 +270,12 @@ class RemoteServerPeer : IPeer
                 break;
             case NetProtocol.WORLD_MAP_PROPERTIES_ACK:
                 {
-                    KojeomLogger.DebugLog("Server received host map properties.", LOG_TYPE.NETWORK_CLIENT_INFO);
+                    KojeomLogger.DebugLog("[ACK] Server received host map properties.", LOG_TYPE.NETWORK_CLIENT_INFO);
                 }
                 break;
             case NetProtocol.CHANGE_SUBWORLD_BLOCK_PUSH:
                 {
-                    KojeomLogger.DebugLog("CHANGE_SUBWORLD_BLOCK_PUSH packet received", LOG_TYPE.NETWORK_CLIENT_INFO);
+                    KojeomLogger.DebugLog("[PUSH] CHANGE_SUBWORLD_BLOCK_PUSH packet received", LOG_TYPE.NETWORK_CLIENT_INFO);
                     SubWorldBlockPacketData receivedData;
                     receivedData.AreaID = msg.PopString();
                     receivedData.SubWorldID = msg.PopString();
@@ -297,22 +297,22 @@ class RemoteServerPeer : IPeer
                             int chunkIdxZ = (int)chunkIndex.z;
                             int ownerChunkType = (int)receivedData.OwnerChunkType;
                             subWorldState.SubWorldInstance.ChunkSlots[chunkIdxX, chunkIdxY, chunkIdxZ].Chunks[ownerChunkType].Update = true;
-                            KojeomLogger.DebugLog("CHANGE_SUBWORLD_BLOCK_PUSH -> Success Block Update.", LOG_TYPE.INFO);
+                            KojeomLogger.DebugLog("[PUSH] CHANGE_SUBWORLD_BLOCK_PUSH -> Success Block Update.", LOG_TYPE.INFO);
                         }
                         else
                         {
-                            KojeomLogger.DebugLog("CHANGE_SUBWORLD_BLOCK_PUSH -> Error( SubWorldState is null )", LOG_TYPE.ERROR);
+                            KojeomLogger.DebugLog("[PUSH] CHANGE_SUBWORLD_BLOCK_PUSH -> Error( SubWorldState is null )", LOG_TYPE.ERROR);
                         }
                     }
                     else
                     {
-                        KojeomLogger.DebugLog("CHANGE_SUBWORLD_BLOCK_PUSH -> Error( WorldArea is null )", LOG_TYPE.ERROR);
+                        KojeomLogger.DebugLog("[PUSH] CHANGE_SUBWORLD_BLOCK_PUSH -> Error( WorldArea is null )", LOG_TYPE.ERROR);
                     }
                 }
                 break;
             case NetProtocol.SUBWORLD_DATAS_ACK:
                 {
-                    KojeomLogger.DebugLog("SubWorld Datas received from server", LOG_TYPE.NETWORK_CLIENT_INFO);
+                    KojeomLogger.DebugLog("[ACK] SubWorld Datas received from server", LOG_TYPE.NETWORK_CLIENT_INFO);
                     SubWorldPacketData packetData;
                     packetData.Size = msg.PopInt32();
                     byte[] fileBytes = new byte[packetData.Size];

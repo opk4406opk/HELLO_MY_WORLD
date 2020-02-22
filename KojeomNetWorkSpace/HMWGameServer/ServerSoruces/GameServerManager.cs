@@ -49,19 +49,23 @@ namespace HMWGameServer
             // listen
             string localIP = GetLocalIP();
             NetworkServiceMgr.StartListen(localIP, 8000);
-            Console.WriteLine(string.Format("Listen with : {0}", localIP));
+            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Listen with : {0}", localIP));
         }
 
         public void StartServer()
         {
-            Console.WriteLine("Hello my World GameServer Started!");
+            GameLogger.SimpleConsoleWriteLineNoFileInfo("Hello my World GameServer Started!");
             while (true)
             {
                 //Console.Write(".");
                 string input = Console.ReadLine();
                 if (input.Equals("users"))
                 {
-                    Console.WriteLine("users count : " + NetworkServiceMgr.ServerUserManagerInstance.GetTotalCount());
+                    GameLogger.SimpleConsoleWriteLineNoFileInfo("users count : " + GameUserList.Count);
+                    foreach(GameUser gameUser in GameUserList)
+                    {
+                        GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("ID : {0}, IP Adress {1}", gameUser.NetIdentityNumber, gameUser.Token.SocketInstance.RemoteEndPoint));
+                    }
                 }
                 System.Threading.Thread.Sleep(1000);
             }
@@ -72,7 +76,7 @@ namespace HMWGameServer
             GameUser user = new GameUser(userToken);
             lock (GameUserList)
             {
-                Console.WriteLine(string.Format("New Session Created. {0}", userToken.SocketInstance.RemoteEndPoint.ToString()));
+                GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("New Session Created. {0}", userToken.SocketInstance.RemoteEndPoint.ToString()));
                 user.NetIdentityNumber = AssignNetID++;
                 GameUserList.Add(user);
             }
@@ -86,7 +90,7 @@ namespace HMWGameServer
                 {
                     if (user.NetIdentityNumber != exceptUserID)
                     {
-                        Console.WriteLine(string.Format("BroadCasting to user(ID : {0}, IPAdreess: {1})", 
+                        GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("BroadCasting to user(ID : {0}, IPAdreess: {1})", 
                             user.NetIdentityNumber,
                             user.Token.SocketInstance.RemoteEndPoint.ToString()));
                         user.Send(packet);
@@ -101,7 +105,8 @@ namespace HMWGameServer
             {
                 foreach (var user in GameUserList)
                 {
-                    user.Send(packet);
+                    bool bValid = user != null && user.Token != null;
+                    if (bValid == true) user.Send(packet);
                 }
             }
         }

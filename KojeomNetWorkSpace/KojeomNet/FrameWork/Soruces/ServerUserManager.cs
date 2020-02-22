@@ -68,7 +68,6 @@ namespace KojeomNet.FrameWork.Soruces
             return Users.Count;
         }
 
-
         void CheckHeartbeat(object state)
         {
             long allowed_time = DateTime.Now.Ticks - HeartbeatDuration;

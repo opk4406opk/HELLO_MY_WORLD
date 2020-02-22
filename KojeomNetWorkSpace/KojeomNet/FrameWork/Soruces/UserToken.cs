@@ -104,7 +104,7 @@ namespace KojeomNet.FrameWork.Soruces
 
                 if (SendingList.Count > 1)
                 {
-                    Logger.SimpleConsoleWriteLine(string.Format("SendingList has somethings, Count : {0}", SendingList.Count));
+                    Logger.SimpleConsoleWriteLineNoFileInfo(string.Format("SendingList has somethings, Count : {0}", SendingList.Count));
                     // 큐에 무언가가 들어 있다면 아직 이전 전송이 완료되지 않은 상태이므로 큐에 추가만 하고 리턴한다.
                     // 현재 수행중인 SendAsync가 완료된 이후에 큐를 검사하여 데이터가 있으면 SendAsync를 호출하여 전송해줄 것이다.
                     return;
@@ -153,7 +153,7 @@ namespace KojeomNet.FrameWork.Soruces
                 Logger.SimpleConsoleWriteLine(string.Format("Failed to send. error {0}, transferred {1}", e.SocketError, e.BytesTransferred));
                 return;
             }
-           
+
             lock (CSSendingListLock)
             {
                 // 리스트에 들어있는 데이터의 총 바이트 수.
@@ -189,6 +189,8 @@ namespace KojeomNet.FrameWork.Soruces
 
                         break;
                     }
+                    Logger.SimpleConsoleWriteLineNoFileInfo(string.Format("Sendted Index : {0}, Sum : {1}, SendingList Count : {2}",
+                        sentedIndex, sum, SendingList.Count));
                     // 전송 완료된것은 리스트에서 삭제한다.
                     SendingList.RemoveRange(0, sentedIndex + 1);
 
@@ -199,6 +201,7 @@ namespace KojeomNet.FrameWork.Soruces
 
                 // 다 보냈고 더이상 보낼것도 없다.
                 SendingList.Clear();
+                Logger.SimpleConsoleWriteLineNoFileInfo(string.Format("No more to sending bytes. So, Finished sending data. (Sending list Clear.)"));
 
                 // 종료가 예약된 경우, 보낼건 다 보냈으니 진짜 종료 처리를 진행한다.
                 if (CurrentState == State.ReserveClosing)

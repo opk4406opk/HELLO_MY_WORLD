@@ -53,11 +53,12 @@ namespace HMWGameServer
                         //
                         GameWorldMapManager.GetInstance().AddSubWorldData(receivedData);
                         //
-                        Console.WriteLine(string.Format("Modified User ID : {0}, AreaID: {1}, SubWorldID : {2}, BlockIndex x : {3} y : {4} z : {5}, BlockType : {6}",
+                        GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Modified User ID : {0}, AreaID: {1}, SubWorldID : {2}, BlockIndex x : {3} y : {4} z : {5}, BlockType : {6}",
                             NetIdentityNumber, receivedData.AreaID, receivedData.SubWorldID,
                             receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z,
                             receivedData.BlockTypeValue));
                         //
+                        GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Changed block ACK packet to GameUser (ID : {0})", NetIdentityNumber));
                         CPacket response = CPacket.Create((short)NetProtocol.CHANGED_SUBWORLD_BLOCK_ACK);
                         Send(response);
 
@@ -97,7 +98,7 @@ namespace HMWGameServer
                         GameWorldMapManager.GetInstance().WorldMapProperties = packetData;
                         GameWorldMapManager.GetInstance().AsyncMakeMap();
                         //
-                        Console.WriteLine(string.Format("MAP_PROPERTIES : WorldAreaRow : {0}, Column : {1}, Layer : {2}," +
+                        GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("MAP_PROPERTIES : WorldAreaRow : {0}, Column : {1}, Layer : {2}," +
                             " SubWorldRow : {3}, Column : {4}, Layer : {5}, SubWorldSizeX : {6}, SizeY : {7}, SizeZ : {8}", 
                             packetData.WorldAreaRow, packetData.WorldAreaColumn, packetData.WorldAreaLayer,
                              packetData.SubWorldRow, packetData.SubWorldColumn, packetData.SubWorldLayer,
@@ -112,8 +113,8 @@ namespace HMWGameServer
                         // Host가 아닌 Client로 접속한 경우에만 서브월드 데이터 리스트를 전송.
                         if (NetType == GameUserNetType.Client)
                         {
-                            Console.WriteLine(string.Format("User : {0} requested subWorld datas. and then push data to user.", NetIdentityNumber));
-                            AsyncMakeSubWorldDataPackets();
+                            //GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("User : {0} requested subWorld datas. and then push data to user.", NetIdentityNumber));
+                            //AsyncMakeSubWorldDataPackets();
                         }
                     }
                     break;
@@ -153,7 +154,7 @@ namespace HMWGameServer
 
         public void OnRemoved()
         {
-            Console.WriteLine(string.Format("Session is stop. NetType : {0} ,NetID : {1}", NetType, NetIdentityNumber));
+            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Session is stop. NetType : {0} ,NetID : {1}", NetType, NetIdentityNumber));
             GameServerManager.GetInstance().OnSessionRemoved(this);
         }
 
