@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 /// <summary>
 /// 네트워크 프로토콜.
@@ -72,6 +73,12 @@ public struct SubWorldBlockPacketData
 
 public class GameNetworkManager
 {
+    #region CallBacks
+    public delegate void OnChangeSubWorldBlock();
+    public OnChangeSubWorldBlock OnChangeSubWorldBlockCallBack;
+    #endregion
+
+    #region Variables
     //
     public static long INVALID_TIMESTAMP_TICKS = 0;
     //
@@ -83,6 +90,7 @@ public class GameNetworkManager
     private static GameNetworkManager Instance = null;
     //
     public GameUserNetType UserNetType = GameUserNetType.None;
+    #endregion
 
     public static GameNetworkManager GetInstance()
     {
@@ -156,13 +164,15 @@ public class GameNetworkManager
     /// 서브월드에서 변경된 블록의 정보를 보냅니다.
     /// </summary>
     /// <param name="packetData"></param>
-    public void SendChangedSubWorldBlock(SubWorldBlockPacketData packetData)
+    public void RequestChangeSubWorldBlock(SubWorldBlockPacketData packetData, OnChangeSubWorldBlock callBack)
     {
+        OnChangeSubWorldBlockCallBack = callBack;
         CPacket packet = CPacket.Create((short)NetProtocol.CHANGED_SUBWORLD_BLOCK_REQ);
         // 1) areaID
         // 2) subWorldID
         // 3) BlockIndex_X, Y, Z
         // 4) block byte value
+        // 5) Owner Chunk Type
         packet.Push(packetData.AreaID);
         packet.Push(packetData.SubWorldID);
         packet.Push(packetData.BlockIndex_X);
@@ -173,7 +183,7 @@ public class GameNetworkManager
         //
         if (GameServer != null)
         {
-            KojeomLogger.DebugLog("Send to Server (Changed Block Data) ", LOG_TYPE.NETWORK_CLIENT_INFO);
+            KojeomLogger.DebugLog("Request to Server (Changed Block Data) ", LOG_TYPE.NETWORK_CLIENT_INFO);
             GameServer.Send(packet);
         }
     }
@@ -206,6 +216,7 @@ class RemoteServerPeer : IPeer
             case NetProtocol.CHANGED_SUBWORLD_BLOCK_ACK:
                 {
                     KojeomLogger.DebugLog("[ACK] Server received changed sub world data.", LOG_TYPE.NETWORK_CLIENT_INFO);
+                    GameNetworkManager.GetInstance().OnChangeSubWorldBlockCallBack();
                 }
                 break;
             case NetProtocol.AFTER_SESSION_INIT_ACK:

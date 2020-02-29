@@ -51,26 +51,32 @@ namespace HMWGameServer
                         // 해당 패킷에 대한 타임스탬프를 기록.
                         //receivedData.TimeStampTicks = DateTime.Now.Ticks;
                         //
-                        GameWorldMapManager.GetInstance().AddSubWorldData(receivedData);
-                        //
-                        GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Modified User ID : {0}, AreaID: {1}, SubWorldID : {2}, BlockIndex x : {3} y : {4} z : {5}, BlockType : {6}",
-                            NetIdentityNumber, receivedData.AreaID, receivedData.SubWorldID,
-                            receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z,
-                            receivedData.BlockTypeValue));
-                        //
-                        GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Changed block ACK packet to GameUser (ID : {0})", NetIdentityNumber));
-                        CPacket response = CPacket.Create((short)NetProtocol.CHANGED_SUBWORLD_BLOCK_ACK);
-                        Send(response);
+                        bool bSuccess = GameWorldMapManager.GetInstance().AddSubWorldData(receivedData);
+                        if(bSuccess == true)
+                        {
+                            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Requested User ID : {0}, AreaID: {1}, SubWorldID : {2}, BlockIndex x : {3} y : {4} z : {5}, BlockType : {6}",
+                                                                          NetIdentityNumber, receivedData.AreaID, receivedData.SubWorldID,
+                                                                          receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z,
+                                                                          receivedData.BlockTypeValue));
+                            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Changed block ACK packet to GameUser (ID : {0})", NetIdentityNumber));
+                            CPacket response = CPacket.Create((short)NetProtocol.CHANGED_SUBWORLD_BLOCK_ACK);
+                            Send(response);
 
-                        CPacket changeBlock = CPacket.Create((short)NetProtocol.CHANGE_SUBWORLD_BLOCK_PUSH);
-                        changeBlock.Push(receivedData.AreaID);
-                        changeBlock.Push(receivedData.SubWorldID);
-                        changeBlock.Push(receivedData.BlockIndex_X);
-                        changeBlock.Push(receivedData.BlockIndex_Y);
-                        changeBlock.Push(receivedData.BlockIndex_Z);
-                        changeBlock.Push(receivedData.BlockTypeValue);
-                        changeBlock.Push(receivedData.OwnerChunkType);
-                        GameServerManager.GetInstance().BroadCasting(changeBlock, NetIdentityNumber);
+                            CPacket changeBlock = CPacket.Create((short)NetProtocol.CHANGE_SUBWORLD_BLOCK_PUSH);
+                            changeBlock.Push(receivedData.AreaID);
+                            changeBlock.Push(receivedData.SubWorldID);
+                            changeBlock.Push(receivedData.BlockIndex_X);
+                            changeBlock.Push(receivedData.BlockIndex_Y);
+                            changeBlock.Push(receivedData.BlockIndex_Z);
+                            changeBlock.Push(receivedData.BlockTypeValue);
+                            changeBlock.Push(receivedData.OwnerChunkType);
+                            GameServerManager.GetInstance().BroadCasting(changeBlock, NetIdentityNumber);
+
+                        }
+                        else
+                        {
+                            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("SubWorldData Change Failed. Requested User ID : {0} ", NetIdentityNumber));
+                        }
                     }
                     break;
                 case NetProtocol.AFTER_SESSION_INIT_REQ:

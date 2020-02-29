@@ -5,6 +5,7 @@ using Mono.Data.Sqlite;
 using System.Data;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 /// <summary>
 /// 게임내 사용자가 월드 블록을 수정/삭제를 관리하는 클래스.
@@ -99,7 +100,7 @@ public class ModifyWorldManager : MonoBehaviour
             int blockX = hitBlock.WorldDataIndexX;
             int blockY = hitBlock.WorldDataIndexY;
             int blockZ = hitBlock.WorldDataIndexZ;
-            KojeomLogger.DebugLog(string.Format("RayCasting blockX {0} blockY {1} blockZ {2}", blockX, blockY, blockZ));
+            //KojeomLogger.DebugLog(string.Format("RayCasting blockX {0} blockY {1} blockZ {2}", blockX, blockY, blockZ));
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // 블록 변경 패킷.
             SubWorldBlockPacketData packetData;
@@ -109,13 +110,6 @@ public class ModifyWorldManager : MonoBehaviour
             //packetData.TimeStampTicks = GameNetworkManager.INVALID_TIMESTAMP_TICKS;
             if (bCreate == true)
             {
-                //Vector3 createPosition = new Vector3(Mathf.Ceil(collideInfo.collisionPoint.x),
-                //    Mathf.Ceil(collideInfo.collisionPoint.y),
-                //    Mathf.Ceil(collideInfo.collisionPoint.z));
-                // 임시코드
-                SelectWorldInstance.CustomOctreeInstance.Add(collideInfo.HitBlockCenter + new Vector3(0, 1.0f, 0));
-                SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
-                SelectWorldInstance.WorldBlockData[blockX, blockY + 1, blockZ].bRendered = true;
                 packetData.BlockIndex_X = blockX;
                 packetData.BlockIndex_Y = blockY + 1;
                 packetData.BlockIndex_Z = blockZ;
@@ -123,25 +117,43 @@ public class ModifyWorldManager : MonoBehaviour
             }
             else
             {
-                // 파티클 테스트.
-                ParticleEffectSpawnParams spawnParams;
-                spawnParams.ParticleType = GameParticleType.DirtSplatter;
-                spawnParams.SpawnLocation = collideInfo.CollisionPoint;
-                spawnParams.SpawnRotation = Quaternion.identity;
-                spawnParams.bLooping = false;
-                spawnParams.bStart = true;
-                GameParticleEffectManager.Instance.SpawnParticleEffect(spawnParams);
-                //
-                SelectWorldInstance.CustomOctreeInstance.Delete(collideInfo.HitBlockCenter);
-                SetBlockForDelete(blockX, blockY, blockZ, blockType);
-                SelectWorldInstance.WorldBlockData[blockX, blockY, blockZ].bRendered = false;
                 packetData.BlockIndex_X = blockX;
                 packetData.BlockIndex_Y = blockY;
                 packetData.BlockIndex_Z = blockZ;
                 packetData.OwnerChunkType = (byte)SelectWorldInstance.WorldBlockData[blockX, blockY, blockZ].OwnerChunkType;
             }
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+           
             // 패킷 전송.
-            GameNetworkManager.GetInstance().SendChangedSubWorldBlock(packetData);
+            GameNetworkManager.GetInstance().RequestChangeSubWorldBlock(packetData, async ()=> 
+            {
+                await Task.Run(() =>
+                {
+                    if (bCreate == true)
+                    {
+                        // 임시코드
+                        SelectWorldInstance.CustomOctreeInstance.Add(collideInfo.HitBlockCenter + new Vector3(0, 1.0f, 0));
+                        SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
+                        SelectWorldInstance.WorldBlockData[blockX, blockY + 1, blockZ].bRendered = true;
+
+                    }
+                    else
+                    {
+                        // 파티클 테스트.
+                        //ParticleEffectSpawnParams spawnParams;
+                        //spawnParams.ParticleType = GameParticleType.DirtSplatter;
+                        //spawnParams.SpawnLocation = collideInfo.CollisionPoint;
+                        //spawnParams.SpawnRotation = Quaternion.identity;
+                        //spawnParams.bLooping = false;
+                        //spawnParams.bStart = true;
+                        //GameParticleEffectManager.Instance.SpawnParticleEffect(spawnParams);
+                        //
+                        SelectWorldInstance.CustomOctreeInstance.Delete(collideInfo.HitBlockCenter);
+                        SetBlockForDelete(blockX, blockY, blockZ, blockType);
+                        SelectWorldInstance.WorldBlockData[blockX, blockY, blockZ].bRendered = false;
+                    }
+                });
+            });
         }
     }
 

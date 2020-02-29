@@ -196,7 +196,7 @@ namespace HMWGameServer
             return savePath;
         }
 
-        public void AddSubWorldData(SubWorldBlockPacketData packetData)
+        public bool AddSubWorldData(SubWorldBlockPacketData packetData)
         {
             lock(LockObject)
             {
@@ -207,10 +207,13 @@ namespace HMWGameServer
                     subWorld.Blocks[packetData.BlockIndex_X, packetData.BlockIndex_Y, packetData.BlockIndex_Z] = packetData.BlockTypeValue;
                     // save subworld.
                     SaveSubWorldFile(subWorld, packetData.AreaID);
+                    //
+                    return true;
                 }
                 else
                 {
                     Console.WriteLine("[ERROR] AddSubWorldData - WorldArea is Null");
+                    return false;
                 }
                
             }
