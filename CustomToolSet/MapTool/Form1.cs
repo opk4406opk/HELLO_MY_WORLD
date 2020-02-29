@@ -1,30 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿using MapTool.Source;
+using System;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MapTool.Source;
 namespace MapTool
 {
-    public class MapToolPath
-    {
-        //
-        public static string SubWorldJsonFilePath;
-        public static string WorldConfigJsonFilePath;
-        //
-    }
-    
    
     public partial class MainForm : Form
     {
-        
+
         private SaveSlotFile SaveSlotFileInstance;
         private IFormatter BinaryFormatterInstance = new BinaryFormatter();
         private MapDataGenerator MapDataGeneratorInstance;
@@ -51,9 +36,9 @@ namespace MapTool
             WorldMapData mapGenData;
             int worldAreaRow = 0, worldAreaColumn = 0, worldAreaLayer = 0;
             int subWorldRow = 0, subWorldColumn = 0, subWorldLayer = 0;
-            if(CheckInputDataValidate(ref subWorldRow, ref subWorldColumn, ref subWorldLayer, ref worldAreaRow, ref worldAreaColumn, ref worldAreaLayer) == true)
+            if (CheckInputDataValidate(ref subWorldRow, ref subWorldColumn, ref subWorldLayer, ref worldAreaRow, ref worldAreaColumn, ref worldAreaLayer) == true)
             {
-               
+
                 mapGenData.SubWorldRow = MapToolUtils.Clamp<int>(subWorldRow, 0, MapDataGenerator.SubWorld_Count_X_Axis_Per_WorldArea);
                 mapGenData.SubWorldColumn = MapToolUtils.Clamp<int>(subWorldColumn, 0, MapDataGenerator.SubWorld_Count_Y_Axis_Per_WorldArea);
                 mapGenData.SubWorldLayer = MapToolUtils.Clamp<int>(subWorldLayer, 0, MapDataGenerator.SubWorld_Count_Z_Axis_Per_WorldArea);
@@ -71,34 +56,40 @@ namespace MapTool
                 mapGenData.WorldAreaLayer = MapDataGenerator.DefaultWorldAreaLayerValue;
             }
 
-            if(File.Exists(SaveSlotFile.SaveFilePath) == true && 
-                string.Equals(dig_folderBrowser.SelectedPath, string.Empty) == true)
+            if (File.Exists(SaveSlotFile.SaveFilePath) == true &&
+                string.Equals(dig_folderBrowser.SelectedPath, string.Empty) == true &&
+                string.Equals(dig_serverConfigPath.SelectedPath, string.Empty) == true)
             {
                 using (var SaveFileStream = new FileStream(SaveSlotFile.SaveFilePath, FileMode.Open))
                 {
                     SaveSlotFileInstance = BinaryFormatterInstance.Deserialize(SaveFileStream) as SaveSlotFile;
-                    MapToolPath.SubWorldJsonFilePath = SaveSlotFileInstance.LastestSubWorldSavePath;
-                    MapToolPath.WorldConfigJsonFilePath = SaveSlotFileInstance.LastestWorldConfgSavePath;
+                    MapToolPath.SubWorldFilePath = SaveSlotFileInstance.LastestClientSubWorldSavePath;
+                    MapToolPath.ClientWorldConfigFilePath = SaveSlotFileInstance.LastestClientWorldConfgSavePath;
+                    MapToolPath.ServerWorldConfigFilePath = SaveSlotFileInstance.LastestServerWorldConfigSavePath;
                 }
             }
-            else if (string.Equals(dig_folderBrowser.SelectedPath, string.Empty) == false)
+            else if (string.Equals(dig_folderBrowser.SelectedPath, string.Empty) == false &&
+                     string.Equals(dig_serverConfigPath.SelectedPath, string.Empty) == false)
             {
-                MapToolPath.SubWorldJsonFilePath = string.Format("{0}//WorldMapData.json", dig_folderBrowser.SelectedPath);
-                MapToolPath.WorldConfigJsonFilePath = string.Format("{0}//WorldConfigData.json", dig_folderBrowser.SelectedPath);
+                MapToolPath.SubWorldFilePath = string.Format("{0}//WorldMapData.json", dig_folderBrowser.SelectedPath);
+                MapToolPath.ClientWorldConfigFilePath = string.Format("{0}//WorldConfigData.json", dig_folderBrowser.SelectedPath);
+                MapToolPath.ServerWorldConfigFilePath = string.Format("{0}//ServerConfig.json", dig_serverConfigPath.SelectedPath);
             }
             else
             {
-                MapToolPath.SubWorldJsonFilePath = ".//WorldMapData.json";
-                MapToolPath.WorldConfigJsonFilePath = ".//WorldConfigData.json";
+                MapToolPath.SubWorldFilePath = ".//WorldMapData.json";
+                MapToolPath.ClientWorldConfigFilePath = ".//WorldConfigData.json";
+                MapToolPath.ServerWorldConfigFilePath = ".//ServerConfig.json";
             }
 
             MapDataGeneratorInstance.Init(mapGenData);
-            if(MapDataGeneratorInstance.Generate())
+            if (MapDataGeneratorInstance.Generate())
             {
                 using (var SaveFileStream = new FileStream(SaveSlotFile.SaveFilePath, FileMode.OpenOrCreate))
                 {
-                    SaveSlotFileInstance.LastestSubWorldSavePath = MapToolPath.SubWorldJsonFilePath;
-                    SaveSlotFileInstance.LastestWorldConfgSavePath = MapToolPath.WorldConfigJsonFilePath;
+                    SaveSlotFileInstance.LastestClientSubWorldSavePath = MapToolPath.SubWorldFilePath;
+                    SaveSlotFileInstance.LastestServerWorldConfigSavePath = MapToolPath.ServerWorldConfigFilePath;
+                    SaveSlotFileInstance.LastestClientWorldConfgSavePath = MapToolPath.ClientWorldConfigFilePath;
                     BinaryFormatterInstance.Serialize(SaveFileStream, SaveSlotFileInstance);
                 }
                 tbx_logBox.AppendText(string.Format("[LOG] Success MapData Generate. \n"));
@@ -108,7 +99,7 @@ namespace MapTool
         private void btn_openSaveFilePathDig_Click(object sender, EventArgs e)
         {
             var ret = dig_folderBrowser.ShowDialog();
-            if(ret == DialogResult.OK)
+            if (ret == DialogResult.OK)
             {
                 tbx_logBox.AppendText(string.Format("[LOG] Select folder Path : {0} \n", dig_folderBrowser.SelectedPath));
             }
@@ -116,12 +107,13 @@ namespace MapTool
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            if(File.Exists(SaveSlotFile.SaveFilePath) == true)
+            if (File.Exists(SaveSlotFile.SaveFilePath) == true)
             {
                 using (var SaveFileStream = new FileStream(SaveSlotFile.SaveFilePath, FileMode.Open))
                 {
                     SaveSlotFileInstance = BinaryFormatterInstance.Deserialize(SaveFileStream) as SaveSlotFile;
-                    tbx_lastSavePath.Text = SaveSlotFileInstance.LastestSubWorldSavePath;
+                    tbx_lastSavePath.Text = SaveSlotFileInstance.LastestClientSubWorldSavePath;
+                    tbx_latestServerConfigPath.Text = SaveSlotFileInstance.LastestServerWorldConfigSavePath;
                     SaveFileStream.Close();
                 }
             }
@@ -136,6 +128,15 @@ namespace MapTool
             //    viewer.Run(60.0);
             //}
         }
+
+        private void Btn_SelectServerConfigPath_Click(object sender, EventArgs e)
+        {
+            var ret = dig_serverConfigPath.ShowDialog();
+            if (ret == DialogResult.OK)
+            {
+                tbx_logBox.AppendText(string.Format("[LOG] Select ServerConfig folder Path : {0} \n", dig_serverConfigPath.SelectedPath));
+            }
+        }
     }
 
     //https://www.guru99.com/c-sharp-serialization.html
@@ -144,8 +145,20 @@ namespace MapTool
     public class SaveSlotFile
     {
         public static readonly string SaveFilePath = ".//SaveData.bin";
-        public string LastestSubWorldSavePath;
-        public string LastestWorldConfgSavePath;
+        public string LastestClientSubWorldSavePath;
+        public string LastestClientWorldConfgSavePath;
+        public string LastestServerWorldConfigSavePath;
     }
+
+    public class MapToolPath
+    {
+        //
+        public static string SubWorldFilePath;
+        public static string ClientWorldConfigFilePath;
+        public static string ServerWorldConfigFilePath;
+        //
+    }
+
+
 
 }

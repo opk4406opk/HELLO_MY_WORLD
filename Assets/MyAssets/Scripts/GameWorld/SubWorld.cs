@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
 
 public class ChunkSlot
 {
@@ -17,7 +18,7 @@ public struct MakeWorldParam
 /// </summary>
 public class SubWorld : MonoBehaviour
 {
-    #region event
+    #region delegate & event
     public delegate void Del_OnFinishLoadChunks(string uniqueID);
     public event Del_OnFinishLoadChunks OnFinishLoadChunks;
 
@@ -135,8 +136,8 @@ public class SubWorld : MonoBehaviour
                     var dist = Mathf.RoundToInt(Vector3.Distance(curPlayerWorld.OffsetCoordinate, OffsetCoordinate));
                     //KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} away from {1} distance Player contained World",
                     //    UniqueID, dist));
-                    // 거리값이 3(테스트용 값) 이상이 되면..Release.
-                    if(dist >= 3)
+                    // 거리값이 2(테스트용 값) 이상이 되면..Release.
+                    if(dist >= 2)
                     {
                         OnReadyToRelease(UniqueID);
                     }
@@ -183,14 +184,14 @@ public class SubWorld : MonoBehaviour
         OnFinishRelease(UniqueID);
     }
 
-    public async void AsyncLoading(Block[,,] newBlockData, bool bSave)
+    public async void AsyncLoading(Block[,,] newBlockData, bool bSave, Action finishCallBack = null)
     {
         var bSuccessLoad = await TaskLoadSubWorldTerrain(newBlockData);
         if(bSave == true)
         {
             var bSuccessSave = await WorldAreaInstance.TaskSaveSpecificSubWorld(UniqueID);
         }
-        StartCoroutine(LoadTerrainChunks());
+        StartCoroutine(LoadTerrainChunks(finishCallBack));
     }
 
     private async Task<bool> TaskLoadSubWorldTerrain(Block[,,] newBlockData = null)
@@ -271,7 +272,7 @@ public class SubWorld : MonoBehaviour
     //    CustomOctreeInstance.DrawFullTree();
     //}
 
-    private IEnumerator LoadTerrainChunks()
+    private IEnumerator LoadTerrainChunks(Action finishCallBack = null)
     {
         KojeomLogger.DebugLog(string.Format("World name : {0}, Chunk 로드를 시작합니다.", WorldName), LOG_TYPE.DEBUG_TEST);
         for (int x = 0; x < ChunkSlots.GetLength(0); x++)
@@ -336,6 +337,7 @@ public class SubWorld : MonoBehaviour
         KojeomLogger.DebugLog(string.Format("World name : {0} Chunk 로드를 완료했습니다.", WorldName), LOG_TYPE.DEBUG_TEST);
         bLoadFinish = true;
         OnFinishLoadChunks(UniqueID);
+        finishCallBack?.Invoke();
 
         // 월드에 등록된 모든 Actor를 Show.
         foreach (var actor in InGameObjRegister.RegisteredActors)
@@ -368,7 +370,7 @@ public class SubWorld : MonoBehaviour
         InGameObjRegister.UnRegister(type, obj);
     }
 
-    public Vector3 RandomRealPositionAtSurface()
+    public Vector3 GetRandomRealPositionAtSurface()
     {
         Vector3 position = Vector3.zero;
         var worldConfig = WorldConfigFile.Instance.GetConfig();

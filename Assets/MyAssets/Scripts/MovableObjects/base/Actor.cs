@@ -85,9 +85,13 @@ abstract public class Actor : MonoBehaviour
     /// </summary>
     protected string ResourceID;
     /// <summary>
-    /// Actor가 월드에 생성되면 발급받는 식별자.
+    /// Actor가 월드에 생성되면 발급받는 식별자. ( 클라이언트에서 사용되는 ID )
     /// </summary>
     protected int SpawnID;
+    /// <summary>
+    /// 네트워크 상에서 부여받는 Actor ID 값.
+    /// </summary>
+    protected int NetID;
     /// <summary>
     /// Actor가 가지고 있는 유일한 Key 식별자. 
     /// (같은 리소스이면서 다른 이름을 가진 객체를 구분하기 위해 사용)
@@ -117,13 +121,19 @@ abstract public class Actor : MonoBehaviour
     {
         return UniqueID;
     }
+    public int GetNetID()
+    {
+        return NetID;
+    }
     public void Show()
     {
         gameObject.SetActive(true);
+        Controller.StartAI();
     }
     public void Hide()
     {
         gameObject.SetActive(false);
+        Controller.StopAI();
     }
 }
 

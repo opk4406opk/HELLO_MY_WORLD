@@ -38,9 +38,9 @@ public class NPCManager : NPCSpawner
         }
     }
 
-    public override void SpawnActor(int uniqueID, string subWorldUniqueID, string worldAreaUniqueID, Vector3 spawnPos, int num, bool initShow = false)
+    public override void SpawnActor(int uniqueID, string subWorldUniqueID, string worldAreaUniqueID, Vector3 spawnPos, int quantity, bool initShow = false)
     {
-        for(int spawnNum = 0; spawnNum < num; spawnNum++)
+        for(int spawnNum = 0; spawnNum < quantity; spawnNum++)
         {
             NPCDataFile.Instance.NpcSpawnDatas.TryGetValue(uniqueID, out NPCSpawnData spawnData);
             if(KojeomUtility.IsValidActorResourceGroup(GameResourceSupervisor.GetInstance().ActorPrefabs[(int)ACTOR_TYPE.NPC].ActorResourceGroups[(int)spawnData.NpcType]) == false)

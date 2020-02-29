@@ -12,9 +12,9 @@ public class AnimalManager : AnimalSpawner
     {
     }
 
-    public override void SpawnActor(int uniqueID, string subWorldUniqueID, string worldAreaUniqueID, Vector3 spawnPos, int num, bool initShow = false)
+    public override void SpawnActor(int uniqueID, string subWorldUniqueID, string worldAreaUniqueID, Vector3 spawnPos, int quantity, bool initShow = false)
     {
-        for (int spawnNum = 0; spawnNum < num; spawnNum++)
+        for (int spawnNum = 0; spawnNum < quantity; spawnNum++)
         {
             AnimalDataFile.Instance.AnimalSpawnDatas.TryGetValue(uniqueID, out AnimalSpawnData spawnData);
             if (KojeomUtility.IsValidActorResourceGroup(GameResourceSupervisor.GetInstance().ActorPrefabs[(int)ACTOR_TYPE.ANIMAL].ActorResourceGroups[(int)spawnData.AnimalType]) == false)

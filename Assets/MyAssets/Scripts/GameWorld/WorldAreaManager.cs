@@ -36,17 +36,57 @@ public class WorldAreaManager : MonoBehaviour
         var mapData = await AsyncGenerateAreaMapDatas(worldAreaGenParamGroup);
         // 완료되면, 월드 아레아를 생성하며 해당 맵 데이터를 설정.
         int idx = 0;
+        List<WorldArea> areaList = new List<WorldArea>();
         foreach (var worldAreaData in WorldMapDataFile.Instance.MapData.WorldAreaDatas)
         {
             GameObject newWorldArea = Instantiate(GameResourceSupervisor.GetInstance().WorldAreaPrefab.LoadSynchro(), new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
             newWorldArea.transform.parent = transform;
             newWorldArea.gameObject.name = worldAreaData.AreaName;
             WorldArea worldAreaInstance = newWorldArea.GetComponent<WorldArea>();
-            worldAreaInstance.Init(worldAreaData, mapData[idx]);
+            worldAreaInstance.Init(worldAreaData, mapData[idx], false);
             WorldAreas.Add(worldAreaData.UniqueID, worldAreaInstance);
+            areaList.Add(worldAreaInstance);
             idx++;
         }
+        // 여러개의 WorldArea중에 1개만 골라, 맵 로딩을 시킨다. ( 이후에 플레이어 생성.)
+        int randIndex = KojeomUtility.RandomInteger(0, areaList.Count);
+        foreach (var keyValuePair in areaList[randIndex].SubWorldStates)
+        {
+            SubWorldState subWorldState = keyValuePair.Value;
+            if (subWorldState.RealTimeStatus == SubWorldRealTimeStatus.ReadyToFirstLoad)
+            {
+                subWorldState.RealTimeStatus = SubWorldRealTimeStatus.Loading;
+                subWorldState.SubWorldInstance.AsyncLoading(null, true, ()=> {
+                    if (GamePlayerManager.Instance != null)
+                    {
+                        if (GamePlayerManager.Instance.bInitialize == false)
+                        {
+                            GamePlayerManager.Instance.Make(subWorldState.SubWorldInstance.GetRandomRealPositionAtSurface(), ()=> {
+                                SwitchAllAreaDynamicWorldLoader(true);
+                            });
+                        }
+                    }
+                });
+            }
+        }
+
         bFinishLoad = true;
+    }
+
+    /// <summary>
+    /// 모든 월드 아레아의 서브월드 Loader를 Enable/Disable
+    /// </summary>
+    /// <param name="enable"></param>
+    public void SwitchAllAreaDynamicWorldLoader(bool enable)
+    {
+        foreach(var keyValuePair in WorldAreas)
+        {
+            WorldArea area = keyValuePair.Value;
+            if(area != null)
+            {
+                area.bRunDynamicLoader = enable;
+            }
+        }
     }
 
     private async Task<List<WorldGenAlgorithms.TerrainValue[,]>> AsyncGenerateAreaMapDatas(List<WorldAreaGenerateParam> paramGroup)

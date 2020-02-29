@@ -105,6 +105,16 @@ public struct PathFinderSettings
         WorldAreaOffsetY = (int)worldAreaOffset.y;
         WorldAreaOffsetZ = (int)worldAreaOffset.z;
     }
+
+    public bool IsValid()
+    {
+        // fails
+        if (WorldBlockData == null) return false;
+        if (SubWorldOffsetX < 0 || SubWorldOffsetY < 0 || SubWorldOffsetZ < 0) return false;
+        if (WorldAreaOffsetX < 0 || WorldAreaOffsetY < 0 || WorldAreaOffsetZ < 0) return false;
+        // success
+        return true;
+    }
 }
 public class CustomAstar3D : MonoBehaviour
 {
@@ -117,7 +127,7 @@ public class CustomAstar3D : MonoBehaviour
     private SimpleVector3 ActorPosition;
     //
     private WorldConfig GameWorldConfing;
-    private PathFinderSettings PathFindingSettings;
+    private PathFinderSettings PathFindingSettingsInstance;
     private int OffsetX = 0;
     private int OffsetY = 0;
     private int OffsetZ = 0;
@@ -130,7 +140,7 @@ public class CustomAstar3D : MonoBehaviour
     {
         if (bAlreadyAsyncCalcPaths == true) return;
         //
-        PathFindingSettings = settings;
+        PathFindingSettingsInstance = settings;
         ActorPosition = actorPosition;
         GameWorldConfing = WorldConfigFile.Instance.GetConfig();
     }
@@ -178,9 +188,9 @@ public class CustomAstar3D : MonoBehaviour
     {
         // Offset 세팅.
         var mapData = WorldMapDataFile.Instance.MapData;
-        OffsetX = (PathFindingSettings.SubWorldOffsetX * GameWorldConfing.SubWorldSizeX) + (PathFindingSettings.WorldAreaOffsetX * mapData.SubWorldRow * GameWorldConfing.SubWorldSizeX);
-        OffsetY = (PathFindingSettings.SubWorldOffsetY * GameWorldConfing.SubWorldSizeY) + (PathFindingSettings.WorldAreaOffsetY * mapData.SubWorldColumn * GameWorldConfing.SubWorldSizeY);
-        OffsetZ = (PathFindingSettings.SubWorldOffsetZ * GameWorldConfing.SubWorldSizeZ) + (PathFindingSettings.WorldAreaOffsetZ * mapData.SubWorldLayer * GameWorldConfing.SubWorldSizeZ);
+        OffsetX = (PathFindingSettingsInstance.SubWorldOffsetX * GameWorldConfing.SubWorldSizeX) + (PathFindingSettingsInstance.WorldAreaOffsetX * mapData.SubWorldRow * GameWorldConfing.SubWorldSizeX);
+        OffsetY = (PathFindingSettingsInstance.SubWorldOffsetY * GameWorldConfing.SubWorldSizeY) + (PathFindingSettingsInstance.WorldAreaOffsetY * mapData.SubWorldColumn * GameWorldConfing.SubWorldSizeY);
+        OffsetZ = (PathFindingSettingsInstance.SubWorldOffsetZ * GameWorldConfing.SubWorldSizeZ) + (PathFindingSettingsInstance.WorldAreaOffsetZ * mapData.SubWorldLayer * GameWorldConfing.SubWorldSizeZ);
         // 길찾기용 맵 데이터 초기화.
         PathFindMapData = new PathNode3D[GameWorldConfing.SubWorldSizeX, GameWorldConfing.SubWorldSizeY, GameWorldConfing.SubWorldSizeZ];
         for (int x = 0; x < GameWorldConfing.SubWorldSizeX; x++)
@@ -217,6 +227,9 @@ public class CustomAstar3D : MonoBehaviour
         SetStartPathNode();
         while (OpenList.Count > 0 && IsGoalInOpenList() == false)
         {
+            // 예외처리.
+            if (PathFindingSettingsInstance.IsValid() == false) break;
+            //
             SetOpenList();
             PathNode3D selectNode = SelectLowCostPath();
             if (selectNode != null) SearchAdjacentNodes(selectNode);
@@ -254,6 +267,9 @@ public class CustomAstar3D : MonoBehaviour
             SetStartPathNode();
             while (OpenList.Count > 0 && IsGoalInOpenList() == false)
             {
+                // 예외처리.
+                if (PathFindingSettingsInstance.IsValid() == false) break;
+                //
                 SetOpenList();
                 PathNode3D selectNode = SelectLowCostPath();
                 if (selectNode != null) SearchAdjacentNodes(selectNode);
@@ -371,10 +387,14 @@ public class CustomAstar3D : MonoBehaviour
 
     private bool IsCanMoveNode(PathNode3D node)
     {
+        // 예외처리.
+        if (PathFindingSettingsInstance.WorldBlockData == null) return false;
+        //
         int x = node.PathMapDataX;
         int y = node.PathMapDataY;
         int z = node.PathMapDataZ;
-        BlockTileType blockType = (BlockTileType)PathFindingSettings.WorldBlockData[x, y, z].Type;
+       
+        BlockTileType blockType = (BlockTileType)PathFindingSettingsInstance.WorldBlockData[x, y, z].Type;
         if (blockType == BlockTileType.EMPTY)
         {
             ClosedList.Add(node);

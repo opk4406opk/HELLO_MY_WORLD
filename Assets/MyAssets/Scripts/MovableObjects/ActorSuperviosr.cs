@@ -9,17 +9,17 @@ public struct RequestSpawnActorData
     public int ActorUniqueID;
     public Vector3 SpawnPosition;
     public ACTOR_TYPE ActorType;
-    public int Num;
+    public int Quantity;
     public bool SpawnAndShow;
 
-    public RequestSpawnActorData(string subWorldUniqueID, string worldAreaUniqueID, int actorUniqueID, Vector3 spawnPosition, ACTOR_TYPE actorType, int num, bool spawnAndShow)
+    public RequestSpawnActorData(string subWorldUniqueID, string worldAreaUniqueID, int actorUniqueID, Vector3 spawnPosition, ACTOR_TYPE actorType, int quantityNumber, bool spawnAndShow)
     {
         SubWorldUniqueID = subWorldUniqueID;
         WorldAreaUniqueID = worldAreaUniqueID;
         ActorUniqueID = actorUniqueID;
         SpawnPosition = spawnPosition;
         ActorType = actorType;
-        Num = num;
+        Quantity = quantityNumber;
         SpawnAndShow = spawnAndShow;
     }
 }
@@ -112,27 +112,27 @@ public class ActorSuperviosr : MonoBehaviour
         RequestSpawnMessages.Enqueue(message);
     }
 
-    public void RequestSpawnRandomNPC(NPC_TYPE npcType, string subWorldUniqueID, string worldAreaUniqueID, int num, bool spawnAndShow)
+    public void RequestSpawnRandomNPC(NPC_TYPE npcType, string subWorldUniqueID, string worldAreaUniqueID, int quantity, bool spawnAndShow)
     {
         WorldAreaManager.Instance.GetWorldArea(worldAreaUniqueID).SubWorldStates.TryGetValue(subWorldUniqueID, out SubWorldState worldState);
         var data = new RequestSpawnActorData(subWorldUniqueID, worldAreaUniqueID,
-            KojeomUtility.RandomInteger(0, NPCDataFile.Instance.NpcSpawnDatas.Count - 1),
-            worldState.SubWorldInstance.RandomRealPositionAtSurface(), ACTOR_TYPE.NPC, num, spawnAndShow);
+                                            KojeomUtility.RandomInteger(0, NPCDataFile.Instance.NpcSpawnDatas.Count - 1),
+                                            worldState.SubWorldInstance.GetRandomRealPositionAtSurface(), ACTOR_TYPE.NPC, quantity, spawnAndShow);
         RequestSpawnNPCMessage msg = new RequestSpawnNPCMessage(data, npcType);
         RequestSpawnMessages.Enqueue(msg);
     }
 
-    public void RequestSpawnRandomMonster(MONSTER_TYPE monsterType, string subWorldUniqueID, string worldAreaUniqueID, int num, bool spawnAndShow)
+    public void RequestSpawnRandomMonster(MONSTER_TYPE monsterType, string subWorldUniqueID, string worldAreaUniqueID, int quantity, bool spawnAndShow)
     {
         // to do.
     }
 
-    public void RequestSpawnRandomAnimal(ANIMAL_TYPE animalType, string subWorldUniqueID, string worldAreaUniqueID, int num, bool spawnAndShow)
+    public void RequestSpawnRandomAnimal(ANIMAL_TYPE animalType, string subWorldUniqueID, string worldAreaUniqueID, int quantity, bool spawnAndShow)
     {
         WorldAreaManager.Instance.GetWorldArea(worldAreaUniqueID).SubWorldStates.TryGetValue(subWorldUniqueID, out SubWorldState worldState);
         var data = new RequestSpawnActorData(subWorldUniqueID, worldAreaUniqueID,
-            KojeomUtility.RandomInteger(0, AnimalDataFile.Instance.AnimalSpawnDatas.Count - 1),
-            worldState.SubWorldInstance.RandomRealPositionAtSurface(), ACTOR_TYPE.ANIMAL, num, spawnAndShow);
+                                            KojeomUtility.RandomInteger(0, AnimalDataFile.Instance.AnimalSpawnDatas.Count - 1),
+                                            worldState.SubWorldInstance.GetRandomRealPositionAtSurface(), ACTOR_TYPE.ANIMAL, quantity, spawnAndShow);
         RequestSpawnAnimalMessage msg = new RequestSpawnAnimalMessage(data, animalType);
         RequestSpawnMessages.Enqueue(msg);
     }
@@ -153,7 +153,7 @@ public class ActorSuperviosr : MonoBehaviour
                             message.SpawnData.SubWorldUniqueID,
                             message.SpawnData.WorldAreaUniqueID,
                             message.SpawnData.SpawnPosition,
-                            message.SpawnData.Num,
+                            message.SpawnData.Quantity,
                             message.SpawnData.SpawnAndShow);
                         break;
                     case ACTOR_TYPE.MONSTER:
@@ -163,7 +163,7 @@ public class ActorSuperviosr : MonoBehaviour
                             message.SpawnData.SubWorldUniqueID,
                             message.SpawnData.WorldAreaUniqueID,
                             message.SpawnData.SpawnPosition,
-                            message.SpawnData.Num,
+                            message.SpawnData.Quantity,
                             message.SpawnData.SpawnAndShow);
                         break;
                 }

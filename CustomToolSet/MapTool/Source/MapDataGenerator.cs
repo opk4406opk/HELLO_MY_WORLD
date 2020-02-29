@@ -33,6 +33,20 @@ namespace MapTool.Source
         public float ChunkLoadIntervalSeconds;
         public float OneTileUnit;
     }
+
+    public struct ServerWorldMapConfigData
+    {
+        public int WorldAreaRow;
+        public int WorldAreaColumn;
+        public int WorldAreaLayer;
+        public int SubWorldRow;
+        public int SubWorldColumn;
+        public int SubWorldLayer;
+        public int SubWorldSizeX;
+        public int SubWorldSizeY;
+        public int SubWorldSizeZ;
+        public int ChunkSize;
+    }
         
     class MapDataGenerator
     {
@@ -60,8 +74,6 @@ namespace MapTool.Source
         public static readonly float ChunkLoadIntervalSeconds = 0.01f;
         public static readonly float OneTileUnit = 0.0625f;
         #endregion
-
-        private readonly int NumberOfGenerateTimes = 800;
 
         private struct Properties
         {
@@ -121,7 +133,25 @@ namespace MapTool.Source
             configData.ChunkSize = MapDataGenerator.ChunkSize;
             configData.OneTileUnit = MapDataGenerator.OneTileUnit;
 
-            File.WriteAllText(MapToolPath.WorldConfigJsonFilePath, JsonConvert.SerializeObject(configData, Formatting.Indented));
+            File.WriteAllText(MapToolPath.ClientWorldConfigFilePath, JsonConvert.SerializeObject(configData, Formatting.Indented));
+            return true;
+        }
+
+        private bool GenerateServerWorldMapConfigData()
+        {
+            ServerWorldMapConfigData serverConfigData;
+            serverConfigData.WorldAreaColumn = WorldMapDataInstance.WorldAreaColumn;
+            serverConfigData.WorldAreaLayer = WorldMapDataInstance.WorldAreaLayer;
+            serverConfigData.WorldAreaRow = WorldMapDataInstance.WorldAreaRow;
+            serverConfigData.SubWorldColumn = WorldMapDataInstance.SubWorldColumn;
+            serverConfigData.SubWorldLayer = WorldMapDataInstance.SubWorldLayer;
+            serverConfigData.SubWorldRow = WorldMapDataInstance.SubWorldRow;
+            serverConfigData.SubWorldSizeX = MapDataGenerator.SubWorldSizeX;
+            serverConfigData.SubWorldSizeY = MapDataGenerator.SubWorldSizeY;
+            serverConfigData.SubWorldSizeZ = MapDataGenerator.SubWorldSizeZ;
+            serverConfigData.ChunkSize = MapDataGenerator.ChunkSize;
+
+            File.WriteAllText(MapToolPath.ServerWorldConfigFilePath, JsonConvert.SerializeObject(serverConfigData, Formatting.Indented));
             return true;
         }
 
@@ -157,7 +187,7 @@ namespace MapTool.Source
                 }
             }
             
-            File.WriteAllText(MapToolPath.SubWorldJsonFilePath, JsonConvert.SerializeObject(jsonFileData, Formatting.Indented));
+            File.WriteAllText(MapToolPath.SubWorldFilePath, JsonConvert.SerializeObject(jsonFileData, Formatting.Indented));
             
             return true;
         }
@@ -199,7 +229,7 @@ namespace MapTool.Source
 
         public bool Generate()
         {
-            return GenerateSubWorldDatas() && GenerateWorldMapConfigData();
+            return GenerateSubWorldDatas() && GenerateWorldMapConfigData() && GenerateServerWorldMapConfigData();
         }
     }
 }
