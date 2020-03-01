@@ -70,7 +70,7 @@ public class WorldArea : MonoBehaviour
     /// <param name="bRunLoader"> 서브월드 생성기 시작 여부</param>
     public void Init(WorldAreaTerrainData worldAreaData, WorldGenAlgorithms.TerrainValue[,] worldAreaXZPlaneData, bool bRunLoader)
     {
-        KojeomLogger.DebugLog("WorldArea 생성을 시작합니다.");
+        KojeomLogger.DebugLog(string.Format("WorldArea : {0} 생성을 시작합니다.", AreaUniqueID));
         XZPlaneDataArray = worldAreaXZPlaneData;
         AreaName = worldAreaData.AreaName;
         AreaUniqueID = worldAreaData.UniqueID;
@@ -80,7 +80,7 @@ public class WorldArea : MonoBehaviour
         //
         CreateArea(worldAreaData);
         StartCoroutine(DynamicSubWorldLoader());
-        KojeomLogger.DebugLog("WorldArea 생성을 종료합니다.");
+        KojeomLogger.DebugLog(string.Format("WorldArea : {0} 생성을 종료합니다.", AreaUniqueID));
     }
 
     private async void AsyncSaveAllSubWorld()
@@ -275,44 +275,54 @@ public class WorldArea : MonoBehaviour
     private IEnumerator DynamicSubWorldLoader()
     {
         KojeomLogger.DebugLog(string.Format("Area : {0} Dynamic SubWorldLoader Start.", AreaUniqueID));
-        while (bRunDynamicLoader == true)
+        while (true)
         {
-            if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.bInitialize == true)
+            if(bRunDynamicLoader == false) yield return new WaitForSeconds(0.5f);
+
+            if (GamePlayerManager.Instance != null && GamePlayerManager.Instance.bInitialize == true)
             {
                 Vector3 playerPos = GamePlayerManager.Instance.MyGamePlayer.Controller.GetPosition();
-                Vector3 offsetPos = SubWorldStates[GetSubWorldUniqueID(playerPos)].SubWorldInstance.OffsetCoordinate;
-
-                // 플레이어가 위치한 서브월드의 offset 위치를 기준삼아
-                // 8방향(대각선, 좌우상하)의 subWorld를 활성화 시킨다. 
-                // 플레이어 주변을 넘어서는 그 바깥의 영역들은 외부 파일로 저장시키는걸 비동기로..
-                // 
-                for (int x = (int)offsetPos.x - 1; x <= (int)offsetPos.x + 1; x++)
+                string containedAreaID = WorldAreaManager.GetWorldAreaUniqueID(playerPos);
+                if (containedAreaID == AreaUniqueID)
                 {
-                    for (int y = (int)offsetPos.y - 1; y <= (int)offsetPos.y + 1; y++)
+                    KojeomLogger.DebugLog(string.Format("this area ID : {0}, containedID : {1}", AreaUniqueID, containedAreaID));
+                    Vector3 offsetPos = SubWorldStates[GetSubWorldUniqueID(playerPos)].SubWorldInstance.OffsetCoordinate;
+
+                    // 플레이어가 위치한 서브월드의 offset 위치를 기준삼아
+                    // 8방향(대각선, 좌우상하)의 subWorld를 활성화 시킨다. 
+                    // 플레이어 주변을 넘어서는 그 바깥의 영역들은 외부 파일로 저장시키는걸 비동기로..
+                    // 
+                    for (int x = (int)offsetPos.x - 1; x <= (int)offsetPos.x + 1; x++)
                     {
-                        for (int z = (int)offsetPos.z - 1; z <= (int)offsetPos.z + 1; z++)
+                        for (int y = (int)offsetPos.y - 1; y <= (int)offsetPos.y + 1; y++)
                         {
-                            string uniqueID = WorldAreaManager.MakeUniqueID(x, y, z);
-                            if (SubWorldStates.ContainsKey(uniqueID) == true)
+                            for (int z = (int)offsetPos.z - 1; z <= (int)offsetPos.z + 1; z++)
                             {
-                                switch (SubWorldStates[uniqueID].RealTimeStatus)
+                                string uniqueID = WorldAreaManager.MakeUniqueID(x, y, z);
+                                if (SubWorldStates.ContainsKey(uniqueID) == true)
                                 {
-                                    case SubWorldRealTimeStatus.None:
-                                        // nothing to do.
-                                        break;
-                                    case SubWorldRealTimeStatus.ReadyToFirstLoad:
-                                        SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Loading;
-                                        SubWorldStates[uniqueID].SubWorldInstance.AsyncLoading(null, true);
-                                        break;
-                                    case SubWorldRealTimeStatus.ReleaseFinish:
-                                        SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Loading;
-                                        AsyncLoadSubWorldFile(uniqueID);
-                                        break;
+                                    switch (SubWorldStates[uniqueID].RealTimeStatus)
+                                    {
+                                        case SubWorldRealTimeStatus.None:
+                                        case SubWorldRealTimeStatus.Loading:
+                                        case SubWorldRealTimeStatus.Release:
+                                            // nothing to do.
+                                            break;
+                                        case SubWorldRealTimeStatus.ReadyToFirstLoad:
+                                            SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Loading;
+                                            SubWorldStates[uniqueID].SubWorldInstance.AsyncLoading(null, true);
+                                            break;
+                                        case SubWorldRealTimeStatus.ReleaseFinish:
+                                            SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Loading;
+                                            AsyncLoadSubWorldFile(uniqueID);
+                                            break;
+                                    }
                                 }
                             }
                         }
                     }
                 }
+
             }
             
             yield return null;

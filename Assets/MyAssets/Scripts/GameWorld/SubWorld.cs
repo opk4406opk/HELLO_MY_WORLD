@@ -125,7 +125,7 @@ public class SubWorld : MonoBehaviour
     }
     private IEnumerator Tick()
     {
-        KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} is Tick Start.", UniqueID));
+        KojeomLogger.DebugLog(string.Format("Onwer AreaID : {0}, SubWorld ID : {1} is Tick Start.", WorldAreaInstance.AreaUniqueID, UniqueID));
         while(bTicking)
         {
             if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.bInitialize == true)
@@ -145,7 +145,7 @@ public class SubWorld : MonoBehaviour
             }
             yield return new WaitForSeconds(0.5f);
         }
-        KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} is Tick Suspended.", UniqueID));
+        KojeomLogger.DebugLog(string.Format("Onwer AreaID : {0}, SubWorld ID : {1} is Tick Suspended.", WorldAreaInstance.AreaUniqueID, UniqueID));
     }
 
     public void Release()
@@ -274,6 +274,10 @@ public class SubWorld : MonoBehaviour
 
     private IEnumerator LoadTerrainChunks(Action finishCallBack = null)
     {
+        if(WorldName == "AREA_1_SUB_WORLD_5")
+        {
+            int debugValue = 0;
+        }
         KojeomLogger.DebugLog(string.Format("World name : {0}, Chunk 로드를 시작합니다.", WorldName), LOG_TYPE.DEBUG_TEST);
         for (int x = 0; x < ChunkSlots.GetLength(0); x++)
         {

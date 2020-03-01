@@ -44,7 +44,8 @@ public class GameCharacterInstance : MonoBehaviour
         {
             bContactWater = true;
         }
-        ContainedWorld = collision.gameObject.GetComponent<AChunk>().SubWorldInstance;
+        SubWorld world = collision.gameObject.GetComponent<AChunk>().SubWorldInstance;
+        ContainedWorld = world;
     }
 
     private void OnCollisionExit(Collision collision)
@@ -69,7 +70,8 @@ public class GameCharacterInstance : MonoBehaviour
         {
             bContactWater = true;
         }
-        ContainedWorld = collision.gameObject.GetComponent<AChunk>().SubWorldInstance;
+        SubWorld world = collision.gameObject.GetComponent<AChunk>().SubWorldInstance;
+        ContainedWorld = world;
     }
 
     public CustomAABB GetCustomAABB(Vector3 moveSpeed)

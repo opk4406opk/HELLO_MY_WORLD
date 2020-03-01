@@ -50,6 +50,7 @@ public class WorldAreaManager : MonoBehaviour
         }
         // 여러개의 WorldArea중에 1개만 골라, 맵 로딩을 시킨다. ( 이후에 플레이어 생성.)
         int randIndex = KojeomUtility.RandomInteger(0, areaList.Count);
+        string selectedAreaID = areaList[randIndex].AreaUniqueID;
         foreach (var keyValuePair in areaList[randIndex].SubWorldStates)
         {
             SubWorldState subWorldState = keyValuePair.Value;
@@ -61,7 +62,8 @@ public class WorldAreaManager : MonoBehaviour
                     {
                         if (GamePlayerManager.Instance.bInitialize == false)
                         {
-                            GamePlayerManager.Instance.Make(subWorldState.SubWorldInstance.GetRandomRealPositionAtSurface(), ()=> {
+                            Vector3 randPos = subWorldState.SubWorldInstance.GetRandomRealPositionAtSurface();
+                            GamePlayerManager.Instance.Make(randPos, ()=> {
                                 SwitchAllAreaDynamicWorldLoader(true);
                             });
                         }
