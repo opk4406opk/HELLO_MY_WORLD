@@ -42,7 +42,7 @@ public class CharacterRenderTextureEditor : EditorWindow
         EditorGUILayout.BeginToggleGroup("Func", true);
         GUILayout.TextArea("(1) 캐릭터 프리팹들의 정면 모습을 렌더링텍스처 파일들로 만들어냅니다.\n " +
             "(2) 작업이 완료되면, SelectChars 프리팹을 Scene에 배치시킨 후, TextureUtility 툴에서 렌더링텍스처 to 텍스처 작업을 시작합니다.");
-        if (GUILayout.Button("Start Create RenderTextures."))
+        if (GUILayout.Button("Start Create RenderTextures and DataFile."))
         {
             CreateCharsDataFile();
             ClickOpenFile();

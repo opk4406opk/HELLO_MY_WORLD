@@ -68,6 +68,7 @@ public class PopupChData : APopupUI
     {
         GameLocalDataManager.GetInstance().CharacterName = ChSelectManager.singleton.GetSelectCharData().chName;
         GameLocalDataManager.GetInstance().CharacterType = int.Parse(ChSelectManager.singleton.GetSelectCharData().chType);
+        GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.InGame);
     }
 
     private void SQL_SelectCharInfoToHistory(SqliteCommand dbcmd)

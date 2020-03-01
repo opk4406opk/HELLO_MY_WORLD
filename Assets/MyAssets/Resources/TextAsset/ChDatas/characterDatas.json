@@ -1,7 +1,23 @@
 [
   {
-    "chName": "Jack",
+    "chName": "Akaza_sum",
     "chType": "0",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Akaza_sum",
+    "chPrefabName": "Akaza_sum"
+  },
+  {
+    "chName": "Akaza_win",
+    "chType": "1",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "Akaza_win",
+    "chPrefabName": "Akaza_win"
+  },
+  {
+    "chName": "Jack",
+    "chType": "2",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Jack",
@@ -9,7 +25,7 @@
   },
   {
     "chName": "Marie_sum",
-    "chType": "1",
+    "chType": "3",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Marie_sum",
@@ -17,15 +33,23 @@
   },
   {
     "chName": "Marie_win",
-    "chType": "2",
+    "chType": "4",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Marie_win",
     "chPrefabName": "Marie_win"
   },
   {
+    "chName": "MCunitychan",
+    "chType": "5",
+    "chLevel": "1",
+    "detailScript": "Something here..",
+    "chFaceTextureName": "MCunitychan",
+    "chPrefabName": "MCunitychan"
+  },
+  {
     "chName": "Misaki_sum_humanoid",
-    "chType": "3",
+    "chType": "6",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Misaki_sum_humanoid",
@@ -33,7 +57,7 @@
   },
   {
     "chName": "Misaki_win_humanoid",
-    "chType": "4",
+    "chType": "7",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Misaki_win_humanoid",
@@ -41,7 +65,7 @@
   },
   {
     "chName": "Query-Chan-SD",
-    "chType": "5",
+    "chType": "8",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD",
@@ -49,7 +73,7 @@
   },
   {
     "chName": "Query-Chan-SD_Aichi",
-    "chType": "6",
+    "chType": "9",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Aichi",
@@ -57,7 +81,7 @@
   },
   {
     "chName": "Query-Chan-SD_Akita",
-    "chType": "7",
+    "chType": "10",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Akita",
@@ -65,7 +89,7 @@
   },
   {
     "chName": "Query-Chan-SD_Aomori",
-    "chType": "8",
+    "chType": "11",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Aomori",
@@ -73,7 +97,7 @@
   },
   {
     "chName": "Query-Chan-SD_Black",
-    "chType": "9",
+    "chType": "12",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Black",
@@ -81,7 +105,7 @@
   },
   {
     "chName": "Query-Chan-SD_Chiba",
-    "chType": "10",
+    "chType": "13",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Chiba",
@@ -89,7 +113,7 @@
   },
   {
     "chName": "Query-Chan-SD_Ehime",
-    "chType": "11",
+    "chType": "14",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Ehime",
@@ -97,7 +121,7 @@
   },
   {
     "chName": "Query-Chan-SD_Fukui",
-    "chType": "12",
+    "chType": "15",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Fukui",
@@ -105,7 +129,7 @@
   },
   {
     "chName": "Query-Chan-SD_Fukuoka",
-    "chType": "13",
+    "chType": "16",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Fukuoka",
@@ -113,7 +137,7 @@
   },
   {
     "chName": "Query-Chan-SD_Fukushima",
-    "chType": "14",
+    "chType": "17",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Fukushima",
@@ -121,7 +145,7 @@
   },
   {
     "chName": "Query-Chan-SD_Gifu",
-    "chType": "15",
+    "chType": "18",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Gifu",
@@ -129,7 +153,7 @@
   },
   {
     "chName": "Query-Chan-SD_Gunma",
-    "chType": "16",
+    "chType": "19",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Gunma",
@@ -137,7 +161,7 @@
   },
   {
     "chName": "Query-Chan-SD_Hiroshima",
-    "chType": "17",
+    "chType": "20",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Hiroshima",
@@ -145,7 +169,7 @@
   },
   {
     "chName": "Query-Chan-SD_Hokkaido",
-    "chType": "18",
+    "chType": "21",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Hokkaido",
@@ -153,7 +177,7 @@
   },
   {
     "chName": "Query-Chan-SD_Hyogo",
-    "chType": "19",
+    "chType": "22",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Hyogo",
@@ -161,7 +185,7 @@
   },
   {
     "chName": "Query-Chan-SD_Ishikawa",
-    "chType": "20",
+    "chType": "23",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Ishikawa",
@@ -169,7 +193,7 @@
   },
   {
     "chName": "Query-Chan-SD_Ivaraki",
-    "chType": "21",
+    "chType": "24",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Ivaraki",
@@ -177,7 +201,7 @@
   },
   {
     "chName": "Query-Chan-SD_Iwate",
-    "chType": "22",
+    "chType": "25",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Iwate",
@@ -185,7 +209,7 @@
   },
   {
     "chName": "Query-Chan-SD_Kagawa",
-    "chType": "23",
+    "chType": "26",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Kagawa",
@@ -193,7 +217,7 @@
   },
   {
     "chName": "Query-Chan-SD_Kagoshima",
-    "chType": "24",
+    "chType": "27",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Kagoshima",
@@ -201,7 +225,7 @@
   },
   {
     "chName": "Query-Chan-SD_Kanagawa",
-    "chType": "25",
+    "chType": "28",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Kanagawa",
@@ -209,7 +233,7 @@
   },
   {
     "chName": "Query-Chan-SD_Kochi",
-    "chType": "26",
+    "chType": "29",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Kochi",
@@ -217,7 +241,7 @@
   },
   {
     "chName": "Query-Chan-SD_Kumamoto",
-    "chType": "27",
+    "chType": "30",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Kumamoto",
@@ -225,7 +249,7 @@
   },
   {
     "chName": "Query-Chan-SD_Kyoto",
-    "chType": "28",
+    "chType": "31",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Kyoto",
@@ -233,7 +257,7 @@
   },
   {
     "chName": "Query-Chan-SD_Mie",
-    "chType": "29",
+    "chType": "32",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Mie",
@@ -241,7 +265,7 @@
   },
   {
     "chName": "Query-Chan-SD_MikanButori",
-    "chType": "30",
+    "chType": "33",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_MikanButori",
@@ -249,7 +273,7 @@
   },
   {
     "chName": "Query-Chan-SD_Miyagi",
-    "chType": "31",
+    "chType": "34",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Miyagi",
@@ -257,7 +281,7 @@
   },
   {
     "chName": "Query-Chan-SD_Miyazaki",
-    "chType": "32",
+    "chType": "35",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Miyazaki",
@@ -265,7 +289,7 @@
   },
   {
     "chName": "Query-Chan-SD_Nagano",
-    "chType": "33",
+    "chType": "36",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Nagano",
@@ -273,7 +297,7 @@
   },
   {
     "chName": "Query-Chan-SD_Nagasaki",
-    "chType": "34",
+    "chType": "37",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Nagasaki",
@@ -281,7 +305,7 @@
   },
   {
     "chName": "Query-Chan-SD_Nara",
-    "chType": "35",
+    "chType": "38",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Nara",
@@ -289,7 +313,7 @@
   },
   {
     "chName": "Query-Chan-SD_NewFukuoka",
-    "chType": "36",
+    "chType": "39",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_NewFukuoka",
@@ -297,7 +321,7 @@
   },
   {
     "chName": "Query-Chan-SD_NewHokkaido",
-    "chType": "37",
+    "chType": "40",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_NewHokkaido",
@@ -305,7 +329,7 @@
   },
   {
     "chName": "Query-Chan-SD_NewOsaka",
-    "chType": "38",
+    "chType": "41",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_NewOsaka",
@@ -313,7 +337,7 @@
   },
   {
     "chName": "Query-Chan-SD_Niigata",
-    "chType": "39",
+    "chType": "42",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Niigata",
@@ -321,7 +345,7 @@
   },
   {
     "chName": "Query-Chan-SD_Okayama",
-    "chType": "40",
+    "chType": "43",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Okayama",
@@ -329,7 +353,7 @@
   },
   {
     "chName": "Query-Chan-SD_Okinawa",
-    "chType": "41",
+    "chType": "44",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Okinawa",
@@ -337,7 +361,7 @@
   },
   {
     "chName": "Query-Chan-SD_Ooita",
-    "chType": "42",
+    "chType": "45",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Ooita",
@@ -345,7 +369,7 @@
   },
   {
     "chName": "Query-Chan-SD_Osaka",
-    "chType": "43",
+    "chType": "46",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Osaka",
@@ -353,7 +377,7 @@
   },
   {
     "chName": "Query-Chan-SD_Saga",
-    "chType": "44",
+    "chType": "47",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Saga",
@@ -361,7 +385,7 @@
   },
   {
     "chName": "Query-Chan-SD_Saitama",
-    "chType": "45",
+    "chType": "48",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Saitama",
@@ -369,7 +393,7 @@
   },
   {
     "chName": "Query-Chan-SD_Shiga",
-    "chType": "46",
+    "chType": "49",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Shiga",
@@ -377,7 +401,7 @@
   },
   {
     "chName": "Query-Chan-SD_Shimane",
-    "chType": "47",
+    "chType": "50",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Shimane",
@@ -385,7 +409,7 @@
   },
   {
     "chName": "Query-Chan-SD_Shizuoka",
-    "chType": "48",
+    "chType": "51",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Shizuoka",
@@ -393,7 +417,7 @@
   },
   {
     "chName": "Query-Chan-SD_SpaceCommand",
-    "chType": "49",
+    "chType": "52",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_SpaceCommand",
@@ -401,7 +425,7 @@
   },
   {
     "chName": "Query-Chan-SD_Spain_Madrid",
-    "chType": "50",
+    "chType": "53",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Spain_Madrid",
@@ -409,7 +433,7 @@
   },
   {
     "chName": "Query-Chan-SD_Tochigi",
-    "chType": "51",
+    "chType": "54",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Tochigi",
@@ -417,7 +441,7 @@
   },
   {
     "chName": "Query-Chan-SD_Tokushima",
-    "chType": "52",
+    "chType": "55",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Tokushima",
@@ -425,7 +449,7 @@
   },
   {
     "chName": "Query-Chan-SD_Tokyo",
-    "chType": "53",
+    "chType": "56",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Tokyo",
@@ -433,7 +457,7 @@
   },
   {
     "chName": "Query-Chan-SD_Tottori",
-    "chType": "54",
+    "chType": "57",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Tottori",
@@ -441,7 +465,7 @@
   },
   {
     "chName": "Query-Chan-SD_Toyama",
-    "chType": "55",
+    "chType": "58",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Toyama",
@@ -449,7 +473,7 @@
   },
   {
     "chName": "Query-Chan-SD_Wakayama",
-    "chType": "56",
+    "chType": "59",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Wakayama",
@@ -457,7 +481,7 @@
   },
   {
     "chName": "Query-Chan-SD_Yamagata",
-    "chType": "57",
+    "chType": "60",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Yamagata",
@@ -465,7 +489,7 @@
   },
   {
     "chName": "Query-Chan-SD_Yamaguchi",
-    "chType": "58",
+    "chType": "61",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Yamaguchi",
@@ -473,7 +497,7 @@
   },
   {
     "chName": "Query-Chan-SD_Yamanashi",
-    "chType": "59",
+    "chType": "62",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Query-Chan-SD_Yamanashi",
@@ -481,7 +505,7 @@
   },
   {
     "chName": "Toko_sum",
-    "chType": "60",
+    "chType": "63",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Toko_sum",
@@ -489,7 +513,7 @@
   },
   {
     "chName": "Toko_win",
-    "chType": "61",
+    "chType": "64",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Toko_win",
@@ -497,7 +521,7 @@
   },
   {
     "chName": "Utc_sum_humanoid",
-    "chType": "62",
+    "chType": "65",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Utc_sum_humanoid",
@@ -505,7 +529,7 @@
   },
   {
     "chName": "Utc_win_humanoid",
-    "chType": "63",
+    "chType": "66",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Utc_win_humanoid",
@@ -513,7 +537,7 @@
   },
   {
     "chName": "Yuko_sum_humanoid",
-    "chType": "64",
+    "chType": "67",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Yuko_sum_humanoid",
@@ -521,7 +545,7 @@
   },
   {
     "chName": "Yuko_win_humanoid",
-    "chType": "65",
+    "chType": "68",
     "chLevel": "1",
     "detailScript": "Something here..",
     "chFaceTextureName": "Yuko_win_humanoid",
