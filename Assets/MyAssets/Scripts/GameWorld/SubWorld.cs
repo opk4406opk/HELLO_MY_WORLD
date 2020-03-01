@@ -274,10 +274,6 @@ public class SubWorld : MonoBehaviour
 
     private IEnumerator LoadTerrainChunks(Action finishCallBack = null)
     {
-        if(WorldName == "AREA_1_SUB_WORLD_5")
-        {
-            int debugValue = 0;
-        }
         KojeomLogger.DebugLog(string.Format("World name : {0}, Chunk 로드를 시작합니다.", WorldName), LOG_TYPE.DEBUG_TEST);
         for (int x = 0; x < ChunkSlots.GetLength(0); x++)
         {
