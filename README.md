@@ -2,7 +2,6 @@
 
 This project is an open source project aimed at mimicking MineCraft. You can use it at will. However, for libraries and resources in use Please note that some license terms are available.  
 <br>
-
 <b><Project Overview></b><br>
     Development period: 2016/01 ~ Current..<br>
     Usage engine: Unity3D (updated to the latest version)<br>
