@@ -5,7 +5,8 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using UnityEngine;
-
+using MapGenLib;
+using Unity.Collections;
 /// <summary>
 /// 외부파일로 저장하게되는 World info.
 /// </summary>
@@ -49,7 +50,8 @@ public enum SubWorldRealTimeStatus
 public class WorldArea : MonoBehaviour
 {
     public string AreaName { get; private set; }
-    public string AreaUniqueID { get; private set; }
+    [ReadOnly]
+    public string AreaUniqueID;
     // WorldArea 위치값( == 오프셋값).
     public Vector3 OffsetCoordinate { get; private set; }
     // 실제 게임오브젝트로서 존재하는 위치값.

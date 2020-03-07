@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
-
+using MapGenLib;
 public class WorldAreaManager : MonoBehaviour
 {
     private struct WorldAreaGenerateParam
@@ -182,9 +182,9 @@ public class WorldAreaManager : MonoBehaviour
     {
         //
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        int areaOffsetX = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX) / WorldMapDataFile.Instance.MapData.WorldAreaRow;
-        int areaOffsetY = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY) / WorldMapDataFile.Instance.MapData.WorldAreaLayer;
-        int areaOffsetZ = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ) / WorldMapDataFile.Instance.MapData.WorldAreaColumn;
+        int areaOffsetX = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX * WorldMapDataFile.Instance.MapData.SubWorldRow) / WorldMapDataFile.Instance.MapData.WorldAreaRow;
+        int areaOffsetY = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY * WorldMapDataFile.Instance.MapData.SubWorldLayer) / WorldMapDataFile.Instance.MapData.WorldAreaLayer;
+        int areaOffsetZ = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ * WorldMapDataFile.Instance.MapData.SubWorldColumn) / WorldMapDataFile.Instance.MapData.WorldAreaColumn;
         // 테스트 코드........
         areaOffsetX = Mathf.Clamp(areaOffsetX, 0, WorldMapDataFile.Instance.MapData.WorldAreaRow - 1);
         areaOffsetY = Mathf.Clamp(areaOffsetY, 0, WorldMapDataFile.Instance.MapData.WorldAreaLayer - 1);
@@ -214,8 +214,8 @@ public class WorldAreaManager : MonoBehaviour
         int z = ceilPosZ - (offsetZ * gameWorldConfig.SubWorldSizeZ * WorldMapDataFile.Instance.MapData.WorldAreaColumn);
         // clamp
         x = Mathf.Clamp(x, 0, gameWorldConfig.SubWorldSizeX);
-        x = Mathf.Clamp(x, 0, gameWorldConfig.SubWorldSizeY);
-        x = Mathf.Clamp(x, 0, gameWorldConfig.SubWorldSizeZ);
+        y = Mathf.Clamp(y, 0, gameWorldConfig.SubWorldSizeY);
+        z = Mathf.Clamp(z, 0, gameWorldConfig.SubWorldSizeZ);
         return new Vector3(x, y, z);
     }
     

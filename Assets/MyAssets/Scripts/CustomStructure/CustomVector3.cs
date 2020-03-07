@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
 /// <summary>
 /// 유니티엔진에 내장된 Vector3를 디컴파일해서 만든 커스텀벡터3.
 /// </summary>
@@ -28,7 +27,7 @@ public struct CustomVector3
 
     public static CustomVector3 Lerp(CustomVector3 a, CustomVector3 b, float t)
     {
-        t = Mathf.Clamp01(t);
+        t = CustomMathf.Clamp01(t);
         return new CustomVector3(a.x + ((b.x - a.x) * t), a.y + ((b.y - a.y) * t), a.z + ((b.z - a.z) * t));
     }
 
@@ -131,7 +130,7 @@ public struct CustomVector3
     public static CustomVector3 Project(CustomVector3 vector, CustomVector3 onNormal)
     {
         float num = Dot(onNormal, onNormal);
-        if (num < Mathf.Epsilon)
+        if (num < CustomMathf.Epsilon)
         {
             return zero;
         }
@@ -145,22 +144,22 @@ public struct CustomVector3
 
     public static float Angle(CustomVector3 from, CustomVector3 to)
     {
-        return (Mathf.Acos(Mathf.Clamp(Dot(from.normalized, to.normalized), -1f, 1f)) * 57.29578f);
+        return (CustomMathf.Acos(CustomMathf.Clamp(Dot(from.normalized, to.normalized), -1f, 1f)) * 57.29578f);
     }
 
     public static float SignedAngle(CustomVector3 from, CustomVector3 to, CustomVector3 axis)
     {
         CustomVector3 normalized = from.normalized;
         CustomVector3 rhs = to.normalized;
-        float num = Mathf.Acos(Mathf.Clamp(Dot(normalized, rhs), -1f, 1f)) * 57.29578f;
-        float num2 = Mathf.Sign(Dot(axis, Cross(normalized, rhs)));
+        float num = CustomMathf.Acos(CustomMathf.Clamp(Dot(normalized, rhs), -1f, 1f)) * 57.29578f;
+        float num2 = CustomMathf.Sign(Dot(axis, Cross(normalized, rhs)));
         return (num * num2);
     }
 
     public static float Distance(CustomVector3 a, CustomVector3 b)
     {
         CustomVector3 vector = new CustomVector3(a.x - b.x, a.y - b.y, a.z - b.z);
-        return Mathf.Sqrt(((vector.x * vector.x) + (vector.y * vector.y)) + (vector.z * vector.z));
+        return CustomMathf.Sqrt(((vector.x * vector.x) + (vector.y * vector.y)) + (vector.z * vector.z));
     }
 
     public static CustomVector3 ClampMagnitude(CustomVector3 vector, float maxLength)
@@ -174,14 +173,14 @@ public struct CustomVector3
 
     public static float Magnitude(CustomVector3 vector)
     {
-        return Mathf.Sqrt(((vector.x * vector.x) + (vector.y * vector.y)) + (vector.z * vector.z));
+        return CustomMathf.Sqrt(((vector.x * vector.x) + (vector.y * vector.y)) + (vector.z * vector.z));
     }
 
     public float magnitude
     {
         get
         {
-            return Mathf.Sqrt(((this.x * this.x) + (this.y * this.y)) + (this.z * this.z));
+            return CustomMathf.Sqrt(((this.x * this.x) + (this.y * this.y)) + (this.z * this.z));
         }
     }
     public static float SqrMagnitude(CustomVector3 vector)
@@ -198,12 +197,12 @@ public struct CustomVector3
     }
     public static CustomVector3 Min(CustomVector3 lhs, CustomVector3 rhs)
     {
-        return new CustomVector3(Mathf.Min(lhs.x, rhs.x), Mathf.Min(lhs.y, rhs.y), Mathf.Min(lhs.z, rhs.z));
+        return new CustomVector3(CustomMathf.Min(lhs.x, rhs.x), CustomMathf.Min(lhs.y, rhs.y), CustomMathf.Min(lhs.z, rhs.z));
     }
 
     public static CustomVector3 Max(CustomVector3 lhs, CustomVector3 rhs)
     {
-        return new CustomVector3(Mathf.Max(lhs.x, rhs.x), Mathf.Max(lhs.y, rhs.y), Mathf.Max(lhs.z, rhs.z));
+        return new CustomVector3(CustomMathf.Max(lhs.x, rhs.x), CustomMathf.Max(lhs.y, rhs.y), CustomMathf.Max(lhs.z, rhs.z));
     }
 
     public static CustomVector3 zero { get; private set; }

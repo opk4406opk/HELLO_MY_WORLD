@@ -1,8 +1,0 @@
-@startuml
-title : Hello My World GameServer Host & Server Flow
-host -> server : connect to server
-host <-- server : success
-host -> server : send Init map datas
-host <-- server : success , 서버에서는 host가 보내준 맵 데이터를 저장.
-
-@enduml

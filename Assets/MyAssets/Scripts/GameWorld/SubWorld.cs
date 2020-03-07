@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using MapGenLib;
+using Unity.Collections;
 
 public class ChunkSlot
 {
@@ -32,7 +33,8 @@ public class SubWorld : MonoBehaviour
 
     #region world infomation.
     public string WorldName { get; private set; }
-    public string UniqueID { get; private set; }
+    [ReadOnly]
+    public string UniqueID;
     // 월드맵 위치값( == 오프셋값).
     public Vector3 OffsetCoordinate { get; private set; }
     // 실제 게임오브젝트로서 존재하는 위치값.
@@ -262,12 +264,12 @@ public class SubWorld : MonoBehaviour
             return true;
         });
     }
-
-    //void OnDrawGizmos()
-    //{
-    //    CustomOctreeInstance.DrawFullTree();
-    //}
-
+//#if UNITY_EDITOR
+//    void OnDrawGizmos()
+//    {
+//        CustomOctreeInstance.DrawFullTree();
+//    }
+//#endif
     private IEnumerator LoadTerrainChunks(Action finishCallBack = null)
     {
         KojeomLogger.DebugLog(string.Format("World name : {0}, Chunk 로드를 시작합니다.", WorldName), LOG_TYPE.DEBUG_TEST);
