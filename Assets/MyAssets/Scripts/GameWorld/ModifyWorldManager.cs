@@ -125,34 +125,30 @@ public class ModifyWorldManager : MonoBehaviour
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
            
             // 패킷 전송.
-            GameNetworkManager.GetInstance().RequestChangeSubWorldBlock(packetData, async ()=> 
+            GameNetworkManager.GetInstance().RequestChangeSubWorldBlock(packetData, ()=> 
             {
-                await Task.Run(() =>
+                if (bCreate == true)
                 {
-                    if (bCreate == true)
-                    {
-                        // 임시코드
-                        SelectWorldInstance.CustomOctreeInstance.Add(collideInfo.HitBlockCenter + new Vector3(0, 1.0f, 0));
-                        SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
-                        SelectWorldInstance.WorldBlockData[blockX, blockY + 1, blockZ].bRendered = true;
-
-                    }
-                    else
-                    {
-                        // 파티클 테스트.
-                        //ParticleEffectSpawnParams spawnParams;
-                        //spawnParams.ParticleType = GameParticleType.DirtSplatter;
-                        //spawnParams.SpawnLocation = collideInfo.CollisionPoint;
-                        //spawnParams.SpawnRotation = Quaternion.identity;
-                        //spawnParams.bLooping = false;
-                        //spawnParams.bStart = true;
-                        //GameParticleEffectManager.Instance.SpawnParticleEffect(spawnParams);
-                        //
-                        SelectWorldInstance.CustomOctreeInstance.Delete(collideInfo.HitBlockCenter);
-                        SetBlockForDelete(blockX, blockY, blockZ, blockType);
-                        SelectWorldInstance.WorldBlockData[blockX, blockY, blockZ].bRendered = false;
-                    }
-                });
+                    // 임시코드
+                    SelectWorldInstance.CustomOctreeInstance.Add(collideInfo.HitBlockCenter + new Vector3(0, 1.0f, 0));
+                    SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
+                    SelectWorldInstance.WorldBlockData[blockX, blockY + 1, blockZ].bRendered = true;
+                }
+                else
+                {
+                    // 파티클 테스트.
+                    //ParticleEffectSpawnParams spawnParams;
+                    //spawnParams.ParticleType = GameParticleType.DirtSplatter;
+                    //spawnParams.SpawnLocation = collideInfo.CollisionPoint;
+                    //spawnParams.SpawnRotation = Quaternion.identity;
+                    //spawnParams.bLooping = false;
+                    //spawnParams.bStart = true;
+                    //GameParticleEffectManager.Instance.SpawnParticleEffect(spawnParams);
+                    //
+                    SelectWorldInstance.CustomOctreeInstance.Delete(collideInfo.HitBlockCenter);
+                    SetBlockForDelete(blockX, blockY, blockZ, blockType);
+                    SelectWorldInstance.WorldBlockData[blockX, blockY, blockZ].bRendered = false;
+                }
             });
         }
     }
