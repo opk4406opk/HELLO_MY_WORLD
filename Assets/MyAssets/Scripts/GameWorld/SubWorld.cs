@@ -9,10 +9,6 @@ public class ChunkSlot
     public AChunk[] Chunks = new AChunk[(int)ChunkType.COUNT];
 }
 
-public struct MakeWorldParam
-{
-    public int BaseOffset;
-}
 /// <summary>
 /// 게임내 Sub-월드를 생성 및 관리하는 클래스.
 /// </summary>

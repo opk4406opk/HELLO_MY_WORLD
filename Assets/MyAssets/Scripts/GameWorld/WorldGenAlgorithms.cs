@@ -12,13 +12,15 @@ public class WorldGenAlgorithms
         public BlockTileType BlockType;
         public List<int> Layers;
     }
+    public struct MakeWorldParam
+    {
+        public int BaseOffset;
+    }
 
-    public static TerrainValue[,] GenerateNormalTerrain(int areaSizeX, int areaSizeZ, int generateNumber = 800)
+    public static TerrainValue[,] GenerateNormalTerrain(int areaSizeX, int areaSizeZ, int subWorldLayerNum, int subWorldSizeY, int generateNumber = 800)
     {
         int[,] xzPlane = new int[areaSizeX, areaSizeZ];
         //
-        int subWorldLayerNum = WorldMapDataFile.Instance.MapData.SubWorldLayer;
-        int subWorldSizeY = WorldConfigFile.Instance.GetConfig().SubWorldSizeY;
         int rangeValue = subWorldLayerNum * subWorldSizeY;
         int rangeHeightMin = -1 * rangeValue;
         int rangeHeightMax = rangeValue;
@@ -81,7 +83,7 @@ public class WorldGenAlgorithms
         {
             for(int z = 0; z < areaSizeZ; z++)
             {
-                terrainValues[x, z].BlockType = WorldGenerateUtils.CalcTerrainValueToBlockType(xzPlane[x, z]);
+                terrainValues[x, z].BlockType = WorldGenerateUtils.CalcTerrainValueToBlockType(xzPlane[x, z], subWorldLayerNum, subWorldSizeY);
                 terrainValues[x, z].Layers = new List<int>();
                 int absTerrainScalaValue = Mathf.Abs(xzPlane[x, z]);
                 for (int layer = 0; layer < subWorldLayerNum; layer++)

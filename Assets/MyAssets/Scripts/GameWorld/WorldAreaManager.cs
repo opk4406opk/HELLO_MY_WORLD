@@ -97,7 +97,9 @@ public class WorldAreaManager : MonoBehaviour
             List<WorldGenAlgorithms.TerrainValue[,]> mapDatas = new List<WorldGenAlgorithms.TerrainValue[,]>();
             foreach(var param in paramGroup)
             {
-                mapDatas.Add(WorldGenAlgorithms.GenerateNormalTerrain(param.AreaSizeX, param.AreaSizeZ, 900));
+                mapDatas.Add(WorldGenAlgorithms.GenerateNormalTerrain(param.AreaSizeX, param.AreaSizeZ,
+                             WorldMapDataFile.Instance.MapData.SubWorldLayer,
+                             WorldConfigFile.Instance.GetConfig().SubWorldSizeY, 900));
             }
             return mapDatas;    
         });
