@@ -97,7 +97,7 @@ public class WindowInput : AInput
         if (Input.GetKey(KeyCode.S)) moveKeyCodes.Add(KeyCode.S);
         if (Input.GetKey(KeyCode.A)) moveKeyCodes.Add(KeyCode.A);
         if (Input.GetKey(KeyCode.D)) moveKeyCodes.Add(KeyCode.D);
-        CreateWindowInputData(INPUT_STATE.CHARACTER_MOVE, moveKeyCodes);
+        if(moveKeyCodes.Count > 0) CreateWindowInputData(INPUT_STATE.CHARACTER_MOVE, moveKeyCodes);
         ////////////////////////////////////////////////////////////////////////////////////////
         if (Input.GetKeyDown(KeyCode.Space))
         {
