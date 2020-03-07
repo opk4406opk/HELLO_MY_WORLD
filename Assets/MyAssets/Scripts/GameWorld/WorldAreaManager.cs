@@ -209,9 +209,9 @@ public class WorldAreaManager : MonoBehaviour
         int offsetY = ceilPosY / gameWorldConfig.SubWorldSizeY;
         int offsetZ = ceilPosZ / gameWorldConfig.SubWorldSizeZ;
         // calc..
-        int x = ceilPosX - (offsetX * gameWorldConfig.SubWorldSizeX * WorldMapDataFile.Instance.MapData.WorldAreaRow);
-        int y = ceilPosY - (offsetY * gameWorldConfig.SubWorldSizeY * WorldMapDataFile.Instance.MapData.WorldAreaLayer);
-        int z = ceilPosZ - (offsetZ * gameWorldConfig.SubWorldSizeZ * WorldMapDataFile.Instance.MapData.WorldAreaColumn);
+        int x = Mathf.Abs(ceilPosX - (offsetX * gameWorldConfig.SubWorldSizeX));
+        int y = Mathf.Abs(ceilPosY - (offsetY * gameWorldConfig.SubWorldSizeY));
+        int z = Mathf.Abs(ceilPosZ - (offsetZ * gameWorldConfig.SubWorldSizeZ));
         // clamp
         x = Mathf.Clamp(x, 0, gameWorldConfig.SubWorldSizeX);
         y = Mathf.Clamp(y, 0, gameWorldConfig.SubWorldSizeY);
