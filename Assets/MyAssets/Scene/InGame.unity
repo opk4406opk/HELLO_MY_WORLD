@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1025651491}
-  m_IndirectSpecularColor: {r: 0.27805433, g: 0.57327807, b: 0.8603462, a: 1}
+  m_IndirectSpecularColor: {r: 0.25737235, g: 0.549876, b: 0.8624784, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -96,6 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 0
 --- !u!196 &5
@@ -1959,8 +1960,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 776387290}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 0.3679245, g: 0.3679245, b: 0.3679245, a: 1}
   m_Intensity: 0.5
   m_Range: 10
@@ -2164,8 +2166,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1025651490}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 0.97794116, g: 0.90295905, b: 0.589641, a: 1}
   m_Intensity: 1.5
   m_Range: 10
