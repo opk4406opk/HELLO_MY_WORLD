@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="ServerSoruces\ConstFilePath.cs" />
     <Compile Include="ServerSoruces\DataFiles\GameConfigDataFile.cs" />
+    <Compile Include="ServerSoruces\DataFiles\GameWorldMapDataFile.cs" />
     <Compile Include="ServerSoruces\GameServerManager.cs" />
     <Compile Include="ServerSoruces\GameUser.cs" />
     <Compile Include="ServerSoruces\GameWorldMapManager.cs" />
