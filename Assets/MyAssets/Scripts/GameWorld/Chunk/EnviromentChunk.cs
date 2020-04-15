@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using MapGenLib;
 public class EnviromentChunk : AChunk
 {
     protected override void FixedUpdate()

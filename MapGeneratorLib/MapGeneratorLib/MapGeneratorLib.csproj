@@ -34,6 +34,9 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
@@ -49,4 +52,12 @@
     <Compile Include="Sources\WorldGenerateUtils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "$(TargetDir)$(TargetFileName)" "C:\Workspaces\Unity3DWorkSpace\HELLO_MY_WORLD\Assets\Plugins";
+copy /Y "$(TargetDir)$(TargetFileName)" "C:\Workspaces\Unity3DWorkSpace\HELLO_MY_WORLD\KojeomNetWorkSpace\HMWGameServer\libs";</PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -42,6 +42,8 @@
             this.tbx_lastSavePath = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.panel_ControlOption = new System.Windows.Forms.Panel();
+            this.tbx_lastestServerWorldMapPath = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.tbx_latestServerConfigPath = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -53,6 +55,8 @@
             this.panel_MapViewer = new System.Windows.Forms.Panel();
             this.btn_SelectServerConfigPath = new System.Windows.Forms.Button();
             this.dig_serverConfigPath = new System.Windows.Forms.FolderBrowserDialog();
+            this.btn_selectServerMapDataPath = new System.Windows.Forms.Button();
+            this.dig_serverMapDataPath = new System.Windows.Forms.FolderBrowserDialog();
             this.panel_ControlOption.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -134,9 +138,9 @@
             // 
             this.btn_openSaveFilePathDig.Location = new System.Drawing.Point(555, 368);
             this.btn_openSaveFilePathDig.Name = "btn_openSaveFilePathDig";
-            this.btn_openSaveFilePathDig.Size = new System.Drawing.Size(143, 74);
+            this.btn_openSaveFilePathDig.Size = new System.Drawing.Size(220, 74);
             this.btn_openSaveFilePathDig.TabIndex = 8;
-            this.btn_openSaveFilePathDig.Text = "Select SavePath";
+            this.btn_openSaveFilePathDig.Text = "Select ClientWorldMapSavePath";
             this.btn_openSaveFilePathDig.UseVisualStyleBackColor = true;
             this.btn_openSaveFilePathDig.Click += new System.EventHandler(this.btn_openSaveFilePathDig_Click);
             // 
@@ -151,24 +155,26 @@
             // 
             // tbx_lastSavePath
             // 
-            this.tbx_lastSavePath.Location = new System.Drawing.Point(154, 260);
+            this.tbx_lastSavePath.Location = new System.Drawing.Point(154, 228);
             this.tbx_lastSavePath.Multiline = true;
             this.tbx_lastSavePath.Name = "tbx_lastSavePath";
             this.tbx_lastSavePath.ReadOnly = true;
-            this.tbx_lastSavePath.Size = new System.Drawing.Size(344, 59);
+            this.tbx_lastSavePath.Size = new System.Drawing.Size(344, 44);
             this.tbx_lastSavePath.TabIndex = 10;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 263);
+            this.label4.Location = new System.Drawing.Point(3, 228);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(145, 12);
+            this.label4.Size = new System.Drawing.Size(237, 12);
             this.label4.TabIndex = 11;
-            this.label4.Text = "Lastest SavePath(Client)";
+            this.label4.Text = "Lastest ClientWorldMap SavePath(Client)";
             // 
             // panel_ControlOption
             // 
+            this.panel_ControlOption.Controls.Add(this.tbx_lastestServerWorldMapPath);
+            this.panel_ControlOption.Controls.Add(this.label9);
             this.panel_ControlOption.Controls.Add(this.tbx_latestServerConfigPath);
             this.panel_ControlOption.Controls.Add(this.label8);
             this.panel_ControlOption.Controls.Add(this.label5);
@@ -187,22 +193,40 @@
             this.panel_ControlOption.Controls.Add(this.label2);
             this.panel_ControlOption.Location = new System.Drawing.Point(12, 263);
             this.panel_ControlOption.Name = "panel_ControlOption";
-            this.panel_ControlOption.Size = new System.Drawing.Size(501, 411);
+            this.panel_ControlOption.Size = new System.Drawing.Size(501, 423);
             this.panel_ControlOption.TabIndex = 12;
+            // 
+            // tbx_lastestServerWorldMapPath
+            // 
+            this.tbx_lastestServerWorldMapPath.Location = new System.Drawing.Point(153, 364);
+            this.tbx_lastestServerWorldMapPath.Multiline = true;
+            this.tbx_lastestServerWorldMapPath.Name = "tbx_lastestServerWorldMapPath";
+            this.tbx_lastestServerWorldMapPath.ReadOnly = true;
+            this.tbx_lastestServerWorldMapPath.Size = new System.Drawing.Size(344, 47);
+            this.tbx_lastestServerWorldMapPath.TabIndex = 21;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(3, 345);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(205, 12);
+            this.label9.TabIndex = 20;
+            this.label9.Text = "Lastest SaveWorldMapPath(Server)";
             // 
             // tbx_latestServerConfigPath
             // 
-            this.tbx_latestServerConfigPath.Location = new System.Drawing.Point(154, 342);
+            this.tbx_latestServerConfigPath.Location = new System.Drawing.Point(153, 284);
             this.tbx_latestServerConfigPath.Multiline = true;
             this.tbx_latestServerConfigPath.Name = "tbx_latestServerConfigPath";
             this.tbx_latestServerConfigPath.ReadOnly = true;
-            this.tbx_latestServerConfigPath.Size = new System.Drawing.Size(344, 57);
+            this.tbx_latestServerConfigPath.Size = new System.Drawing.Size(344, 47);
             this.tbx_latestServerConfigPath.TabIndex = 19;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(-2, 342);
+            this.label8.Location = new System.Drawing.Point(-2, 288);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(149, 12);
             this.label8.TabIndex = 18;
@@ -274,12 +298,27 @@
             this.btn_SelectServerConfigPath.UseVisualStyleBackColor = true;
             this.btn_SelectServerConfigPath.Click += new System.EventHandler(this.Btn_SelectServerConfigPath_Click);
             // 
+            // btn_selectServerMapDataPath
+            // 
+            this.btn_selectServerMapDataPath.Location = new System.Drawing.Point(555, 538);
+            this.btn_selectServerMapDataPath.Name = "btn_selectServerMapDataPath";
+            this.btn_selectServerMapDataPath.Size = new System.Drawing.Size(199, 66);
+            this.btn_selectServerMapDataPath.TabIndex = 15;
+            this.btn_selectServerMapDataPath.Text = "Select ServerMapData Path";
+            this.btn_selectServerMapDataPath.UseVisualStyleBackColor = true;
+            this.btn_selectServerMapDataPath.Click += new System.EventHandler(this.Btn_selectServerMapDataPath_Click);
+            // 
+            // dig_serverMapDataPath
+            // 
+            this.dig_serverMapDataPath.HelpRequest += new System.EventHandler(this.Dig_serverMapDataPath_HelpRequest);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1023, 686);
+            this.ClientSize = new System.Drawing.Size(1023, 698);
+            this.Controls.Add(this.btn_selectServerMapDataPath);
             this.Controls.Add(this.btn_SelectServerConfigPath);
             this.Controls.Add(this.panel_MapViewer);
             this.Controls.Add(this.panel_ControlOption);
@@ -324,6 +363,10 @@
         private System.Windows.Forms.FolderBrowserDialog dig_serverConfigPath;
         private System.Windows.Forms.TextBox tbx_latestServerConfigPath;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button btn_selectServerMapDataPath;
+        private System.Windows.Forms.FolderBrowserDialog dig_serverMapDataPath;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox tbx_lastestServerWorldMapPath;
     }
 }
 

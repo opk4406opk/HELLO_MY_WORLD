@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using MapGenLib;
 //                      X    Y     Z
 //root 노드 -> center(15.5, 15.5, 15.5)
 

@@ -58,41 +58,51 @@ namespace MapTool
 
             if (File.Exists(SaveSlotFile.SaveFilePath) == true &&
                 string.Equals(dig_folderBrowser.SelectedPath, string.Empty) == true &&
-                string.Equals(dig_serverConfigPath.SelectedPath, string.Empty) == true)
+                string.Equals(dig_serverConfigPath.SelectedPath, string.Empty) == true &&
+                string.Equals(dig_serverMapDataPath.SelectedPath, string.Empty) == true)
             {
                 using (var SaveFileStream = new FileStream(SaveSlotFile.SaveFilePath, FileMode.Open))
                 {
                     SaveSlotFileInstance = BinaryFormatterInstance.Deserialize(SaveFileStream) as SaveSlotFile;
                     MapToolPath.SubWorldFilePath = SaveSlotFileInstance.LastestClientSubWorldSavePath;
+                    MapToolPath.ServerSubWorldFilePath = SaveSlotFileInstance.LastestServerSubWorldSavePath;
                     MapToolPath.ClientWorldConfigFilePath = SaveSlotFileInstance.LastestClientWorldConfgSavePath;
                     MapToolPath.ServerWorldConfigFilePath = SaveSlotFileInstance.LastestServerWorldConfigSavePath;
                 }
             }
             else if (string.Equals(dig_folderBrowser.SelectedPath, string.Empty) == false &&
-                     string.Equals(dig_serverConfigPath.SelectedPath, string.Empty) == false)
+                     string.Equals(dig_serverConfigPath.SelectedPath, string.Empty) == false &&
+                      string.Equals(dig_serverMapDataPath.SelectedPath, string.Empty) == false)
             {
                 MapToolPath.SubWorldFilePath = string.Format("{0}//WorldMapData.json", dig_folderBrowser.SelectedPath);
                 MapToolPath.ClientWorldConfigFilePath = string.Format("{0}//WorldConfigData.json", dig_folderBrowser.SelectedPath);
                 MapToolPath.ServerWorldConfigFilePath = string.Format("{0}//ServerConfig.json", dig_serverConfigPath.SelectedPath);
+                MapToolPath.ServerSubWorldFilePath = string.Format("{0}//ServerWorldMapData.json", dig_serverMapDataPath.SelectedPath);
             }
             else
             {
                 MapToolPath.SubWorldFilePath = ".//WorldMapData.json";
                 MapToolPath.ClientWorldConfigFilePath = ".//WorldConfigData.json";
                 MapToolPath.ServerWorldConfigFilePath = ".//ServerConfig.json";
+                MapToolPath.ServerSubWorldFilePath = ".//ServerWorldMapData.json";
             }
 
             MapDataGeneratorInstance.Init(mapGenData);
-            if (MapDataGeneratorInstance.Generate())
+            if (MapDataGeneratorInstance.Generate() == true)
             {
                 using (var SaveFileStream = new FileStream(SaveSlotFile.SaveFilePath, FileMode.OpenOrCreate))
                 {
                     SaveSlotFileInstance.LastestClientSubWorldSavePath = MapToolPath.SubWorldFilePath;
                     SaveSlotFileInstance.LastestServerWorldConfigSavePath = MapToolPath.ServerWorldConfigFilePath;
                     SaveSlotFileInstance.LastestClientWorldConfgSavePath = MapToolPath.ClientWorldConfigFilePath;
+                    SaveSlotFileInstance.LastestServerSubWorldSavePath = MapToolPath.ServerSubWorldFilePath;
                     BinaryFormatterInstance.Serialize(SaveFileStream, SaveSlotFileInstance);
                 }
                 tbx_logBox.AppendText(string.Format("[LOG] Success MapData Generate. \n"));
+                //
+                tbx_lastSavePath.Text = SaveSlotFileInstance.LastestClientSubWorldSavePath;
+                tbx_latestServerConfigPath.Text = SaveSlotFileInstance.LastestServerWorldConfigSavePath;
+                tbx_lastestServerWorldMapPath.Text = SaveSlotFileInstance.LastestServerSubWorldSavePath;
             }
         }
 
@@ -101,7 +111,7 @@ namespace MapTool
             var ret = dig_folderBrowser.ShowDialog();
             if (ret == DialogResult.OK)
             {
-                tbx_logBox.AppendText(string.Format("[LOG] Select folder Path : {0} \n", dig_folderBrowser.SelectedPath));
+                tbx_logBox.AppendText(string.Format("\n[LOG] Select folder Path : {0} \n", dig_folderBrowser.SelectedPath));
             }
         }
 
@@ -114,6 +124,7 @@ namespace MapTool
                     SaveSlotFileInstance = BinaryFormatterInstance.Deserialize(SaveFileStream) as SaveSlotFile;
                     tbx_lastSavePath.Text = SaveSlotFileInstance.LastestClientSubWorldSavePath;
                     tbx_latestServerConfigPath.Text = SaveSlotFileInstance.LastestServerWorldConfigSavePath;
+                    tbx_lastestServerWorldMapPath.Text = SaveSlotFileInstance.LastestServerSubWorldSavePath;
                     SaveFileStream.Close();
                 }
             }
@@ -134,7 +145,21 @@ namespace MapTool
             var ret = dig_serverConfigPath.ShowDialog();
             if (ret == DialogResult.OK)
             {
-                tbx_logBox.AppendText(string.Format("[LOG] Select ServerConfig folder Path : {0} \n", dig_serverConfigPath.SelectedPath));
+                tbx_logBox.AppendText(string.Format("\n[LOG] Select ServerConfig folder Path : {0} \n", dig_serverConfigPath.SelectedPath));
+            }
+        }
+
+        private void Dig_serverMapDataPath_HelpRequest(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Btn_selectServerMapDataPath_Click(object sender, EventArgs e)
+        {
+            var ret = dig_serverMapDataPath.ShowDialog();
+            if (ret == DialogResult.OK)
+            {
+                tbx_logBox.AppendText(string.Format("\n[LOG] Select ServerWorldMap folder Path : {0} \n", dig_serverMapDataPath.SelectedPath));
             }
         }
     }
@@ -148,12 +173,14 @@ namespace MapTool
         public string LastestClientSubWorldSavePath;
         public string LastestClientWorldConfgSavePath;
         public string LastestServerWorldConfigSavePath;
+        public string LastestServerSubWorldSavePath;
     }
 
     public class MapToolPath
     {
         //
         public static string SubWorldFilePath;
+        public static string ServerSubWorldFilePath;
         public static string ClientWorldConfigFilePath;
         public static string ServerWorldConfigFilePath;
         //

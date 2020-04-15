@@ -102,37 +102,6 @@ namespace HMWGameServer
             }
         }
 
-        private async void AsyncMakeSubWorldDataPackets()
-        {
-            var packets = await AsyncMakeSubworldDataPackets_Internal();
-            foreach(CPacket packet in packets)
-            {
-                Send(packet);
-            }
-        }
-
-        private async Task<List<CPacket>> AsyncMakeSubworldDataPackets_Internal()
-        {
-            return await Task.Run(() => {
-                List<CPacket> packets = new List<CPacket>();
-                var mapData = GameWorldMapManager.GetInstance().GetWorldMapData();
-                foreach (var data in mapData)
-                {
-                    int addValue = 1024;
-                    CPacket pushSubWorldData = CPacket.Create((short)NetProtocol.SUBWORLD_DATAS_ACK, data.SubWorldDataFileBytes.Length + addValue);
-                    // size.
-                    pushSubWorldData.Push(data.SubWorldDataFileBytes.Length);
-                    // file bytes.
-                    for (int idx = 0; idx < data.SubWorldDataFileBytes.Length; idx++)
-                    {
-                        pushSubWorldData.Push(data.SubWorldDataFileBytes[idx]);
-                    }
-                    packets.Add(pushSubWorldData);
-                }
-                return packets;
-            });
-        }
-
         public void OnRemoved()
         {
             GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Session is stop. NetType : {0} ,NetID : {1}", NetType, NetIdentityNumber));

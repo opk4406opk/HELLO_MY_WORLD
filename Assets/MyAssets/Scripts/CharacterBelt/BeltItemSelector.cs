@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using MapGenLib;
 public abstract class ABeltItem : MonoBehaviour
 {
     protected UIButton uiButton;

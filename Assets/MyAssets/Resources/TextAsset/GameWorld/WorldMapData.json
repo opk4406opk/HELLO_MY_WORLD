@@ -1,8 +1,8 @@
 {
   "Properties": {
-    "WorldAreaRow": 3,
-    "WorldAreaColumn": 3,
-    "WorldAreaLayer": 1,
+    "WorldAreaRow": 2,
+    "WorldAreaColumn": 2,
+    "WorldAreaLayer": 2,
     "SubWorldRow": 2,
     "SubWorldColumn": 2,
     "SubWorldLayer": 2
@@ -155,10 +155,10 @@
       ]
     },
     {
-      "UNIQUE_ID": "unique_0:0:2",
+      "UNIQUE_ID": "unique_0:1:0",
       "OFFSET_X": "0",
-      "OFFSET_Y": "0",
-      "OFFSET_Z": "2",
+      "OFFSET_Y": "1",
+      "OFFSET_Z": "0",
       "AREA_NAME": "WORLD_AREA_2",
       "SubWorldDatas": [
         {
@@ -228,10 +228,10 @@
       ]
     },
     {
-      "UNIQUE_ID": "unique_1:0:0",
-      "OFFSET_X": "1",
-      "OFFSET_Y": "0",
-      "OFFSET_Z": "0",
+      "UNIQUE_ID": "unique_0:1:1",
+      "OFFSET_X": "0",
+      "OFFSET_Y": "1",
+      "OFFSET_Z": "1",
       "AREA_NAME": "WORLD_AREA_3",
       "SubWorldDatas": [
         {
@@ -301,10 +301,10 @@
       ]
     },
     {
-      "UNIQUE_ID": "unique_1:0:1",
+      "UNIQUE_ID": "unique_1:0:0",
       "OFFSET_X": "1",
       "OFFSET_Y": "0",
-      "OFFSET_Z": "1",
+      "OFFSET_Z": "0",
       "AREA_NAME": "WORLD_AREA_4",
       "SubWorldDatas": [
         {
@@ -374,10 +374,10 @@
       ]
     },
     {
-      "UNIQUE_ID": "unique_1:0:2",
+      "UNIQUE_ID": "unique_1:0:1",
       "OFFSET_X": "1",
       "OFFSET_Y": "0",
-      "OFFSET_Z": "2",
+      "OFFSET_Z": "1",
       "AREA_NAME": "WORLD_AREA_5",
       "SubWorldDatas": [
         {
@@ -447,9 +447,9 @@
       ]
     },
     {
-      "UNIQUE_ID": "unique_2:0:0",
-      "OFFSET_X": "2",
-      "OFFSET_Y": "0",
+      "UNIQUE_ID": "unique_1:1:0",
+      "OFFSET_X": "1",
+      "OFFSET_Y": "1",
       "OFFSET_Z": "0",
       "AREA_NAME": "WORLD_AREA_6",
       "SubWorldDatas": [
@@ -520,9 +520,9 @@
       ]
     },
     {
-      "UNIQUE_ID": "unique_2:0:1",
-      "OFFSET_X": "2",
-      "OFFSET_Y": "0",
+      "UNIQUE_ID": "unique_1:1:1",
+      "OFFSET_X": "1",
+      "OFFSET_Y": "1",
       "OFFSET_Z": "1",
       "AREA_NAME": "WORLD_AREA_7",
       "SubWorldDatas": [
@@ -588,79 +588,6 @@
           "OFFSET_Y": "1",
           "OFFSET_Z": "1",
           "WORLD_NAME": "AREA_7_SUB_WORLD_7",
-          "IS_SURFACE": "True"
-        }
-      ]
-    },
-    {
-      "UNIQUE_ID": "unique_2:0:2",
-      "OFFSET_X": "2",
-      "OFFSET_Y": "0",
-      "OFFSET_Z": "2",
-      "AREA_NAME": "WORLD_AREA_8",
-      "SubWorldDatas": [
-        {
-          "UNIQUE_ID": "unique_0:0:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_8_SUB_WORLD_0",
-          "IS_SURFACE": "False"
-        },
-        {
-          "UNIQUE_ID": "unique_0:0:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_8_SUB_WORLD_1",
-          "IS_SURFACE": "False"
-        },
-        {
-          "UNIQUE_ID": "unique_0:1:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_8_SUB_WORLD_2",
-          "IS_SURFACE": "True"
-        },
-        {
-          "UNIQUE_ID": "unique_0:1:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_8_SUB_WORLD_3",
-          "IS_SURFACE": "True"
-        },
-        {
-          "UNIQUE_ID": "unique_1:0:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_8_SUB_WORLD_4",
-          "IS_SURFACE": "False"
-        },
-        {
-          "UNIQUE_ID": "unique_1:0:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_8_SUB_WORLD_5",
-          "IS_SURFACE": "False"
-        },
-        {
-          "UNIQUE_ID": "unique_1:1:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_8_SUB_WORLD_6",
-          "IS_SURFACE": "True"
-        },
-        {
-          "UNIQUE_ID": "unique_1:1:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_8_SUB_WORLD_7",
           "IS_SURFACE": "True"
         }
       ]

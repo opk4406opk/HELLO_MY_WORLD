@@ -33,7 +33,7 @@ namespace MapGenLib
         {
             t = CustomMathf.Clamp01(t);
             return new CustomVector3(a.x + ((b.x - a.x) * t), a.y + ((b.y - a.y) * t), a.z + ((b.z - a.z) * t));
-        }
+        } 
 
         public static CustomVector3 LerpUnclamped(CustomVector3 a, CustomVector3 b, float t)
         {

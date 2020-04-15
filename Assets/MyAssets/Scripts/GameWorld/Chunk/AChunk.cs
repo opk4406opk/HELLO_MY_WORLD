@@ -1,15 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public enum ChunkType
-{
-	TERRAIN = 0, // 지형 ( 동굴, 땅..)
-	WATER = 1, // 물.
-    ENVIROMENT = 2, // 환경 ( 나무, 풀..)
-	NONE = 3,
-	COUNT = NONE
-}
+using MapGenLib;
 
 public abstract class AChunk : MonoBehaviour {
 

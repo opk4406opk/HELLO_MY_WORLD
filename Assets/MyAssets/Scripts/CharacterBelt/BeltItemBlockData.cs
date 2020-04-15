@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using MapGenLib;
 
 /// <summary>
 /// 게임내 사용자의 블록 belt에 등록되어있는 블록정보.

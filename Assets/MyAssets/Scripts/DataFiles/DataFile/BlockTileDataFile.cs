@@ -1,27 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using MapGenLib;
 
-/// <summary>
-/// 블록 tile의 type 클래스.
-/// </summary>
-public enum BlockTileType
-{
-    NONE = 0,
-    EMPTY = 1,
-    GRASS = 2,
-    STONE_BIG = 3,
-    STONE_SMALL = 4,
-    SAND = 5,
-    RED_STONE = 6,
-    WOOD = 7,
-    STONE_GOLD = 8,
-    STONE_IRON = 9,
-    STONE_SILVER = 10,
-    NORMAL_TREE_LEAF = 11,
-    SQAURE_TREE_LEAF = 12,
-    WATER = 13
-}
+
 /// <summary>
 /// Tile 데이터를 주고받기 위한 내부 통신용 구조체.
 /// </summary>

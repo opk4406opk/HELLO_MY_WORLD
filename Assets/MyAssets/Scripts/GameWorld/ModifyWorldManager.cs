@@ -6,6 +6,7 @@ using System.Data;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using MapGenLib;
 
 /// <summary>
 /// 게임내 사용자가 월드 블록을 수정/삭제를 관리하는 클래스.
@@ -33,7 +34,7 @@ public class ModifyWorldManager : MonoBehaviour
             //
             subWorld.WorldBlockData[blockIndex_X, blockIndex_Y, blockIndex_Z].Type = modifiedTileValue;
             subWorld.WorldBlockData[blockIndex_X, blockIndex_Y, blockIndex_Z].Durability = blockTileInfo.Durability;
-            Vector3 centerPos = subWorld.WorldBlockData[blockIndex_X, blockIndex_Y, blockIndex_Z].GetCenterPosition();
+            Vector3 centerPos = KojeomUtility.ConvertCustomToVector3(subWorld.WorldBlockData[blockIndex_X, blockIndex_Y, blockIndex_Z].GetCenterPosition());
             if ((BlockTileType)modifiedTileValue == BlockTileType.EMPTY)
             {
                 subWorld.WorldBlockData[blockIndex_X, blockIndex_Y, blockIndex_Z].bRendered = false;

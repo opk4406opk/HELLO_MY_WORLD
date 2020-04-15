@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
+using MapGenLib;
 
 namespace HMWGameServer
 {
@@ -13,21 +14,22 @@ namespace HMWGameServer
     class WorldArea
     {
         public string UniqueID;
+        public int AreaSizeX;
+        public int AreaSizeZ;
         public Dictionary<string, SubWorld> SubWorlds;
     }
     [Serializable]
     class SubWorld
     {
         public string UniqueID;
-        public byte[,,] Blocks;
-        public string SavePath;
+        public Block[,,] Blocks;
     }
     [Serializable]
     class SubWorldDataFileFormat
     {
         public string AreaID;
         public string SubWorldID;
-        public byte[,,] BlockTypes;
+        public Block[,,] Blocks;
     }
     struct SubWorldPacketData
     {
@@ -107,6 +109,7 @@ namespace HMWGameServer
         {
             return await Task.Run(() =>
             {
+                ConfigFileStruct config = GameConfigDataFile.GetInstance().GetConfig();
                 // init
                 WorldAreaMap = new Dictionary<string, WorldArea>();
                 // make.
@@ -118,8 +121,10 @@ namespace HMWGameServer
                         {
                             WorldArea worldArea = new WorldArea();
                             worldArea.UniqueID = Utils.MakeUniqueID(areaX, areaY, areaZ);
+                            worldArea.AreaSizeX = config.SubWorldRow * config.SubWorldSizeX;
+                            worldArea.AreaSizeZ = config.SubWorldColumn * config.SubWorldSizeZ;
                             worldArea.SubWorlds = new Dictionary<string, SubWorld>();
-                            List<SubWorld> subWorldList = MakeSubWorld(worldArea.UniqueID);
+                            List<SubWorld> subWorldList = MakeDefaultSubWorld(worldArea.UniqueID);
                             foreach (var subWorld in subWorldList)
                             {
                                 worldArea.SubWorlds.Add(subWorld.UniqueID, subWorld);
@@ -128,11 +133,41 @@ namespace HMWGameServer
                         }
                     }
                 }
+                // setting data.
+                foreach(var pair in WorldAreaMap)
+                {
+                    string areaUniqueID = pair.Key;
+                    WorldArea worldAreaInst = pair.Value;
+                    if(worldAreaInst != null)
+                    {
+                        var normalTerrainData = WorldGenAlgorithms.GenerateNormalTerrain(worldAreaInst.AreaSizeX, worldAreaInst.AreaSizeZ,
+                                                                                         config.SubWorldLayer, config.SubWorldSizeY);
+                        foreach(var subWorldPair in worldAreaInst.SubWorlds)
+                        {
+                            string subWorldUniqueID = subWorldPair.Key;
+                            SubWorld subWorldInst = subWorldPair.Value;
+                            if(subWorldInst != null)
+                            {
+                                //int rangeY = normalTerrainData[x,z].Layers[(int)OffsetCoordinate.y];
+                                for (int y = 0; y < subWorldInst.Blocks.GetLength(1); y++)
+                                {
+                                    for (int x = 0; x < subWorldInst.Blocks.GetLength(0); x++)
+                                    {
+                                        for (int z = 0; z < subWorldInst.Blocks.GetLength(2); z++)
+                                        {
+                                            //subWorldInst.Blocks[x,y,z].Type = normalTerrainData[x, z].
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 return true;
             });
         }
 
-        private List<SubWorld> MakeSubWorld(string areaID)
+        private List<SubWorld> MakeDefaultSubWorld(string areaID)
         {
             lock(LockObject)
             {
@@ -145,10 +180,9 @@ namespace HMWGameServer
                         {
                             SubWorld subWorld = new SubWorld();
                             subWorld.UniqueID = Utils.MakeUniqueID(x, y, z);
-                            subWorld.Blocks = new byte[GameConfigDataFile.GetInstance().GetConfig().SubWorldSizeX,
+                            subWorld.Blocks = new Block[GameConfigDataFile.GetInstance().GetConfig().SubWorldSizeX,
                                                        GameConfigDataFile.GetInstance().GetConfig().SubWorldSizeY,
                                                        GameConfigDataFile.GetInstance().GetConfig().SubWorldSizeZ];
-                            subWorld.SavePath = SaveSubWorldFile(subWorld, areaID); // make data file.
                             subworldList.Add(subWorld);
                         }
                     }
@@ -166,14 +200,6 @@ namespace HMWGameServer
             return worldData;
         }
 
-        private byte[] LoadSubWorldFileBytes(string filePath)
-        {
-            FileStream fileStream = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.Read);
-            var bytes = Utils.ReadFully(fileStream);
-            fileStream.Close();
-            return bytes;
-        }
-
         private string SaveSubWorldFile(SubWorld subWorld, string AreaID)
         {
             Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
@@ -185,7 +211,7 @@ namespace HMWGameServer
 
             SubWorldDataFileFormat dataFile = new SubWorldDataFileFormat
             {
-                BlockTypes = subWorld.Blocks,
+                Blocks = subWorld.Blocks,
                 AreaID = AreaID,
                 SubWorldID = subWorld.UniqueID
             };
@@ -204,7 +230,7 @@ namespace HMWGameServer
                 if(worldArea != null)
                 {
                     worldArea.SubWorlds.TryGetValue(packetData.SubWorldID, out SubWorld subWorld);
-                    subWorld.Blocks[packetData.BlockIndex_X, packetData.BlockIndex_Y, packetData.BlockIndex_Z] = packetData.BlockTypeValue;
+                    subWorld.Blocks[packetData.BlockIndex_X, packetData.BlockIndex_Y, packetData.BlockIndex_Z].Type = packetData.BlockTypeValue;
                     // save subworld.
                     SaveSubWorldFile(subWorld, packetData.AreaID);
                     //
@@ -220,25 +246,5 @@ namespace HMWGameServer
            
         }
 
-        public List<SubWorldPacketData> GetWorldMapData()
-        {
-            lock(LockObject)
-            {
-                List<SubWorldPacketData> packetDatas = new List<SubWorldPacketData>();
-                foreach (var area in WorldAreaMap)
-                {
-                    WorldArea worldArea = area.Value;
-                    foreach (var sub in worldArea.SubWorlds)
-                    {
-                        SubWorld subWorld = sub.Value;
-                        SubWorldPacketData packetData;
-                        packetData.SubWorldDataFileBytes = LoadSubWorldFileBytes(subWorld.SavePath);
-                        packetData.Size = packetData.SubWorldDataFileBytes.Length;
-                        packetDatas.Add(packetData);
-                    }
-                }
-                return packetDatas;
-            }
-        }
     }
 }

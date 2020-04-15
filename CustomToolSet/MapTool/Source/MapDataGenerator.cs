@@ -188,7 +188,7 @@ namespace MapTool.Source
             }
             
             File.WriteAllText(MapToolPath.SubWorldFilePath, JsonConvert.SerializeObject(jsonFileData, Formatting.Indented));
-            
+            File.WriteAllText(MapToolPath.ServerSubWorldFilePath, JsonConvert.SerializeObject(jsonFileData, Formatting.Indented));
             return true;
         }
 

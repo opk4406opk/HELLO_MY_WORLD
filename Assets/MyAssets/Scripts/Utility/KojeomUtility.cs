@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using MapGenLib;
 
 public class KojeomUtility
 {
@@ -29,6 +30,15 @@ public class KojeomUtility
             }
         }
         return v;
+    }
+
+    public static Vector3 ConvertCustomToVector3(CustomVector3 customVec3)
+    {
+        Vector3 ret;
+        ret.x = customVec3.x;
+        ret.y = customVec3.y;
+        ret.z = customVec3.z;
+        return ret;
     }
 
     public static byte[] StructureToByteArray(object obj)
