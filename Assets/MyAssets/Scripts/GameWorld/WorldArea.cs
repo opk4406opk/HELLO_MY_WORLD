@@ -198,7 +198,7 @@ public class WorldArea : MonoBehaviour
 
     private void CreateArea(WorldAreaTerrainData worldAreaData)
     {
-        foreach(var subWorldData in worldAreaData.SubWorldDataList)
+        foreach(var subWorldData in worldAreaData.SubWorldDatas)
         {
             SubWorld subWorld = MakeNewSubWorldInstance();
             subWorld.OnFinishLoadChunks += OnFinishSubWorldLoadChunks;

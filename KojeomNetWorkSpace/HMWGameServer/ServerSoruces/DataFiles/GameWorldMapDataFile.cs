@@ -11,8 +11,6 @@ namespace HMWGameServer.ServerSoruces.DataFiles
 {
     public class WorldMapData
     {
-        public List<WorldAreaTerrainData> WorldAreaDatas = new List<WorldAreaTerrainData>();
-
         public int WorldAreaRow;
         public int WorldAreaColumn;
         public int WorldAreaLayer;
@@ -20,22 +18,28 @@ namespace HMWGameServer.ServerSoruces.DataFiles
         public int SubWorldRow;
         public int SubWorldColumn;
         public int SubWorldLayer;
+
+        public List<WorldAreaTerrainData> WorldAreaDatas = new List<WorldAreaTerrainData>();
     }
 
     public class WorldAreaTerrainData
     {
         public string UniqueID;
-        public int OffsetX, OffsetY, OffsetZ;
+        public int OffsetX;
+        public int OffsetY;
+        public int OffsetZ;
         public string AreaName;
-        public List<SubWorldData> SubWorldDataList = new List<SubWorldData>();
+        public List<SubWorldData> SubWorldDatas = new List<SubWorldData>();
     }
 
     public struct SubWorldData
     {
         public string UniqueID;
-        public int OffsetX, OffsetY, OffsetZ;
+        public int OffsetX;
+        public int OffsetY;
+        public int OffsetZ;
         public string WorldName;
-        public bool IsSurface;
+        public bool bSurface;
     }
 
     class GameWorldMapDataFile
@@ -57,7 +61,7 @@ namespace HMWGameServer.ServerSoruces.DataFiles
             }
 
             // deserialize JSON directly from a file
-            using (StreamReader file = File.OpenText(GameFilePath.ConfigFilePath))
+            using (StreamReader file = File.OpenText(GameFilePath.WorldMapFilePath))
             {
                 JsonSerializer serializer = new JsonSerializer();
                 MapData = (WorldMapData)serializer.Deserialize(file, typeof(WorldMapData));

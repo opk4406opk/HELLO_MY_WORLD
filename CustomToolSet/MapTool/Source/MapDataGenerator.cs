@@ -88,22 +88,22 @@ namespace MapTool.Source
 
         private class WorldAreaData
         {
-            public string UNIQUE_ID;
-            public string OFFSET_X;
-            public string OFFSET_Y;
-            public string OFFSET_Z;
-            public string AREA_NAME;
+            public string UniqueID;
+            public string OffsetX;
+            public string OffsetY;
+            public string OffsetZ;
+            public string AreaName;
             public List<SubWorldData> SubWorldDatas = new List<SubWorldData>();
         }
        
         private struct SubWorldData
         {
-            public string UNIQUE_ID;
-            public string OFFSET_X;
-            public string OFFSET_Y;
-            public string OFFSET_Z;
-            public string WORLD_NAME;
-            public string IS_SURFACE;
+            public string UniqueID;
+            public string OffsetX;
+            public string OffsetY;
+            public string OffsetZ;
+            public string WorldName;
+            public string bSurface;
         }
 
         private WorldMapData WorldMapDataInstance;
@@ -174,11 +174,11 @@ namespace MapTool.Source
                     {
                         WorldAreaData worldArea = new WorldAreaData
                         {
-                            UNIQUE_ID = string.Format("unique_{0}:{1}:{2}", x.ToString(), y.ToString(), z.ToString()),
-                            OFFSET_X = x.ToString(),
-                            OFFSET_Y = y.ToString(),
-                            OFFSET_Z = z.ToString(),
-                            AREA_NAME = string.Format("WORLD_AREA_{0}", areaIndex),
+                            UniqueID = string.Format("unique_{0}:{1}:{2}", x.ToString(), y.ToString(), z.ToString()),
+                            OffsetX = x.ToString(),
+                            OffsetY = y.ToString(),
+                            OffsetZ = z.ToString(),
+                            AreaName = string.Format("WORLD_AREA_{0}", areaIndex),
                         };
                         jsonFileData.WorldAreaDatas.Add(worldArea);
                         CreateSubWorlds(jsonFileData, areaIndex);
@@ -206,19 +206,19 @@ namespace MapTool.Source
                     {
                         SubWorldData subWorldData = new SubWorldData
                         {
-                            UNIQUE_ID = string.Format("unique_{0}:{1}:{2}", x.ToString(), y.ToString(), z.ToString()),
-                            OFFSET_X = x.ToString(),
-                            OFFSET_Y = y.ToString(),
-                            OFFSET_Z = z.ToString(),
-                            WORLD_NAME = string.Format("AREA_{0}_SUB_WORLD_{1}", areaIndex, worldIndex),
+                            UniqueID = string.Format("unique_{0}:{1}:{2}", x.ToString(), y.ToString(), z.ToString()),
+                            OffsetX = x.ToString(),
+                            OffsetY = y.ToString(),
+                            OffsetZ = z.ToString(),
+                            WorldName = string.Format("AREA_{0}_SUB_WORLD_{1}", areaIndex, worldIndex),
                         };
                         if (y == (WorldMapDataInstance.SubWorldLayer - 1))
                         {
-                            subWorldData.IS_SURFACE = true.ToString();
+                            subWorldData.bSurface = true.ToString();
                         }
                         else
                         {
-                            subWorldData.IS_SURFACE = false.ToString();
+                            subWorldData.bSurface = false.ToString();
                         }
                         jsonFileData.WorldAreaDatas[areaIndex].SubWorldDatas.Add(subWorldData);
                         worldIndex++;

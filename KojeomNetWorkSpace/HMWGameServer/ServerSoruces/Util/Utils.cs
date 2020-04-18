@@ -23,7 +23,8 @@ namespace HMWGameServer
     class Utils
     {
         // Seed 값은 일정하게 0으로 고정.
-        private static System.Random RandomInstance = new System.Random(0);
+        private static int RandomSeed = 0;
+        private static System.Random RandomInstance = new System.Random(RandomSeed);
 
         public static void ChangeSeed()
         {
@@ -33,6 +34,8 @@ namespace HMWGameServer
         {
             RandomInstance = new System.Random(newSeed);
         }
+
+        public static int GetSeed() { return RandomSeed; }
         /// <summary>
         /// 
         /// </summary>

@@ -10,5 +10,6 @@ namespace HMWGameServer.ServerSoruces.Util
     {
         public static readonly string ConfigDirectory = "./Config/";
         public static readonly string ConfigFilePath = "./Config/ServerConfig.json";
+        public static readonly string WorldMapFilePath = "./Config/ServerWorldMapData.json";
     }
 }

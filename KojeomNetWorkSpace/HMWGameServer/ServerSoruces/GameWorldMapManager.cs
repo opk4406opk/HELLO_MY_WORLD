@@ -14,6 +14,8 @@ namespace HMWGameServer
     class WorldArea
     {
         public string UniqueID;
+        public int OffsetX, OffsetY, OffsetZ;
+        public string AreaName;
         public int AreaSizeX;
         public int AreaSizeZ;
         public Dictionary<string, SubWorld> SubWorlds;
@@ -22,6 +24,9 @@ namespace HMWGameServer
     class SubWorld
     {
         public string UniqueID;
+        public int OffsetX, OffsetY, OffsetZ;
+        public string WorldName;
+        public bool bSurface;
         public Block[,,] Blocks;
     }
     [Serializable]
@@ -112,27 +117,35 @@ namespace HMWGameServer
                 ConfigFileStruct config = GameConfigDataFile.GetInstance().GetConfig();
                 // init
                 WorldAreaMap = new Dictionary<string, WorldArea>();
-                // make.
-                for (int areaX = 0; areaX < GameConfigDataFile.GetInstance().GetConfig().WorldAreaRow; ++areaX)
+                // allocate map.
+                WorldMapData mapData = GameWorldMapDataFile.GetInstance().MapData;
+                foreach(WorldAreaTerrainData terrainData in mapData.WorldAreaDatas)
                 {
-                    for (int areaY = 0; areaY < GameConfigDataFile.GetInstance().GetConfig().WorldAreaLayer; ++areaY)
+                    WorldArea areaInstance = new WorldArea();
+                    areaInstance.UniqueID = Utils.MakeUniqueID(terrainData.OffsetX, terrainData.OffsetY, terrainData.OffsetZ);
+                    areaInstance.AreaName = terrainData.AreaName;
+                    areaInstance.OffsetX = terrainData.OffsetX;
+                    areaInstance.OffsetY = terrainData.OffsetY;
+                    areaInstance.OffsetZ = terrainData.OffsetZ;
+                    areaInstance.AreaSizeX = config.SubWorldRow * config.SubWorldSizeX; ;
+                    areaInstance.AreaSizeZ = config.SubWorldColumn * config.SubWorldSizeZ;
+                    areaInstance.SubWorlds = new Dictionary<string, SubWorld>();
+                    foreach(var subWorldData in terrainData.SubWorldDatas)
                     {
-                        for (int areaZ = 0; areaZ < GameConfigDataFile.GetInstance().GetConfig().WorldAreaColumn; ++areaZ)
-                        {
-                            WorldArea worldArea = new WorldArea();
-                            worldArea.UniqueID = Utils.MakeUniqueID(areaX, areaY, areaZ);
-                            worldArea.AreaSizeX = config.SubWorldRow * config.SubWorldSizeX;
-                            worldArea.AreaSizeZ = config.SubWorldColumn * config.SubWorldSizeZ;
-                            worldArea.SubWorlds = new Dictionary<string, SubWorld>();
-                            List<SubWorld> subWorldList = MakeDefaultSubWorld(worldArea.UniqueID);
-                            foreach (var subWorld in subWorldList)
-                            {
-                                worldArea.SubWorlds.Add(subWorld.UniqueID, subWorld);
-                            }
-                            WorldAreaMap.Add(worldArea.UniqueID, worldArea);
-                        }
+                        SubWorld subWorldInst = new SubWorld();
+                        subWorldInst.UniqueID = subWorldData.UniqueID;
+                        subWorldInst.WorldName = subWorldData.WorldName;
+                        subWorldInst.OffsetX = subWorldData.OffsetX;
+                        subWorldInst.OffsetY = subWorldData.OffsetY;
+                        subWorldInst.OffsetZ = subWorldData.OffsetZ;
+                        subWorldInst.bSurface = subWorldData.bSurface;
+                        subWorldInst.Blocks = new Block[config.SubWorldSizeX, config.SubWorldSizeY, config.SubWorldSizeZ];
+                        //
+                        areaInstance.SubWorlds.Add(subWorldInst.UniqueID, subWorldInst);
                     }
+                    WorldAreaMap.Add(areaInstance.UniqueID, areaInstance);
                 }
+
                 // setting data.
                 foreach(var pair in WorldAreaMap)
                 {
@@ -141,54 +154,40 @@ namespace HMWGameServer
                     if(worldAreaInst != null)
                     {
                         var normalTerrainData = WorldGenAlgorithms.GenerateNormalTerrain(worldAreaInst.AreaSizeX, worldAreaInst.AreaSizeZ,
-                                                                                         config.SubWorldLayer, config.SubWorldSizeY);
+                                                                                         config.SubWorldLayer, config.SubWorldSizeY, Utils.GetSeed());
                         foreach(var subWorldPair in worldAreaInst.SubWorlds)
                         {
                             string subWorldUniqueID = subWorldPair.Key;
                             SubWorld subWorldInst = subWorldPair.Value;
                             if(subWorldInst != null)
                             {
-                                //int rangeY = normalTerrainData[x,z].Layers[(int)OffsetCoordinate.y];
-                                for (int y = 0; y < subWorldInst.Blocks.GetLength(1); y++)
+                                for (int x = 0; x < subWorldInst.Blocks.GetLength(0); x++)
                                 {
-                                    for (int x = 0; x < subWorldInst.Blocks.GetLength(0); x++)
+                                    for (int z = 0; z < subWorldInst.Blocks.GetLength(2); z++)
                                     {
-                                        for (int z = 0; z < subWorldInst.Blocks.GetLength(2); z++)
+                                        int mapX = (subWorldInst.OffsetX * config.SubWorldSizeX) + x;
+                                        int mapZ = (subWorldInst.OffsetZ * config.SubWorldSizeZ) + z;
+                                        WorldGenAlgorithms.TerrainValue terrainValue = normalTerrainData[mapX, mapZ];
+                                        int rangeY = terrainValue.Layers[subWorldInst.OffsetY];
+                                        byte blockType = (byte)terrainValue.BlockType;
+                                        for (int y = 0; y < rangeY; y++)
                                         {
-                                            //subWorldInst.Blocks[x,y,z].Type = normalTerrainData[x, z].
+                                            // 블록 타입 세팅.
+                                            subWorldInst.Blocks[x, y, z].Type = blockType;
+                                            // 블록 내구도 세팅.
+                                            //BlockTileInfo blockTypeInfo = BlockTileDataFile.Instance.GetBlockTileInfo((BlockTileType)blockType);
+                                            //subWorldInst.Blocks[x, y, z].Durability = blockTypeInfo.Durability;
                                         }
                                     }
                                 }
+                                // save.
+                                SaveSubWorldFile(subWorldInst, worldAreaInst.UniqueID);
                             }
                         }
                     }
                 }
                 return true;
             });
-        }
-
-        private List<SubWorld> MakeDefaultSubWorld(string areaID)
-        {
-            lock(LockObject)
-            {
-                List<SubWorld> subworldList = new List<SubWorld>();
-                for (int x = 0; x < GameConfigDataFile.GetInstance().GetConfig().SubWorldRow; ++x)
-                {
-                    for (int y = 0; y < GameConfigDataFile.GetInstance().GetConfig().SubWorldLayer; ++y)
-                    {
-                        for (int z = 0; z < GameConfigDataFile.GetInstance().GetConfig().SubWorldColumn; ++z)
-                        {
-                            SubWorld subWorld = new SubWorld();
-                            subWorld.UniqueID = Utils.MakeUniqueID(x, y, z);
-                            subWorld.Blocks = new Block[GameConfigDataFile.GetInstance().GetConfig().SubWorldSizeX,
-                                                       GameConfigDataFile.GetInstance().GetConfig().SubWorldSizeY,
-                                                       GameConfigDataFile.GetInstance().GetConfig().SubWorldSizeZ];
-                            subworldList.Add(subWorld);
-                        }
-                    }
-                }
-                return subworldList;
-            }
         }
 
         private SubWorldDataFileFormat LoadSubWorldFile(string filePath)

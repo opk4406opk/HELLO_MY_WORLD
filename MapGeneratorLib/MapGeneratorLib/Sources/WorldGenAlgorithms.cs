@@ -86,8 +86,10 @@ namespace MapGenLib
             public int BaseOffset;
         }
 
-        public static TerrainValue[,] GenerateNormalTerrain(int areaSizeX, int areaSizeZ, int subWorldLayerNum, int subWorldSizeY, int generateNumber = 800)
+        public static TerrainValue[,] GenerateNormalTerrain(int areaSizeX, int areaSizeZ, int subWorldLayerNum, int subWorldSizeY, int randomSeed, int generateNumber = 800)
         {
+            Utilitys.ChangeSeed(randomSeed);
+            //
             int[,] xzPlane = new int[areaSizeX, areaSizeZ];
             //
             int rangeValue = subWorldLayerNum * subWorldSizeY;

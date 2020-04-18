@@ -9,586 +9,586 @@
   },
   "WorldAreaDatas": [
     {
-      "UNIQUE_ID": "unique_0:0:0",
-      "OFFSET_X": "0",
-      "OFFSET_Y": "0",
-      "OFFSET_Z": "0",
-      "AREA_NAME": "WORLD_AREA_0",
+      "UniqueID": "unique_0:0:0",
+      "OffsetX": "0",
+      "OffsetY": "0",
+      "OffsetZ": "0",
+      "AreaName": "WORLD_AREA_0",
       "SubWorldDatas": [
         {
-          "UNIQUE_ID": "unique_0:0:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_0",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_0_SUB_WORLD_0",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:0:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_1",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_0_SUB_WORLD_1",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:1:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_2",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_0_SUB_WORLD_2",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_0:1:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_3",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_0_SUB_WORLD_3",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_1:0:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_4",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_0_SUB_WORLD_4",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_1:0:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_5",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_0_SUB_WORLD_5",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_1:1:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_6",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_0_SUB_WORLD_6",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_1:1:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_0_SUB_WORLD_7",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_0_SUB_WORLD_7",
+          "bSurface": "True"
         }
       ]
     },
     {
-      "UNIQUE_ID": "unique_0:0:1",
-      "OFFSET_X": "0",
-      "OFFSET_Y": "0",
-      "OFFSET_Z": "1",
-      "AREA_NAME": "WORLD_AREA_1",
+      "UniqueID": "unique_0:0:1",
+      "OffsetX": "0",
+      "OffsetY": "0",
+      "OffsetZ": "1",
+      "AreaName": "WORLD_AREA_1",
       "SubWorldDatas": [
         {
-          "UNIQUE_ID": "unique_0:0:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_1_SUB_WORLD_0",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_1_SUB_WORLD_0",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:0:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_1_SUB_WORLD_1",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_1_SUB_WORLD_1",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:1:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_1_SUB_WORLD_2",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_1_SUB_WORLD_2",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_0:1:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_1_SUB_WORLD_3",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_1_SUB_WORLD_3",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_1:0:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_1_SUB_WORLD_4",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_1_SUB_WORLD_4",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_1:0:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_1_SUB_WORLD_5",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_1_SUB_WORLD_5",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_1:1:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_1_SUB_WORLD_6",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_1_SUB_WORLD_6",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_1:1:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_1_SUB_WORLD_7",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_1_SUB_WORLD_7",
+          "bSurface": "True"
         }
       ]
     },
     {
-      "UNIQUE_ID": "unique_0:1:0",
-      "OFFSET_X": "0",
-      "OFFSET_Y": "1",
-      "OFFSET_Z": "0",
-      "AREA_NAME": "WORLD_AREA_2",
+      "UniqueID": "unique_0:1:0",
+      "OffsetX": "0",
+      "OffsetY": "1",
+      "OffsetZ": "0",
+      "AreaName": "WORLD_AREA_2",
       "SubWorldDatas": [
         {
-          "UNIQUE_ID": "unique_0:0:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_2_SUB_WORLD_0",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_2_SUB_WORLD_0",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:0:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_2_SUB_WORLD_1",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_2_SUB_WORLD_1",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:1:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_2_SUB_WORLD_2",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_2_SUB_WORLD_2",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_0:1:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_2_SUB_WORLD_3",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_2_SUB_WORLD_3",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_1:0:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_2_SUB_WORLD_4",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_2_SUB_WORLD_4",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_1:0:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_2_SUB_WORLD_5",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_2_SUB_WORLD_5",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_1:1:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_2_SUB_WORLD_6",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_2_SUB_WORLD_6",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_1:1:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_2_SUB_WORLD_7",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_2_SUB_WORLD_7",
+          "bSurface": "True"
         }
       ]
     },
     {
-      "UNIQUE_ID": "unique_0:1:1",
-      "OFFSET_X": "0",
-      "OFFSET_Y": "1",
-      "OFFSET_Z": "1",
-      "AREA_NAME": "WORLD_AREA_3",
+      "UniqueID": "unique_0:1:1",
+      "OffsetX": "0",
+      "OffsetY": "1",
+      "OffsetZ": "1",
+      "AreaName": "WORLD_AREA_3",
       "SubWorldDatas": [
         {
-          "UNIQUE_ID": "unique_0:0:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_3_SUB_WORLD_0",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_3_SUB_WORLD_0",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:0:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_3_SUB_WORLD_1",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_3_SUB_WORLD_1",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:1:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_3_SUB_WORLD_2",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_3_SUB_WORLD_2",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_0:1:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_3_SUB_WORLD_3",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_3_SUB_WORLD_3",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_1:0:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_3_SUB_WORLD_4",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_3_SUB_WORLD_4",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_1:0:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_3_SUB_WORLD_5",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_3_SUB_WORLD_5",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_1:1:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_3_SUB_WORLD_6",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_3_SUB_WORLD_6",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_1:1:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_3_SUB_WORLD_7",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_3_SUB_WORLD_7",
+          "bSurface": "True"
         }
       ]
     },
     {
-      "UNIQUE_ID": "unique_1:0:0",
-      "OFFSET_X": "1",
-      "OFFSET_Y": "0",
-      "OFFSET_Z": "0",
-      "AREA_NAME": "WORLD_AREA_4",
+      "UniqueID": "unique_1:0:0",
+      "OffsetX": "1",
+      "OffsetY": "0",
+      "OffsetZ": "0",
+      "AreaName": "WORLD_AREA_4",
       "SubWorldDatas": [
         {
-          "UNIQUE_ID": "unique_0:0:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_4_SUB_WORLD_0",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_4_SUB_WORLD_0",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:0:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_4_SUB_WORLD_1",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_4_SUB_WORLD_1",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:1:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_4_SUB_WORLD_2",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_4_SUB_WORLD_2",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_0:1:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_4_SUB_WORLD_3",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_4_SUB_WORLD_3",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_1:0:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_4_SUB_WORLD_4",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_4_SUB_WORLD_4",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_1:0:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_4_SUB_WORLD_5",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_4_SUB_WORLD_5",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_1:1:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_4_SUB_WORLD_6",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_4_SUB_WORLD_6",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_1:1:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_4_SUB_WORLD_7",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_4_SUB_WORLD_7",
+          "bSurface": "True"
         }
       ]
     },
     {
-      "UNIQUE_ID": "unique_1:0:1",
-      "OFFSET_X": "1",
-      "OFFSET_Y": "0",
-      "OFFSET_Z": "1",
-      "AREA_NAME": "WORLD_AREA_5",
+      "UniqueID": "unique_1:0:1",
+      "OffsetX": "1",
+      "OffsetY": "0",
+      "OffsetZ": "1",
+      "AreaName": "WORLD_AREA_5",
       "SubWorldDatas": [
         {
-          "UNIQUE_ID": "unique_0:0:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_5_SUB_WORLD_0",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_5_SUB_WORLD_0",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:0:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_5_SUB_WORLD_1",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_5_SUB_WORLD_1",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:1:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_5_SUB_WORLD_2",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_5_SUB_WORLD_2",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_0:1:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_5_SUB_WORLD_3",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_5_SUB_WORLD_3",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_1:0:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_5_SUB_WORLD_4",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_5_SUB_WORLD_4",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_1:0:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_5_SUB_WORLD_5",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_5_SUB_WORLD_5",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_1:1:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_5_SUB_WORLD_6",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_5_SUB_WORLD_6",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_1:1:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_5_SUB_WORLD_7",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_5_SUB_WORLD_7",
+          "bSurface": "True"
         }
       ]
     },
     {
-      "UNIQUE_ID": "unique_1:1:0",
-      "OFFSET_X": "1",
-      "OFFSET_Y": "1",
-      "OFFSET_Z": "0",
-      "AREA_NAME": "WORLD_AREA_6",
+      "UniqueID": "unique_1:1:0",
+      "OffsetX": "1",
+      "OffsetY": "1",
+      "OffsetZ": "0",
+      "AreaName": "WORLD_AREA_6",
       "SubWorldDatas": [
         {
-          "UNIQUE_ID": "unique_0:0:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_6_SUB_WORLD_0",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_6_SUB_WORLD_0",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:0:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_6_SUB_WORLD_1",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_6_SUB_WORLD_1",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:1:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_6_SUB_WORLD_2",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_6_SUB_WORLD_2",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_0:1:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_6_SUB_WORLD_3",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_6_SUB_WORLD_3",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_1:0:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_6_SUB_WORLD_4",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_6_SUB_WORLD_4",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_1:0:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_6_SUB_WORLD_5",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_6_SUB_WORLD_5",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_1:1:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_6_SUB_WORLD_6",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_6_SUB_WORLD_6",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_1:1:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_6_SUB_WORLD_7",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_6_SUB_WORLD_7",
+          "bSurface": "True"
         }
       ]
     },
     {
-      "UNIQUE_ID": "unique_1:1:1",
-      "OFFSET_X": "1",
-      "OFFSET_Y": "1",
-      "OFFSET_Z": "1",
-      "AREA_NAME": "WORLD_AREA_7",
+      "UniqueID": "unique_1:1:1",
+      "OffsetX": "1",
+      "OffsetY": "1",
+      "OffsetZ": "1",
+      "AreaName": "WORLD_AREA_7",
       "SubWorldDatas": [
         {
-          "UNIQUE_ID": "unique_0:0:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_7_SUB_WORLD_0",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_7_SUB_WORLD_0",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:0:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_7_SUB_WORLD_1",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_7_SUB_WORLD_1",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_0:1:0",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_7_SUB_WORLD_2",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_7_SUB_WORLD_2",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_0:1:1",
-          "OFFSET_X": "0",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_7_SUB_WORLD_3",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_7_SUB_WORLD_3",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_1:0:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_7_SUB_WORLD_4",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_7_SUB_WORLD_4",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_1:0:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "0",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_7_SUB_WORLD_5",
-          "IS_SURFACE": "False"
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_7_SUB_WORLD_5",
+          "bSurface": "False"
         },
         {
-          "UNIQUE_ID": "unique_1:1:0",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "0",
-          "WORLD_NAME": "AREA_7_SUB_WORLD_6",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_7_SUB_WORLD_6",
+          "bSurface": "True"
         },
         {
-          "UNIQUE_ID": "unique_1:1:1",
-          "OFFSET_X": "1",
-          "OFFSET_Y": "1",
-          "OFFSET_Z": "1",
-          "WORLD_NAME": "AREA_7_SUB_WORLD_7",
-          "IS_SURFACE": "True"
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_7_SUB_WORLD_7",
+          "bSurface": "True"
         }
       ]
     }

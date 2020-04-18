@@ -19,7 +19,7 @@ public class WorldAreaTerrainData
     public string UniqueID;
     public int OffsetX, OffsetY, OffsetZ;
     public string AreaName;
-    public List<SubWorldData> SubWorldDataList = new List<SubWorldData>();
+    public List<SubWorldData> SubWorldDatas = new List<SubWorldData>();
 }
 
 public struct SubWorldData
@@ -96,15 +96,15 @@ public class WorldMapDataFile : BaseDataFile
             WorldAreaTerrainData worldAreaData = new WorldAreaTerrainData();
             var data = worldArea.ToDictionary();
             string val;
-            data.TryGetValue("AREA_NAME", out val);
+            data.TryGetValue("AreaName", out val);
             worldAreaData.AreaName = val;
-            data.TryGetValue("OFFSET_X", out val);
+            data.TryGetValue("OffsetX", out val);
             worldAreaData.OffsetX = int.Parse(val);
-            data.TryGetValue("OFFSET_Y", out val);
+            data.TryGetValue("OffsetY", out val);
             worldAreaData.OffsetY = int.Parse(val);
-            data.TryGetValue("OFFSET_Z", out val);
+            data.TryGetValue("OffsetZ", out val);
             worldAreaData.OffsetZ = int.Parse(val);
-            data.TryGetValue("UNIQUE_ID", out val);
+            data.TryGetValue("UniqueID", out val);
             worldAreaData.UniqueID = val;
             // 데이터 리스트에 마지막 원소가 SubWorld 데이터 리스트임.
             var subWorldDataList = worldArea.list[worldArea.list.Count - 1].list;
@@ -114,20 +114,20 @@ public class WorldMapDataFile : BaseDataFile
                 //
                 var map = subWorld.ToDictionary();
                 string outValue;
-                map.TryGetValue("WORLD_NAME", out outValue);
+                map.TryGetValue("WorldName", out outValue);
                 subWorldData.WorldName = outValue;
                 //
-                map.TryGetValue("OFFSET_X", out outValue);
+                map.TryGetValue("OffsetX", out outValue);
                 subWorldData.OffsetX = int.Parse(outValue);
-                map.TryGetValue("OFFSET_Y", out outValue);
+                map.TryGetValue("OffsetY", out outValue);
                 subWorldData.OffsetY = int.Parse(outValue);
-                map.TryGetValue("OFFSET_Z", out outValue);
+                map.TryGetValue("OffsetZ", out outValue);
                 subWorldData.OffsetZ = int.Parse(outValue);
                 //
-                map.TryGetValue("UNIQUE_ID", out outValue);
+                map.TryGetValue("UniqueID", out outValue);
                 subWorldData.UniqueID = outValue;
                 //
-                map.TryGetValue("IS_SURFACE", out val);
+                map.TryGetValue("IsSurface", out val);
                 if (val == "False")
                 {
                     subWorldData.IsSurface = false;
@@ -136,7 +136,7 @@ public class WorldMapDataFile : BaseDataFile
                 {
                     subWorldData.IsSurface = true;
                 }
-                worldAreaData.SubWorldDataList.Add(subWorldData);
+                worldAreaData.SubWorldDatas.Add(subWorldData);
             }
             MapData.WorldAreaDatas.Add(worldAreaData);
         }

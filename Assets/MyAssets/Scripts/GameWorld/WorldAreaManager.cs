@@ -99,7 +99,7 @@ public class WorldAreaManager : MonoBehaviour
             {
                 mapDatas.Add(WorldGenAlgorithms.GenerateNormalTerrain(param.AreaSizeX, param.AreaSizeZ,
                              WorldMapDataFile.Instance.MapData.SubWorldLayer,
-                             WorldConfigFile.Instance.GetConfig().SubWorldSizeY, 900));
+                             WorldConfigFile.Instance.GetConfig().SubWorldSizeY, KojeomUtility.GetSeed()));
             }
             return mapDatas;    
         });

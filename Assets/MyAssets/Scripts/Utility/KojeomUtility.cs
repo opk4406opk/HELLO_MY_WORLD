@@ -187,8 +187,9 @@ public class KojeomUtility
         return (a.x * b.y - a.y * b.x);
     }
 
-    // Seed 값은 일정하게 0으로 고정.
-    private static System.Random RandomInstance = new System.Random(0);
+    // Seed 값은 서버에서 오는 값으로 설정된다. 일단 디폴트값은 0.
+    private static int RandomSeed = 0;
+    private static System.Random RandomInstance = new System.Random(RandomSeed);
 
     public static void ChangeSeed()
     {
@@ -196,7 +197,13 @@ public class KojeomUtility
     }
     public static void ChangeSeed(int newSeed)
     {
+        RandomSeed = newSeed;
         RandomInstance = new System.Random(newSeed);
+    }
+
+    public static int GetSeed()
+    {
+        return RandomSeed;
     }
     /// <summary>
     /// 
