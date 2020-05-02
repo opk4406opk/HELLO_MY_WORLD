@@ -104,7 +104,7 @@ namespace KojeomNet.FrameWork.Soruces
 
                 if (SendingList.Count > 1)
                 {
-                    Logger.SimpleConsoleWriteLineNoFileInfo(string.Format("SendingList has somethings, Count : {0}", SendingList.Count));
+                    //Logger.SimpleConsoleWriteLineNoFileInfo(string.Format("SendingList has somethings, Count : {0}", SendingList.Count));
                     // 큐에 무언가가 들어 있다면 아직 이전 전송이 완료되지 않은 상태이므로 큐에 추가만 하고 리턴한다.
                     // 현재 수행중인 SendAsync가 완료된 이후에 큐를 검사하여 데이터가 있으면 SendAsync를 호출하여 전송해줄 것이다.
                     return;

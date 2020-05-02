@@ -133,6 +133,7 @@ namespace HMWGameServer
                                         blockPacket.Push(blockPacketData.BlockIndex_Y);
                                         blockPacket.Push(blockPacketData.BlockIndex_Z);
                                         blockPacket.Push(blockPacketData.BlockTypeValue);
+                                        blockPacket.Push(blockPacketData.OwnerChunkType);
                                         //
                                         SubWorldDataPackets.Add(blockPacket);
                                     }

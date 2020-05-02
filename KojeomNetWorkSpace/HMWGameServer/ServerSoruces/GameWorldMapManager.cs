@@ -135,6 +135,20 @@ namespace HMWGameServer
                         subWorldInst.OffsetZ = subWorldData.OffsetZ;
                         subWorldInst.bSurface = subWorldData.bSurface;
                         subWorldInst.Blocks = new Block[config.SubWorldSizeX, config.SubWorldSizeY, config.SubWorldSizeZ];
+                        for(int x = 0; x < config.SubWorldSizeX; x++)
+                        {
+                            for (int y = 0; y < config.SubWorldSizeY; y++)
+                            {
+                                for (int z = 0; z < config.SubWorldSizeZ; z++)
+                                {
+                                    subWorldInst.Blocks[x, y, z].WorldDataIndexX = x;
+                                    subWorldInst.Blocks[x, y, z].WorldDataIndexY = y;
+                                    subWorldInst.Blocks[x, y, z].WorldDataIndexZ = z;
+                                    subWorldInst.Blocks[x, y, z].CurrentType = (byte)BlockTileType.EMPTY;
+                                    subWorldInst.Blocks[x, y, z].OriginalType = (byte)BlockTileType.EMPTY;
+                                }
+                            }
+                        }
                         //
                         areaInstance.SubWorlds.Add(subWorldInst.UniqueID, subWorldInst);
                     }
@@ -253,7 +267,11 @@ namespace HMWGameServer
                 if(worldArea != null)
                 {
                     worldArea.SubWorlds.TryGetValue(packetData.SubWorldID, out SubWorld subWorld);
+                    subWorld.Blocks[packetData.BlockIndex_X, packetData.BlockIndex_Y, packetData.BlockIndex_Z].WorldDataIndexX = packetData.BlockIndex_X;
+                    subWorld.Blocks[packetData.BlockIndex_X, packetData.BlockIndex_Y, packetData.BlockIndex_Z].WorldDataIndexY = packetData.BlockIndex_Y;
+                    subWorld.Blocks[packetData.BlockIndex_X, packetData.BlockIndex_Y, packetData.BlockIndex_Z].WorldDataIndexZ = packetData.BlockIndex_Z;
                     subWorld.Blocks[packetData.BlockIndex_X, packetData.BlockIndex_Y, packetData.BlockIndex_Z].CurrentType = packetData.BlockTypeValue;
+                    subWorld.Blocks[packetData.BlockIndex_X, packetData.BlockIndex_Y, packetData.BlockIndex_Z].OwnerChunkType = (ChunkType)packetData.OwnerChunkType;
                     // save subworld.
                     SaveSubWorldFile(subWorld, packetData.AreaID);
                     //

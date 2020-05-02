@@ -13,18 +13,7 @@ namespace HMWTest.TestCode
         Client,
         Host,
     }
-    struct WorldMapPropertiesPacketData
-    {
-        public int WorldAreaRow;
-        public int WorldAreaColumn;
-        public int WorldAreaLayer;
-        public int SubWorldRow;
-        public int SubWorldColumn;
-        public int SubWorldLayer;
-        public int SubWorldSizeX;
-        public int SubWorldSizeY;
-        public int SubWorldSizeZ;
-    }
+
     struct SubWorldBlockPacketData
     {
         // 실제 패킷 데이터.
