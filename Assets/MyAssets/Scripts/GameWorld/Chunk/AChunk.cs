@@ -81,7 +81,7 @@ public abstract class AChunk : MonoBehaviour {
 		{
 			return BlockTileType.EMPTY;
 		}
-		return (BlockTileType)SubWorldInstance.WorldBlockData[x, y, z].Type;
+		return (BlockTileType)SubWorldInstance.WorldBlockData[x, y, z].CurrentType;
 	}
 
 	protected void CubeTopFace(float x, float y, float z, BlockTileType tileType)

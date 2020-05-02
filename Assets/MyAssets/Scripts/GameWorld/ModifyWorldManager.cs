@@ -32,7 +32,7 @@ public class ModifyWorldManager : MonoBehaviour
             SubWorld subWorld = subWorldState.SubWorldInstance;
             BlockTileInfo blockTileInfo = BlockTileDataFile.Instance.GetBlockTileInfo((BlockTileType)modifiedTileValue);
             //
-            subWorld.WorldBlockData[blockIndex_X, blockIndex_Y, blockIndex_Z].Type = modifiedTileValue;
+            subWorld.WorldBlockData[blockIndex_X, blockIndex_Y, blockIndex_Z].CurrentType = modifiedTileValue;
             subWorld.WorldBlockData[blockIndex_X, blockIndex_Y, blockIndex_Z].Durability = blockTileInfo.Durability;
             Vector3 centerPos = KojeomUtility.ConvertCustomToVector3(subWorld.WorldBlockData[blockIndex_X, blockIndex_Y, blockIndex_Z].GetCenterPosition());
             if ((BlockTileType)modifiedTileValue == BlockTileType.EMPTY)
@@ -94,6 +94,9 @@ public class ModifyWorldManager : MonoBehaviour
 
     private void RayCastingProcess(Ray ray, byte blockType, bool bCreate)
     {
+        if (SelectWorldInstance == null) return;
+        if (SelectWorldInstance.CustomOctreeInstance == null) return;
+
         CollideInfo collideInfo = SelectWorldInstance.CustomOctreeInstance.Collide(ray);
         if (collideInfo.bCollide)
         {
@@ -163,7 +166,7 @@ public class ModifyWorldManager : MonoBehaviour
            (x >= 0) && (y >= 0) && (z >= 0)) 
         {
             BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo((BlockTileType)block);
-            SelectWorldInstance.WorldBlockData[x, y, z].Type = block;
+            SelectWorldInstance.WorldBlockData[x, y, z].CurrentType = block;
             SelectWorldInstance.WorldBlockData[x, y, z].Durability = tileInfo.Durability;
             SelectWorldInstance.WorldBlockData[x, y, z].bRendered = true;
             UpdateChunkAt(x, y, z, block);
@@ -238,7 +241,7 @@ public class ModifyWorldManager : MonoBehaviour
             // 비동기로 처리하는게 좋을 듯 싶다.
             //UpdateUserItem(world.WorldBlockData[x, y, z].Type);
             BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo((BlockTileType)block);
-            SelectWorldInstance.WorldBlockData[x, y, z].Type = block;
+            SelectWorldInstance.WorldBlockData[x, y, z].CurrentType = block;
             SelectWorldInstance.WorldBlockData[x, y, z].Durability = tileInfo.Durability;
             SelectWorldInstance.WorldBlockData[x, y, z].bRendered = false;
             UpdateChunkAt(x, y, z, block);

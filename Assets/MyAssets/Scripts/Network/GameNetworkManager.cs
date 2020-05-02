@@ -9,6 +9,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using MapGenLib;
 
 /// <summary>
 /// 네트워크 프로토콜.
@@ -28,8 +29,11 @@ public enum NetProtocol
 
     CHANGE_SUBWORLD_BLOCK_PUSH,
 
-    SUBWORLD_DATAS_REQ,
-    SUBWORLD_DATAS_ACK,
+    SUBWORLD_DATAS_REQ, // 클라에서 서버로 월드맵(모든 서브월드) 요청.
+    SUBWORLD_DATAS_ACK, // 서버에서 클라로 서브월드 데이터 전달.
+
+    SUBWORLD_DATAS_SAFE_RECEIVED, // 클라이언트에서 제대로 수신했을경우 보낸다.
+    SUBWORLD_DATAS_FINISH, // 서버에서 클라가 모든 서브월드 데이터 패킷을 수신했다면 종료 패킷으로 보낸다.
 
     END
 }
@@ -39,22 +43,6 @@ public enum GameUserNetType
     None,
     Client,
     Host,
-}
-
-/// <summary>
-/// 서버에서 수신한 SubWorld File 포멧.
-/// </summary>
-class SubWorldDataFileFormat
-{
-    public string AreaID;
-    public string SubWorldID;
-    public byte[,,] BlockTypes;
-}
-
-struct SubWorldPacketData
-{
-    public int Size;
-    public byte[] SubWorldDataFileBytes;
 }
 
 public struct SubWorldBlockPacketData
@@ -69,6 +57,12 @@ public struct SubWorldBlockPacketData
     public byte OwnerChunkType;
     // 서버에서 기록하는 타임스탬프.
     //public long TimeStampTicks;
+}
+
+public struct SubWorldPacketDataKey
+{
+    public string AreaID;
+    public string SubWorldID;
 }
 
 public class GameNetworkManager
@@ -90,6 +84,8 @@ public class GameNetworkManager
     private static GameNetworkManager Instance = null;
     //
     public GameUserNetType UserNetType = GameUserNetType.None;
+    public bool bFinishReceivedAllSubWorlds = false; // 서버로부터 모든 서브월드 데이터를 수신했는지?
+    public Dictionary<SubWorldPacketDataKey, List<SubWorldBlockPacketData>> InitialReceivedSubWorldDatas = new Dictionary<SubWorldPacketDataKey, List<SubWorldBlockPacketData>>();
     #endregion
 
     public static GameNetworkManager GetInstance()
@@ -132,6 +128,7 @@ public class GameNetworkManager
         }
         return localIP;
     }
+
 
     public void ConnectToGameServer(string ip, int port, GameUserNetType netType)
     {
@@ -185,6 +182,16 @@ public class GameNetworkManager
         {
             KojeomLogger.DebugLog("Request to Server (Changed Block Data) ", LOG_TYPE.NETWORK_CLIENT_INFO);
             GameServer.Send(packet);
+        }
+    }
+
+    public void PushSafeReceivedSubWorldData()
+    {
+        CPacket safeReceivePacket = CPacket.Create((short)NetProtocol.SUBWORLD_DATAS_SAFE_RECEIVED);
+        if(GameServer != null)
+        {
+            KojeomLogger.DebugLog("Push to Server (Safe Received SubWorldData) ", LOG_TYPE.NETWORK_CLIENT_INFO);
+            GameServer.Send(safeReceivePacket);
         }
     }
 
@@ -250,7 +257,15 @@ class RemoteServerPeer : IPeer
                         worldArea.SubWorldStates.TryGetValue(receivedData.SubWorldID, out SubWorldState subWorldState);
                         if (subWorldState != null)
                         {
-                            subWorldState.SubWorldInstance.WorldBlockData[receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z].Type = receivedData.BlockTypeValue;
+                            float centerX = subWorldState.SubWorldInstance.WorldBlockData[receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z].CenterX;
+                            float centerY = subWorldState.SubWorldInstance.WorldBlockData[receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z].CenterY;
+                            float centerZ = subWorldState.SubWorldInstance.WorldBlockData[receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z].CenterZ;
+                            Vector3 blockLocation = new Vector3(centerX, centerY, centerZ);
+                            // 비어있는 블록이라면, 충돌 옥트리에서 해당 위치에 해당하는 노드 삭제.
+                            if ((BlockTileType)receivedData.BlockTypeValue == BlockTileType.EMPTY) subWorldState.SubWorldInstance.CustomOctreeInstance.Delete(blockLocation);
+                            else subWorldState.SubWorldInstance.CustomOctreeInstance.Add(blockLocation);
+                            // 블록 업데이트.
+                            subWorldState.SubWorldInstance.WorldBlockData[receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z].CurrentType = receivedData.BlockTypeValue;
                             Vector3 chunkIndex = WorldAreaManager.ConvertBlockIdxToChunkIdx(receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z);
                             int chunkIdxX = (int)chunkIndex.x;
                             int chunkIdxY = (int)chunkIndex.y;
@@ -272,27 +287,39 @@ class RemoteServerPeer : IPeer
                 break;
             case NetProtocol.SUBWORLD_DATAS_ACK:
                 {
-                    KojeomLogger.DebugLog("[ACK] SubWorld Datas received from server", LOG_TYPE.NETWORK_CLIENT_INFO);
-                    SubWorldPacketData packetData;
-                    packetData.Size = msg.PopInt32();
-                    byte[] fileBytes = new byte[packetData.Size];
-                    for(int idx = 0; idx < packetData.Size; idx++)
+                    KojeomLogger.DebugLog("[ACK] SubWorld Block Data received from server", LOG_TYPE.NETWORK_CLIENT_INFO);
+                    SubWorldBlockPacketData receivedData;
+                    receivedData.AreaID = msg.PopString();
+                    receivedData.SubWorldID = msg.PopString();
+                    receivedData.BlockIndex_X = msg.PopInt32();
+                    receivedData.BlockIndex_Y = msg.PopInt32();
+                    receivedData.BlockIndex_Z = msg.PopInt32();
+                    receivedData.BlockTypeValue = msg.Popbyte();
+                    receivedData.OwnerChunkType = msg.Popbyte();
+
+                    SubWorldPacketDataKey key;
+                    key.AreaID = receivedData.AreaID;
+                    key.SubWorldID = receivedData.SubWorldID;
+                    List<SubWorldBlockPacketData> blockPackets;
+                    bool bFind = GameNetworkManager.GetInstance().InitialReceivedSubWorldDatas.TryGetValue(key, out blockPackets);
+                    if(bFind == false)
                     {
-                        fileBytes[idx] = msg.Popbyte();
+                        blockPackets = new List<SubWorldBlockPacketData>();
+                        blockPackets.Add(receivedData);
                     }
-                    // bytes to stream.
-                    Stream stream = new MemoryStream(fileBytes);
-                    BinaryFormatter bf = new BinaryFormatter();
-                    SubWorldDataFileFormat fileFormat = bf.Deserialize(stream) as SubWorldDataFileFormat;
-                    WorldArea worldArea = WorldAreaManager.Instance.GetWorldArea(fileFormat.AreaID);
-                    if(worldArea != null)
+                    else
                     {
-                        worldArea.SubWorldStates.TryGetValue(fileFormat.SubWorldID, out SubWorldState subWorldState);
-                        if(subWorldState != null)
-                        {
-                            subWorldState.SubWorldInstance.UpdateBlocks(fileFormat.BlockTypes, true);
-                        }
+                        blockPackets.Add(receivedData);
                     }
+                    // 데이터 수신했음을 알린다.
+                    GameNetworkManager.GetInstance().PushSafeReceivedSubWorldData();
+                }
+                break;
+            case NetProtocol.SUBWORLD_DATAS_FINISH: // 모든 서브월드 데이터를 서버로부터 완전하게 수신했다.
+                {
+                    // 서버에서 월드맵 송신이 종료되었음을 알리는 패킷.
+                    KojeomLogger.DebugLog("SUBWORLD_DATAS_FINISH [ All Subworld data received. ]", LOG_TYPE.NETWORK_CLIENT_INFO);
+                    GameNetworkManager.GetInstance().bFinishReceivedAllSubWorlds = true;
                 }
                 break;
         }

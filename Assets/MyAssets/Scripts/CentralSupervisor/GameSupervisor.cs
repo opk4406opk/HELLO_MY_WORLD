@@ -3,12 +3,21 @@ using System.Collections;
 using UnityEditor;
 
 /// <summary>
-/// 게임 상태(single, multi, load, save)를 관리하는 클래스.
+/// 게임 상태를 관리하는 클래스.
 /// </summary>
 public struct GameStatusManager
 {
     public static GameModeState CurrentGameModeState = GameModeState.NONE;
     public static DetailSingleMode DetailSingleMode = DetailSingleMode.NONE;
+    public static GameUserNetType GetNetType()
+    {
+        return GameNetworkManager.GetInstance().UserNetType;
+    }
+
+    public static bool IsAllSubWorldDataReceived()
+    {
+        return GameNetworkManager.GetInstance().bFinishReceivedAllSubWorlds;
+    }
 }
 
 public class GameLocalDataManager
@@ -103,9 +112,24 @@ public class GameSupervisor : MonoBehaviour
                     GameStatusManager.CurrentGameModeState, GameNetworkManager.GetInstance().UserNetType), LOG_TYPE.SYSTEM);
                 break;
         }
-        //
+        // 게임 데이터 파일 초기화.
         GameDataManagerInstance.Initialize();
-        InitManagers();
+        // 게임 플레이 초기화 코루틴 시작.
+        StartCoroutine(InitializeManagersProcess());
+    }
+
+    private IEnumerator InitializeManagersProcess()
+    {
+        if (GameStatusManager.GetNetType() == GameUserNetType.Client)
+        {
+            while (true)
+            {
+                if (GameStatusManager.IsAllSubWorldDataReceived() == true) break;
+                yield return null;
+            }
+        }
+        // 게임 플레이 관련 초기화.
+        InitializeManagers();
     }
 
     private void Update()
@@ -119,7 +143,7 @@ public class GameSupervisor : MonoBehaviour
     /// <summary>
     /// 게임내 각종 매니저 클래스들을 초기화합니다. ( 게임 데이터파일들이 초기화 된 이후에 호출되야 합니다. )
     /// </summary>
-    public void InitManagers()
+    public void InitializeManagers()
     {
         KojeomLogger.DebugLog("게임매니저 클래스들을 초기화 합니다.");
         // sound init.
@@ -130,8 +154,8 @@ public class GameSupervisor : MonoBehaviour
         //
         kojeomCoroutineHelper.Init();
         inputManager.Init();
-        //Game Total World Init
         GameParticleManagerInstance.Init();
+        //Game Total World Init
         WorldAreaManager.Init();
         //player Init
         PlayerCameraManagerInstance.Init();

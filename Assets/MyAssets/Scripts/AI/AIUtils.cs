@@ -19,6 +19,12 @@ public class AIUtils : MonoBehaviour
         Block[,,] blockData = actorController.GetContainedWorldBlockData();
         Vector3 blockCoordinate = WorldAreaManager.GetRealCoordToWorldDataCoord(actorController.GetActorTransform().position);
 
+        if (blockData == null)
+        {
+            outResult = Vector3.zero;
+            return false;
+        }
+
         List<Vector3> candidates = new List<Vector3>();
         foreach (Vector3 dir in direcitons)
         {
@@ -39,7 +45,7 @@ public class AIUtils : MonoBehaviour
                 if(bInBoundUpY == true)
                 {
                     Block upBlock = blockData[blockX, upStairY, blockZ];
-                    if(upBlock.Type != (byte)BlockTileType.EMPTY) bEmptyUpBlock = false;
+                    if(upBlock.CurrentType != (byte)BlockTileType.EMPTY) bEmptyUpBlock = false;
                 }
                 else
                 {
@@ -47,7 +53,7 @@ public class AIUtils : MonoBehaviour
                     bEmptyUpBlock = false;
                 }
                 Block block = blockData[blockX, blockY, blockZ];
-                bool bNotEmptyToBlock = block.Type != (byte)BlockTileType.EMPTY;
+                bool bNotEmptyToBlock = block.CurrentType != (byte)BlockTileType.EMPTY;
                 // 목표 블록이 Empty가 아니면서 바로 위에 있는 블록이 Empty 라면 갈 수 있음.
                 if (bNotEmptyToBlock == true && bEmptyUpBlock == true)
                 {

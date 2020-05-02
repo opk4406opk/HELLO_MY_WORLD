@@ -84,7 +84,7 @@ public class SaveAndLoadManager : MonoBehaviour {
                 for (int z = 0; z < gameWorldConfig.SubWorldSizeZ; ++z)
                 {
                     mergeIdx = (x * gameWorldConfig.SubWorldSizeY * gameWorldConfig.SubWorldSizeZ) + (y * gameWorldConfig.SubWorldSizeZ) + z;
-                    mergeWorldData[mergeIdx + mergeIdxOffset] = GameWorldStates[uniqueID].SubWorldInstance.WorldBlockData[x, y, z].Type;
+                    mergeWorldData[mergeIdx + mergeIdxOffset] = GameWorldStates[uniqueID].SubWorldInstance.WorldBlockData[x, y, z].CurrentType;
                 }
         
         // 데이터 입력이 끝나면, 구분자를 삽입한다.

@@ -72,7 +72,7 @@ public class KojeomUtility
             {
                 for (int z = 0; z < blockData.GetLength(2); ++z)
                 {
-                    byteArray[x, y, z] = blockData[x, y, z].Type;
+                    byteArray[x, y, z] = blockData[x, y, z].CurrentType;
                 }
             }
         }
@@ -267,5 +267,16 @@ public class KojeomUtility
 
         //
         return INPUT_DEVICE_TYPE.NONE;
+    }
+
+    public static int PerlinNoise(int x, int y, int z, float scale, float height, float power)
+    {
+        // noise value 0 to 1
+        float rValue;
+        rValue = Noise.GetNoise(((double)x) / scale, ((double)y) / scale, ((double)z) / scale);
+        rValue *= height;
+
+        if (power != 0) rValue = Mathf.Pow(rValue, power);
+        return (int)rValue;
     }
 }

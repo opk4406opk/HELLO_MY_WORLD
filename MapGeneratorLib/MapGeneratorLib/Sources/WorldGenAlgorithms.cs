@@ -41,8 +41,8 @@ namespace MapGenLib
     [Serializable]
     public struct Block
     {
-
-        public byte Type;
+        public byte CurrentType;
+        public byte OriginalType;
         public float CenterX;
         public float CenterY;
         public float CenterZ;
@@ -55,7 +55,8 @@ namespace MapGenLib
                                          // 복사 생성자.
         public Block(Block b)
         {
-            Type = b.Type;
+            CurrentType = b.CurrentType;
+            OriginalType = b.OriginalType;
             CenterX = b.CenterX;
             CenterY = b.CenterY;
             CenterZ = b.CenterZ;
@@ -200,17 +201,17 @@ namespace MapGenLib
                     {
                         if (y <= internalTerrain)
                         {
-                            subWorldBlockData[x, y, z].Type = (byte)BlockTileType.STONE_BIG;
+                            subWorldBlockData[x, y, z].CurrentType = (byte)BlockTileType.STONE_BIG;
                         }
                         else if (y <= surface + internalTerrain)
                         {
-                            subWorldBlockData[x, y, z].Type = (byte)BlockTileType.GRASS;
+                            subWorldBlockData[x, y, z].CurrentType = (byte)BlockTileType.GRASS;
                             if (y > highestPoint.y)
                             {
                                 highestPoint = new CustomVector3(x, y, z);
                             }
                         }
-                        else if (y >= surface + internalTerrain && subWorldBlockData[x, y - 1, z].Type != (byte)BlockTileType.EMPTY)
+                        else if (y >= surface + internalTerrain && subWorldBlockData[x, y - 1, z].CurrentType != (byte)BlockTileType.EMPTY)
                         {
                             TreeSpawnCandidates.Add(new CustomVector3(x, y, z));
                         }
@@ -261,7 +262,7 @@ namespace MapGenLib
                         int cave = WorldGenerateUtils.PerlinNoise(x, y * 3, z, 2, 18, 1);
                         if (cave > y)
                         {
-                            subWorldBlockData[x, y, z].Type = (byte)BlockTileType.EMPTY;
+                            subWorldBlockData[x, y, z].CurrentType = (byte)BlockTileType.EMPTY;
                             WorldGenerateUtils.FloodFillSubWorld(new FloodFill3DNode(x, y, z), BlockTileType.SAND, BlockTileType.EMPTY,
                                         subWorldBlockData, 4, subWorldSize);
                         }

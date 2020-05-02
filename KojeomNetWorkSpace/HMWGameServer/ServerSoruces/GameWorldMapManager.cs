@@ -36,12 +36,7 @@ namespace HMWGameServer
         public string SubWorldID;
         public Block[,,] Blocks;
     }
-    struct SubWorldPacketData
-    {
-        public int Size;
-        public byte[] SubWorldDataFileBytes;
-    }
-
+   
     struct SubWorldBlockPacketData
     {
         // 실제 패킷 데이터.
@@ -173,7 +168,8 @@ namespace HMWGameServer
                                         for (int y = 0; y < rangeY; y++)
                                         {
                                             // 블록 타입 세팅.
-                                            subWorldInst.Blocks[x, y, z].Type = blockType;
+                                            subWorldInst.Blocks[x, y, z].CurrentType = blockType;
+                                            subWorldInst.Blocks[x, y, z].OriginalType = blockType;
                                             // 블록 내구도 세팅.
                                             //BlockTileInfo blockTypeInfo = BlockTileDataFile.Instance.GetBlockTileInfo((BlockTileType)blockType);
                                             //subWorldInst.Blocks[x, y, z].Durability = blockTypeInfo.Durability;
@@ -199,11 +195,39 @@ namespace HMWGameServer
             return worldData;
         }
 
-        private string SaveSubWorldFile(SubWorld subWorld, string AreaID)
+        public List<byte[]> GetSubWorldBytesList()
+        {
+            List<byte[]> list = new List<byte[]>();
+            foreach(var data in WorldAreaMap)
+            {
+                WorldArea worldAreaInst = data.Value;
+                foreach(var subWorldData in worldAreaInst.SubWorlds)
+                {
+                    SubWorld subWorldInst = subWorldData.Value;
+                    list.Add(GetSubWorldFileBytes(worldAreaInst.UniqueID, subWorldInst.UniqueID));
+                }
+            }
+            return list;
+        }
+
+        private byte[] GetSubWorldFileBytes(string areaUniqueID, string subWorldUniqueID)
+        {
+            string loadPath = Path.Combine(ConstFilePath.RAW_SUB_WORLD_DATA_PATH, string.Format("Area({0})_SubWorld({1}).MapFile",
+                                            Utils.ConvertUniqueIDToFileName(areaUniqueID), Utils.ConvertUniqueIDToFileName(subWorldUniqueID)));
+            FileStream fileStream = File.Open(loadPath, FileMode.OpenOrCreate, FileAccess.Read);
+            using (var memoryStream = new MemoryStream())
+            {
+                fileStream.CopyTo(memoryStream);
+                fileStream.Close();
+                return memoryStream.ToArray();
+            }
+        }
+
+        private string SaveSubWorldFile(SubWorld subWorld, string areaID)
         {
             Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
             string savePath = Path.Combine(ConstFilePath.RAW_SUB_WORLD_DATA_PATH, string.Format("Area({0})_SubWorld({1}).MapFile",
-                Utils.ConvertUniqueIDToFileName(AreaID), Utils.ConvertUniqueIDToFileName(subWorld.UniqueID)));
+                Utils.ConvertUniqueIDToFileName(areaID), Utils.ConvertUniqueIDToFileName(subWorld.UniqueID)));
             // 파일 생성.
             BinaryFormatter bf = new BinaryFormatter();
             FileStream fileStream = File.Open(savePath, FileMode.OpenOrCreate, FileAccess.Write);
@@ -211,7 +235,7 @@ namespace HMWGameServer
             SubWorldDataFileFormat dataFile = new SubWorldDataFileFormat
             {
                 Blocks = subWorld.Blocks,
-                AreaID = AreaID,
+                AreaID = areaID,
                 SubWorldID = subWorld.UniqueID
             };
             // 시리얼라이징.
@@ -229,7 +253,7 @@ namespace HMWGameServer
                 if(worldArea != null)
                 {
                     worldArea.SubWorlds.TryGetValue(packetData.SubWorldID, out SubWorld subWorld);
-                    subWorld.Blocks[packetData.BlockIndex_X, packetData.BlockIndex_Y, packetData.BlockIndex_Z].Type = packetData.BlockTypeValue;
+                    subWorld.Blocks[packetData.BlockIndex_X, packetData.BlockIndex_Y, packetData.BlockIndex_Z].CurrentType = packetData.BlockTypeValue;
                     // save subworld.
                     SaveSubWorldFile(subWorld, packetData.AreaID);
                     //
@@ -240,9 +264,7 @@ namespace HMWGameServer
                     Console.WriteLine("[ERROR] AddSubWorldData - WorldArea is Null");
                     return false;
                 }
-               
             }
-           
         }
 
     }

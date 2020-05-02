@@ -27,9 +27,9 @@ namespace KojeomNet.FrameWork.Soruces
             Closed,
         }
         // 종료 요청. S -> C
-        const short SYS_CLOSE_REQ = 0;
+        const short SYS_CLOSE_REQ = -999;
         // 종료 응답. C -> S
-        const short SYS_CLOSE_ACK = -1;
+        const short SYS_CLOSE_ACK = -1000;
         // 하트비트 시작. S -> C
         public const short SYS_START_HEARTBEAT = -2;
         // 하트비트 갱신. C -> S

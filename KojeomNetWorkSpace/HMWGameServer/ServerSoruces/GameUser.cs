@@ -17,10 +17,11 @@ namespace HMWGameServer
     class GameUser : IPeer
     {
         public UserToken Token { get; private set; }
-
-        public int NetIdentityNumber = 0;
-        //
+        public int NetIdentityNumber { get; set; } = 0;
         private GameUserNetType NetType = GameUserNetType.None;
+        private List<CPacket> SubWorldDataPackets = new List<CPacket>();
+        private ulong TotalSubWorldDataPackets = 0;
+        private ulong CurrentSafeReceived = 0;
 
         public GameUser(UserToken userToken)
         {
@@ -89,17 +90,101 @@ namespace HMWGameServer
                         Send(initPacket);
                     }
                     break;
+                case NetProtocol.SUBWORLD_DATAS_SAFE_RECEIVED:
+                    {
+                        CurrentSafeReceived++;
+                        // 모든 서브월드 데이터가 클라이언트한테 제대로 수신되었다면 완전 종료 패킷을 보낸다.
+                        if(TotalSubWorldDataPackets == CurrentSafeReceived)
+                        {
+                            SendSubWorldDataFinishPacket();
+                        }
+                    }
+                    break;
                 case NetProtocol.SUBWORLD_DATAS_REQ:
                     {
                         // Host가 아닌 Client로 접속한 경우에만 서브월드 데이터 리스트를 전송.
                         if (NetType == GameUserNetType.Client)
                         {
-                            //GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("User : {0} requested subWorld datas. and then push data to user.", NetIdentityNumber));
-                            //AsyncMakeSubWorldDataPackets();
+                            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("User : {0} requested subWorld datas. SUBWORLD_DATAS_ACK START", NetIdentityNumber));
+                            foreach(var data in GameWorldMapManager.GetInstance().WorldAreaMap)
+                            {
+                                WorldArea worldAreaInst = data.Value;
+                                foreach(var subworldData in worldAreaInst.SubWorlds)
+                                {
+                                    SubWorld subWorldInst = subworldData.Value;
+                                    foreach(var block in subWorldInst.Blocks)
+                                    {
+                                        // 초기 생성된 블록 타입값과 현재 타입이 같다면 보내지 않는다.
+                                        if (block.CurrentType == block.OriginalType) continue;
+
+                                        SubWorldBlockPacketData blockPacketData;
+                                        blockPacketData.AreaID = worldAreaInst.UniqueID;
+                                        blockPacketData.SubWorldID = subWorldInst.UniqueID;
+                                        blockPacketData.BlockIndex_X = block.WorldDataIndexX;
+                                        blockPacketData.BlockIndex_Y = block.WorldDataIndexY;
+                                        blockPacketData.BlockIndex_Z = block.WorldDataIndexZ;
+                                        blockPacketData.BlockTypeValue = block.CurrentType;
+                                        blockPacketData.OwnerChunkType = (byte)block.OwnerChunkType;
+                                        //
+                                        CPacket blockPacket = CPacket.Create((short)NetProtocol.SUBWORLD_DATAS_ACK);
+                                        blockPacket.Push(blockPacketData.AreaID);
+                                        blockPacket.Push(blockPacketData.SubWorldID);
+                                        blockPacket.Push(blockPacketData.BlockIndex_X);
+                                        blockPacket.Push(blockPacketData.BlockIndex_Y);
+                                        blockPacket.Push(blockPacketData.BlockIndex_Z);
+                                        blockPacket.Push(blockPacketData.BlockTypeValue);
+                                        //
+                                        SubWorldDataPackets.Add(blockPacket);
+                                    }
+                                }
+                            }
+                            foreach(var packet in SubWorldDataPackets)
+                            {
+                                Send(packet);
+                            }
+                            TotalSubWorldDataPackets = (ulong)SubWorldDataPackets.Count;
+                            SubWorldDataPackets.Clear();
+                            //
+                            if (TotalSubWorldDataPackets == 0) SendSubWorldDataFinishPacket();
+                            //
+                            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("User : {0} requested subWorld datas. SUBWORLD_DATAS_ACK FINISH ( total : {1} )", NetIdentityNumber, TotalSubWorldDataPackets));
                         }
                     }
                     break;
             }
+        }
+
+        private void SendSubWorldDataFinishPacket()
+        {
+            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Client Received All SubWorldData. ( User ID : {0} )", NetIdentityNumber));
+            TotalSubWorldDataPackets = 0;
+            CurrentSafeReceived = 0;
+            CPacket finishSubWorldDatasPacket = CPacket.Create((short)NetProtocol.SUBWORLD_DATAS_FINISH);
+            Send(finishSubWorldDatasPacket);
+        }
+
+        private async void AsyncSendWorldMap()
+        {
+            await AsyncSendSubworldDatas();
+        }
+
+        private async Task<bool> AsyncSendSubworldDatas()
+        {
+            return await Task.Run(() =>
+            {
+                foreach(var bytes in GameWorldMapManager.GetInstance().GetSubWorldBytesList())
+                {
+                    int bufferSize = bytes.Length + Defines.HEADER_SIZE;
+                    CPacket subWorldPacket = CPacket.Create((short)NetProtocol.SUBWORLD_DATAS_ACK, bufferSize);
+                    // 데이터 파일의 사이즈.
+                    subWorldPacket.Push(bytes.Length);
+                    // 실제 파일 bytes.
+                    foreach (byte oneByte in bytes) subWorldPacket.Push(oneByte);
+                    // sending.
+                    Send(subWorldPacket);
+                }
+                return true;
+            });
         }
 
         public void OnRemoved()

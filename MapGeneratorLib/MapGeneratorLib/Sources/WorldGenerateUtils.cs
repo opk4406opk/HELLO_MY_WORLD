@@ -269,13 +269,13 @@ namespace MapGenLib
             FloodFill3DNode frontNode = new FloodFill3DNode(centerNode.X, centerNode.Y, centerNode.Z + 1);
             FloodFill3DNode backNode = new FloodFill3DNode(centerNode.X, centerNode.Y, centerNode.Z - 1);
 
-            if (worldBlockData[centerNode.X, centerNode.Y, centerNode.Z].Type == (byte)exceptType)
+            if (worldBlockData[centerNode.X, centerNode.Y, centerNode.Z].CurrentType == (byte)exceptType)
             {
                 return;
             }
             else
             {
-                worldBlockData[centerNode.X, centerNode.Y, centerNode.Z].Type = (byte)replaceType;
+                worldBlockData[centerNode.X, centerNode.Y, centerNode.Z].CurrentType = (byte)replaceType;
                 if (CheckSubWorldBoundary(leftNode, subWorldSize) == true && ((maskDirection & FloodFillDirection.LEFT) != FloodFillDirection.LEFT))
                 {
                     FloodFillSubWorld(leftNode, exceptType, replaceType, worldBlockData, depth, subWorldSize, maskDirection);

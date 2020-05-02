@@ -395,7 +395,7 @@ public class CustomAstar3D : MonoBehaviour
         int y = node.PathMapDataY;
         int z = node.PathMapDataZ;
        
-        BlockTileType blockType = (BlockTileType)PathFindingSettingsInstance.WorldBlockData[x, y, z].Type;
+        BlockTileType blockType = (BlockTileType)PathFindingSettingsInstance.WorldBlockData[x, y, z].CurrentType;
         if (blockType == BlockTileType.EMPTY)
         {
             ClosedList.Add(node);

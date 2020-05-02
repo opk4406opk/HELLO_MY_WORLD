@@ -49,12 +49,12 @@ public class SubWorld : MonoBehaviour
 
     private InGameObjectRegister InGameObjRegister;
     //
-    private WorldArea WorldAreaInstance;
+    private WorldArea OwnerWorldAreaInstance;
 
-    public void Init(SubWorldData subWorldData, WorldArea worldArea)
+    public void Init(SubWorldData subWorldData, WorldArea ownerArea)
     {
         ChunkSize = WorldConfigFile.Instance.GetConfig().ChunkSize;
-        WorldAreaInstance = worldArea;
+        OwnerWorldAreaInstance = ownerArea;
         bLoadFinish = false;
         InGameObjRegister = new InGameObjectRegister();
         InGameObjRegister.Initialize();
@@ -64,9 +64,9 @@ public class SubWorld : MonoBehaviour
         OffsetCoordinate = new Vector3(subWorldData.OffsetX, subWorldData.OffsetY, subWorldData.OffsetZ);
         var configData = WorldConfigFile.Instance.GetConfig();
         var mapData = WorldMapDataFile.Instance.MapData;
-        float realCoordX = (OffsetCoordinate.x * configData.SubWorldSizeX) + (WorldAreaInstance.OffsetCoordinate.x * mapData.SubWorldRow * configData.SubWorldSizeX);
-        float realCoordY = (OffsetCoordinate.y * configData.SubWorldSizeY) + (WorldAreaInstance.OffsetCoordinate.y * mapData.SubWorldColumn * configData.SubWorldSizeY);
-        float realCoordZ = (OffsetCoordinate.z * configData.SubWorldSizeZ) + (WorldAreaInstance.OffsetCoordinate.z * mapData.SubWorldLayer * configData.SubWorldSizeZ);
+        float realCoordX = (OffsetCoordinate.x * configData.SubWorldSizeX) + (OwnerWorldAreaInstance.OffsetCoordinate.x * mapData.SubWorldRow * configData.SubWorldSizeX);
+        float realCoordY = (OffsetCoordinate.y * configData.SubWorldSizeY) + (OwnerWorldAreaInstance.OffsetCoordinate.y * mapData.SubWorldColumn * configData.SubWorldSizeY);
+        float realCoordZ = (OffsetCoordinate.z * configData.SubWorldSizeZ) + (OwnerWorldAreaInstance.OffsetCoordinate.z * mapData.SubWorldLayer * configData.SubWorldSizeZ);
         RealCoordinate = new Vector3(realCoordX, realCoordY, realCoordZ);
         bSurfaceWorld = subWorldData.IsSurface;
         // setting to GameObject
@@ -82,12 +82,12 @@ public class SubWorld : MonoBehaviour
 
     public Vector3 GetWorldAreaOffset()
     {
-        return WorldAreaInstance.OffsetCoordinate;
+        return OwnerWorldAreaInstance.OffsetCoordinate;
     }
 
     public string GetWorldAreaUniqueID()
     {
-        return WorldAreaInstance.AreaUniqueID;
+        return OwnerWorldAreaInstance.AreaUniqueID;
     }
 
     /// <summary>
@@ -104,7 +104,7 @@ public class SubWorld : MonoBehaviour
             {
                 for (int y = 0; y < worldConfig.SubWorldSizeY; y++)
                 {
-                    WorldBlockData[x, y, z].Type = blockTypeBytes[x, y, z];
+                    WorldBlockData[x, y, z].CurrentType = blockTypeBytes[x, y, z];
                 }
             }
         }
@@ -121,14 +121,41 @@ public class SubWorld : MonoBehaviour
             }
         }
     }
+
+    public void UpdateBlocks(Block[,,] blocks, bool bUpdateRender)
+    {
+        var worldConfig = WorldConfigFile.Instance.GetConfig();
+        for (int x = 0; x < worldConfig.SubWorldSizeX; x++)
+        {
+            for (int z = 0; z < worldConfig.SubWorldSizeZ; z++)
+            {
+                for (int y = 0; y < worldConfig.SubWorldSizeY; y++)
+                {
+                    WorldBlockData[x, y, z] = blocks[x, y, z];
+                }
+            }
+        }
+
+        if (bUpdateRender == true)
+        {
+            // 렌더링 리프레쉬.\
+            foreach (ChunkSlot slot in ChunkSlots)
+            {
+                foreach (var chunk in slot.Chunks)
+                {
+                    chunk.Update = true;
+                }
+            }
+        }
+    }
     private IEnumerator Tick()
     {
-        KojeomLogger.DebugLog(string.Format("Onwer AreaID : {0}, SubWorld ID : {1} is Tick Start.", WorldAreaInstance.AreaUniqueID, UniqueID));
+        KojeomLogger.DebugLog(string.Format("Onwer AreaID : {0}, SubWorld ID : {1} is Tick Start.", OwnerWorldAreaInstance.AreaUniqueID, UniqueID));
         while(bTicking)
         {
             if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.bInitialize == true)
             {
-                var curPlayerWorld = WorldAreaInstance.ContainedSubWorld(GamePlayerManager.Instance.MyGamePlayer.Controller.GetPosition());
+                var curPlayerWorld = OwnerWorldAreaInstance.ContainedSubWorld(GamePlayerManager.Instance.MyGamePlayer.Controller.GetPosition());
                 if (curPlayerWorld != null)
                 {
                     var dist = Mathf.RoundToInt(Vector3.Distance(curPlayerWorld.OffsetCoordinate, OffsetCoordinate));
@@ -143,7 +170,7 @@ public class SubWorld : MonoBehaviour
             }
             yield return new WaitForSeconds(0.5f);
         }
-        KojeomLogger.DebugLog(string.Format("Onwer AreaID : {0}, SubWorld ID : {1} is Tick Suspended.", WorldAreaInstance.AreaUniqueID, UniqueID));
+        KojeomLogger.DebugLog(string.Format("Onwer AreaID : {0}, SubWorld ID : {1} is Tick Suspended.", OwnerWorldAreaInstance.AreaUniqueID, UniqueID));
     }
 
     public void Release()
@@ -187,7 +214,7 @@ public class SubWorld : MonoBehaviour
         var bSuccessLoad = await TaskLoadSubWorldTerrain(newBlockData);
         if(bSave == true)
         {
-            var bSuccessSave = await WorldAreaInstance.TaskSaveSpecificSubWorld(UniqueID);
+            var bSuccessSave = await OwnerWorldAreaInstance.TaskSaveSpecificSubWorld(UniqueID);
         }
         StartCoroutine(LoadTerrainChunks(finishCallBack));
     }
@@ -208,7 +235,7 @@ public class SubWorld : MonoBehaviour
                         {
                             WorldBlockData[x, y, z] = new Block
                             {
-                                Type = (byte)BlockTileType.EMPTY,
+                                CurrentType = (byte)BlockTileType.EMPTY,
                                 bRendered = false,
                                 WorldDataIndexX = x,
                                 WorldDataIndexY = y,
@@ -247,13 +274,14 @@ public class SubWorld : MonoBehaviour
                     int mapX = ((int)OffsetCoordinate.x * worldConfig.SubWorldSizeX) + x;
                     int mapZ = ((int)OffsetCoordinate.z * worldConfig.SubWorldSizeZ) + z;
                     //
-                    WorldGenAlgorithms.TerrainValue terrainValue = WorldAreaInstance.XZPlaneDataArray[mapX, mapZ];
+                    WorldGenAlgorithms.TerrainValue terrainValue = OwnerWorldAreaInstance.XZPlaneDataArray[mapX, mapZ];
                     int rangeY = terrainValue.Layers[(int)OffsetCoordinate.y];
                     byte blockType = (byte)terrainValue.BlockType;
                     for (int y = 0; y < rangeY; y++)
                     {
                         // 블록 타입 세팅.
-                        WorldBlockData[x, y, z].Type = blockType;
+                        WorldBlockData[x, y, z].CurrentType = blockType;
+                        WorldBlockData[x, y, z].OriginalType = blockType;
                         // 블록 내구도 세팅.
                         BlockTileInfo blockTypeInfo = BlockTileDataFile.Instance.GetBlockTileInfo((BlockTileType)blockType);
                         WorldBlockData[x, y, z].Durability = blockTypeInfo.Durability;
@@ -344,17 +372,6 @@ public class SubWorld : MonoBehaviour
         }
     }
 
-    private int PerlinNoise (int x, int y, int z, float scale, float height, float power)
-    {
-        // noise value 0 to 1
-        float rValue;
-        rValue = Noise.GetNoise (((double)x) / scale, ((double)y) / scale, ((double)z) / scale);
-        rValue *= height;
-   
-        if (power != 0) rValue = Mathf.Pow(rValue, power);
-        return (int)rValue;
-    }
-
     public void RegisterObject(GameObject obj)
     {
         InGameObjRegister.Register(obj);
@@ -380,7 +397,7 @@ public class SubWorld : MonoBehaviour
             for (int indexY = 1; indexY < worldConfig.SubWorldSizeY; indexY++)
             {
                 Block block = WorldBlockData[indexX, indexY, indexZ];
-                if ((BlockTileType)block.Type == BlockTileType.EMPTY)
+                if ((BlockTileType)block.CurrentType == BlockTileType.EMPTY)
                 {
                     position.x = block.CenterX;
                     position.y = block.CenterY;

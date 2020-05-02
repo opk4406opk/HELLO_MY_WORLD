@@ -23,7 +23,7 @@ namespace MapGenLib
             {
                 if (WorldGenerateUtils.CheckSubWorldBoundary((int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z, subWorldSize) == true)
                 {
-                    worldBlockData[(int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z].Type = (byte)BlockTileType.WOOD;
+                    worldBlockData[(int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z].CurrentType = (byte)BlockTileType.WOOD;
                 }
             }
             MakeDefaultBranch(worldBlockData,
@@ -44,7 +44,7 @@ namespace MapGenLib
                     {
                         if (WorldGenerateUtils.CheckSubWorldBoundary((int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z, subWorldSize) == true)
                         {
-                            worldBlockData[(int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z].Type = (byte)leafType;
+                            worldBlockData[(int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z].CurrentType = (byte)leafType;
                         }
                     }
                 }
@@ -66,7 +66,7 @@ namespace MapGenLib
             {
                 if (WorldGenerateUtils.CheckSubWorldBoundary((int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z, subWorldSize) == true)
                 {
-                    worldBlockData[(int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z].Type = (byte)BlockTileType.WOOD;
+                    worldBlockData[(int)rootPosition.x, (int)rootPosition.y + idx, (int)rootPosition.z].CurrentType = (byte)BlockTileType.WOOD;
                 }
             }
             MakeSqaureBranch(worldBlockData, new CustomVector3(rootPosition.x, rootPosition.y + treeBodyLength, rootPosition.z), 2, BlockTileType.SQAURE_TREE_LEAF, subWorldSize);
@@ -83,7 +83,7 @@ namespace MapGenLib
                     {
                         if (WorldGenerateUtils.CheckSubWorldBoundary((int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z, subWorldSize) == true)
                         {
-                            worldBlockData[(int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z].Type = (byte)leafType;
+                            worldBlockData[(int)branchPos.x + x, (int)branchPos.y + y, (int)branchPos.z + z].CurrentType = (byte)leafType;
                         }
                     }
                 }
