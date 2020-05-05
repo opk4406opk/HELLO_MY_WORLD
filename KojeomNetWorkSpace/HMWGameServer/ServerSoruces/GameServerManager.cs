@@ -13,14 +13,14 @@ namespace HMWGameServer
     {
         private List<GameUser> GameUserList;
         private NetworkServiceManager NetworkServiceMgr;
-
         private static GameServerManager Instance = null;
-
+        private readonly byte USING_NET_ID = 0;
+        private readonly byte FREE_NET_ID = 1;
+        private static int CurrentMaxIDTable = 32167;
         /// <summary>
-        /// 게임 유저에게 할당하는 NetID.
-        /// <br></br>유저가 접속할 때마다 1씩 증가한 값으로 설정.
+        /// 
         /// </summary>
-        public int AssignNetID = 0;
+        private List<byte> NetIDTable = new List<byte>();
         /// <summary>
         /// 호스트에서 최초 맵 생성시에 사용된 Random Seed 값.
         /// </summary>
@@ -42,6 +42,8 @@ namespace HMWGameServer
             NetworkServiceMgr = new NetworkServiceManager(true);
             NetworkServiceMgr.Initialize();
             NetworkServiceMgr.OnSessionCreated += OnSessionCreated;
+            // Net 식별자 테이블 초기화.
+            for (int idx = 0; idx < CurrentMaxIDTable; idx++) NetIDTable.Add(FREE_NET_ID);
         }
 
         public void StartListen()
@@ -49,12 +51,12 @@ namespace HMWGameServer
             // listen
             string localIP = GetLocalIP();
             NetworkServiceMgr.StartListen(localIP, 8000);
-            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Listen with : {0}", localIP));
+            GameLogger.ConsoleLogNoFileInfo(string.Format("Listen with : {0}", localIP));
         }
 
         public void StartServer()
         {
-            GameLogger.SimpleConsoleWriteLineNoFileInfo("Hello my World GameServer Started!");
+            GameLogger.ConsoleLogNoFileInfo("Hello my World GameServer Started!");
             GameWorldMapManager.GetInstance().AsyncMakeMap();
             while (true)
             {
@@ -63,10 +65,10 @@ namespace HMWGameServer
                 string input = Console.ReadLine();
                 if (input.Equals("users"))
                 {
-                    GameLogger.SimpleConsoleWriteLineNoFileInfo("users count : " + GameUserList.Count);
+                    GameLogger.ConsoleLogNoFileInfo("users count : " + GameUserList.Count);
                     foreach(GameUser gameUser in GameUserList)
                     {
-                        GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("ID : {0}, IP Adress {1}", gameUser.NetIdentityNumber, gameUser.Token.SocketInstance.RemoteEndPoint));
+                        GameLogger.ConsoleLogNoFileInfo(string.Format("ID : {0}, IP Adress {1}", gameUser.NetIdentityNumber, gameUser.Token.SocketInstance.RemoteEndPoint));
                     }
                 }
                 System.Threading.Thread.Sleep(1000);
@@ -78,9 +80,11 @@ namespace HMWGameServer
             GameUser user = new GameUser(userToken);
             lock (GameUserList)
             {
-                GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("New Session Created. {0}", userToken.SocketInstance.RemoteEndPoint.ToString()));
-                user.NetIdentityNumber = AssignNetID++;
+                user.NetIdentityNumber = AssignNetID();
                 GameUserList.Add(user);
+                GameLogger.ConsoleLogNoFileInfo(string.Format("New Session Created. ( IP : {0}, NetID : {1} )",
+                    userToken.SocketInstance.RemoteEndPoint.ToString(), user.NetIdentityNumber));
+
             }
         }
 
@@ -92,7 +96,7 @@ namespace HMWGameServer
                 {
                     if (user.NetIdentityNumber != exceptUserID)
                     {
-                        GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("BroadCasting to user(ID : {0}, IPAdreess: {1})", 
+                        GameLogger.ConsoleLogNoFileInfo(string.Format("BroadCasting to user(ID : {0}, IPAdreess: {1})", 
                             user.NetIdentityNumber,
                             user.Token.SocketInstance.RemoteEndPoint.ToString()));
                         user.Send(packet);
@@ -117,6 +121,8 @@ namespace HMWGameServer
         {
             lock (GameUserList)
             {
+                GameLogger.ConsoleLogNoFileInfo(string.Format("Session( NetID : {0} ) is Removed.", user.NetIdentityNumber));
+                RecallNetID(user.NetIdentityNumber);
                 GameUserList.Remove(user);
             }
         }
@@ -133,6 +139,30 @@ namespace HMWGameServer
                 }
             }
             return localIP;
+        }
+
+        private int AssignNetID()
+        {
+            for(int idx = 0; idx < NetIDTable.Count; idx++)
+            {
+                if (NetIDTable[idx] == FREE_NET_ID)
+                {
+                    NetIDTable[idx] = USING_NET_ID;
+                    return idx;
+                }
+            }
+            // 현재 테이블에서 비어있는 식별자가 없다면 1개 증가시킨다.
+            CurrentMaxIDTable++;
+            NetIDTable.Add(USING_NET_ID);
+            GameLogger.ConsoleLogNoFileInfo(string.Format("Maximum NetID Table is Increased.  [current max : {0}]",
+                CurrentMaxIDTable));
+            //
+            return CurrentMaxIDTable - 1;
+        }
+
+        private void RecallNetID(int netIdentifier)
+        {
+            NetIDTable[netIdentifier] = FREE_NET_ID;
         }
     }
 }

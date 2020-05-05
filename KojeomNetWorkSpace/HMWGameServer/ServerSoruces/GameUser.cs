@@ -55,11 +55,11 @@ namespace HMWGameServer
                         bool bSuccess = GameWorldMapManager.GetInstance().AddSubWorldData(receivedData);
                         if(bSuccess == true)
                         {
-                            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Requested User ID : {0}, AreaID: {1}, SubWorldID : {2}, BlockIndex x : {3} y : {4} z : {5}, BlockType : {6}",
+                            GameLogger.ConsoleLogNoFileInfo(string.Format("Requested User ID : {0}, AreaID: {1}, SubWorldID : {2}, BlockIndex x : {3} y : {4} z : {5}, BlockType : {6}",
                                                                           NetIdentityNumber, receivedData.AreaID, receivedData.SubWorldID,
                                                                           receivedData.BlockIndex_X, receivedData.BlockIndex_Y, receivedData.BlockIndex_Z,
                                                                           receivedData.BlockTypeValue));
-                            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Changed block ACK packet to GameUser (ID : {0})", NetIdentityNumber));
+                            GameLogger.ConsoleLogNoFileInfo(string.Format("Changed block ACK packet to GameUser (ID : {0})", NetIdentityNumber));
                             CPacket response = CPacket.Create((short)NetProtocol.CHANGED_SUBWORLD_BLOCK_ACK);
                             Send(response);
 
@@ -76,7 +76,7 @@ namespace HMWGameServer
                         }
                         else
                         {
-                            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("SubWorldData Change Failed. Requested User ID : {0} ", NetIdentityNumber));
+                            GameLogger.ConsoleLogNoFileInfo(string.Format("SubWorldData Change Failed. Requested User ID : {0} ", NetIdentityNumber));
                         }
                     }
                     break;
@@ -105,7 +105,7 @@ namespace HMWGameServer
                         // Host가 아닌 Client로 접속한 경우에만 서브월드 데이터 리스트를 전송.
                         if (NetType == GameUserNetType.Client)
                         {
-                            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("User : {0} requested subWorld datas. SUBWORLD_DATAS_ACK START", NetIdentityNumber));
+                            GameLogger.ConsoleLogNoFileInfo(string.Format("User : {0} requested subWorld datas. SUBWORLD_DATAS_ACK START", NetIdentityNumber));
                             foreach(var data in GameWorldMapManager.GetInstance().WorldAreaMap)
                             {
                                 WorldArea worldAreaInst = data.Value;
@@ -148,7 +148,7 @@ namespace HMWGameServer
                             //
                             if (TotalSubWorldDataPackets == 0) SendSubWorldDataFinishPacket();
                             //
-                            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("User : {0} requested subWorld datas. SUBWORLD_DATAS_ACK FINISH ( total : {1} )", NetIdentityNumber, TotalSubWorldDataPackets));
+                            GameLogger.ConsoleLogNoFileInfo(string.Format("User : {0} requested subWorld datas. SUBWORLD_DATAS_ACK FINISH ( total : {1} )", NetIdentityNumber, TotalSubWorldDataPackets));
                         }
                     }
                     break;
@@ -157,7 +157,7 @@ namespace HMWGameServer
 
         private void SendSubWorldDataFinishPacket()
         {
-            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Client Received All SubWorldData. ( User ID : {0} )", NetIdentityNumber));
+            GameLogger.ConsoleLogNoFileInfo(string.Format("Client Received All SubWorldData. ( User ID : {0} )", NetIdentityNumber));
             TotalSubWorldDataPackets = 0;
             CurrentSafeReceived = 0;
             CPacket finishSubWorldDatasPacket = CPacket.Create((short)NetProtocol.SUBWORLD_DATAS_FINISH);
@@ -190,7 +190,7 @@ namespace HMWGameServer
 
         public void OnRemoved()
         {
-            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Session is stop. NetType : {0} ,NetID : {1}", NetType, NetIdentityNumber));
+            GameLogger.ConsoleLogNoFileInfo(string.Format("Session is stop. NetType : {0} ,NetID : {1}", NetType, NetIdentityNumber));
             GameServerManager.GetInstance().OnSessionRemoved(this);
         }
 

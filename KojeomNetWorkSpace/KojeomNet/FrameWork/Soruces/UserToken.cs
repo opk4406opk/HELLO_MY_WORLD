@@ -249,7 +249,7 @@ namespace KojeomNet.FrameWork.Soruces
 
             if (PeerInstance != null)
             {
-                CPacket msg = CPacket.Create((short)-1);
+                CPacket msg = CPacket.Create(SYS_CLOSE_ACK);
                 if (Dispatcher != null)
                 {
                     Dispatcher.OnMessage(this, new ArraySegment<byte>(msg.Buffer, 0, msg.Position));

@@ -195,10 +195,10 @@ public class GameNetworkManager
         }
     }
 
-    public void DisConnectToGameServer()
+    public void DisconnectToGameServer()
     {
-        KojeomLogger.DebugLog("DisConnectToGameServer ", LOG_TYPE.NETWORK_CLIENT_INFO);
-        ((RemoteServerPeer)GameServer).UserTokenInstance.Ban();
+        KojeomLogger.DebugLog("DisconnectToGameServer ", LOG_TYPE.NETWORK_CLIENT_INFO);
+        ((RemoteServerPeer)GameServer).UserTokenInstance.Disconnect();
     }
 }
 

@@ -9,7 +9,7 @@ namespace HMWGameServer
 {
     class GameLogger
     {
-        public static void SimpleConsoleWriteLine(string message,
+        public static void ConsoleLog(string message,
                                            [CallerMemberName] string callingMethod = "",
                                            [CallerFilePath] string callingFilePath = "",
                                            [CallerLineNumber] int callingFileLineNumber = 0)
@@ -18,7 +18,7 @@ namespace HMWGameServer
             Console.WriteLine(msg);
         }
 
-        public static void SimpleConsoleWriteLineNoFileInfo(string message)
+        public static void ConsoleLogNoFileInfo(string message)
         {
             string msg = string.Format("[HMW_LOG] message : {0}", message);
             Console.WriteLine(msg);

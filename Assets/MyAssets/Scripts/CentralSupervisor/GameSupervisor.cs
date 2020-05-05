@@ -182,4 +182,9 @@ public class GameSupervisor : MonoBehaviour
         }
         KojeomLogger.DebugLog("게임매니저 클래스 초기화 완료.");
     }
+
+    void OnApplicationQuit()
+    {
+        GameNetworkManager.GetInstance().DisconnectToGameServer();
+    }
 }

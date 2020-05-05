@@ -98,11 +98,11 @@ namespace HMWGameServer
 
         public async void AsyncMakeMap()
         {
-            GameLogger.SimpleConsoleWriteLineNoFileInfo("Start Async MakeMap.");
+            GameLogger.ConsoleLogNoFileInfo("Start Async MakeMap.");
             var watch = System.Diagnostics.Stopwatch.StartNew();
             bInitMakeWorldMap = await MakeWorldMap();
             watch.Stop();
-            GameLogger.SimpleConsoleWriteLineNoFileInfo(string.Format("Finish Async MakeMap. (takes time : {0} ms)", watch.ElapsedMilliseconds));
+            GameLogger.ConsoleLogNoFileInfo(string.Format("Finish Async MakeMap. (takes time : {0} ms)", watch.ElapsedMilliseconds));
         }
 
         private async Task<bool> MakeWorldMap()
