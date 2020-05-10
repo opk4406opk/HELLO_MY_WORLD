@@ -236,12 +236,12 @@ public class WorldArea : MonoBehaviour
         //NPC 생성 테스트. 
         if(worldState.SubWorldInstance.bSurfaceWorld == true)
         {
-            ActorSuperviosr.Instance.RequestSpawnRandomNPC(NPC_TYPE.Merchant, subWorldUniqueID, AreaUniqueID, 1, false);
+            ActorSuperviosr.Instance.RequestSpawnRandomNPC(NPC_TYPE.Merchant, subWorldUniqueID, AreaUniqueID, 1, true);
         }
         //Animal 생성 테스트. 
         if (worldState.SubWorldInstance.bSurfaceWorld == true)
         {
-            ActorSuperviosr.Instance.RequestSpawnRandomAnimal(ANIMAL_TYPE.Chick, subWorldUniqueID, AreaUniqueID, 1, false);
+            ActorSuperviosr.Instance.RequestSpawnRandomAnimal(ANIMAL_TYPE.Chick, subWorldUniqueID, AreaUniqueID, 1, true);
         }
     }
 

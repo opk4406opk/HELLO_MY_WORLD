@@ -68,6 +68,9 @@ public abstract class AChunk : MonoBehaviour {
 		set { _Update = value; }
 	}
 
+    public delegate void Del_OnLoadFinish(int worldDataX, int worldDataY, int worldDataZ);
+    public event Del_OnLoadFinish OnLoadFinish;
+
 	protected abstract void CreateCube(int blockIdxX, int blockIdxY, int blockIdxZ, float cubeX, float cubeY, float cubeZ, float blockCenterX, float blockCenterY, float blockCenterZ);
 	protected abstract void FixedUpdate();
 	public abstract void Init();
@@ -101,7 +104,6 @@ public abstract class AChunk : MonoBehaviour {
 
 	protected void CubeNorthFace(float x, float y, float z, BlockTileType tileType)
 	{
-
 		NewVertices.Add(new Vector3(x + 1, y - 1, z + 1));
 		NewVertices.Add(new Vector3(x + 1, y, z + 1));
 		NewVertices.Add(new Vector3(x, y, z + 1));
@@ -112,12 +114,10 @@ public abstract class AChunk : MonoBehaviour {
 		TexturePos.y = tileInfo.PositionY;
 
 		CreateFace(TexturePos);
-
 	}
 
 	protected void CubeEastFace(float x, float y, float z, BlockTileType tileType)
 	{
-
 		NewVertices.Add(new Vector3(x + 1, y - 1, z));
 		NewVertices.Add(new Vector3(x + 1, y, z));
 		NewVertices.Add(new Vector3(x + 1, y, z + 1));
@@ -128,12 +128,10 @@ public abstract class AChunk : MonoBehaviour {
 		TexturePos.y = tileInfo.PositionY;
 
 		CreateFace(TexturePos);
-
 	}
 
 	protected void CubeSouthFace(float x, float y, float z, BlockTileType tileType)
 	{
-
 		NewVertices.Add(new Vector3(x, y - 1, z));
 		NewVertices.Add(new Vector3(x, y, z));
 		NewVertices.Add(new Vector3(x + 1, y, z));
@@ -144,12 +142,10 @@ public abstract class AChunk : MonoBehaviour {
 		TexturePos.y = tileInfo.PositionY;
 
 		CreateFace(TexturePos);
-
 	}
 
 	protected void CubeWestFace(float x, float y, float z, BlockTileType tileType)
 	{
-
 		NewVertices.Add(new Vector3(x, y - 1, z + 1));
 		NewVertices.Add(new Vector3(x, y, z + 1));
 		NewVertices.Add(new Vector3(x, y, z));
@@ -160,12 +156,10 @@ public abstract class AChunk : MonoBehaviour {
 		TexturePos.y = tileInfo.PositionY;
 
 		CreateFace(TexturePos);
-
 	}
 
 	protected void CubeBottomFace(float x, float y, float z, BlockTileType tileType)
 	{
-
 		NewVertices.Add(new Vector3(x, y - 1, z));
 		NewVertices.Add(new Vector3(x + 1, y - 1, z));
 		NewVertices.Add(new Vector3(x + 1, y - 1, z + 1));
@@ -176,7 +170,6 @@ public abstract class AChunk : MonoBehaviour {
 		TexturePos.y = tileInfo.PositionY;
 
 		CreateFace(TexturePos);
-
 	}
 
 	protected void CreateFace(Vector2 texturePos)
@@ -227,12 +220,17 @@ public abstract class AChunk : MonoBehaviour {
             }
         }
         UpdateMesh();
+        OnLoadFinish(_WorldDataIdxX, _WorldDataIdxY, _WorldDataIdxZ);
     }
 
     protected async void TestAsyncGenerateMesh()
     {
         bool bSuccess = await AsyncGenerateMesh_Internal();
-        if (bSuccess == true) UpdateMesh();
+        if (bSuccess == true)
+        {
+            UpdateMesh();
+            OnLoadFinish(_WorldDataIdxX, _WorldDataIdxY, _WorldDataIdxZ);
+        }
     }
 
     private async Task<bool> AsyncGenerateMesh_Internal()

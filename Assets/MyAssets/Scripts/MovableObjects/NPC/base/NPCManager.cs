@@ -54,8 +54,7 @@ public class NPCManager : NPCSpawner
             instance.transform.parent = ActorSuperviosr.Instance.GetSpawnedGroupTransform();
             //
             WorldAreaManager.Instance.GetWorldArea(worldAreaUniqueID).SubWorldStates.TryGetValue(subWorldUniqueID, out SubWorldState worldState);
-            if(worldState.RealTimeStatus == SubWorldRealTimeStatus.Loading ||
-               worldState.RealTimeStatus == SubWorldRealTimeStatus.LoadFinish)
+            if(worldState.RealTimeStatus == SubWorldRealTimeStatus.LoadFinish)
             {
                 worldState.SubWorldInstance.RegisterActor(instance);
                 int spanwID = instance.GetHashCode();

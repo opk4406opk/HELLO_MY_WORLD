@@ -63,7 +63,7 @@ public class ActorSuperviosr : MonoBehaviour
 {
     [SerializeField]
     private Transform SpawnedGroupTransform;
-    public bool IsRunningTick { get; private set; }
+    public bool bRunningTick { get; private set; }
     public NPCManager NPCManagerInstance { get; private set; }
     public AnimalManager AnimalManagerInstance { get; private set; }
     //
@@ -104,7 +104,7 @@ public class ActorSuperviosr : MonoBehaviour
 
     public void End()
     {
-        IsRunningTick = false;
+        bRunningTick = false;
     }
 
     public void RequestSpawnActor(RequestSpawnActorMessage message)
@@ -139,9 +139,9 @@ public class ActorSuperviosr : MonoBehaviour
 
     private IEnumerator Tick()
     {
-        IsRunningTick = true;
+        bRunningTick = true;
         KojeomLogger.DebugLog("ActorSuperviosr::Tick Start.", LOG_TYPE.NORMAL);
-        while(IsRunningTick == true)
+        while(bRunningTick == true)
         {
             if(RequestSpawnMessages.Count > 0)
             {

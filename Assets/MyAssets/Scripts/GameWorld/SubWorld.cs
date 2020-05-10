@@ -43,6 +43,8 @@ public class SubWorld : MonoBehaviour
     public Block[,,] WorldBlockData { get; private set; }
     private int ChunkSize = 0;
     private int ChunkNumber = 0;
+    private int CurrentLoadedChunkCount = 0; //
+    private Action InvokeExternalCallback; // 
     public CustomOctree CustomOctreeInstance { get; private set; } = new CustomOctree();
 
     private InGameObjectRegister InGameObjRegister;
@@ -311,6 +313,8 @@ public class SubWorld : MonoBehaviour
 //#endif
     private IEnumerator LoadTerrainChunks(Action finishCallBack = null)
     {
+        InvokeExternalCallback = finishCallBack;
+        //
         KojeomLogger.DebugLog(string.Format("World name : {0}, Chunk 로드를 시작합니다.", WorldName), LOG_TYPE.DEBUG_TEST);
         for (int x = 0; x < ChunkSlots.GetLength(0); x++)
         {
@@ -362,25 +366,33 @@ public class SubWorld : MonoBehaviour
                         ChunkSlots[x, y, z].Chunks[type].RealCoordX = chunkRealCoordX + RealCoordinate.x;
                         ChunkSlots[x, y, z].Chunks[type].RealCoordY = chunkRealCoordY + RealCoordinate.y;
                         ChunkSlots[x, y, z].Chunks[type].RealCoordZ = chunkRealCoordZ + RealCoordinate.z;
+                        ChunkSlots[x, y, z].Chunks[type].OnLoadFinish += OnLoadFinishChunk;
                         ChunkSlots[x, y, z].Chunks[type].Init();
                         yield return new WaitForSeconds(WorldConfigFile.Instance.GetConfig().ChunkLoadIntervalSeconds);
                     }
-
                 }
             }
         }
-        //
-        KojeomLogger.DebugLog(string.Format("World name : {0} Chunk 로드를 완료했습니다.", WorldName), LOG_TYPE.DEBUG_TEST);
-        bLoadFinish = true;
-        SetTickEnable(true);
-        OnFinishLoadChunks(UniqueID);
-        finishCallBack?.Invoke();
+        
+    }
 
-        // 월드에 등록된 모든 Actor를 Show.
-        //foreach (var actor in InGameObjRegister.RegisteredActors)
-        //{
-        //    actor.Show();
-        //}
+    private void OnLoadFinishChunk(int loadFinishChunkX, int loadFinishChunkY, int loadFinishChunkZ)
+    {
+        CurrentLoadedChunkCount++;
+        int totalChunks = ChunkSlots.Length * (int)ChunkType.COUNT;
+        if (totalChunks == CurrentLoadedChunkCount)
+        {
+            CurrentLoadedChunkCount = 0;
+            KojeomLogger.DebugLog(string.Format("World name : {0} 모든 Chunk 로드를 완료했습니다.", WorldName), LOG_TYPE.DEBUG_TEST);
+            bLoadFinish = true;
+            SetTickEnable(true);
+            // 모든 청크 로딩완료 이벤트.
+            OnFinishLoadChunks(UniqueID);
+            // 외부 콜백 호출.
+            InvokeExternalCallback?.Invoke();
+            // 월드에 등록된 모든 Actor를 Show.
+            foreach (var actor in InGameObjRegister.RegisteredActors) actor.Show();
+        }
     }
 
     public void RegisterObject(GameObject obj)
