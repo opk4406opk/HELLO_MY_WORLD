@@ -134,13 +134,11 @@ public class GamePlayerController : MonoBehaviour
                     {
                         CurPlayerState = GamePlayerState.IDLE;
                     }
-                    else if (inputData.InputState == INPUT_STATE.CHARACTER_JUMP &&
-                        CurPlayerState == GamePlayerState.MOVE && bPlayerInGroundOrWater == true)
+                    else if (inputData.InputState == INPUT_STATE.CHARACTER_JUMP && CurPlayerState == GamePlayerState.MOVE && bPlayerInGroundOrWater == true)
                     {
                         CurPlayerState = GamePlayerState.MOVING_JUMP;
                     }
-                    else if (inputData.InputState == INPUT_STATE.CHARACTER_JUMP &&
-                        CurPlayerState != GamePlayerState.MOVE && bPlayerInGroundOrWater == true)
+                    else if (inputData.InputState == INPUT_STATE.CHARACTER_JUMP && CurPlayerState != GamePlayerState.MOVE && bPlayerInGroundOrWater == true)
                     {
                         CurPlayerState = GamePlayerState.JUMP;
                     }

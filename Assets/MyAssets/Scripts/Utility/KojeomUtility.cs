@@ -296,6 +296,7 @@ public class KojeomUtility
     {
         if(StopWatchInstance != null)
         {
+            StopWatchInstance.Stop();
             return StopWatchInstance.ElapsedMilliseconds;
         }
         return 0;

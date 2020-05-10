@@ -249,7 +249,6 @@ public class WorldArea : MonoBehaviour
     {
         switch(SubWorldStates[uniqueID].RealTimeStatus)
         {
-            //case WorldRealTimeStatus.Loading:
             case SubWorldRealTimeStatus.LoadFinish:
                 // 릴리즈 상태로 전환.
                 SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Release;
@@ -342,7 +341,7 @@ public class WorldArea : MonoBehaviour
                    
                 }
             }
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 

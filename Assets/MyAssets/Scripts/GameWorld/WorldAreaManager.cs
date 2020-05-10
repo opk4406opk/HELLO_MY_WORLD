@@ -71,8 +71,6 @@ public class WorldAreaManager : MonoBehaviour
                 string selectedAreaID = areaInstance.AreaUniqueID;
                 foreach (var keyValuePair in areaList[randIndex].SubWorldStates)
                 {
-                    yield return new WaitForSeconds(0.1f);
-                    //
                     SubWorldState subWorldState = keyValuePair.Value;
                     if (subWorldState.RealTimeStatus == SubWorldRealTimeStatus.ReadyToFirstLoad)
                     {
@@ -124,6 +122,7 @@ public class WorldAreaManager : MonoBehaviour
                             }
                         });
                     }
+                    yield return new WaitForSeconds(0.1f);
                 }
                 bInitFinish = true;
                 break;
