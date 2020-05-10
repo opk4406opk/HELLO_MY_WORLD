@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MapGenLib;
+using System.Threading.Tasks;
 
 public abstract class AChunk : MonoBehaviour {
 
@@ -228,7 +229,48 @@ public abstract class AChunk : MonoBehaviour {
         UpdateMesh();
     }
 
-	protected void UpdateMesh()
+    protected async void TestAsyncGenerateMesh()
+    {
+        bool bSuccess = await AsyncGenerateMesh_Internal();
+        if (bSuccess == true) UpdateMesh();
+    }
+
+    private async Task<bool> AsyncGenerateMesh_Internal()
+    {
+        return await Task.Run(() => {
+            for (int relativeX = 0; relativeX < ChunkSize; relativeX++)
+            {
+                for (int relativeY = 0; relativeY < ChunkSize; relativeY++)
+                {
+                    for (int relativeZ = 0; relativeZ < ChunkSize; relativeZ++)
+                    {
+                        int blockIdxX, blockIdxY, blockIdxZ;
+                        blockIdxX = relativeX + _WorldDataIdxX;
+                        blockIdxY = relativeY + _WorldDataIdxY;
+                        blockIdxZ = relativeZ + _WorldDataIdxZ;
+                        //
+                        float cubeX, cubeY, cubeZ;
+                        cubeX = relativeX + _RealCoordX;
+                        cubeY = relativeY + _RealCoordY;
+                        cubeZ = relativeZ + _RealCoordZ;
+                        //
+                        // 블록 생성시 6개의 면들의 위치를 조정하기 위해 추가했던 offset 값을 제거한다.
+                        // x, z 는 0.5f 씩 더해주고, y는 0.5f 빼준다.
+                        float blockCenterX = cubeX + 0.5f;
+                        float blockCenterY = cubeY - 0.5f;
+                        float blockCenterZ = cubeZ + 0.5f;
+                        SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterX = blockCenterX;
+                        SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterY = blockCenterY;
+                        SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].CenterZ = blockCenterZ;
+                        CreateCube(blockIdxX, blockIdxY, blockIdxZ, cubeX, cubeY, cubeZ, blockCenterX, blockCenterY, blockCenterZ);
+                    }
+                }
+            }
+            return true;
+        });
+    }
+
+    protected void UpdateMesh()
 	{
 		MeshInstance.Clear();
 		MeshInstance.vertices = NewVertices.ToArray();

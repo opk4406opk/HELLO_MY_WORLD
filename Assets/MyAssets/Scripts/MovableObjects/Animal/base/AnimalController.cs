@@ -7,11 +7,9 @@ public class AnimalController : ActorController
 
     public override void Init(SubWorld world, Actor instance)
     {
+        PreInit();
         ActorInstance = instance;
         ContainedWorld = world;
-        AnimatorInstance = gameObject.GetComponent<Animator>();
-        BoxColliderInstance = gameObject.GetComponent<BoxCollider>();
-
         // AI 초기화 세팅.
         AIGroup[(int)AITypes.Common] = new CommonAnimalAI();
         AIGroup[(int)AITypes.Common].Initialize(this);

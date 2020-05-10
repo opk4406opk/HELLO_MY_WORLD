@@ -128,12 +128,12 @@ abstract public class Actor : MonoBehaviour
     public void Show()
     {
         gameObject.SetActive(true);
-        Controller.StartAI();
+        Controller.StartController();
     }
     public void Hide()
     {
         gameObject.SetActive(false);
-        Controller.StopAI();
+        Controller.StopController();
     }
 }
 

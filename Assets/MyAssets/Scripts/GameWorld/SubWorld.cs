@@ -27,10 +27,8 @@ public class SubWorld : MonoBehaviour
     #endregion
 
     public ChunkSlot[,,] ChunkSlots { get; private set; }
-
     public bool bLoadFinish { get; private set; } = false;
     public bool bTicking { get; private set; } = false;
-
     #region world infomation.
     public string WorldName { get; private set; }
     [ReadOnly]
@@ -48,8 +46,8 @@ public class SubWorld : MonoBehaviour
     public CustomOctree CustomOctreeInstance { get; private set; } = new CustomOctree();
 
     private InGameObjectRegister InGameObjRegister;
-    //
     private WorldArea OwnerWorldAreaInstance;
+    private IEnumerator TickEnumerator;
 
     public void Init(SubWorldData subWorldData, WorldArea ownerArea)
     {
@@ -75,9 +73,8 @@ public class SubWorld : MonoBehaviour
         CustomOctreeInstance.Init(RealCoordinate, new Vector3(configData.SubWorldSizeX + RealCoordinate.x,
             configData.SubWorldSizeY + RealCoordinate.y,
             configData.SubWorldSizeZ + RealCoordinate.z));
-        //
-        bTicking = true;
-        StartCoroutine(Tick());
+        // setting tick enumerator.
+        TickEnumerator = Tick();
     }
 
     public Vector3 GetWorldAreaOffset()
@@ -88,6 +85,22 @@ public class SubWorld : MonoBehaviour
     public string GetWorldAreaUniqueID()
     {
         return OwnerWorldAreaInstance.AreaUniqueID;
+    }
+
+    public void SetTickEnable(bool bEnable)
+    {
+        if(bEnable == true)
+        {
+            bTicking = true;
+            StartCoroutine(TickEnumerator);
+            //KojeomLogger.DebugLog(string.Format("Onwer AreaID : {0}, SubWorld ID : {1} is Tick Start.", OwnerWorldAreaInstance.AreaUniqueID, UniqueID));
+        }
+        else
+        {
+            bTicking = false;
+            StopCoroutine(TickEnumerator);
+            //KojeomLogger.DebugLog(string.Format("Onwer AreaID : {0}, SubWorld ID : {1} is Tick Suspended.", OwnerWorldAreaInstance.AreaUniqueID, UniqueID));
+        }
     }
 
     /// <summary>
@@ -150,7 +163,6 @@ public class SubWorld : MonoBehaviour
     }
     private IEnumerator Tick()
     {
-        KojeomLogger.DebugLog(string.Format("Onwer AreaID : {0}, SubWorld ID : {1} is Tick Start.", OwnerWorldAreaInstance.AreaUniqueID, UniqueID));
         while(bTicking)
         {
             if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.bInitialize == true)
@@ -168,9 +180,8 @@ public class SubWorld : MonoBehaviour
                     }
                 }
             }
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1.0f);
         }
-        KojeomLogger.DebugLog(string.Format("Onwer AreaID : {0}, SubWorld ID : {1} is Tick Suspended.", OwnerWorldAreaInstance.AreaUniqueID, UniqueID));
     }
 
     public void Release()
@@ -309,7 +320,6 @@ public class SubWorld : MonoBehaviour
                 {
                     for (int type = 0; type < (int)ChunkType.COUNT; type++)
                     {
-
                         // 유니티엔진에서 제공되는 게임 오브젝트들의 중점(=월드좌표에서의 위치)은
                         // 실제 게임 오브젝트의 정중앙이 된다. 
                         // 따라서, 유니티엔진에 맞춰서 오브젝트의 중점을 정중앙으로 블록들을 생성하려면(= 1개의 블록은 6개의 면을 생성한다),
@@ -362,14 +372,15 @@ public class SubWorld : MonoBehaviour
         //
         KojeomLogger.DebugLog(string.Format("World name : {0} Chunk 로드를 완료했습니다.", WorldName), LOG_TYPE.DEBUG_TEST);
         bLoadFinish = true;
+        SetTickEnable(true);
         OnFinishLoadChunks(UniqueID);
         finishCallBack?.Invoke();
 
         // 월드에 등록된 모든 Actor를 Show.
-        foreach (var actor in InGameObjRegister.RegisteredActors)
-        {
-            actor.Show();
-        }
+        //foreach (var actor in InGameObjRegister.RegisteredActors)
+        //{
+        //    actor.Show();
+        //}
     }
 
     public void RegisterObject(GameObject obj)

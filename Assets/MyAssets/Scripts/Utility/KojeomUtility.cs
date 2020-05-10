@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using MapGenLib;
+using System.Diagnostics;
 
 public class KojeomUtility
 {
@@ -278,5 +279,25 @@ public class KojeomUtility
 
         if (power != 0) rValue = Mathf.Pow(rValue, power);
         return (int)rValue;
+    }
+
+    private static Stopwatch StopWatchInstance;
+    public static void StartWatch()
+    {
+        // watch start.
+        StopWatchInstance = Stopwatch.StartNew();
+    }
+
+    /// <summary>
+    ///  스탑워치의 경과한 시간을 리턴. ( millie seconds )
+    /// </summary>
+    /// <returns></returns>
+    public static long StopWatch()
+    {
+        if(StopWatchInstance != null)
+        {
+            return StopWatchInstance.ElapsedMilliseconds;
+        }
+        return 0;
     }
 }

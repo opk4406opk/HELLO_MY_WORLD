@@ -198,7 +198,7 @@ public class GameNetworkManager
     public void DisconnectToGameServer()
     {
         KojeomLogger.DebugLog("DisconnectToGameServer ", LOG_TYPE.NETWORK_CLIENT_INFO);
-        ((RemoteServerPeer)GameServer).UserTokenInstance.Disconnect();
+        if(GameServer != null) ((RemoteServerPeer)GameServer).UserTokenInstance.Disconnect();
     }
 }
 

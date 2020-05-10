@@ -34,6 +34,14 @@ public class GameCharacterInstance : MonoBehaviour
         //RigidBodyInstance.useGravity = false;
     }
 
+    public void EnableComponents(bool bEnable)
+    {
+        if (QueryMecanimController != null) QueryMecanimController.enabled = bEnable;
+        if (BoxColliderInstance != null) BoxColliderInstance.enabled = bEnable;
+        if (AnimatorInstance != null) AnimatorInstance.enabled = bEnable;
+        if (RigidBodyInstance != null) RigidBodyInstance.useGravity = bEnable;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.layer == LayerMask.NameToLayer(GameObjectLayerDefines.TERRAIN_CHUNK_LAYER) == true)

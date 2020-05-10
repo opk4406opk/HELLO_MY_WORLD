@@ -8,8 +8,9 @@ public class WaterChunk : AChunk
     {
         if (_Update)
         {
-            GenerateMesh();
+            //GenerateMesh();
             _Update = false;
+            TestAsyncGenerateMesh();
         }
     }
     public override void Init()
@@ -20,7 +21,8 @@ public class WaterChunk : AChunk
         TileUnit = gameWorldConfig.OneTileUnit;
         MeshInstance = GetComponent<MeshFilter>().mesh;
         MeshColliderComponent = GetComponent<MeshCollider>();
-        GenerateMesh();
+        //GenerateMesh();
+        TestAsyncGenerateMesh();
     }
 
     protected override void CreateCube(int blockIdxX, int blockIdxY, int blockIdxZ, float cubeX, float cubeY, float cubeZ, float blockCenterX, float blockCenterY, float blockCenterZ)

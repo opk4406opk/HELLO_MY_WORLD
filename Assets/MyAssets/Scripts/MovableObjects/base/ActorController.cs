@@ -14,6 +14,12 @@ public class ActorAnimTypeString
 public abstract class ActorController : MonoBehaviour
 {
     abstract public void Init(SubWorld world, Actor instance);
+    protected void PreInit()
+    {
+        BoxColliderInstance = gameObject.GetComponent<BoxCollider>();
+        RigidbodyInstance = gameObject.GetComponent<Rigidbody>();
+        AnimatorInstance = gameObject.GetComponent<Animator>();
+    }
     abstract public Transform GetActorTransform();
     abstract public void Tick(float deltaTime);
 
@@ -21,6 +27,7 @@ public abstract class ActorController : MonoBehaviour
     protected ActorStateType CurStateType;
     protected AITypes CurAIType = AITypes.Common;
     protected BoxCollider BoxColliderInstance;
+    protected Rigidbody RigidbodyInstance;
     protected StateMachineController StateMachineControllerInstance = new StateMachineController();
     protected SubWorld ContainedWorld;
     protected Animator AnimatorInstance;
@@ -195,10 +202,16 @@ public abstract class ActorController : MonoBehaviour
     }
     public void StartController()
     {
-
+        AnimatorInstance.enabled = true;
+        BoxColliderInstance.enabled = true;
+        RigidbodyInstance.useGravity = true;
+        StartAI();
     }
     public void StopController()
     {
-
+        AnimatorInstance.enabled = false;
+        BoxColliderInstance.enabled = false;
+        RigidbodyInstance.useGravity = false;
+        StopAI();
     }
 }

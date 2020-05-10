@@ -29,8 +29,8 @@ public class GamePlayer : MonoBehaviour
         //
         Controller = gameObject.GetComponent<GamePlayerController>();
         Controller.Init(this, CharInstance);
+        Controller.EnableTick(false); // test
         Controller.SetPosition(initPos);
-        Controller.StartControllProcess();
         SetObjectLayer(true);
         //
         KojeomLogger.DebugLog("게임플레이어 PostInit 완료. ", LOG_TYPE.INFO);

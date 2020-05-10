@@ -22,15 +22,13 @@ public class GamePlayerManager : MonoBehaviour {
         //
         var instance = Instantiate(GameResourceSupervisor.GetInstance().GamePlayerPrefab.LoadSynchro(), Vector3.zero, Quaternion.identity);
         MyGamePlayer = instance.GetComponent<GamePlayer>();
-        MyGamePlayer.Initialize(GameLocalDataManager.GetInstance().CharacterType,
-            GameLocalDataManager.GetInstance().CharacterName, initPosition);
+        MyGamePlayer.Initialize(GameLocalDataManager.GetInstance().CharacterType, GameLocalDataManager.GetInstance().CharacterName, initPosition);
         //Player Manager 하위 종속으로 변경.
         MyGamePlayer.transform.parent = gameObject.transform;
-        //
-        bInitialize = true;
         // call back.
         finishCallBack?.Invoke();
         //
         KojeomLogger.DebugLog(string.Format("[GamePlayerManager] Finish Make"), LOG_TYPE.INFO);
+        bInitialize = true;
     }
 }
