@@ -19,6 +19,7 @@ public class WorldAreaTerrainData
     public string UniqueID;
     public int OffsetX, OffsetY, OffsetZ;
     public string AreaName;
+    public bool bSurface;
     public List<SubWorldData> SubWorldDatas = new List<SubWorldData>();
 }
 
@@ -27,7 +28,7 @@ public struct SubWorldData
     public string UniqueID;
     public int OffsetX, OffsetY, OffsetZ;
     public string WorldName;
-    public bool IsSurface;
+    public bool bSurface;
 }
 
 
@@ -106,6 +107,16 @@ public class WorldMapDataFile : BaseDataFile
             worldAreaData.OffsetZ = int.Parse(val);
             data.TryGetValue("UniqueID", out val);
             worldAreaData.UniqueID = val;
+            data.TryGetValue("bSurface", out val);
+            if(val == "False")
+            {
+                worldAreaData.bSurface = false;
+            }
+            else
+            {
+                worldAreaData.bSurface = true;
+            }
+            
             // 데이터 리스트에 마지막 원소가 SubWorld 데이터 리스트임.
             var subWorldDataList = worldArea.list[worldArea.list.Count - 1].list;
             foreach (var subWorld in subWorldDataList)
@@ -127,14 +138,14 @@ public class WorldMapDataFile : BaseDataFile
                 map.TryGetValue("UniqueID", out outValue);
                 subWorldData.UniqueID = outValue;
                 //
-                map.TryGetValue("IsSurface", out val);
+                map.TryGetValue("bSurface", out val);
                 if (val == "False")
                 {
-                    subWorldData.IsSurface = false;
+                    subWorldData.bSurface = false;
                 }
                 else
                 {
-                    subWorldData.IsSurface = true;
+                    subWorldData.bSurface = true;
                 }
                 worldAreaData.SubWorldDatas.Add(subWorldData);
             }

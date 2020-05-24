@@ -93,6 +93,7 @@ namespace MapTool.Source
             public string OffsetY;
             public string OffsetZ;
             public string AreaName;
+            public string bSurface;
             public List<SubWorldData> SubWorldDatas = new List<SubWorldData>();
         }
        
@@ -180,6 +181,14 @@ namespace MapTool.Source
                             OffsetZ = z.ToString(),
                             AreaName = string.Format("WORLD_AREA_{0}", areaIndex),
                         };
+                        if(y == WorldMapDataInstance.WorldAreaLayer -1)
+                        {
+                            worldArea.bSurface = true.ToString();
+                        }
+                        else
+                        {
+                            worldArea.bSurface = false.ToString();
+                        }
                         jsonFileData.WorldAreaDatas.Add(worldArea);
                         CreateSubWorlds(jsonFileData, areaIndex);
                         areaIndex++;

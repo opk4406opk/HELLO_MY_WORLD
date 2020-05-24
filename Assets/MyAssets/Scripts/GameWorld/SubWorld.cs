@@ -70,7 +70,7 @@ public class SubWorld : MonoBehaviour
         float realCoordY = (OffsetCoordinate.y * configData.SubWorldSizeY) + (OwnerWorldAreaInstance.OffsetCoordinate.y * mapData.SubWorldColumn * configData.SubWorldSizeY);
         float realCoordZ = (OffsetCoordinate.z * configData.SubWorldSizeZ) + (OwnerWorldAreaInstance.OffsetCoordinate.z * mapData.SubWorldLayer * configData.SubWorldSizeZ);
         RealCoordinate = new Vector3(realCoordX, realCoordY, realCoordZ);
-        bSurfaceWorld = subWorldData.IsSurface;
+        bSurfaceWorld = subWorldData.bSurface;
         // setting to GameObject
         gameObject.name = WorldName;
         // Octree init.
