@@ -68,57 +68,53 @@ public class WorldAreaManager : MonoBehaviour
             WorldArea areaInstance = areaList[randIndex];
             if(areaInstance.bInitFinish == true)
             {
-                string selectedAreaID = areaInstance.AreaUniqueID;
-                foreach (var keyValuePair in areaList[randIndex].SubWorldStates)
+                foreach (var keyValuePair in areaInstance.SubWorldStates)
                 {
                     SubWorldState subWorldState = keyValuePair.Value;
                     if (subWorldState.RealTimeStatus == SubWorldRealTimeStatus.ReadyToFirstLoad)
                     {
                         subWorldState.RealTimeStatus = SubWorldRealTimeStatus.Loading;
                         subWorldState.SubWorldInstance.AsyncLoading(null, true, () => {
-                            if (GamePlayerManager.Instance != null)
+                            // 서브월드 비동기로딩 완료 후
+                            // 서버에서 데이터를 수신한게 있다면 세팅하고 업데이트.
+                            SubWorldPacketDataKey findKey;
+                            findKey.AreaID = subWorldState.SubWorldInstance.GetWorldAreaUniqueID();
+                            findKey.SubWorldID = subWorldState.SubWorldInstance.UniqueID;
+                            List<SubWorldBlockPacketData> receivedUpdatePackets;
+                            bool bFind = GameNetworkManager.GetInstance().InitialReceivedSubWorldDatas.TryGetValue(findKey, out receivedUpdatePackets);
+                            if (bFind == true)
                             {
-                                // 서브월드 비동기로딩 완료 후
-                                // 서버에서 데이터를 수신한게 있다면 세팅하고 업데이트.
-                                SubWorldPacketDataKey findKey;
-                                findKey.AreaID = subWorldState.SubWorldInstance.GetWorldAreaUniqueID();
-                                findKey.SubWorldID = subWorldState.SubWorldInstance.UniqueID;
-                                List<SubWorldBlockPacketData> receivedUpdatePackets;
-                                bool bFind = GameNetworkManager.GetInstance().InitialReceivedSubWorldDatas.TryGetValue(findKey, out receivedUpdatePackets);
-                                if (bFind == true)
+                                foreach (var updatePacket in receivedUpdatePackets)
                                 {
-                                    foreach (var updatePacket in receivedUpdatePackets)
-                                    {
-                                        float centerX = subWorldState.SubWorldInstance.WorldBlockData[updatePacket.BlockIndex_X, updatePacket.BlockIndex_Y, updatePacket.BlockIndex_Z].CenterX;
-                                        float centerY = subWorldState.SubWorldInstance.WorldBlockData[updatePacket.BlockIndex_X, updatePacket.BlockIndex_Y, updatePacket.BlockIndex_Z].CenterY;
-                                        float centerZ = subWorldState.SubWorldInstance.WorldBlockData[updatePacket.BlockIndex_X, updatePacket.BlockIndex_Y, updatePacket.BlockIndex_Z].CenterZ;
-                                        Vector3 blockLocation = new Vector3(centerX, centerY, centerZ);
-                                        // 비어있는 블록이라면, 충돌 옥트리에서 해당 위치에 해당하는 노드 삭제.
-                                        if ((BlockTileType)updatePacket.BlockTypeValue == BlockTileType.EMPTY) subWorldState.SubWorldInstance.CustomOctreeInstance.Delete(blockLocation);
-                                        else subWorldState.SubWorldInstance.CustomOctreeInstance.Add(blockLocation);
-                                        // 블록 타입 업데이트.
-                                        int updateBlockX = updatePacket.BlockIndex_X;
-                                        int updateBlockY = updatePacket.BlockIndex_Y;
-                                        int updateBlockZ = updatePacket.BlockIndex_Z;
-                                        Vector3 chunkIndex = ConvertBlockIdxToChunkIdx(updatePacket.BlockIndex_X, updatePacket.BlockIndex_Y, updatePacket.BlockIndex_Z);
-                                        int chunkIdxX = (int)chunkIndex.x;
-                                        int chunkIdxY = (int)chunkIndex.y;
-                                        int chunkIdxZ = (int)chunkIndex.z;
-                                        int ownerChunkType = (int)updatePacket.OwnerChunkType;
-                                        subWorldState.SubWorldInstance.ChunkSlots[chunkIdxX, chunkIdxY, chunkIdxZ].Chunks[ownerChunkType].Update = true;
-                                        subWorldState.SubWorldInstance.WorldBlockData[updateBlockX, updateBlockY, updateBlockZ].CurrentType = updatePacket.BlockTypeValue;
-                                        // set log message.
-                                        KojeomLogger.DebugLog(string.Format("[Update] Specific block update success. { AreaID : {0}, SubWorldID : {1}, Block Index (x : {2}, y : {3}, z : {4}) }",
-                                            updatePacket.AreaID, updatePacket.SubWorldID, updateBlockX, updateBlockY, updateBlockZ), LOG_TYPE.INFO);
-                                    }
+                                    float centerX = subWorldState.SubWorldInstance.WorldBlockData[updatePacket.BlockIndex_X, updatePacket.BlockIndex_Y, updatePacket.BlockIndex_Z].CenterX;
+                                    float centerY = subWorldState.SubWorldInstance.WorldBlockData[updatePacket.BlockIndex_X, updatePacket.BlockIndex_Y, updatePacket.BlockIndex_Z].CenterY;
+                                    float centerZ = subWorldState.SubWorldInstance.WorldBlockData[updatePacket.BlockIndex_X, updatePacket.BlockIndex_Y, updatePacket.BlockIndex_Z].CenterZ;
+                                    Vector3 blockLocation = new Vector3(centerX, centerY, centerZ);
+                                    // 비어있는 블록이라면, 충돌 옥트리에서 해당 위치에 해당하는 노드 삭제.
+                                    if ((BlockTileType)updatePacket.BlockTypeValue == BlockTileType.EMPTY) subWorldState.SubWorldInstance.CustomOctreeInstance.Delete(blockLocation);
+                                    else subWorldState.SubWorldInstance.CustomOctreeInstance.Add(blockLocation);
+                                    // 블록 타입 업데이트.
+                                    int updateBlockX = updatePacket.BlockIndex_X;
+                                    int updateBlockY = updatePacket.BlockIndex_Y;
+                                    int updateBlockZ = updatePacket.BlockIndex_Z;
+                                    Vector3 chunkIndex = ConvertBlockIdxToChunkIdx(updatePacket.BlockIndex_X, updatePacket.BlockIndex_Y, updatePacket.BlockIndex_Z);
+                                    int chunkIdxX = (int)chunkIndex.x;
+                                    int chunkIdxY = (int)chunkIndex.y;
+                                    int chunkIdxZ = (int)chunkIndex.z;
+                                    int ownerChunkType = (int)updatePacket.OwnerChunkType;
+                                    subWorldState.SubWorldInstance.ChunkSlots[chunkIdxX, chunkIdxY, chunkIdxZ].Chunks[ownerChunkType].Update = true;
+                                    subWorldState.SubWorldInstance.WorldBlockData[updateBlockX, updateBlockY, updateBlockZ].CurrentType = updatePacket.BlockTypeValue;
+                                    // set log message.
+                                    KojeomLogger.DebugLog(string.Format("[Update] Specific block update success. [ AreaID : {0}, SubWorldID : {1}, Block Index (x : {2}, y : {3}, z : {4}) ]",
+                                        updatePacket.AreaID, updatePacket.SubWorldID, updateBlockX, updateBlockY, updateBlockZ), LOG_TYPE.INFO);
                                 }
-                                if (GamePlayerManager.Instance.bInitialize == false)
-                                {
-                                    Vector3 randPos = subWorldState.SubWorldInstance.GetRandomRealPositionAtSurface();
-                                    GamePlayerManager.Instance.Make(randPos, () => {
-                                        SwitchAllAreaDynamicWorldLoader(true);
-                                    });
-                                }
+                            }
+                            if (GamePlayerManager.Instance.bInitialize == false)
+                            {
+                                Vector3 randPos = subWorldState.SubWorldInstance.GetRandomRealPositionAtSurface();
+                                GamePlayerManager.Instance.Make(randPos, () => {
+                                    SwitchAllAreaDynamicWorldLoader(true);
+                                });
                             }
                         });
                     }
@@ -240,14 +236,16 @@ public class WorldAreaManager : MonoBehaviour
     {
         //
         var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-        int areaOffsetX = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.x) / gameWorldConfig.SubWorldSizeX * WorldMapDataFile.Instance.MapData.SubWorldRow) / WorldMapDataFile.Instance.MapData.WorldAreaRow;
-        int areaOffsetY = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.y) / gameWorldConfig.SubWorldSizeY * WorldMapDataFile.Instance.MapData.SubWorldLayer) / WorldMapDataFile.Instance.MapData.WorldAreaLayer;
-        int areaOffsetZ = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.z) / gameWorldConfig.SubWorldSizeZ * WorldMapDataFile.Instance.MapData.SubWorldColumn) / WorldMapDataFile.Instance.MapData.WorldAreaColumn;
-        // 테스트 코드........
+        int x = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.x) / (gameWorldConfig.SubWorldSizeX * WorldMapDataFile.Instance.MapData.SubWorldRow));
+        int y = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.y) / (gameWorldConfig.SubWorldSizeY * WorldMapDataFile.Instance.MapData.SubWorldLayer));
+        int z = Mathf.CeilToInt(Mathf.CeilToInt(objectPos.z) / (gameWorldConfig.SubWorldSizeZ * WorldMapDataFile.Instance.MapData.SubWorldColumn));
+        int areaOffsetX = Mathf.CeilToInt(x % WorldMapDataFile.Instance.MapData.WorldAreaRow);
+        int areaOffsetY = Mathf.CeilToInt(y % WorldMapDataFile.Instance.MapData.WorldAreaLayer);
+        int areaOffsetZ = Mathf.CeilToInt(z % WorldMapDataFile.Instance.MapData.WorldAreaColumn);
+        // clamp.
         areaOffsetX = Mathf.Clamp(areaOffsetX, 0, WorldMapDataFile.Instance.MapData.WorldAreaRow - 1);
         areaOffsetY = Mathf.Clamp(areaOffsetY, 0, WorldMapDataFile.Instance.MapData.WorldAreaLayer - 1);
         areaOffsetZ = Mathf.Clamp(areaOffsetZ, 0, WorldMapDataFile.Instance.MapData.WorldAreaColumn - 1);
-        //..................
         return MakeUniqueID(areaOffsetX, areaOffsetY, areaOffsetZ);
     }
 

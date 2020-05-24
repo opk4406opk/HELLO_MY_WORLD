@@ -133,22 +133,34 @@ public class WorldArea : MonoBehaviour
     public async Task<bool> TaskSaveSpecificSubWorld(string uniqueID)
     {
         return await Task.Run(() => {
-            Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
-
+            if(Directory.Exists(ConstFilePath.RAW_SUB_WORLD_DATA_PATH) == false) Directory.CreateDirectory(ConstFilePath.RAW_SUB_WORLD_DATA_PATH);
+            //
             SubWorldStates.TryGetValue(uniqueID, out SubWorldState state);
             string savePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", state.SubWorldInstance.WorldName);
             // 파일 생성.
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream fileStream = File.Open(savePath, FileMode.OpenOrCreate, FileAccess.Write);
-
-            SubWorldExternalDataFile dataFile = new SubWorldExternalDataFile
+            BinaryFormatter bf = null;
+            FileStream fileStream = null;
+            SubWorldExternalDataFile dataFile = null;
+            try
             {
-                BlockData = state.SubWorldInstance.WorldBlockData,
-                SubWorldUniqueID = state.SubWorldInstance.UniqueID
-            };
-            // 시리얼라이징.
-            bf.Serialize(fileStream, dataFile);
-            fileStream.Close();
+                bf = new BinaryFormatter();
+                fileStream = File.Open(savePath, FileMode.OpenOrCreate, FileAccess.Write);
+                dataFile = new SubWorldExternalDataFile
+                {
+                    BlockData = state.SubWorldInstance.WorldBlockData,
+                    SubWorldUniqueID = state.SubWorldInstance.UniqueID
+                };
+            }
+            catch(Exception e)
+            {
+
+            }
+            finally
+            {
+                // 시리얼라이징.
+                bf.Serialize(fileStream, dataFile);
+                fileStream.Close();
+            }
             return true;
         });
     }
@@ -157,11 +169,15 @@ public class WorldArea : MonoBehaviour
     { 
         // 메모리 해제 직전, Sub WorldData를 외부 파일로 저장.
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} Start and Waiting Async Save.", uniqueID));
-        var isSaveSuccess = await TaskSaveSpecificSubWorld(uniqueID);
+        var bSaveSuccess = await TaskSaveSpecificSubWorld(uniqueID);
         KojeomLogger.DebugLog(string.Format("SubWorld ID : {0} End Waiting Async Save.", uniqueID));
-        // 메모리 해제 시작.
-        KojeomLogger.DebugLog(string.Format("Subworld ID : {0} is Start Release. ", uniqueID));
-        SubWorldStates[uniqueID].SubWorldInstance.Release();
+        if (bSaveSuccess == true)
+        { 
+            // 메모리 해제 시작.
+            KojeomLogger.DebugLog(string.Format("Subworld ID : {0} is Start Release. ", uniqueID));
+            SubWorldStates[uniqueID].SubWorldInstance.Release();
+            SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Release;
+        }
     }
 
     /// <summary>
@@ -177,11 +193,24 @@ public class WorldArea : MonoBehaviour
             string fileName = worldState.SubWorldInstance.WorldName;
             string filePath = string.Format(ConstFilePath.RAW_SUB_WORLD_DATA_PATH + "{0}", fileName);
             // 파일 열기.
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream fileStream = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.Read);
-            var worldData = bf.Deserialize(fileStream) as SubWorldExternalDataFile;
-            fileStream.Close();
-            return worldData;
+            BinaryFormatter bf = null;
+            FileStream fileStream = null;
+            SubWorldExternalDataFile worldDataFile = null;
+            try
+            {
+                bf = new BinaryFormatter();
+                fileStream = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.Read);
+                worldDataFile = bf.Deserialize(fileStream) as SubWorldExternalDataFile;
+            }
+            catch(Exception e)
+            {
+
+            }
+            finally
+            {
+                fileStream.Close();
+            }
+            return worldDataFile;
         });
     }
 
@@ -232,9 +261,10 @@ public class WorldArea : MonoBehaviour
     {
         SubWorldStates.TryGetValue(subWorldUniqueID, out SubWorldState worldState);
         worldState.RealTimeStatus = SubWorldRealTimeStatus.LoadFinish;
+        worldState.SubWorldInstance.CurrentState = SubWorldRealTimeStatus.LoadFinish;
         //
         //NPC 생성 테스트. 
-        if(worldState.SubWorldInstance.bSurfaceWorld == true)
+        if (worldState.SubWorldInstance.bSurfaceWorld == true)
         {
             ActorSuperviosr.Instance.RequestSpawnRandomNPC(NPC_TYPE.Merchant, subWorldUniqueID, AreaUniqueID, 1, true);
         }
@@ -252,6 +282,7 @@ public class WorldArea : MonoBehaviour
             case SubWorldRealTimeStatus.LoadFinish:
                 // 릴리즈 상태로 전환.
                 SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Release;
+                SubWorldStates[uniqueID].SubWorldInstance.CurrentState = SubWorldRealTimeStatus.Release;
                 AsyncReleaseSubWorldFile(uniqueID);
                 break;
         }
@@ -260,6 +291,7 @@ public class WorldArea : MonoBehaviour
     private void OnFinishReleaseSubWorldInstance(string uniqueID)
     {
         SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.ReleaseFinish;
+        SubWorldStates[uniqueID].SubWorldInstance.CurrentState = SubWorldRealTimeStatus.ReleaseFinish;
     }
 
     /// <summary>
@@ -288,6 +320,23 @@ public class WorldArea : MonoBehaviour
         bRunningLoader = false;
         StopCoroutine(SubWorldLoaderEnumerator);
     }
+
+    public void ForceLoadSubWorlds()
+    {
+        foreach (var state in SubWorldStates)
+        {
+            SubWorldState instance = state.Value;
+            if(instance != null)
+            {
+                if(instance.RealTimeStatus == SubWorldRealTimeStatus.ReleaseFinish ||
+                   instance.RealTimeStatus == SubWorldRealTimeStatus.ReadyToFirstLoad)
+                {
+                    instance.RealTimeStatus = SubWorldRealTimeStatus.Loading;
+                    instance.SubWorldInstance.AsyncLoading(null, true);
+                }
+            }
+        }
+    }
    
     private IEnumerator DynamicSubWorldLoader()
     {
@@ -295,15 +344,15 @@ public class WorldArea : MonoBehaviour
         while (true)
         {
             if (bInitFinish == false) yield return null;
-            if (bRunningLoader == false) yield return new WaitForSeconds(1.5f);
+            if (bRunningLoader == false) yield return null;
 
             if (GamePlayerManager.Instance != null && GamePlayerManager.Instance.bInitialize == true)
             {
-                Vector3 playerPos = GamePlayerManager.Instance.MyGamePlayer.Controller.GetPosition();
+                Vector3 playerPos = GamePlayerManager.Instance.MyGamePlayer.GetPosition();
                 string containedAreaID = WorldAreaManager.GetWorldAreaUniqueID(playerPos);
                 if (containedAreaID == AreaUniqueID)
                 {
-                    //KojeomLogger.DebugLog(string.Format("this area ID : {0}, containedID : {1}", AreaUniqueID, containedAreaID));
+                    KojeomLogger.DebugLog(string.Format("this area ID : {0}, player contained AreaID : {1}", AreaUniqueID, containedAreaID));
                     Vector3 offsetPos = SubWorldStates[GetSubWorldUniqueID(playerPos)].SubWorldInstance.OffsetCoordinate;
                     // 플레이어가 위치한 서브월드의 offset 위치를 기준삼아
                     // 8방향(대각선, 좌우상하)의 subWorld를 활성화 시킨다. 
@@ -329,16 +378,17 @@ public class WorldArea : MonoBehaviour
                                     break;
                                 case SubWorldRealTimeStatus.ReadyToFirstLoad:
                                     SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Loading;
+                                    SubWorldStates[uniqueID].SubWorldInstance.CurrentState = SubWorldRealTimeStatus.Loading;
                                     SubWorldStates[uniqueID].SubWorldInstance.AsyncLoading(null, true);
                                     break;
                                 case SubWorldRealTimeStatus.ReleaseFinish:
                                     SubWorldStates[uniqueID].RealTimeStatus = SubWorldRealTimeStatus.Loading;
+                                    SubWorldStates[uniqueID].SubWorldInstance.CurrentState = SubWorldRealTimeStatus.Loading;
                                     AsyncLoadSubWorldFile(uniqueID);
                                     break;
                             }
                         }
                     }
-                   
                 }
             }
             yield return new WaitForSeconds(0.1f);

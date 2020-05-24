@@ -38,6 +38,8 @@ public class SubWorld : MonoBehaviour
     // 실제 게임오브젝트로서 존재하는 위치값.
     public Vector3 RealCoordinate{ get; private set; }
     public bool bSurfaceWorld { get; private set; }
+    // 현재 서브월드 상태.
+    public SubWorldRealTimeStatus CurrentState = SubWorldRealTimeStatus.None;
     #endregion
 
     public Block[,,] WorldBlockData { get; private set; }
@@ -188,6 +190,7 @@ public class SubWorld : MonoBehaviour
 
     public void Release()
     {
+        CurrentState = SubWorldRealTimeStatus.Release;
         bLoadFinish = false;
         StopCoroutine(Tick());
         StopCoroutine(LoadTerrainChunks());
@@ -313,6 +316,7 @@ public class SubWorld : MonoBehaviour
 //#endif
     private IEnumerator LoadTerrainChunks(Action finishCallBack = null)
     {
+        CurrentState = SubWorldRealTimeStatus.Loading;
         InvokeExternalCallback = finishCallBack;
         //
         KojeomLogger.DebugLog(string.Format("World name : {0}, Chunk 로드를 시작합니다.", WorldName), LOG_TYPE.DEBUG_TEST);

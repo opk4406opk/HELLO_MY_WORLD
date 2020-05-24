@@ -173,6 +173,7 @@ public class CustomComponentEditor : EditorWindow
             rigidBody.mass = 1.0f;
             rigidBody.useGravity = true;
             rigidBody.constraints = RigidbodyConstraints.FreezeRotation;
+            rigidBody.isKinematic = false;
             PrefabUtility.SavePrefabAsset(element);
         }
         KojeomLogger.DebugLog("Rigidbody 컴포넌트 할당 작업 완료.");

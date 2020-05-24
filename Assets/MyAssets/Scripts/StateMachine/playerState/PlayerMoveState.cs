@@ -91,7 +91,7 @@ public class PlayerMoveState : APlayerState, IState
         {
             return;
         }
-        Vector3 move = dir.normalized * MoveSpeed;
-        GamePlayer.Controller.LerpPosition(move);
+        Vector3 moveValue = dir.normalized * MoveSpeed;
+        GamePlayer.Controller.Move(moveValue);
     }
 }

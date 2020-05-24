@@ -168,6 +168,11 @@ public abstract class ActorController : MonoBehaviour
         transform.Rotate(transform.up, angle);
     }
 
+    public SubWorldRealTimeStatus GetContainedWorldState()
+    {
+        return ContainedWorld.CurrentState;
+    }
+
     public Block[,,] GetContainedWorldBlockData()
     {
         return ContainedWorld.WorldBlockData;

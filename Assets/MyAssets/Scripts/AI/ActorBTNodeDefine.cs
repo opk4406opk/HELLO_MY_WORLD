@@ -37,6 +37,14 @@ public class BTNodeMoveForTarget : Node
     }
     public void AsyncPathFinding(Vector3 goalWorldPosition)
     {
+        // 예외처리.
+        switch (Controller.GetContainedWorldState())
+        {
+            case SubWorldRealTimeStatus.Loading:
+            case SubWorldRealTimeStatus.Release:
+            case SubWorldRealTimeStatus.ReleaseFinish:
+                return;
+        }
         // init
         PathFinderSettings needData = new PathFinderSettings(Controller.GetContainedWorldBlockData(),
                                                              Controller.GetContainedSubWorldOffset(),

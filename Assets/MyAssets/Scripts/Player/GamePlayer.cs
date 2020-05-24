@@ -29,7 +29,7 @@ public class GamePlayer : MonoBehaviour
         //
         Controller = gameObject.GetComponent<GamePlayerController>();
         Controller.Init(this, CharInstance);
-        Controller.EnableTick(false); // test
+        Controller.EnableTick(true);
         Controller.SetPosition(initPos);
         SetObjectLayer(true);
         //
@@ -59,5 +59,10 @@ public class GamePlayer : MonoBehaviour
         GameCharacterInstance gameChar = characterObject.GetComponent<GameCharacterInstance>();
         gameChar.Init();
         return gameChar;
+    }
+
+    public Vector3 GetPosition()
+    {
+        return Controller.GetPosition();
     }
 }
