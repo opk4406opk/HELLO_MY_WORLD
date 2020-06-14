@@ -640,10 +640,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b067d6d57b3a0c948aeae4f007dde699, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minimumX: -360
-  maximumX: 360
-  minimumY: -60
-  maximumY: 60
+  MinimumAngleY: -360
+  MaximumAngleY: 360
+  MinimumAngleX: -60
+  MaximumAngleX: 60
   CamSensitivityY: 1
   CamSensitivityX: 1
 --- !u!1 &204995964

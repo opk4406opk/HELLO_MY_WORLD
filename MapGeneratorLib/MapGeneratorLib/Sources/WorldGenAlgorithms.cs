@@ -87,6 +87,26 @@ namespace MapGenLib
             public int BaseOffset;
         }
 
+        public static TerrainValue[,] GenerateUndergroundTerrain(int areaSizeX, int areaSizeZ, int subWorldLayerNum, int subWorldSizeY, int randomSeed)
+        {
+            Utilitys.ChangeSeed(randomSeed);
+
+            TerrainValue[,] terrainValues = new TerrainValue[areaSizeX, areaSizeZ];
+            for (int x = 0; x < areaSizeX; x++)
+            {
+                for (int z = 0; z < areaSizeZ; z++)
+                {
+                    terrainValues[x, z].BlockType = BlockTileType.STONE_SMALL;
+                    terrainValues[x, z].Layers = new List<int>();
+                    for (int layer = 0; layer < subWorldLayerNum; layer++)
+                    {
+                        terrainValues[x, z].Layers.Add(subWorldSizeY);
+                    }
+                }
+            }
+            return terrainValues;
+        }
+
         public static TerrainValue[,] GenerateNormalTerrain(int areaSizeX, int areaSizeZ, int subWorldLayerNum, int subWorldSizeY, int randomSeed, int generateNumber = 800)
         {
             Utilitys.ChangeSeed(randomSeed);
@@ -270,7 +290,6 @@ namespace MapGenLib
                 }
             }
         }
-
     }
 
 }

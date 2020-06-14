@@ -9,10 +9,10 @@ public class GamePlayerCameraManager : MonoBehaviour
     #region cam_option
     private List<float> CamRotArrayX = new List<float>();
     private List<float> CamRotArrayY = new List<float>();
-    public float minimumX = -360F;
-    public float maximumX = 360F;
-    public float minimumY = -60F;
-    public float maximumY = 60F;
+    public float MinimumAngleY = -360F;
+    public float MaximumAngleY = 360F;
+    public float MinimumAngleX = -60F;
+    public float MaximumAngleX = 60F;
     private readonly int FrameCounter = 20;
     [Range(1.0f, 100.0f)]
     public float CamSensitivityY = 1.0f;
@@ -36,7 +36,7 @@ public class GamePlayerCameraManager : MonoBehaviour
         bInitialzed = true;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (bInitialzed == false) return;
         //
@@ -86,17 +86,21 @@ public class GamePlayerCameraManager : MonoBehaviour
         camRotAverageY /= CamRotArrayY.Count;
         camRotAverageX /= CamRotArrayX.Count;
 
-        // 상하 움직임 최대/최소.
-        camRotAverageY = Mathf.Clamp(camRotAverageY, minimumY, maximumY);
-        // 좌우 움직임은 최대값/최소값 제한두지 않고 적용.
-        //camRotAverageX = Mathf.Clamp(camRotAverageX, minimumX, maximumX);
-        //KojeomLogger.DebugLog(string.Format("CamRotAvgX : {0}, CamRotAvgY : {1}", camRotAverageX, camRotAverageY), LOG_TYPE.DEBUG_TEST );
-
         CameraYQuaternion = Quaternion.AngleAxis(camRotAverageY, Vector3.left);
         CameraXQuaternion = Quaternion.AngleAxis(camRotAverageX, Vector3.up);
 
-        // rot cam (상하좌우)
-        PlayerCamera.transform.localRotation *= CameraYQuaternion;
+
+
+        Quaternion newCamQuaternion = PlayerCamera.transform.localRotation;
+        newCamQuaternion *= CameraYQuaternion;
+        float rotationXValue = newCamQuaternion.eulerAngles.x;
+        //if (rotationXValue > 360.0f) rotationXValue -= 360.0f;
+        //KojeomLogger.DebugLog(string.Format("x rotation : {0}", rotationXValue));
+        //if (rotationXValue >= MaximumAngleX || rotationXValue <= MinimumAngleX) return;
+
+        // rotation camera. ( Y )
+        PlayerCamera.transform.localRotation = newCamQuaternion;
+        KojeomLogger.DebugLog(string.Format("euler angle : {0}", PlayerCamera.transform.localRotation.eulerAngles));
     }
 
     public Camera GetPlayerCamera()
