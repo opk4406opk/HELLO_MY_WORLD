@@ -3,7 +3,7 @@ using UnityEngine.Networking;
 
 public class PlayerMoveState : APlayerState, IState
 {
-    private float MoveSpeed;
+    private const float MoveSpeed = 6.5f;
     private QuerySDMecanimController AniController;
     private BoxCollider BoxColliderInstance;
 
@@ -12,7 +12,6 @@ public class PlayerMoveState : APlayerState, IState
         GamePlayer = gamePlayer;
         InputData = inputData;
         BoxColliderInstance = GamePlayer.Controller.CharacterInstance.BoxColliderInstance;
-        MoveSpeed = 3.5f;
     }
     public void InitState()
     {
