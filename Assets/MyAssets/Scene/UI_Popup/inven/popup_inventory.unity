@@ -94,8 +94,9 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaDirect: 0.5
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
-    m_ShowResolutionOverlay: 1
     m_ExportTrainingData: 0
+    m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 0
 --- !u!196 &4
@@ -310,8 +311,8 @@ GameObject:
   - component: {fileID: 177903687}
   - component: {fileID: 177903686}
   - component: {fileID: 177903689}
-  - component: {fileID: 177903690}
   - component: {fileID: 177903688}
+  - component: {fileID: 177903690}
   m_Layer: 5
   m_Name: itemSlot(origin)
   m_TagString: Untagged
@@ -414,7 +415,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 177903684}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 270a4f5be7306c8499948a3f093a1617, type: 3}
+  m_Script: {fileID: 11500000, guid: cba4ca54729acab46904e1de44fabf36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   lbl_amount: {fileID: 1688886143}
@@ -1754,7 +1755,7 @@ Transform:
   m_GameObject: {fileID: 2017305714}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0018518518, y: 0.0018518518, z: 0.0018518518}
+  m_LocalScale: {x: 0.0018501388, y: 0.0018501388, z: 0.0018501388}
   m_Children:
   - {fileID: 697917816}
   m_Father: {fileID: 0}

@@ -100,7 +100,7 @@ public class GamePlayerCameraManager : MonoBehaviour
 
         // rotation camera. ( Y )
         PlayerCamera.transform.localRotation = newCamQuaternion;
-        KojeomLogger.DebugLog(string.Format("euler angle : {0}", PlayerCamera.transform.localRotation.eulerAngles));
+        //KojeomLogger.DebugLog(string.Format("euler angle : {0}", PlayerCamera.transform.localRotation.eulerAngles));
     }
 
     public Camera GetPlayerCamera()

@@ -352,7 +352,7 @@ public class WorldArea : MonoBehaviour
                 string containedAreaID = WorldAreaManager.GetWorldAreaUniqueID(playerPos);
                 if (containedAreaID == AreaUniqueID)
                 {
-                    KojeomLogger.DebugLog(string.Format("this area ID : {0}, player contained AreaID : {1}", AreaUniqueID, containedAreaID));
+                    //KojeomLogger.DebugLog(string.Format("this area ID : {0}, player contained AreaID : {1}", AreaUniqueID, containedAreaID));
                     Vector3 offsetPos = SubWorldStates[GetSubWorldUniqueID(playerPos)].SubWorldInstance.OffsetCoordinate;
                     // 플레이어가 위치한 서브월드의 offset 위치를 기준삼아
                     // 8방향(대각선, 좌우상하)의 subWorld를 활성화 시킨다. 
