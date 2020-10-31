@@ -6,34 +6,28 @@ using System.Collections;
 /// </summary>
 public class CharacterData : MonoBehaviour {
 
-    public string chName { set; get; }
-    public int chLevel { set; get; }
-    public string detailScript { set; get; }
-    public string chType { set; get; }
-
-    private string _chFaceName;
-    public string chFaceName
-    {
-        set { _chFaceName = value; }
-        //get { return _chFace; }
-    }
+    public string CharacterName { set; get; }
+    public int CharacterLevel { set; get; }
+    public string DetailScript { set; get; }
+    public string CharacterType { set; get; }
+    
     private Texture faceTexture;
 
     [SerializeField]
     private UILabel lbl_name;
     [SerializeField]
-    private UITexture txt_chFace;
+    private UITexture Texture_Character;
 
     public void InitData()
     {
-        lbl_name.text = chName;
-        SetTexture(_chFaceName);
-        txt_chFace.mainTexture = faceTexture;
+        lbl_name.text = CharacterName;
+        SetTexture(CharacterName);
     }
 
-    private void SetTexture(string _textureName)
+    private void SetTexture(string textureName)
     {
-        string filePath = string.Format("{0}texture2D_{1}", ConstFilePath.CHAR_TEXTURE2D_RESOURCES_PATH, _textureName);
+        string filePath = string.Format("{0}texture2D_{1}", ConstFilePath.CHAR_TEXTURE2D_RESOURCES_PATH, textureName);
 		faceTexture = Resources.Load(filePath) as Texture;
-	}
+        Texture_Character.mainTexture = faceTexture;
+    }
 }

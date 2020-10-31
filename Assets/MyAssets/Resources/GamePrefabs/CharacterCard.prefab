@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 458550}
   - component: {fileID: 11499846}
   m_Layer: 5
-  m_Name: txt_chFace
+  m_Name: texture_character
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -288,7 +288,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &479314
 Transform:
   m_ObjectHideFlags: 0
@@ -373,7 +373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lbl_name: {fileID: 11465012}
-  txt_chFace: {fileID: 11499846}
+  Texture_Character: {fileID: 11499846}
 --- !u!1 &1592838505086692
 GameObject:
   m_ObjectHideFlags: 0

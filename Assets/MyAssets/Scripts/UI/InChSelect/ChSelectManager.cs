@@ -61,20 +61,19 @@ public class ChSelectManager : MonoBehaviour
     {
         for(int idx = 0; idx < maxCharCard; ++idx)
         {
-            GameObject newChCard = Instantiate(charCardPrefab,
-                new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
+            GameObject newChCard = Instantiate(charCardPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0)) as GameObject;
             CharacterData chData = newChCard.GetComponent<CharacterData>();
             string tmpStr;
             jsonDataSheet[idx].TryGetValue("chName", out tmpStr);
-            chData.chName = tmpStr;
+            chData.CharacterName = tmpStr;
             jsonDataSheet[idx].TryGetValue("chType", out tmpStr);
-            chData.chType = tmpStr;
+            chData.CharacterType = tmpStr;
             jsonDataSheet[idx].TryGetValue("chLevel", out tmpStr);
-            chData.chLevel = int.Parse(tmpStr);
+            chData.CharacterLevel = int.Parse(tmpStr);
             jsonDataSheet[idx].TryGetValue("detailScript", out tmpStr);
-            chData.detailScript = tmpStr;
+            chData.DetailScript = tmpStr;
             jsonDataSheet[idx].TryGetValue("chFaceTextureName", out tmpStr);
-            chData.chFaceName = tmpStr;
+            chData.CharacterName = tmpStr;
             chData.InitData();
 
             //chCard set OnClick Event
@@ -86,6 +85,8 @@ public class ChSelectManager : MonoBehaviour
             newChCard.transform.parent = uiGridObj.transform;
             newChCard.transform.localScale = new Vector3(1, 1, 1);
             newChCard.transform.localPosition = new Vector3(0, 0, 0);
+
+            newChCard.SetActive(true);
         }
         uiGridObj.GetComponent<UIGrid>().Reposition();
     }

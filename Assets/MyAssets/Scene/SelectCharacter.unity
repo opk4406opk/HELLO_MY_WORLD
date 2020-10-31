@@ -43,7 +43,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 12
   m_GIWorkflowMode: 0
   m_GISettings:
     serializedVersion: 2
@@ -96,8 +96,10 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 0c60a106a52a0074ab6eeacd9bb74220,
+    type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -117,6 +119,8 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
@@ -601,8 +605,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 826.7578, y: 32, z: 0}
-  m_Center: {x: -1.6210938, y: 0, z: 0}
+  m_Size: {x: 826.7969, y: 32, z: 0}
+  m_Center: {x: -1.6015625, y: 0, z: 0}
 --- !u!114 &1005653866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -677,10 +681,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: (origin)CharacterCard
       objectReference: {fileID: 0}
-    - target: {fileID: 152770, guid: d97c0f4d84938a44f815910c19a08746, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 479314, guid: d97c0f4d84938a44f815910c19a08746, type: 3}
       propertyPath: m_LocalPosition.x
       value: 15
@@ -711,6 +711,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 479314, guid: d97c0f4d84938a44f815910c19a08746, type: 3}
       propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 479314, guid: d97c0f4d84938a44f815910c19a08746, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 479314, guid: d97c0f4d84938a44f815910c19a08746, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 479314, guid: d97c0f4d84938a44f815910c19a08746, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11414568, guid: d97c0f4d84938a44f815910c19a08746, type: 3}

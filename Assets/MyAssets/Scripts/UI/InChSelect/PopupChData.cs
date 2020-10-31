@@ -66,8 +66,8 @@ public class PopupChData : APopupUI
     /// </summary>
     private void CallBackSingleGameProcess()
     {
-        GameLocalDataManager.GetInstance().CharacterName = ChSelectManager.singleton.GetSelectCharData().chName;
-        GameLocalDataManager.GetInstance().CharacterType = int.Parse(ChSelectManager.singleton.GetSelectCharData().chType);
+        GameLocalDataManager.GetInstance().CharacterName = ChSelectManager.singleton.GetSelectCharData().CharacterName;
+        GameLocalDataManager.GetInstance().CharacterType = int.Parse(ChSelectManager.singleton.GetSelectCharData().CharacterType);
         GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.InGame);
     }
 
@@ -123,10 +123,10 @@ public class PopupChData : APopupUI
     private void SetData()
     {
         var selectCharData = ChSelectManager.singleton.GetSelectCharData();
-        chName.text = selectCharData.chName;
-        chLevel.text = selectCharData.chLevel.ToString();
-        chType.text = selectCharData.chType;
-        chDetailScript.text = selectCharData.detailScript;
+        chName.text = selectCharData.CharacterName;
+        chLevel.text = selectCharData.CharacterLevel.ToString();
+        chType.text = selectCharData.CharacterType;
+        chDetailScript.text = selectCharData.DetailScript;
     }
 
     protected override void CallBackPopupClose()
