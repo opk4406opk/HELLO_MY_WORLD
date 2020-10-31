@@ -50,10 +50,10 @@ MonoBehaviour:
     y: 1718
     width: 427
     height: 330
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 10
+    borderRight: 10
+    borderTop: 10
+    borderBottom: 10
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -154,11 +154,11 @@ MonoBehaviour:
     y: 151
     width: 246
     height: 339
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
-    paddingLeft: 0
+    borderLeft: 5
+    borderRight: 5
+    borderTop: 5
+    borderBottom: 5
+    paddingLeft: 5
     paddingRight: 0
     paddingTop: 0
     paddingBottom: 0
@@ -258,10 +258,10 @@ MonoBehaviour:
     y: 1318
     width: 362
     height: 52
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 6
+    borderRight: 6
+    borderTop: 6
+    borderBottom: 6
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -271,10 +271,10 @@ MonoBehaviour:
     y: 1238
     width: 362
     height: 52
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 10
+    borderRight: 10
+    borderTop: 10
+    borderBottom: 10
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -297,10 +297,10 @@ MonoBehaviour:
     y: 1616
     width: 86
     height: 94
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 10
+    borderRight: 10
+    borderTop: 10
+    borderBottom: 10
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -323,10 +323,10 @@ MonoBehaviour:
     y: 732
     width: 86
     height: 94
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 1
+    borderRight: 1
+    borderTop: 1
+    borderBottom: 1
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -336,10 +336,10 @@ MonoBehaviour:
     y: 342
     width: 119
     height: 46
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 10
+    borderRight: 10
+    borderTop: 10
+    borderBottom: 10
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -349,10 +349,10 @@ MonoBehaviour:
     y: 1476
     width: 86
     height: 94
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 5
+    borderRight: 5
+    borderTop: 5
+    borderBottom: 5
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -414,10 +414,10 @@ MonoBehaviour:
     y: 1364
     width: 291
     height: 66
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 10
+    borderRight: 10
+    borderTop: 10
+    borderBottom: 10
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -440,10 +440,10 @@ MonoBehaviour:
     y: 82
     width: 224
     height: 61
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 6
+    borderRight: 6
+    borderTop: 6
+    borderBottom: 6
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -466,10 +466,10 @@ MonoBehaviour:
     y: 1169
     width: 224
     height: 61
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 5
+    borderRight: 5
+    borderTop: 5
+    borderBottom: 5
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -492,10 +492,10 @@ MonoBehaviour:
     y: 13
     width: 224
     height: 61
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 5
+    borderRight: 5
+    borderTop: 5
+    borderBottom: 5
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -570,10 +570,10 @@ MonoBehaviour:
     y: 72
     width: 118
     height: 46
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 10
+    borderRight: 10
+    borderTop: 10
+    borderBottom: 10
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -596,10 +596,10 @@ MonoBehaviour:
     y: 1578
     width: 689
     height: 132
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 2
+    borderRight: 2
+    borderTop: 2
+    borderBottom: 2
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -622,10 +622,10 @@ MonoBehaviour:
     y: 1298
     width: 689
     height: 132
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 10
+    borderRight: 10
+    borderTop: 10
+    borderBottom: 10
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -635,10 +635,10 @@ MonoBehaviour:
     y: 1438
     width: 689
     height: 132
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 15
+    borderRight: 15
+    borderTop: 15
+    borderBottom: 15
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -687,10 +687,10 @@ MonoBehaviour:
     y: 1240
     width: 230
     height: 50
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 5
+    borderRight: 5
+    borderTop: 5
+    borderBottom: 5
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -752,10 +752,10 @@ MonoBehaviour:
     y: 1718
     width: 427
     height: 330
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 20
+    borderRight: 20
+    borderTop: 20
+    borderBottom: 20
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -765,11 +765,11 @@ MonoBehaviour:
     y: 1718
     width: 427
     height: 330
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
-    paddingLeft: 0
+    borderLeft: 20
+    borderRight: 20
+    borderTop: 20
+    borderBottom: 20
+    paddingLeft: 10
     paddingRight: 0
     paddingTop: 0
     paddingBottom: 0
@@ -778,10 +778,10 @@ MonoBehaviour:
     y: 846
     width: 501
     height: 210
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 5
+    borderRight: 5
+    borderTop: 5
+    borderBottom: 5
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -804,10 +804,10 @@ MonoBehaviour:
     y: 151
     width: 246
     height: 339
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 10
+    borderRight: 10
+    borderTop: 10
+    borderBottom: 10
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -817,10 +817,10 @@ MonoBehaviour:
     y: 498
     width: 246
     height: 340
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 10
+    borderRight: 10
+    borderTop: 10
+    borderBottom: 10
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
@@ -830,10 +830,10 @@ MonoBehaviour:
     y: 1720
     width: 32
     height: 32
-    borderLeft: 0
-    borderRight: 0
-    borderTop: 0
-    borderBottom: 0
+    borderLeft: 5
+    borderRight: 5
+    borderTop: 5
+    borderBottom: 5
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0

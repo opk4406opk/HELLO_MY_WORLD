@@ -38,12 +38,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1025651491}
-  m_IndirectSpecularColor: {r: 0.25737235, g: 0.549876, b: 0.8624784, a: 1}
+  m_IndirectSpecularColor: {r: 0.25735834, g: 0.5498717, b: 0.86247873, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 12
   m_GIWorkflowMode: 0
   m_GISettings:
     serializedVersion: 2
@@ -98,7 +98,8 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 6717411cbec857442a072bc15ca09b6d,
+    type: 2}
 --- !u!196 &5
 NavMeshSettings:
   serializedVersion: 2
@@ -118,6 +119,8 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
@@ -200,8 +203,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 0}
-  mSpriteName: barBack_horizontalMid
+  mAtlas: {fileID: 114845371126332316, guid: e811363eda8b3c84db8dd583b203de8a, type: 3}
+  mSpriteName: Headder_4
   mFillCenter: 1
 --- !u!1 &19833588
 GameObject:
@@ -1481,6 +1484,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1453812588}
     m_Modifications:
+    - target: {fileID: 1261201889449252, guid: c2e849a15dc5e7045a1c21cd41174d34, type: 3}
+      propertyPath: m_Name
+      value: btn_beltItemBlock(origin)
+      objectReference: {fileID: 0}
     - target: {fileID: 4355375611951362, guid: c2e849a15dc5e7045a1c21cd41174d34, type: 3}
       propertyPath: m_LocalPosition.x
       value: -348
@@ -1513,10 +1520,17 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114321488047654606, guid: c2e849a15dc5e7045a1c21cd41174d34,
-        type: 3}
-      propertyPath: onClick.Array.data[0].mTarget
-      value: 
+    - target: {fileID: 4355375611951362, guid: c2e849a15dc5e7045a1c21cd41174d34, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4355375611951362, guid: c2e849a15dc5e7045a1c21cd41174d34, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4355375611951362, guid: c2e849a15dc5e7045a1c21cd41174d34, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2e849a15dc5e7045a1c21cd41174d34, type: 3}
@@ -1970,8 +1984,8 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
-    m_Resolution: -1
+    m_Type: 1
+    m_Resolution: 0
     m_CustomResolution: -1
     m_Strength: 1
     m_Bias: 0.05
@@ -2642,8 +2656,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 0}
-  mSpriteName: barBack_verticalMid
+  mAtlas: {fileID: 114845371126332316, guid: e811363eda8b3c84db8dd583b203de8a, type: 3}
+  mSpriteName: Button_29
   mFillCenter: 1
 --- !u!1 &1261921990
 GameObject:
@@ -3036,7 +3050,7 @@ MonoBehaviour:
   anchorOffset: 0
   softBorderPadding: 1
   renderQueue: 0
-  startingRenderQueue: 3004
+  startingRenderQueue: 3005
   mClipTexture: {fileID: 0}
   mAlpha: 1
   mClipping: 3
@@ -4106,7 +4120,7 @@ Transform:
   m_GameObject: {fileID: 1748876771}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0018501388, y: 0.0018501388, z: 0.0018501388}
+  m_LocalScale: {x: 0.0018518518, y: 0.0018518518, z: 0.0018518518}
   m_Children:
   - {fileID: 529236322}
   m_Father: {fileID: 0}

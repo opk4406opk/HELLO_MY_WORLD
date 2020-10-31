@@ -64,7 +64,7 @@ MonoBehaviour:
   mPivot: 4
   mWidth: 32
   mHeight: 32
-  mDepth: 1
+  mDepth: 2
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
@@ -80,7 +80,7 @@ MonoBehaviour:
   bottomType: 1
   topType: 1
   mAtlas: {fileID: 11430708, guid: 6d754b765e02eff43898f6cc9814c6f6, type: 3}
-  mSpriteName: DEEP_GREEN_STONE
+  mSpriteName: GRASS
   mFillCenter: 1
 --- !u!1 &1261201889449252
 GameObject:
@@ -143,13 +143,7 @@ MonoBehaviour:
   pressedSprite2D: {fileID: 0}
   disabledSprite2D: {fileID: 0}
   pixelSnap: 0
-  onClick:
-  - mTarget: {fileID: 0}
-    mMethodName: OnSelectBlock
-    mParameters:
-    - obj: {fileID: 1261201889449252}
-      field: 
-    oneShot: 0
+  onClick: []
 --- !u!114 &114626235544933224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,11 +246,11 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 1, g: 1, b: 1, a: 1}
+  mColor: {r: 1, g: 1, b: 1, a: 0.52156866}
   mPivot: 4
   mWidth: 46
   mHeight: 46
-  mDepth: 0
+  mDepth: 1
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
@@ -271,6 +265,6 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 0}
-  mSpriteName: barBack_horizontalMid
+  mAtlas: {fileID: 114845371126332316, guid: e811363eda8b3c84db8dd583b203de8a, type: 3}
+  mSpriteName: texture_back_collider(black)
   mFillCenter: 1

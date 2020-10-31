@@ -14,6 +14,16 @@ using MapGenLib;
 /// 
 public class ModifyWorldManager : MonoBehaviour
 {
+    private struct ProcessBlockData_Internal
+    {
+        public CollideInfo collideInfo;
+        public bool bCreate;
+        public int BlockX;
+        public int BlockY;
+        public int BlockZ;
+        public byte BlockType;
+    }
+
     private SubWorld SelectWorldInstance;
     private int chunkSize = 0;
     public void Init()
@@ -127,33 +137,52 @@ public class ModifyWorldManager : MonoBehaviour
                 packetData.OwnerChunkType = (byte)SelectWorldInstance.WorldBlockData[blockX, blockY, blockZ].OwnerChunkType;
             }
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-           
-            // 패킷 전송.
-            GameNetworkManager.GetInstance().RequestChangeSubWorldBlock(packetData, ()=> 
+
+            ProcessBlockData_Internal processData = new ProcessBlockData_Internal();
+            processData.collideInfo = collideInfo;
+            processData.bCreate = bCreate;
+            processData.BlockX = blockX;
+            processData.BlockY = blockY;
+            processData.BlockZ = blockZ;
+            processData.BlockType = blockType;
+            if (GameStatusManager.CurrentGameModeState == GameModeState.SINGLE)
             {
-                if (bCreate == true)
+                ProcessBlockCreateOrDelete(processData);
+            }
+            else if (GameStatusManager.CurrentGameModeState == GameModeState.MULTI)
+            {
+                // 패킷 전송.
+                GameNetworkManager.GetInstance().RequestChangeSubWorldBlock(packetData, () =>
                 {
-                    // 임시코드
-                    SelectWorldInstance.CustomOctreeInstance.Add(collideInfo.HitBlockCenter + new Vector3(0, 1.0f, 0));
-                    SetBlockForAdd(blockX, blockY + 1, blockZ, blockType);
-                    SelectWorldInstance.WorldBlockData[blockX, blockY + 1, blockZ].bRendered = true;
-                }
-                else
-                {
-                    // 파티클 테스트.
-                    //ParticleEffectSpawnParams spawnParams;
-                    //spawnParams.ParticleType = GameParticleType.DirtSplatter;
-                    //spawnParams.SpawnLocation = collideInfo.CollisionPoint;
-                    //spawnParams.SpawnRotation = Quaternion.identity;
-                    //spawnParams.bLooping = false;
-                    //spawnParams.bStart = true;
-                    //GameParticleEffectManager.Instance.SpawnParticleEffect(spawnParams);
-                    //
-                    SelectWorldInstance.CustomOctreeInstance.Delete(collideInfo.HitBlockCenter);
-                    SetBlockForDelete(blockX, blockY, blockZ, blockType);
-                    SelectWorldInstance.WorldBlockData[blockX, blockY, blockZ].bRendered = false;
-                }
-            });
+                    ProcessBlockCreateOrDelete(processData);
+                });
+            }
+        }
+    }
+
+    private void ProcessBlockCreateOrDelete(ProcessBlockData_Internal processData)
+    {
+        if (processData.bCreate == true)
+        {
+            // 임시코드
+            SelectWorldInstance.CustomOctreeInstance.Add(processData.collideInfo.HitBlockCenter + new Vector3(0, 1.0f, 0));
+            SetBlockForAdd(processData.BlockX, processData.BlockY + 1, processData.BlockZ, processData.BlockType);
+            SelectWorldInstance.WorldBlockData[processData.BlockX, processData.BlockY + 1, processData.BlockZ].bRendered = true;
+        }
+        else
+        {
+            // 파티클 테스트.
+            ParticleEffectSpawnParams spawnParams;
+            spawnParams.ParticleType = GameParticleType.FireworksGreenSmall;
+            spawnParams.SpawnLocation = processData.collideInfo.CollisionPoint;
+            spawnParams.SpawnRotation = Quaternion.identity;
+            spawnParams.bLooping = false;
+            spawnParams.bStart = true;
+            GameParticleEffectManager.Instance.SpawnParticleEffect(spawnParams);
+
+            SelectWorldInstance.CustomOctreeInstance.Delete(processData.collideInfo.HitBlockCenter);
+            SetBlockForDelete(processData.BlockX, processData.BlockY, processData.BlockZ, processData.BlockType);
+            SelectWorldInstance.WorldBlockData[processData.BlockX, processData.BlockY, processData.BlockZ].bRendered = false;
         }
     }
 

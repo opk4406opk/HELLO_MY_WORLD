@@ -43,7 +43,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 12
   m_GIWorkflowMode: 0
   m_GISettings:
     serializedVersion: 2
@@ -98,7 +98,8 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 064ccec94446aa7499ef555e21bbd2aa,
+    type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -118,6 +119,8 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
@@ -810,8 +813,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 32, y: 506.66666, z: 0}
-  m_Center: {x: 0, y: 2.6666718, z: 0}
+  m_Size: {x: 32, y: 63.541664, z: 0}
+  m_Center: {x: 0, y: 0.22916698, z: 0}
 --- !u!114 &784268729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -844,12 +847,12 @@ MonoBehaviour:
   mColor: {r: 1, g: 0.99541134, b: 0.3254717, a: 1}
   mPivot: 4
   mWidth: 32
-  mHeight: 512
+  mHeight: 64
   mDepth: 12
   autoResizeBoxCollider: 1
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 0.0625
+  aspectRatio: 0.5
   mType: 1
   mFillDirection: 4
   mFillAmount: 1
@@ -1755,7 +1758,7 @@ Transform:
   m_GameObject: {fileID: 2017305714}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0018501388, y: 0.0018501388, z: 0.0018501388}
+  m_LocalScale: {x: 0.0018518518, y: 0.0018518518, z: 0.0018518518}
   m_Children:
   - {fileID: 697917816}
   m_Father: {fileID: 0}

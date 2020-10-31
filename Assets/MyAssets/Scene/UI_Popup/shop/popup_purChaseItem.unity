@@ -43,7 +43,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 12
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -94,10 +94,12 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaDirect: 0.5
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
-    m_ShowResolutionOverlay: 1
     m_ExportTrainingData: 0
+    m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 54d9b73f372e878459fb0a066a6909df,
+    type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -117,6 +119,8 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
@@ -241,8 +245,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 384.00003, y: 96.000015, z: 0}
-  m_Center: {x: 0, y: -0.0000076293945, z: -0.0000333786}
+  m_Size: {x: 383.99997, y: 95.99998, z: 0}
+  m_Center: {x: 0, y: 0.0000076293945, z: 0.000030994415}
 --- !u!114 &43426531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -368,8 +372,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 0}
-  mSpriteName: barHorizontal_blue_mid
+  mAtlas: {fileID: 114845371126332316, guid: e811363eda8b3c84db8dd583b203de8a, type: 3}
+  mSpriteName: Button_20
   mFillCenter: 1
 --- !u!1 &180988864
 GameObject:
@@ -536,7 +540,7 @@ MonoBehaviour:
   aspectRatio: 1.3333334
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 0}
-  mFont: {fileID: 0}
+  mFont: {fileID: 114563814380006104, guid: bab0db8f3552b9649ae0daf292fe24d9, type: 3}
   mText: type
   mFontSize: 24
   mFontStyle: 0
@@ -641,8 +645,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 0}
-  mSpriteName: barHorizontal_yellow_mid
+  mAtlas: {fileID: 114845371126332316, guid: e811363eda8b3c84db8dd583b203de8a, type: 3}
+  mSpriteName: Button_9
   mFillCenter: 1
 --- !u!1 &420604078
 GameObject:
@@ -715,7 +719,7 @@ MonoBehaviour:
   aspectRatio: 6
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 0}
-  mFont: {fileID: 0}
+  mFont: {fileID: 114563814380006104, guid: bab0db8f3552b9649ae0daf292fe24d9, type: 3}
   mText: Purchase
   mFontSize: 64
   mFontStyle: 0
@@ -865,7 +869,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 451072539}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: 3, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 180988865}
@@ -902,8 +906,8 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
-  mWidth: 64
-  mHeight: 64
+  mWidth: 48
+  mHeight: 48
   mDepth: 11
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
@@ -919,8 +923,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 0}
-  mSpriteName: iconCross_grey
+  mAtlas: {fileID: 114425664160048444, guid: 3bb5d26dd2e7f674a9b6c944a1cd6afe, type: 3}
+  mSpriteName: Icon_Cross
   mFillCenter: 1
 --- !u!1 &462543076
 GameObject:
@@ -993,7 +997,7 @@ MonoBehaviour:
   aspectRatio: 3
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 0}
-  mFont: {fileID: 0}
+  mFont: {fileID: 114563814380006104, guid: bab0db8f3552b9649ae0daf292fe24d9, type: 3}
   mText: 0
   mFontSize: 32
   mFontStyle: 0
@@ -1174,8 +1178,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 0}
-  mSpriteName: buttonRound_blue
+  mAtlas: {fileID: 114845371126332316, guid: e811363eda8b3c84db8dd583b203de8a, type: 3}
+  mSpriteName: Button_20
   mFillCenter: 1
 --- !u!1 &738315477
 GameObject:
@@ -1248,7 +1252,7 @@ MonoBehaviour:
   aspectRatio: 5.125
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 0}
-  mFont: {fileID: 0}
+  mFont: {fileID: 114563814380006104, guid: bab0db8f3552b9649ae0daf292fe24d9, type: 3}
   mText: x99
   mFontSize: 32
   mFontStyle: 0
@@ -1353,8 +1357,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 0}
-  mSpriteName: barHorizontal_shadow_mid
+  mAtlas: {fileID: 114845371126332316, guid: e811363eda8b3c84db8dd583b203de8a, type: 3}
+  mSpriteName: Headder_5
   mFillCenter: 1
 --- !u!1 &786430862
 GameObject:
@@ -1626,7 +1630,7 @@ MonoBehaviour:
   aspectRatio: 8
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 0}
-  mFont: {fileID: 0}
+  mFont: {fileID: 114563814380006104, guid: bab0db8f3552b9649ae0daf292fe24d9, type: 3}
   mText: ITEM_TITLE
   mFontSize: 32
   mFontStyle: 0
@@ -1795,7 +1799,7 @@ Transform:
   m_GameObject: {fileID: 881936087}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0017361111, y: 0.0017361111, z: 0.0017361111}
+  m_LocalScale: {x: 0.0018518518, y: 0.0018518518, z: 0.0018518518}
   m_Children:
   - {fileID: 808814377}
   m_Father: {fileID: 0}
@@ -1870,7 +1874,7 @@ MonoBehaviour:
   hideIfOffScreen: 0
   keepAspectRatio: 0
   aspectRatio: 3
-  mType: 0
+  mType: 1
   mFillDirection: 4
   mFillAmount: 1
   mInvert: 0
@@ -1880,8 +1884,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 0}
-  mSpriteName: glassPanel_projection
+  mAtlas: {fileID: 114845371126332316, guid: e811363eda8b3c84db8dd583b203de8a, type: 3}
+  mSpriteName: Button_3
   mFillCenter: 1
 --- !u!1 &1285436303
 GameObject:
@@ -1962,8 +1966,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 0}
-  mSpriteName: barVertical_shadow_mid
+  mAtlas: {fileID: 114845371126332316, guid: e811363eda8b3c84db8dd583b203de8a, type: 3}
+  mSpriteName: Headder_2
   mFillCenter: 1
 --- !u!1 &1374241586
 GameObject:
@@ -2026,7 +2030,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 1, g: 1, b: 1, a: 1}
+  mColor: {r: 1, g: 1, b: 1, a: 0.5019608}
   mPivot: 4
   mWidth: 1920
   mHeight: 1080
@@ -2045,8 +2049,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 0}
-  mSpriteName: barHorizontal_shadow_mid
+  mAtlas: {fileID: 114845371126332316, guid: e811363eda8b3c84db8dd583b203de8a, type: 3}
+  mSpriteName: texture_back_collider(black)
   mFillCenter: 1
 --- !u!65 &1374241589
 BoxCollider:
@@ -2132,7 +2136,7 @@ MonoBehaviour:
   aspectRatio: 8
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 0}
-  mFont: {fileID: 0}
+  mFont: {fileID: 114563814380006104, guid: bab0db8f3552b9649ae0daf292fe24d9, type: 3}
   mText: 'Quantity::'
   mFontSize: 32
   mFontStyle: 0
@@ -2236,7 +2240,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 24, y: 24, z: 0}
+  m_Size: {x: 32, y: 32, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1639344237
 MonoBehaviour:
@@ -2269,8 +2273,8 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
-  mWidth: 24
-  mHeight: 24
+  mWidth: 32
+  mHeight: 32
   mDepth: 14
   autoResizeBoxCollider: 1
   hideIfOffScreen: 0
@@ -2286,8 +2290,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 0}
-  mSpriteName: dotGreen
+  mAtlas: {fileID: 114845371126332316, guid: e811363eda8b3c84db8dd583b203de8a, type: 3}
+  mSpriteName: Button_20
   mFillCenter: 1
 --- !u!1 &1666360807
 GameObject:
@@ -2368,8 +2372,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 0}
-  mSpriteName: metalPanel
+  mAtlas: {fileID: 114845371126332316, guid: e811363eda8b3c84db8dd583b203de8a, type: 3}
+  mSpriteName: 1
   mFillCenter: 1
 --- !u!1 &1709649553
 GameObject:
@@ -2442,7 +2446,7 @@ MonoBehaviour:
   aspectRatio: 2.953125
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 0}
-  mFont: {fileID: 0}
+  mFont: {fileID: 114563814380006104, guid: bab0db8f3552b9649ae0daf292fe24d9, type: 3}
   mText: "\uC544\uC774\uD15C \uC138\uBD80 \uB0B4\uC6A9 \uC704\uCE58."
   mFontSize: 24
   mFontStyle: 0
@@ -2579,8 +2583,8 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mAtlas: {fileID: 0}
-  mSpriteName: barVertical_shadow_mid
+  mAtlas: {fileID: 114845371126332316, guid: e811363eda8b3c84db8dd583b203de8a, type: 3}
+  mSpriteName: Headder_5
   mFillCenter: 1
 --- !u!1 &1921459402
 GameObject:
@@ -2653,7 +2657,7 @@ MonoBehaviour:
   aspectRatio: 5.125
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 0}
-  mFont: {fileID: 0}
+  mFont: {fileID: 114563814380006104, guid: bab0db8f3552b9649ae0daf292fe24d9, type: 3}
   mText: "\uC544\uC774\uD15C \uC885\uB958:"
   mFontSize: 32
   mFontStyle: 0
@@ -2750,7 +2754,7 @@ MonoBehaviour:
   aspectRatio: 5.125
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 0}
-  mFont: {fileID: 0}
+  mFont: {fileID: 114563814380006104, guid: bab0db8f3552b9649ae0daf292fe24d9, type: 3}
   mText: "\uC544\uC774\uD15C \uC124\uBA85"
   mFontSize: 32
   mFontStyle: 0
