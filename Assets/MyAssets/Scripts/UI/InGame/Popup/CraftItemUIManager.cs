@@ -18,37 +18,37 @@ public class CraftItemUIManager : APopupUI {
     [SerializeField]
     private UISprite spr_afterItemImg;
 
-    private readonly int defaultItemSlot = 9;
+    private readonly int DefaultItemSlot = 9;
     private List<UIItemData> itemSlotList = new List<UIItemData>();
 
-    private UIItemData lastestSelectItem;
+    private UIItemData LastestSelectItem;
 
-    private static CraftItemUIManager _singleton = null;
-    public static CraftItemUIManager singleton
+    private static CraftItemUIManager _Instance = null;
+    public static CraftItemUIManager Instance
     {
         get
         {
-            if (_singleton == null) KojeomLogger.DebugLog("CraftItemUIManager 제대로 초기화 되지 않았습니다", LOG_TYPE.ERROR);
-            return _singleton;
+            if (_Instance == null) KojeomLogger.DebugLog("CraftItemUIManager 제대로 초기화 되지 않았습니다", LOG_TYPE.ERROR);
+            return _Instance;
         }
     }
 
     void Start ()
     {
-        _singleton = this;
+        _Instance = this;
         spr_afterItemImg.spriteName = string.Empty;
 
         Ed_OnClickQuantityList = new EventDelegate(this, "OnClickQuantTityList");
         selectQuantityList.onChange.Add(Ed_OnClickQuantityList);
 
-        CreateEmptySlot(defaultItemSlot);
+        CreateEmptySlot(DefaultItemSlot);
         SetDropDownList();
         ScaleUpEffect();
     }
 
     public UIItemData GetLastestSelectItem()
     {
-        return lastestSelectItem;
+        return LastestSelectItem;
     }
     
     public void OnClickMakeItem()
@@ -58,7 +58,7 @@ public class CraftItemUIManager : APopupUI {
 
     private void UpdateUserItems()
     {
-        if(ChkPossibleMakeItem() == true)
+        if(CheckPossibleMakeItem() == true)
         {
             // consume user materials, and user item info update
             CraftItem item;
@@ -189,22 +189,21 @@ public class CraftItemUIManager : APopupUI {
         }
     }
 
-    private bool ChkPossibleMakeItem()
+    private bool CheckPossibleMakeItem()
     {
-        bool isPossibleMakeItem = false;
+        bool bPossibleMakeItem = false;
 
         CraftItem item;
         CraftItemListDataFile.Instance.CraftItems.TryGetValue(selectCraftItemList.value, out item);
         foreach (CraftRawMaterial raw in item.RawMaterials)
         {
-            isPossibleMakeItem = ChkMaterialAmount(raw.UniqueID,
-                raw.ConsumeAmount * int.Parse(selectQuantityList.value));
-            if (isPossibleMakeItem == false) return false;
+            bPossibleMakeItem = CheckMaterialAmount(raw.UniqueID, raw.ConsumeAmount * int.Parse(selectQuantityList.value));
+            if (bPossibleMakeItem == false) return false;
         }
         return true;
     }
 
-    private bool ChkMaterialAmount(string itemID, int needAmount)
+    private bool CheckMaterialAmount(string itemID, int needAmount)
     {
         string conn = GameDBManager.GetInstance().GetDBConnectionPath();
 
@@ -250,7 +249,7 @@ public class CraftItemUIManager : APopupUI {
     }
 
     private EventDelegate Ed_OnClickQuantityList;
-    private void OnClickQuantTityList()
+    private void OnClickQuantityList()
     {
         UpdateConsumeAmount();
     }
@@ -263,7 +262,7 @@ public class CraftItemUIManager : APopupUI {
         foreach (CraftRawMaterial raw in item.RawMaterials)
         {
             string calcedAmount = (raw.ConsumeAmount * int.Parse(selectQuantityList.value)).ToString();
-            itemSlotList[slotIdx].amount = calcedAmount;
+            itemSlotList[slotIdx].Amount = calcedAmount;
             itemSlotList[slotIdx].InitAmountData();
             slotIdx++;
         }
@@ -289,12 +288,13 @@ public class CraftItemUIManager : APopupUI {
         int slotIdx = 0;
         foreach (CraftRawMaterial raw in item.RawMaterials)
         {
-            if (slotIdx > defaultItemSlot) CreateEmptySlot(5);
+            if (slotIdx > DefaultItemSlot) CreateEmptySlot(5);
           
-            itemSlotList[slotIdx].itemName = raw.RawMaterialName;
-            itemSlotList[slotIdx].type = itemTable.GetItemInfo(raw.UniqueID).Type.ToString();
-            itemSlotList[slotIdx].detailInfo = itemTable.GetItemInfo(raw.UniqueID).FlavorText;
-            itemSlotList[slotIdx].amount = raw.ConsumeAmount.ToString();
+            itemSlotList[slotIdx].ItemName = raw.RawMaterialName;
+            itemSlotList[slotIdx].Type = itemTable.GetItemInfo(raw.UniqueID).Type.ToString();
+            itemSlotList[slotIdx].DetailInfo = itemTable.GetItemInfo(raw.UniqueID).FlavorText;
+            itemSlotList[slotIdx].Amount = raw.ConsumeAmount.ToString();
+            itemSlotList[slotIdx].ResourceName = RawElementTableReader.GetInstance().GetTableRow(raw.UniqueID).ResourceName;
             itemSlotList[slotIdx].InitAllData();
             itemSlotList[slotIdx].OnInfo();
 
@@ -310,7 +310,7 @@ public class CraftItemUIManager : APopupUI {
     private EventDelegate Ed_OnClickItem;
     private void OnClickItem(UIItemData itemData)
     {
-        lastestSelectItem = itemData;
+        LastestSelectItem = itemData;
         UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.ItemData);
     }
 
@@ -318,8 +318,8 @@ public class CraftItemUIManager : APopupUI {
     {
         foreach(UIItemData itemData in itemSlotList)
         {
-            itemData.itemName = string.Empty;
-            itemData.amount = string.Empty;
+            itemData.ItemName = string.Empty;
+            itemData.Amount = string.Empty;
             itemData.InitAllData();
             itemData.OffInfo();
         }

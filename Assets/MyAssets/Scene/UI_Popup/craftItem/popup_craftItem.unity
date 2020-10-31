@@ -1409,10 +1409,10 @@ MonoBehaviour:
   mAlignment: 0
   mEncoding: 1
   mMaxLineCount: 0
-  mEffectStyle: 1
+  mEffectStyle: 3
   mEffectColor: {r: 0, g: 0, b: 0, a: 1}
   mSymbols: 1
-  mEffectDistance: {x: 2, y: 2}
+  mEffectDistance: {x: 5, y: 5}
   mOverflow: 0
   mMaterial: {fileID: 0}
   mApplyGradient: 0
@@ -2122,7 +2122,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1001467471}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 270a4f5be7306c8499948a3f093a1617, type: 3}
+  m_Script: {fileID: 11500000, guid: cba4ca54729acab46904e1de44fabf36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   lbl_amount: {fileID: 861458891}

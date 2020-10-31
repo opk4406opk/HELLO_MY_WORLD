@@ -322,7 +322,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &177903685
 Transform:
   m_ObjectHideFlags: 0
@@ -813,8 +813,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 32, y: 63.541664, z: 0}
-  m_Center: {x: 0, y: 0.22916698, z: 0}
+  m_Size: {x: 32, y: 63.333332, z: 0}
+  m_Center: {x: 0, y: 0.33333397, z: 0}
 --- !u!114 &784268729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -864,7 +864,7 @@ MonoBehaviour:
   bottomType: 1
   topType: 1
   mAtlas: {fileID: 114845371126332316, guid: e811363eda8b3c84db8dd583b203de8a, type: 3}
-  mSpriteName: Panel_6
+  mSpriteName: Button_10
   mFillCenter: 1
 --- !u!1 &811460439
 GameObject:
@@ -997,16 +997,16 @@ MonoBehaviour:
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 0}
   mFont: {fileID: 114563814380006104, guid: bab0db8f3552b9649ae0daf292fe24d9, type: 3}
-  mText: Inventory
+  mText: Iventory
   mFontSize: 128
   mFontStyle: 0
   mAlignment: 0
   mEncoding: 1
   mMaxLineCount: 0
-  mEffectStyle: 1
+  mEffectStyle: 3
   mEffectColor: {r: 0, g: 0, b: 0, a: 1}
   mSymbols: 1
-  mEffectDistance: {x: 2, y: 2}
+  mEffectDistance: {x: 5, y: 5}
   mOverflow: 0
   mMaterial: {fileID: 0}
   mApplyGradient: 0

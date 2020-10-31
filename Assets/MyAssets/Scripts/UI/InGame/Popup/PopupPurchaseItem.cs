@@ -58,8 +58,8 @@ public class PopupPurchaseItem : APopupUI {
                         dbconn.Open(); //Open connection to the database.
                         string sqlQuery = "INSERT INTO USER_ITEM (name, type, amount, id) VALUES("
                                            + "'" + seletedItemData.name + "'" + "," + "'" +
-                                           seletedItemData.type + "'" + "," + quantity + ","
-                                           + seletedItemData.id + ")";
+                                           seletedItemData.Type + "'" + "," + quantity + ","
+                                           + seletedItemData.UniqueID + ")";
                         dbcmd.CommandText = sqlQuery;
                         dbcmd.ExecuteNonQuery();
 
@@ -70,7 +70,7 @@ public class PopupPurchaseItem : APopupUI {
                         if (SQLiteErrorCode.Constraint == e.ErrorCode)
                         {
                             string sqlQuery = "SELECT amount FROM USER_ITEM WHERE id = "
-                                        + "'" + seletedItemData.id + "'";
+                                        + "'" + seletedItemData.UniqueID + "'";
                             dbcmd.CommandText = sqlQuery;
                             IDataReader reader = dbcmd.ExecuteReader();
                             reader.Read();
@@ -79,7 +79,7 @@ public class PopupPurchaseItem : APopupUI {
                             reader.Close();
 
                             sqlQuery = "UPDATE USER_ITEM SET amount = " + "'" + itemAmount + "'" +
-                                        " WHERE id = " + "'" + seletedItemData.id + "'";
+                                        " WHERE id = " + "'" + seletedItemData.UniqueID + "'";
                             dbcmd.CommandText = sqlQuery;
                             dbcmd.ExecuteNonQuery();
 
@@ -100,11 +100,11 @@ public class PopupPurchaseItem : APopupUI {
 
     private void SetData()
     {
-        lbl_itemTitle.text = ShopUIManager.singleton.GetLastestSelectItem().itemName;
-        spr_itemImg.spriteName = ShopUIManager.singleton.GetLastestSelectItem().itemName;
-        lbl_itemType.text = ShopUIManager.singleton.GetLastestSelectItem().type;
-        lbl_itemAmount.text = ShopUIManager.singleton.GetLastestSelectItem().amount;
-        lbl_itemDetailInfo.text = ShopUIManager.singleton.GetLastestSelectItem().detailInfo;
+        lbl_itemTitle.text = ShopUIManager.singleton.GetLastestSelectItem().ItemName;
+        spr_itemImg.spriteName = ShopUIManager.singleton.GetLastestSelectItem().ItemName;
+        lbl_itemType.text = ShopUIManager.singleton.GetLastestSelectItem().Type;
+        lbl_itemAmount.text = ShopUIManager.singleton.GetLastestSelectItem().Amount;
+        lbl_itemDetailInfo.text = ShopUIManager.singleton.GetLastestSelectItem().DetailInfo;
     }
 
     protected override void CallBackPopupClose()

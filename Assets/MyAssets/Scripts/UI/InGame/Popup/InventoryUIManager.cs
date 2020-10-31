@@ -89,10 +89,10 @@ public class InventoryUIManager : APopupUI {
                         while (reader.Read())
                         {
                             DBUserItem userItem;
-                            userItem.name = reader.GetString(0);
-                            userItem.type = reader.GetString(1);
-                            userItem.amount = reader.GetInt32(2);
-                            userItem.id = reader.GetString(3);
+                            userItem.Name = reader.GetString(0);
+                            userItem.Type = reader.GetString(1);
+                            userItem.Amount = reader.GetInt32(2);
+                            userItem.UniqueID = reader.GetString(3);
                             userItemList.Add(userItem);
                         }
                         reader.Close();
@@ -109,13 +109,14 @@ public class InventoryUIManager : APopupUI {
         foreach(DBUserItem uitem in userItemList)
         {
             // set user item info
-            itemSlotList[itemSlotIdx].itemName = uitem.name;
-            itemSlotList[itemSlotIdx].id = uitem.id;
-            itemSlotList[itemSlotIdx].amount = uitem.amount.ToString();
-            itemSlotList[itemSlotIdx].type = uitem.type.ToString();
+            itemSlotList[itemSlotIdx].ItemName = uitem.Name;
+            itemSlotList[itemSlotIdx].UniqueID = uitem.UniqueID;
+            itemSlotList[itemSlotIdx].Amount = uitem.Amount.ToString();
+            itemSlotList[itemSlotIdx].Type = uitem.Type.ToString();
+            itemSlotList[itemSlotIdx].ResourceName = RawElementTableReader.GetInstance().GetTableRow(uitem.UniqueID).ResourceName;
             // set item detail info
-            ItemInfo itemInfo = ItemTableReader.GetInstance().GetItemInfo(uitem.id);
-            itemSlotList[itemSlotIdx].detailInfo = itemInfo.FlavorText;
+            ItemInfo itemInfo = ItemTableReader.GetInstance().GetItemInfo(uitem.UniqueID);
+            itemSlotList[itemSlotIdx].DetailInfo = itemInfo.FlavorText;
 
             itemSlotList[itemSlotIdx].InitAllData();
             itemSlotList[itemSlotIdx].OnInfo();

@@ -373,7 +373,7 @@ MonoBehaviour:
   bottomType: 1
   topType: 1
   mAtlas: {fileID: 114845371126332316, guid: e811363eda8b3c84db8dd583b203de8a, type: 3}
-  mSpriteName: Button_20
+  mSpriteName: Headder_2
   mFillCenter: 1
 --- !u!1 &180988864
 GameObject:
@@ -1947,7 +1947,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 1, g: 1, b: 1, a: 1}
+  mColor: {r: 1, g: 1, b: 1, a: 0.5019608}
   mPivot: 3
   mWidth: 384
   mHeight: 32
@@ -2190,7 +2190,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1639344232}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 26, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 29399465}

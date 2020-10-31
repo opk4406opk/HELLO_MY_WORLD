@@ -94,33 +94,38 @@ public class ShopUIManager : APopupUI {
 
     private void SettingShopItem()
     {
-        var shopSellingItemIds = ((MerchantNPC)ActorSuperviosr.Instance.NPCManagerInstance.GetLastestClickedActor()).GetSellingItemIDList();
-        List <ItemInfo> shopItems = new List<ItemInfo>();
-        foreach(var id in shopSellingItemIds)
+        MerchantNPC merchantNPC = ActorSuperviosr.Instance.NPCManagerInstance.GetLastestClickedActor() as MerchantNPC;
+        if(merchantNPC != null)
         {
-            shopItems.Add(ItemTableReader.GetInstance().GetItemInfo(id.ToString()));
-        }
+            var shopSellingItemIds = merchantNPC.GetSellingItemIDList();
+            List<ItemInfo> shopItems = new List<ItemInfo>();
+            foreach (var id in shopSellingItemIds)
+            {
+                shopItems.Add(ItemTableReader.GetInstance().GetItemInfo(id.ToString()));
+            }
 
-        int moreEmptySlot = shopItems.Count;
-        if (moreEmptySlot > defaultItemSlot) CreateShopEmptySlot(moreEmptySlot - defaultItemSlot);
-        int itemSlotIdx = 0;
-        foreach (ItemInfo item in shopItems)
-        {
-            // set user item info
-            shopItemSlotList[itemSlotIdx].itemName = item.Name;
-            shopItemSlotList[itemSlotIdx].id = item.UniqueID;
-            shopItemSlotList[itemSlotIdx].amount = "∞";
-            shopItemSlotList[itemSlotIdx].type = item.Type.ToString();
-            // set item detail info
-            shopItemSlotList[itemSlotIdx].detailInfo = item.FlavorText;
+            int moreEmptySlot = shopItems.Count;
+            if (moreEmptySlot > defaultItemSlot) CreateShopEmptySlot(moreEmptySlot - defaultItemSlot);
+            int itemSlotIdx = 0;
+            foreach (ItemInfo item in shopItems)
+            {
+                // set user item info
+                shopItemSlotList[itemSlotIdx].ItemName = item.Name;
+                shopItemSlotList[itemSlotIdx].UniqueID = item.UniqueID;
+                shopItemSlotList[itemSlotIdx].Amount = "∞";
+                shopItemSlotList[itemSlotIdx].Type = item.Type.ToString();
+                shopItemSlotList[itemSlotIdx].ResourceName = RawElementTableReader.GetInstance().GetTableRow(item.UniqueID).ResourceName;
+                // set item detail info
+                shopItemSlotList[itemSlotIdx].DetailInfo = item.FlavorText;
 
-            shopItemSlotList[itemSlotIdx].InitAllData();
-            shopItemSlotList[itemSlotIdx].OnInfo();
-            //set event delegate
-            Ed_OnClickShopItem = new EventDelegate(this, "OnClickShopItem");
-            Ed_OnClickShopItem.parameters[0].value = shopItemSlotList[itemSlotIdx];
-            shopItemSlotList[itemSlotIdx].GetComponent<UIButton>().onClick.Add(Ed_OnClickShopItem);
-            itemSlotIdx++;
+                shopItemSlotList[itemSlotIdx].InitAllData();
+                shopItemSlotList[itemSlotIdx].OnInfo();
+                //set event delegate
+                Ed_OnClickShopItem = new EventDelegate(this, "OnClickShopItem");
+                Ed_OnClickShopItem.parameters[0].value = shopItemSlotList[itemSlotIdx];
+                shopItemSlotList[itemSlotIdx].GetComponent<UIButton>().onClick.Add(Ed_OnClickShopItem);
+                itemSlotIdx++;
+            }
         }
     }
 
@@ -152,10 +157,10 @@ public class ShopUIManager : APopupUI {
                         while (reader.Read())
                         {
                             DBUserItem userItem;
-                            userItem.name = reader.GetString(0);
-                            userItem.type = reader.GetString(1);
-                            userItem.amount = reader.GetInt32(2);
-                            userItem.id = reader.GetString(3);
+                            userItem.Name = reader.GetString(0);
+                            userItem.Type = reader.GetString(1);
+                            userItem.Amount = reader.GetInt32(2);
+                            userItem.UniqueID = reader.GetString(3);
                             userItemList.Add(userItem);
                         }
                         reader.Close();
@@ -172,13 +177,14 @@ public class ShopUIManager : APopupUI {
         foreach (DBUserItem uitem in userItemList)
         {
             // set user item info
-            invenItemSlotList[itemSlotIdx].itemName = uitem.name;
-            invenItemSlotList[itemSlotIdx].id = uitem.id;
-            invenItemSlotList[itemSlotIdx].amount = uitem.amount.ToString();
-            invenItemSlotList[itemSlotIdx].type = uitem.type.ToString();
+            invenItemSlotList[itemSlotIdx].ItemName = uitem.Name;
+            invenItemSlotList[itemSlotIdx].UniqueID = uitem.UniqueID;
+            invenItemSlotList[itemSlotIdx].Amount = uitem.Amount.ToString();
+            invenItemSlotList[itemSlotIdx].Type = uitem.Type.ToString();
+            invenItemSlotList[itemSlotIdx].ResourceName = RawElementTableReader.GetInstance().GetTableRow(uitem.UniqueID).ResourceName;
             // set item detail info
-            ItemInfo itemInfo = ItemTableReader.GetInstance().GetItemInfo(uitem.id);
-            invenItemSlotList[itemSlotIdx].detailInfo = itemInfo.FlavorText;
+            ItemInfo itemInfo = ItemTableReader.GetInstance().GetItemInfo(uitem.UniqueID);
+            invenItemSlotList[itemSlotIdx].DetailInfo = itemInfo.FlavorText;
 
             invenItemSlotList[itemSlotIdx].InitAllData();
             invenItemSlotList[itemSlotIdx].OnInfo();

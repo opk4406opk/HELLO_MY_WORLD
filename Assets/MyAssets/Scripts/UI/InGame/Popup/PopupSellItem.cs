@@ -28,7 +28,7 @@ public class PopupSellItem : APopupUI {
 
     void Start()
     {
-        maxSell = int.Parse(ShopUIManager.singleton.GetLastestSelectItem().amount);
+        maxSell = int.Parse(ShopUIManager.singleton.GetLastestSelectItem().Amount);
         slider_sellQuantity.numberOfSteps = maxSell;
         SetData();
         ScaleUpEffect();
@@ -51,11 +51,11 @@ public class PopupSellItem : APopupUI {
 
     private void SetData()
     {
-        lbl_itemTitle.text = ShopUIManager.singleton.GetLastestSelectItem().itemName;
-        spr_itemImg.spriteName = ShopUIManager.singleton.GetLastestSelectItem().itemName;
-        lbl_itemType.text = ShopUIManager.singleton.GetLastestSelectItem().type;
-        lbl_itemAmount.text = ShopUIManager.singleton.GetLastestSelectItem().amount;
-        lbl_itemDetailInfo.text = ShopUIManager.singleton.GetLastestSelectItem().detailInfo;
+        lbl_itemTitle.text = ShopUIManager.singleton.GetLastestSelectItem().ItemName;
+        spr_itemImg.spriteName = ShopUIManager.singleton.GetLastestSelectItem().ItemName;
+        lbl_itemType.text = ShopUIManager.singleton.GetLastestSelectItem().Type;
+        lbl_itemAmount.text = ShopUIManager.singleton.GetLastestSelectItem().Amount;
+        lbl_itemDetailInfo.text = ShopUIManager.singleton.GetLastestSelectItem().DetailInfo;
     }
 
     protected override void CallBackPopupClose()

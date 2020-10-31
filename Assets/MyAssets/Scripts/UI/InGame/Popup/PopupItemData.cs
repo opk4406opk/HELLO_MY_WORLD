@@ -36,11 +36,11 @@ public class PopupItemData : APopupUI
         {
             selectedItemData = InventoryUIManager.singleton.GetLastestSelectItem();
         }
-        lbl_itemTitle.text = selectedItemData.itemName;
-        spr_itemImg.spriteName = selectedItemData.itemName;
-        lbl_itemType.text = selectedItemData.type;
-        lbl_itemAmount.text = selectedItemData.amount;
-        lbl_itemDetailInfo.text = selectedItemData.detailInfo;
+        lbl_itemTitle.text = selectedItemData.ItemName;
+        spr_itemImg.spriteName = selectedItemData.ItemName;
+        lbl_itemType.text = selectedItemData.Type;
+        lbl_itemAmount.text = selectedItemData.Amount;
+        lbl_itemDetailInfo.text = selectedItemData.DetailInfo;
     }
 
     protected override void CallBackPopupClose()

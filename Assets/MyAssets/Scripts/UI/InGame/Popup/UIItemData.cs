@@ -6,11 +6,12 @@ using System.Collections;
 /// ( 아이템 slot 오브젝트에 컴포넌트로 붙게된다. )
 /// </summary>
 public class UIItemData : MonoBehaviour {
-    public string id { set; get; }
-    public string amount { set; get; }
-    public string type { set; get; }
-    public string itemName { set; get; }
-    public string detailInfo { set; get; }
+    public string UniqueID { set; get; }
+    public string Amount { set; get; }
+    public string Type { set; get; }
+    public string ItemName { set; get; }
+    public string DetailInfo { set; get; }
+    public string ResourceName { set; get; }
 
     [SerializeField]
     private UILabel lbl_amount;
@@ -31,10 +32,10 @@ public class UIItemData : MonoBehaviour {
 
     public void InitAllData()
     {
-        gameObject.GetComponent<UIButton>().normalSprite = itemName;
-        spr_itemImage.spriteName = itemName;
-        lbl_amount.text = amount;
+        gameObject.GetComponent<UIButton>().normalSprite = ResourceName;
+        spr_itemImage.spriteName = ResourceName;
+        lbl_amount.text = Amount;
     }
-    public void InitAmountData() { lbl_amount.text = amount; }
+    public void InitAmountData() { lbl_amount.text = Amount; }
    
 }

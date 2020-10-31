@@ -11,10 +11,10 @@ using System.IO;
 /// </summary>
 public struct DBUserItem
 {
-    public string id;
-    public string name;
-    public string type;
-    public int amount;
+    public string UniqueID;
+    public string Name;
+    public string Type;
+    public int Amount;
 }
 /// streamingAssets 경로에 대한 문서.
 /// https://docs.unity3d.com/ScriptReference/Application-streamingAssetsPath.html

@@ -288,7 +288,7 @@ MonoBehaviour:
   anchorOffset: 0
   softBorderPadding: 1
   renderQueue: 0
-  startingRenderQueue: 3008
+  startingRenderQueue: 3006
   mClipTexture: {fileID: 0}
   mAlpha: 1
   mClipping: 3
@@ -412,7 +412,7 @@ MonoBehaviour:
   mEffectStyle: 3
   mEffectColor: {r: 0, g: 0, b: 0, a: 1}
   mSymbols: 1
-  mEffectDistance: {x: 1, y: 1}
+  mEffectDistance: {x: 5, y: 5}
   mOverflow: 0
   mMaterial: {fileID: 0}
   mApplyGradient: 0
@@ -1659,7 +1659,7 @@ MonoBehaviour:
   mPivot: 4
   mWidth: 64
   mHeight: 64
-  mDepth: 16
+  mDepth: 19
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
@@ -1737,7 +1737,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 1, g: 1, b: 1, a: 1}
+  mColor: {r: 0.32941177, g: 0.32941177, b: 0.32941177, a: 1}
   mPivot: 4
   mWidth: 400
   mHeight: 400
@@ -1819,7 +1819,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 1, g: 1, b: 1, a: 1}
+  mColor: {r: 0, g: 0, b: 0, a: 0.5019608}
   mPivot: 4
   mWidth: 96
   mHeight: 96
@@ -2055,7 +2055,7 @@ MonoBehaviour:
   anchorOffset: 0
   softBorderPadding: 1
   renderQueue: 0
-  startingRenderQueue: 3008
+  startingRenderQueue: 3006
   mClipTexture: {fileID: 0}
   mAlpha: 1
   mClipping: 3
@@ -2241,7 +2241,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 1, g: 1, b: 1, a: 1}
+  mColor: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 1}
   mPivot: 4
   mWidth: 1024
   mHeight: 684
@@ -2423,7 +2423,7 @@ MonoBehaviour:
   mPivot: 4
   mWidth: 64
   mHeight: 64
-  mDepth: 16
+  mDepth: 19
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
@@ -3013,7 +3013,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 1, g: 1, b: 1, a: 1}
+  mColor: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   mPivot: 4
   mWidth: 400
   mHeight: 400
@@ -3047,8 +3047,8 @@ GameObject:
   - component: {fileID: 1986714471}
   - component: {fileID: 1986714470}
   - component: {fileID: 1986714469}
-  - component: {fileID: 1986714468}
   - component: {fileID: 1986714467}
+  - component: {fileID: 1986714468}
   m_Layer: 5
   m_Name: shopItemSlot(origin)
   m_TagString: Untagged
@@ -3095,7 +3095,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1986714465}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 270a4f5be7306c8499948a3f093a1617, type: 3}
+  m_Script: {fileID: 11500000, guid: cba4ca54729acab46904e1de44fabf36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   lbl_amount: {fileID: 355841793}
@@ -3442,7 +3442,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 1, g: 1, b: 1, a: 1}
+  mColor: {r: 0, g: 0, b: 0, a: 0.5019608}
   mPivot: 4
   mWidth: 96
   mHeight: 96
@@ -3654,8 +3654,8 @@ GameObject:
   - component: {fileID: 2132825062}
   - component: {fileID: 2132825061}
   - component: {fileID: 2132825060}
-  - component: {fileID: 2132825059}
   - component: {fileID: 2132825058}
+  - component: {fileID: 2132825059}
   m_Layer: 5
   m_Name: invenItemSlot(origin)
   m_TagString: Untagged
@@ -3702,7 +3702,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2132825056}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 270a4f5be7306c8499948a3f093a1617, type: 3}
+  m_Script: {fileID: 11500000, guid: cba4ca54729acab46904e1de44fabf36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   lbl_amount: {fileID: 251602424}
