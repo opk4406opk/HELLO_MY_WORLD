@@ -20,6 +20,8 @@ public class MultiPlayLobbyManager : MonoBehaviour {
     private void Start()
     {
         _instance = this;
+
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     public void OnClickStartHost()

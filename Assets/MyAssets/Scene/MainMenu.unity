@@ -646,7 +646,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 1, g: 1, b: 1, a: 0.8666667}
+  mColor: {r: 1, g: 1, b: 1, a: 0.4}
   mPivot: 4
   mWidth: 1400
   mHeight: 196
@@ -1936,8 +1936,10 @@ MonoBehaviour:
     m_Bits: 32
   debug: 0
   useMouse: 1
-  useTouch: 0
+  useTouch: 1
   allowMultiTouch: 1
+  bUseInitCursorMode: 0
+  InitCursorMode: 0
   useKeyboard: 0
   useController: 0
   stickyTooltip: 1

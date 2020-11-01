@@ -4,7 +4,7 @@ using System;
 /// <summary>
 /// 캐릭터 선택창에서 팝업되는 세부정보를 관리하는 클래스.
 /// </summary>
-public class PopupChData : APopupUI
+public class PopupCharacterData : APopupUI
 {
     [SerializeField]
     private UILabel chName;
@@ -66,8 +66,8 @@ public class PopupChData : APopupUI
     /// </summary>
     private void CallBackSingleGameProcess()
     {
-        GameLocalDataManager.GetInstance().CharacterName = ChSelectManager.singleton.GetSelectCharData().CharacterName;
-        GameLocalDataManager.GetInstance().CharacterType = int.Parse(ChSelectManager.singleton.GetSelectCharData().CharacterType);
+        GameLocalDataManager.GetInstance().CharacterName = CharacterSelectManager.singleton.GetSelectCharData().CharacterName;
+        GameLocalDataManager.GetInstance().CharacterType = int.Parse(CharacterSelectManager.singleton.GetSelectCharData().CharacterType);
         GameSceneLoader.LoadGameSceneAsync(GameSceneLoader.SCENE_TYPE.InGame);
     }
 
@@ -122,7 +122,7 @@ public class PopupChData : APopupUI
 
     private void SetData()
     {
-        var selectCharData = ChSelectManager.singleton.GetSelectCharData();
+        var selectCharData = CharacterSelectManager.singleton.GetSelectCharData();
         chName.text = selectCharData.CharacterName;
         chLevel.text = selectCharData.CharacterLevel.ToString();
         chType.text = selectCharData.CharacterType;

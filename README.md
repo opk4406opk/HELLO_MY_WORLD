@@ -6,7 +6,7 @@ This project is an open source project aimed at mimicking MineCraft. You can use
 <b><Project Overview></b><br>
 	<b>Development period:</b> 2016/01 ~ Current..<br>
 	<b>Usage engine:</b> Unity3D (updated to the latest version)<br>
-	<b>Usage library: NGUI</b> (3.x), Sqlite3, JSonObject, NewtonSoft.json, ITween, FMOD, UniRx<br>
+	<b>Usage library: NGUI</b> (3.x), Sqlite3, JSonObject, NewtonSoft.json, ITween, FMOD, UniRx, FreeNet<br>
 	<b>Language used:</b> C #<br>
 	<b>Platforms:</b> Android, IOS, PC (windows)<br>
 	

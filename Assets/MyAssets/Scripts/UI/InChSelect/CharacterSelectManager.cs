@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// 게임 캐릭터 선택하는 창을 관리하는 클래스.
 /// </summary>
-public class ChSelectManager : MonoBehaviour
+public class CharacterSelectManager : MonoBehaviour
 {
     private JSONObject charDatajsonObj;
     private TextAsset jsonFile;
@@ -18,8 +18,8 @@ public class ChSelectManager : MonoBehaviour
     [SerializeField]
     private GameObject uiGridObj;
 
-    private static ChSelectManager _singleton = null;
-    public static ChSelectManager singleton
+    private static CharacterSelectManager _singleton = null;
+    public static CharacterSelectManager singleton
     {
         get
         {
@@ -35,6 +35,8 @@ public class ChSelectManager : MonoBehaviour
         _singleton = this;
         LoadCharDatas();
         CreateChCard();
+
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     public CharacterData GetSelectCharData()

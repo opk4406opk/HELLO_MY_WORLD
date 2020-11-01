@@ -25,11 +25,10 @@ public class MainMenuManager : MonoBehaviour {
 
     private void Start()
     {
-        if(bSoundOn == true)
-        {
-            GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_mainMenu);
-        }
+        if(bSoundOn == true) GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_mainMenu);
         GameResourceSupervisor.GetInstance();
+
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     /// <summary>

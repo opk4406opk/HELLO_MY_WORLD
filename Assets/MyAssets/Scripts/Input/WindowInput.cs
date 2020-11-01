@@ -51,16 +51,11 @@ public class WindowInput : AInput
             }
         }
 
-        //// 마우스 아무 버튼이나 누르면 Confined 상태로 전환.
-        //if (bAnyMouseButton == true)
-        //{
-        //    Cursor.lockState = CursorLockMode.Confined;
-        //}
-        //// 키보드 아무 버튼이나 누르면 Confined 상태로 전환.
-        //if (Input.anyKey || Input.anyKeyDown)
-        //{
-        //    Cursor.lockState = CursorLockMode.Confined;
-        //}
+        // 팝업 UI가 없는 상태에서 마우스 클릭을 하면 Lock.
+        if (bAnyMouseButton == true && UIPopupSupervisor.bInGameAllPopupClose == true)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
 
         ///////////////////////////////////////////////////////////////////////////////////////
         if (Input.GetKeyDown(KeyCode.I))
@@ -88,8 +83,8 @@ public class WindowInput : AInput
         }
         else if(Input.GetKey(KeyCode.Escape))
         {
-            // 마우스 커서에 대한 잠금을 해제.
-            Cursor.lockState = CursorLockMode.None;
+            // 마우스 커서가 보이도록 설정.
+            Cursor.lockState = CursorLockMode.Confined;
         }
         ///////////////////////////////////////////////////////////////////////////////////////
         List<KeyCode> moveKeyCodes = new List<KeyCode>();

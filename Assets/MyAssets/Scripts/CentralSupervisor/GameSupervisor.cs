@@ -116,6 +116,8 @@ public class GameSupervisor : MonoBehaviour
         GameDataManagerInstance.Initialize();
         // 게임 플레이 초기화 코루틴 시작.
         StartCoroutine(InitializeManagersProcess());
+        // 테스트 코드.
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private IEnumerator InitializeManagersProcess()

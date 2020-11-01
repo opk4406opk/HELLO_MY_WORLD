@@ -301,7 +301,7 @@ GameObject:
   - component: {fileID: 479656938}
   - component: {fileID: 479656939}
   m_Layer: 5
-  m_Name: panel_ChSeletor
+  m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1186,6 +1186,8 @@ MonoBehaviour:
   useMouse: 1
   useTouch: 1
   allowMultiTouch: 1
+  bUseInitCursorMode: 0
+  InitCursorMode: 0
   useKeyboard: 1
   useController: 1
   stickyTooltip: 1

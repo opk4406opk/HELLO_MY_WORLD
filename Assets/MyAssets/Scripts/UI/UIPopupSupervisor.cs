@@ -37,6 +37,7 @@ public class UIPopupSupervisor : MonoBehaviour {
     // network UI popups.
     public static bool bWaitingConnectOpen { get; private set; } = false;
     public static bool bPromptServerIPOpen { get; private set; } = false;
+    public static int CurrentPopupCount { get; private set; } = 0;
 
     //
     private static bool _bAllPopupClose = false;
@@ -51,7 +52,9 @@ public class UIPopupSupervisor : MonoBehaviour {
                (bCraftItemOpen == false) &&
                (bShopOpen == false) &&
                (bPurchaseItemOpen == false) &&
-               (bSellItemOpen == false))
+               (bSellItemOpen == false) &&
+               (bWaitingConnectOpen == false) &&
+               (bPromptServerIPOpen == false))
             {
                 _bAllPopupClose = true;
                 return _bAllPopupClose;
@@ -63,6 +66,7 @@ public class UIPopupSupervisor : MonoBehaviour {
 
     public static void OpenPopupUI(UI_POPUP_TYPE popuptype)
     {
+        bool bOpenPopup = false;
         switch (popuptype)
         {
             case UI_POPUP_TYPE.CraftItem:
@@ -71,6 +75,7 @@ public class UIPopupSupervisor : MonoBehaviour {
                     SceneManager.LoadSceneAsync("popup_craftItem", LoadSceneMode.Additive);
                     bCraftItemOpen = true;
                     _bAllPopupClose = false;
+                    bOpenPopup = true;
                 }
                 break;
             case UI_POPUP_TYPE.Inventory:
@@ -79,6 +84,7 @@ public class UIPopupSupervisor : MonoBehaviour {
                     SceneManager.LoadSceneAsync("popup_inventory", LoadSceneMode.Additive);
                     bInvenOpen = true;
                     _bAllPopupClose = false;
+                    bOpenPopup = true;
                 }
                 break;
             case UI_POPUP_TYPE.Shop:
@@ -87,6 +93,7 @@ public class UIPopupSupervisor : MonoBehaviour {
                     SceneManager.LoadSceneAsync("popup_shop", LoadSceneMode.Additive);
                     bShopOpen = true;
                     _bAllPopupClose = false;
+                    bOpenPopup = true;
                 }
                 break;
             case UI_POPUP_TYPE.GameMenu:
@@ -95,6 +102,7 @@ public class UIPopupSupervisor : MonoBehaviour {
                     SceneManager.LoadSceneAsync("popup_menu", LoadSceneMode.Additive);
                     bGameMenuOpen = true;
                     _bAllPopupClose = false;
+                    bOpenPopup = true;
                 }
                 break;
             case UI_POPUP_TYPE.GameMessage:
@@ -103,6 +111,7 @@ public class UIPopupSupervisor : MonoBehaviour {
                     SceneManager.LoadSceneAsync("popup_message", LoadSceneMode.Additive);
                     bGameMessageOpen = true;
                     _bAllPopupClose = false;
+                    bOpenPopup = true;
                 }
                 break;
             case UI_POPUP_TYPE.ItemData:
@@ -111,6 +120,7 @@ public class UIPopupSupervisor : MonoBehaviour {
                     SceneManager.LoadSceneAsync("popup_ItemData", LoadSceneMode.Additive);
                     bItemDataOpen = true;
                     _bAllPopupClose = false;
+                    bOpenPopup = true;
                 }
                 break;
             case UI_POPUP_TYPE.PurchaseItem:
@@ -119,6 +129,7 @@ public class UIPopupSupervisor : MonoBehaviour {
                     SceneManager.LoadSceneAsync("popup_purChaseItem", LoadSceneMode.Additive);
                     bPurchaseItemOpen = true;
                     _bAllPopupClose = false;
+                    bOpenPopup = true;
                 }
                 break;
             case UI_POPUP_TYPE.SellItem:
@@ -127,10 +138,12 @@ public class UIPopupSupervisor : MonoBehaviour {
                     SceneManager.LoadSceneAsync("popup_sellItem", LoadSceneMode.Additive);
                     bSellItemOpen = true;
                     _bAllPopupClose = false;
+                    bOpenPopup = true;
                 }
                 break;
             case UI_POPUP_TYPE.CharInfo:
                 SceneManager.LoadSceneAsync("popup_chInfo", LoadSceneMode.Additive);
+                bOpenPopup = true;
                 break;
 
             // Network UI Popups.
@@ -139,6 +152,7 @@ public class UIPopupSupervisor : MonoBehaviour {
                 {
                     SceneManager.LoadSceneAsync("popup_waitingConnect", LoadSceneMode.Additive);
                     bWaitingConnectOpen = true;
+                    bOpenPopup = true;
                 }
                 break;
             case UI_POPUP_TYPE.PromptServerIP:
@@ -146,60 +160,82 @@ public class UIPopupSupervisor : MonoBehaviour {
                 {
                     SceneManager.LoadSceneAsync("popup_prompt_server_ip", LoadSceneMode.Additive);
                     bPromptServerIPOpen = true;
+                    bOpenPopup = true;
                 }
                 break;
+        }
+
+        if (bOpenPopup == true)
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+            CurrentPopupCount++;
         }
     }
 
     public static void ClosePopupUI(UI_POPUP_TYPE popuptype)
     {
+        bool bClosePopup = false;
         switch (popuptype)
         {
             case UI_POPUP_TYPE.CraftItem:
                 SceneManager.UnloadSceneAsync("popup_craftItem");
                 bCraftItemOpen = false;
+                bClosePopup = true;
                 break;
             case UI_POPUP_TYPE.Inventory:
                 SceneManager.UnloadSceneAsync("popup_inventory");
                 bInvenOpen = false;
+                bClosePopup = true;
                 break;
             case UI_POPUP_TYPE.Shop:
                 SceneManager.UnloadSceneAsync("popup_shop");
                 bShopOpen = false;
+                bClosePopup = true;
                 break;
             case UI_POPUP_TYPE.GameMenu:
                 SceneManager.UnloadSceneAsync("popup_menu");
                 bGameMenuOpen = false;
+                bClosePopup = true;
                 break;
             case UI_POPUP_TYPE.GameMessage:
                 SceneManager.UnloadSceneAsync("popup_message");
                 bGameMessageOpen = false;
+                bClosePopup = true;
                 break;
             case UI_POPUP_TYPE.ItemData:
                 SceneManager.UnloadSceneAsync("popup_ItemData");
                 bItemDataOpen = false;
+                bClosePopup = true;
                 break;
             case UI_POPUP_TYPE.PurchaseItem:
                 SceneManager.UnloadSceneAsync("popup_purChaseItem");
                 bPurchaseItemOpen = false;
+                bClosePopup = true;
                 break;
             case UI_POPUP_TYPE.SellItem:
                 SceneManager.UnloadSceneAsync("popup_sellItem");
                 bSellItemOpen = false;
+                bClosePopup = true;
                 break;
             case UI_POPUP_TYPE.CharInfo:
                 SceneManager.UnloadSceneAsync("popup_chInfo");
+                bClosePopup = true;
                 break;
 
             // Network UI Popups.
             case UI_POPUP_TYPE.WaitingConnect:
                 SceneManager.UnloadSceneAsync("popup_waitingConnect");
                 bWaitingConnectOpen = false;
+                bClosePopup = true;
                 break;
             case UI_POPUP_TYPE.PromptServerIP:
                 SceneManager.UnloadSceneAsync("popup_prompt_server_ip");
                 bPromptServerIPOpen = false;
+                bClosePopup = true;
                 break;
         }
+        //
+        if (bClosePopup == true) CurrentPopupCount--;
+        if(bInGameAllPopupClose == true) Cursor.lockState = CursorLockMode.Locked;
     }
 }

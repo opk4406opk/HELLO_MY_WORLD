@@ -38,7 +38,7 @@ using UnityEditor;
 /// </summary>
 
 [ExecuteInEditMode]
-[AddComponentMenu("NGUI/UI/NGUI Event System (UICamera)")]
+//[AddComponentMenu("NGUI/UI/NGUI Event System (UICamera)")]
 [RequireComponent(typeof(Camera))]
 public class UICamera : MonoBehaviour
 {
@@ -209,8 +209,10 @@ public class UICamera : MonoBehaviour
 	/// <summary>
 	/// Whether multi-touch is allowed.
 	/// </summary>
-
 	public bool allowMultiTouch = true;
+
+    public bool bUseInitCursorMode = false;
+    public CursorLockMode InitCursorMode = CursorLockMode.None;
 
 	/// <summary>
 	/// Whether the keyboard events will be processed.
@@ -489,8 +491,8 @@ public class UICamera : MonoBehaviour
 						Screen.lockCursor = false;
 						Screen.showCursor = true;
 #else
-						Cursor.lockState = CursorLockMode.None;
-						Cursor.visible = true;
+						//Cursor.lockState = CursorLockMode.None;
+						//Cursor.visible = true;
 #endif
 					}
 #if UNITY_EDITOR
@@ -503,8 +505,8 @@ public class UICamera : MonoBehaviour
 						Screen.showCursor = false;
 						Screen.lockCursor = true;
 #else
-						Cursor.visible = false;
-						Cursor.lockState = CursorLockMode.Locked;
+						//Cursor.visible = false;
+						//Cursor.lockState = CursorLockMode.Locked;
 #endif
 
 						// Skip the next 2 frames worth of mouse movement
@@ -1584,6 +1586,8 @@ public class UICamera : MonoBehaviour
 	
 	void Start ()
 	{
+        if(bUseInitCursorMode == true) Cursor.lockState = InitCursorMode;
+
 		if (eventType != EventType.World_3D && cachedCamera.transparencySortMode != TransparencySortMode.Orthographic)
 			cachedCamera.transparencySortMode = TransparencySortMode.Orthographic;
 
