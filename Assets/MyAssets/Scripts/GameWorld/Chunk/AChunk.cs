@@ -4,6 +4,11 @@ using UnityEngine;
 using MapGenLib;
 using System.Threading.Tasks;
 
+public struct PlaneData
+{
+    public List<Vector3> Points;
+}
+
 public abstract class AChunk : MonoBehaviour {
 
 	public SubWorld SubWorldInstance { set; get; }
@@ -16,7 +21,6 @@ public abstract class AChunk : MonoBehaviour {
 	///  ex) 256 x 256(pixel) CommonBlockSheet 기준. 1tile(16pixel) 이 차지하는 텍스처 좌표값.  16/256
 	/// </summary>
 	protected float TileUnit;
-	protected Vector2 TexturePos;
 	protected Mesh MeshInstance;
 	protected int FaceCount;
 
@@ -75,6 +79,43 @@ public abstract class AChunk : MonoBehaviour {
 	protected abstract void FixedUpdate();
 	public abstract void Init();
 
+    protected PlaneData CreateFaceProcess(Vector3 point1, Vector3 point2, Vector3 point3, Vector3 point4, BlockTileType tileType)
+    {
+        List<Vector3> planePoints = new List<Vector3>();
+        planePoints.Add(point1);
+        planePoints.Add(point2);
+        planePoints.Add(point3);
+        planePoints.Add(point4);
+        PlaneData planeInfo;
+        planeInfo.Points = planePoints;
+
+        NewVertices.Add(point1);
+        NewVertices.Add(point2);
+        NewVertices.Add(point3);
+        NewVertices.Add(point4);
+
+        BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo(tileType);
+        Vector2 texturePos = Vector2.zero;
+        texturePos.x = tileInfo.PositionX;
+        texturePos.y = tileInfo.PositionY;
+
+        NewTriangles.Add(FaceCount * 4); //1
+        NewTriangles.Add(FaceCount * 4 + 1); //2
+        NewTriangles.Add(FaceCount * 4 + 2); //3
+        NewTriangles.Add(FaceCount * 4); //1
+        NewTriangles.Add(FaceCount * 4 + 2); //3
+        NewTriangles.Add(FaceCount * 4 + 3); //4
+
+        NewUV.Add(new Vector2(TileUnit * texturePos.x + TileUnit, TileUnit * texturePos.y));
+        NewUV.Add(new Vector2(TileUnit * texturePos.x + TileUnit, TileUnit * texturePos.y + TileUnit));
+        NewUV.Add(new Vector2(TileUnit * texturePos.x, TileUnit * texturePos.y + TileUnit));
+        NewUV.Add(new Vector2(TileUnit * texturePos.x, TileUnit * texturePos.y));
+
+        FaceCount++; // Add this line
+
+        return planeInfo;
+    }
+
 	protected BlockTileType GetBlockType(int x, int y, int z)
 	{
 		var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
@@ -88,89 +129,59 @@ public abstract class AChunk : MonoBehaviour {
 		return (BlockTileType)SubWorldInstance.WorldBlockData[x, y, z].CurrentType;
 	}
 
-	protected void CubeTopFace(float x, float y, float z, BlockTileType tileType)
+	protected PlaneData CubeTopFace(float x, float y, float z, BlockTileType tileType)
 	{
-		NewVertices.Add(new Vector3(x, y, z + 1));
-		NewVertices.Add(new Vector3(x + 1, y, z + 1));
-		NewVertices.Add(new Vector3(x + 1, y, z));
-		NewVertices.Add(new Vector3(x, y, z));
+        Vector3 point1 = new Vector3(x, y, z + 1);
+        Vector3 point2 = new Vector3(x + 1, y, z + 1);
+        Vector3 point3 = new Vector3(x + 1, y, z);
+        Vector3 point4 = new Vector3(x, y, z);
+        return CreateFaceProcess(point1, point2, point3, point4, tileType);
+    }
 
-		BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo(tileType);
-		TexturePos.x = tileInfo.PositionX;
-		TexturePos.y = tileInfo.PositionY;
-
-		CreateFace(TexturePos);
-	}
-
-	protected void CubeNorthFace(float x, float y, float z, BlockTileType tileType)
+	protected PlaneData CubeNorthFace(float x, float y, float z, BlockTileType tileType)
 	{
-		NewVertices.Add(new Vector3(x + 1, y - 1, z + 1));
-		NewVertices.Add(new Vector3(x + 1, y, z + 1));
-		NewVertices.Add(new Vector3(x, y, z + 1));
-		NewVertices.Add(new Vector3(x, y - 1, z + 1));
+        Vector3 point1 = new Vector3(x + 1, y - 1, z + 1);
+        Vector3 point2 = new Vector3(x + 1, y, z + 1);
+        Vector3 point3 = new Vector3(x, y, z + 1);
+        Vector3 point4 = new Vector3(x, y - 1, z + 1);
+        return CreateFaceProcess(point1, point2, point3, point4, tileType);
+    }
 
-		BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo(tileType);
-		TexturePos.x = tileInfo.PositionX;
-		TexturePos.y = tileInfo.PositionY;
-
-		CreateFace(TexturePos);
-	}
-
-	protected void CubeEastFace(float x, float y, float z, BlockTileType tileType)
+	protected PlaneData CubeEastFace(float x, float y, float z, BlockTileType tileType)
 	{
-		NewVertices.Add(new Vector3(x + 1, y - 1, z));
-		NewVertices.Add(new Vector3(x + 1, y, z));
-		NewVertices.Add(new Vector3(x + 1, y, z + 1));
-		NewVertices.Add(new Vector3(x + 1, y - 1, z + 1));
+        Vector3 point1 = new Vector3(x + 1, y - 1, z);
+        Vector3 point2 = new Vector3(x + 1, y, z);
+        Vector3 point3 = new Vector3(x + 1, y, z + 1);
+        Vector3 point4 = new Vector3(x + 1, y - 1, z + 1);
+        return CreateFaceProcess(point1, point2, point3, point4, tileType);
+    }
 
-		BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo(tileType);
-		TexturePos.x = tileInfo.PositionX;
-		TexturePos.y = tileInfo.PositionY;
-
-		CreateFace(TexturePos);
-	}
-
-	protected void CubeSouthFace(float x, float y, float z, BlockTileType tileType)
+	protected PlaneData CubeSouthFace(float x, float y, float z, BlockTileType tileType)
 	{
-		NewVertices.Add(new Vector3(x, y - 1, z));
-		NewVertices.Add(new Vector3(x, y, z));
-		NewVertices.Add(new Vector3(x + 1, y, z));
-		NewVertices.Add(new Vector3(x + 1, y - 1, z));
+        Vector3 point1 = new Vector3(x, y - 1, z);
+        Vector3 point2 = new Vector3(x, y, z);
+        Vector3 point3 = new Vector3(x + 1, y, z);
+        Vector3 point4 = new Vector3(x + 1, y - 1, z);
+        return CreateFaceProcess(point1, point2, point3, point4, tileType);
+    }
 
-		BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo(tileType);
-		TexturePos.x = tileInfo.PositionX;
-		TexturePos.y = tileInfo.PositionY;
-
-		CreateFace(TexturePos);
-	}
-
-	protected void CubeWestFace(float x, float y, float z, BlockTileType tileType)
+	protected PlaneData CubeWestFace(float x, float y, float z, BlockTileType tileType)
 	{
-		NewVertices.Add(new Vector3(x, y - 1, z + 1));
-		NewVertices.Add(new Vector3(x, y, z + 1));
-		NewVertices.Add(new Vector3(x, y, z));
-		NewVertices.Add(new Vector3(x, y - 1, z));
+        Vector3 point1 = new Vector3(x, y - 1, z + 1);
+        Vector3 point2 = new Vector3(x, y, z + 1);
+        Vector3 point3 = new Vector3(x, y, z);
+        Vector3 point4 = new Vector3(x, y - 1, z);
+        return CreateFaceProcess(point1, point2, point3, point4, tileType);
+    }
 
-		BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo(tileType);
-		TexturePos.x = tileInfo.PositionX;
-		TexturePos.y = tileInfo.PositionY;
-
-		CreateFace(TexturePos);
-	}
-
-	protected void CubeBottomFace(float x, float y, float z, BlockTileType tileType)
+	protected PlaneData CubeBottomFace(float x, float y, float z, BlockTileType tileType)
 	{
-		NewVertices.Add(new Vector3(x, y - 1, z));
-		NewVertices.Add(new Vector3(x + 1, y - 1, z));
-		NewVertices.Add(new Vector3(x + 1, y - 1, z + 1));
-		NewVertices.Add(new Vector3(x, y - 1, z + 1));
-
-		BlockTileInfo tileInfo = BlockTileDataFile.Instance.GetBlockTileInfo(tileType);
-		TexturePos.x = tileInfo.PositionX;
-		TexturePos.y = tileInfo.PositionY;
-
-		CreateFace(TexturePos);
-	}
+        Vector3 point1 = new Vector3(x, y - 1, z);
+        Vector3 point2 = new Vector3(x + 1, y - 1, z);
+        Vector3 point3 = new Vector3(x + 1, y - 1, z + 1);
+        Vector3 point4 = new Vector3(x, y - 1, z + 1);
+        return CreateFaceProcess(point1, point2, point3, point4, tileType);
+    }
 
 	protected void CreateFace(Vector2 texturePos)
 	{

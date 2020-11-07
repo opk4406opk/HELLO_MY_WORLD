@@ -108,36 +108,23 @@ public class ModifyWorldManager : MonoBehaviour
         if (SelectWorldInstance.CustomOctreeInstance == null) return;
 
         CollideInfo collideInfo = SelectWorldInstance.CustomOctreeInstance.Collide(ray);
-        if (collideInfo.bCollide)
+        if (collideInfo.bCollide == true)
         {
             Block hitBlock = collideInfo.GetBlock();
+            Vector3 blockCenter = new Vector3(hitBlock.CenterX, hitBlock.CenterY, hitBlock.CenterZ);
+            Vector3 dir = ray.origin - blockCenter;
+            dir.Normalize();
+
             int blockX = hitBlock.WorldDataIndexX;
             int blockY = hitBlock.WorldDataIndexY;
             int blockZ = hitBlock.WorldDataIndexZ;
-            //KojeomLogger.DebugLog(string.Format("RayCasting blockX {0} blockY {1} blockZ {2}", blockX, blockY, blockZ));
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // 블록 변경 패킷.
-            SubWorldBlockPacketData packetData;
-            packetData.AreaID = SelectWorldInstance.GetWorldAreaUniqueID();
-            packetData.SubWorldID = SelectWorldInstance.UniqueID;
-            packetData.BlockTypeValue = blockType;
-            //packetData.TimeStampTicks = GameNetworkManager.INVALID_TIMESTAMP_TICKS;
-            if (bCreate == true)
+            if(bCreate == true)
             {
-                packetData.BlockIndex_X = blockX;
-                packetData.BlockIndex_Y = blockY + 1;
-                packetData.BlockIndex_Z = blockZ;
-                packetData.OwnerChunkType = (byte)SelectWorldInstance.WorldBlockData[blockX, blockY + 1, blockZ].OwnerChunkType;
+                blockX += Mathf.RoundToInt(dir.x);
+                blockY += Mathf.RoundToInt(dir.y);
+                blockZ += Mathf.RoundToInt(dir.z);
             }
-            else
-            {
-                packetData.BlockIndex_X = blockX;
-                packetData.BlockIndex_Y = blockY;
-                packetData.BlockIndex_Z = blockZ;
-                packetData.OwnerChunkType = (byte)SelectWorldInstance.WorldBlockData[blockX, blockY, blockZ].OwnerChunkType;
-            }
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+            KojeomLogger.DebugLog(string.Format("RayCasting blockX : {0} blockY : {1} blockZ : {2}, dir :{3} rayOrigin : {4}", blockX, blockY, blockZ, dir, ray.origin));
             ProcessBlockData_Internal processData = new ProcessBlockData_Internal();
             processData.collideInfo = collideInfo;
             processData.bCreate = bCreate;
@@ -151,6 +138,25 @@ public class ModifyWorldManager : MonoBehaviour
             }
             else if (GameStatusManager.CurrentGameModeState == GameModeState.MULTI)
             {
+                // 블록 변경 패킷.
+                SubWorldBlockPacketData packetData;
+                packetData.AreaID = SelectWorldInstance.GetWorldAreaUniqueID();
+                packetData.SubWorldID = SelectWorldInstance.UniqueID;
+                packetData.BlockTypeValue = blockType;
+                if (bCreate == true)
+                {
+                    packetData.BlockIndex_X = blockX;
+                    packetData.BlockIndex_Y = blockY + 1;
+                    packetData.BlockIndex_Z = blockZ;
+                    packetData.OwnerChunkType = (byte)SelectWorldInstance.WorldBlockData[blockX, blockY + 1, blockZ].OwnerChunkType;
+                }
+                else
+                {
+                    packetData.BlockIndex_X = blockX;
+                    packetData.BlockIndex_Y = blockY;
+                    packetData.BlockIndex_Z = blockZ;
+                    packetData.OwnerChunkType = (byte)SelectWorldInstance.WorldBlockData[blockX, blockY, blockZ].OwnerChunkType;
+                }
                 // 패킷 전송.
                 GameNetworkManager.GetInstance().RequestChangeSubWorldBlock(packetData, () =>
                 {
