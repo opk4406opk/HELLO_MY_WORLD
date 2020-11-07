@@ -4,11 +4,6 @@ using UnityEngine;
 using MapGenLib;
 using System.Threading.Tasks;
 
-public struct PlaneData
-{
-    public List<Vector3> Points;
-}
-
 public abstract class AChunk : MonoBehaviour {
 
 	public SubWorld SubWorldInstance { set; get; }
@@ -81,13 +76,17 @@ public abstract class AChunk : MonoBehaviour {
 
     protected PlaneData CreateFaceProcess(Vector3 point1, Vector3 point2, Vector3 point3, Vector3 point4, BlockTileType tileType)
     {
-        List<Vector3> planePoints = new List<Vector3>();
-        planePoints.Add(point1);
-        planePoints.Add(point2);
-        planePoints.Add(point3);
-        planePoints.Add(point4);
+        List<CustomVector3> planePoints = new List<CustomVector3>();
+        planePoints.Add(new CustomVector3(point1.x, point1.y, point1.z));
+        planePoints.Add(new CustomVector3(point2.x, point2.y, point2.z));
+        planePoints.Add(new CustomVector3(point3.x, point3.y, point3.z));
+        planePoints.Add(new CustomVector3(point4.x, point4.y, point4.z));
         PlaneData planeInfo;
         planeInfo.Points = planePoints;
+        Vector3 vec1onPlane = point1 - point2;
+        Vector3 vec2onPlane = point1 - point3;
+        Vector3 surfaceNormal = Vector3.Cross(vec1onPlane, vec2onPlane);
+        planeInfo.SurfaceNormal = new CustomVector3(surfaceNormal.x, surfaceNormal.y, surfaceNormal.z);
 
         NewVertices.Add(point1);
         NewVertices.Add(point2);
@@ -138,7 +137,7 @@ public abstract class AChunk : MonoBehaviour {
         return CreateFaceProcess(point1, point2, point3, point4, tileType);
     }
 
-	protected PlaneData CubeNorthFace(float x, float y, float z, BlockTileType tileType)
+	protected PlaneData CubeFrontFace(float x, float y, float z, BlockTileType tileType)
 	{
         Vector3 point1 = new Vector3(x + 1, y - 1, z + 1);
         Vector3 point2 = new Vector3(x + 1, y, z + 1);
@@ -147,7 +146,7 @@ public abstract class AChunk : MonoBehaviour {
         return CreateFaceProcess(point1, point2, point3, point4, tileType);
     }
 
-	protected PlaneData CubeEastFace(float x, float y, float z, BlockTileType tileType)
+	protected PlaneData CubeRightFace(float x, float y, float z, BlockTileType tileType)
 	{
         Vector3 point1 = new Vector3(x + 1, y - 1, z);
         Vector3 point2 = new Vector3(x + 1, y, z);
@@ -156,7 +155,7 @@ public abstract class AChunk : MonoBehaviour {
         return CreateFaceProcess(point1, point2, point3, point4, tileType);
     }
 
-	protected PlaneData CubeSouthFace(float x, float y, float z, BlockTileType tileType)
+	protected PlaneData CubeBackFace(float x, float y, float z, BlockTileType tileType)
 	{
         Vector3 point1 = new Vector3(x, y - 1, z);
         Vector3 point2 = new Vector3(x, y, z);
@@ -165,7 +164,7 @@ public abstract class AChunk : MonoBehaviour {
         return CreateFaceProcess(point1, point2, point3, point4, tileType);
     }
 
-	protected PlaneData CubeWestFace(float x, float y, float z, BlockTileType tileType)
+	protected PlaneData CubeLeftFace(float x, float y, float z, BlockTileType tileType)
 	{
         Vector3 point1 = new Vector3(x, y - 1, z + 1);
         Vector3 point2 = new Vector3(x, y, z + 1);

@@ -36,12 +36,12 @@ public class TerrainChunk : AChunk
         var blockType = GetBlockType(blockIdxX, blockIdxY, blockIdxZ);
         if (blockType != BlockTileType.EMPTY && blockType != BlockTileType.WATER)
         {
-            CubeTopFace(cubeX, cubeY, cubeZ, blockType);
-            CubeBottomFace(cubeX, cubeY, cubeZ, blockType);
-            CubeNorthFace(cubeX, cubeY, cubeZ, blockType);
-            CubeSouthFace(cubeX, cubeY, cubeZ, blockType);
-            CubeEastFace(cubeX, cubeY, cubeZ, blockType);
-            CubeWestFace(cubeX, cubeY, cubeZ, blockType);
+            PlaneData topPlane = CubeTopFace(cubeX, cubeY, cubeZ, blockType);
+            PlaneData bottomPlane = CubeBottomFace(cubeX, cubeY, cubeZ, blockType);
+            PlaneData frontPlane = CubeFrontFace(cubeX, cubeY, cubeZ, blockType);
+            PlaneData backPlane = CubeBackFace(cubeX, cubeY, cubeZ, blockType);
+            PlaneData rightPlane = CubeRightFace(cubeX, cubeY, cubeZ, blockType);
+            PlaneData leftPlane = CubeLeftFace(cubeX, cubeY, cubeZ, blockType);
             // points 배열은 실제 블록을 생성할 때 쓰이는 8개의 포인트로 실제 월드 좌표값이다.
             // 따라서, 이를 이용해 블록의 AABB의 Min, Max Extent 값을 정한다.
             //Vector3[] points = new Vector3[8];
@@ -56,6 +56,13 @@ public class TerrainChunk : AChunk
             //
             SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].bRendered = true;
             SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].OwnerChunkType = ChunkType.TERRAIN;
+            SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].PlaneGroup = new Dictionary<PlaneType, PlaneData>();
+            SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].PlaneGroup.Add(PlaneType.TOP, topPlane);
+            SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].PlaneGroup.Add(PlaneType.BOTTOM, bottomPlane);
+            SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].PlaneGroup.Add(PlaneType.FRONT, frontPlane);
+            SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].PlaneGroup.Add(PlaneType.BACK, backPlane);
+            SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].PlaneGroup.Add(PlaneType.LEFT, leftPlane);
+            SubWorldInstance.WorldBlockData[blockIdxX, blockIdxY, blockIdxZ].PlaneGroup.Add(PlaneType.RIGHT, rightPlane);
             // 월드맵에 생성된 블록의 중앙점을 이용해 Octree의 노드를 생성합니다.
             SubWorldInstance.CustomOctreeInstance.Add(new Vector3(blockCenterX, blockCenterY, blockCenterZ));
         }

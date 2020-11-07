@@ -33,6 +33,22 @@ namespace MapGenLib
         NONE = 3,
         COUNT = NONE
     }
+    
+    public enum PlaneType
+    {
+        TOP,
+        BOTTOM,
+        FRONT,
+        BACK,
+        LEFT,
+        RIGHT,
+    }
+
+    public struct PlaneData
+    {
+        public List<CustomVector3> Points;
+        public CustomVector3 SurfaceNormal;
+    }
 
     /// <summary>
     /// Block
@@ -52,7 +68,8 @@ namespace MapGenLib
         public int WorldDataIndexZ;
         public int Durability;
         public ChunkType OwnerChunkType; // 이 블록을 소유한 청크의 타입.
-                                         // 복사 생성자.
+        public Dictionary<PlaneType, PlaneData> PlaneGroup;
+        // 복사 생성자.
         public Block(Block b)
         {
             CurrentType = b.CurrentType;
@@ -66,6 +83,7 @@ namespace MapGenLib
             WorldDataIndexZ = b.WorldDataIndexZ;
             Durability = b.Durability;
             OwnerChunkType = b.OwnerChunkType;
+            PlaneGroup = b.PlaneGroup;
         }
 
         public CustomVector3 GetCenterPosition()
