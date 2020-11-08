@@ -17,6 +17,7 @@ public class ModifyWorldManager : MonoBehaviour
     private struct ProcessBlockData_Internal
     {
         public CollideInfo collideInfo;
+        public Vector3 updatePosition;
         public bool bCreate;
         public int BlockX;
         public int BlockY;
@@ -119,13 +120,19 @@ public class ModifyWorldManager : MonoBehaviour
             Vector3 offset = Vector3.zero;
             if (bCreate == true)
             {
-                offset = CalcBlockCreateOffset(hitBlock, ray);
-                blockX += Mathf.RoundToInt(offset.x);
-                blockY += Mathf.RoundToInt(offset.y);
-                blockZ += Mathf.RoundToInt(offset.z);
+                offset = ray.origin - collideInfo.HitBlockCenter;
+                offset.Normalize();
+
+                offset.x = Mathf.Round(offset.x);
+                offset.y = Mathf.Round(offset.y);
+                offset.z = Mathf.Round(offset.z);
+
+                blockX += (int)offset.x;
+                blockY += (int)offset.y;
+                blockZ += (int)offset.z;
+
+                KojeomLogger.DebugLog(string.Format("Create blockX : {0} blockY : {1} blockZ : {2} offset : {3}", blockX, blockY, blockZ, offset));
             }
-            
-            KojeomLogger.DebugLog(string.Format("RayCasting blockX : {0} blockY : {1} blockZ : {2} offset : {3}", blockX, blockY, blockZ, offset));
             ProcessBlockData_Internal processData = new ProcessBlockData_Internal();
             processData.collideInfo = collideInfo;
             processData.bCreate = bCreate;
@@ -133,6 +140,7 @@ public class ModifyWorldManager : MonoBehaviour
             processData.BlockY = blockY;
             processData.BlockZ = blockZ;
             processData.BlockType = blockType;
+            processData.updatePosition = collideInfo.HitBlockCenter + offset;
             if (GameStatusManager.CurrentGameModeState == GameModeState.SINGLE)
             {
                 ProcessBlockCreateOrDelete(processData);
@@ -144,20 +152,11 @@ public class ModifyWorldManager : MonoBehaviour
                 packetData.AreaID = SelectWorldInstance.GetWorldAreaUniqueID();
                 packetData.SubWorldID = SelectWorldInstance.UniqueID;
                 packetData.BlockTypeValue = blockType;
-                if (bCreate == true)
-                {
-                    packetData.BlockIndex_X = blockX;
-                    packetData.BlockIndex_Y = blockY + 1;
-                    packetData.BlockIndex_Z = blockZ;
-                    packetData.OwnerChunkType = (byte)SelectWorldInstance.WorldBlockData[blockX, blockY + 1, blockZ].OwnerChunkType;
-                }
-                else
-                {
-                    packetData.BlockIndex_X = blockX;
-                    packetData.BlockIndex_Y = blockY;
-                    packetData.BlockIndex_Z = blockZ;
-                    packetData.OwnerChunkType = (byte)SelectWorldInstance.WorldBlockData[blockX, blockY, blockZ].OwnerChunkType;
-                }
+
+                packetData.BlockIndex_X = blockX;
+                packetData.BlockIndex_Y = blockY;
+                packetData.BlockIndex_Z = blockZ;
+                packetData.OwnerChunkType = (byte)SelectWorldInstance.WorldBlockData[blockX, blockY, blockZ].OwnerChunkType;
                 // 패킷 전송.
                 GameNetworkManager.GetInstance().RequestChangeSubWorldBlock(packetData, () =>
                 {
@@ -169,6 +168,7 @@ public class ModifyWorldManager : MonoBehaviour
 
     private Vector3 CalcBlockCreateOffset(Block block, Ray ray)
     {
+        //Dictionary<PlaneType, Vector3> test = new Dictionary<PlaneType, Vector3>();
         foreach(var group in block.PlaneGroup)
         {
             PlaneType type = group.Key;
@@ -189,9 +189,9 @@ public class ModifyWorldManager : MonoBehaviour
         if (processData.bCreate == true)
         {
             // 임시코드
-            SelectWorldInstance.CustomOctreeInstance.Add(processData.collideInfo.HitBlockCenter + new Vector3(0, 1.0f, 0));
-            SetBlockForAdd(processData.BlockX, processData.BlockY + 1, processData.BlockZ, processData.BlockType);
-            SelectWorldInstance.WorldBlockData[processData.BlockX, processData.BlockY + 1, processData.BlockZ].bRendered = true;
+            SelectWorldInstance.CustomOctreeInstance.Add(processData.updatePosition);
+            SetBlockForAdd(processData.BlockX, processData.BlockY, processData.BlockZ, processData.BlockType);
+            SelectWorldInstance.WorldBlockData[processData.BlockX, processData.BlockY, processData.BlockZ].bRendered = true;
         }
         else
         {
@@ -204,7 +204,7 @@ public class ModifyWorldManager : MonoBehaviour
             spawnParams.bStart = true;
             GameParticleEffectManager.Instance.SpawnParticleEffect(spawnParams);
 
-            SelectWorldInstance.CustomOctreeInstance.Delete(processData.collideInfo.HitBlockCenter);
+            SelectWorldInstance.CustomOctreeInstance.Delete(processData.updatePosition);
             SetBlockForDelete(processData.BlockX, processData.BlockY, processData.BlockZ, processData.BlockType);
             SelectWorldInstance.WorldBlockData[processData.BlockX, processData.BlockY, processData.BlockZ].bRendered = false;
         }
