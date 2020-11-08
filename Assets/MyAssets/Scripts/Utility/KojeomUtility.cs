@@ -281,6 +281,30 @@ public class KojeomUtility
         return (int)rValue;
     }
 
+    /// <summary>
+    /// 평면 & 광선 충돌 체크.
+    /// 참고 링크 : https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection
+    /// </summary>
+    /// <param name="ray"></param>
+    /// <param name="pointOnPlane"></param>
+    /// <param name="planeNormal"></param>
+    /// <returns></returns>
+    public static bool IntersectRayWithPlane(Ray ray, Vector3 pointOnPlane, Vector3 planeNormal)
+    {
+        Vector3 rayOrigin = ray.origin;
+        rayOrigin.Normalize();
+        pointOnPlane.Normalize();
+
+        float denorminator = Vector3.Dot(planeNormal, ray.direction);
+        if(denorminator > float.Epsilon)
+        {
+            Vector3 rayOriginToPoint = pointOnPlane - rayOrigin;
+            float t = Vector3.Dot(rayOriginToPoint, planeNormal) / denorminator;
+            return (t >= 0);
+        }
+        return false;
+    }
+
     private static Stopwatch StopWatchInstance;
     public static void StartWatch()
     {

@@ -111,20 +111,21 @@ public class ModifyWorldManager : MonoBehaviour
         if (collideInfo.bCollide == true)
         {
             Block hitBlock = collideInfo.GetBlock();
-            Vector3 blockCenter = new Vector3(hitBlock.CenterX, hitBlock.CenterY, hitBlock.CenterZ);
-            Vector3 dir = ray.origin - blockCenter;
-            dir.Normalize();
 
             int blockX = hitBlock.WorldDataIndexX;
             int blockY = hitBlock.WorldDataIndexY;
             int blockZ = hitBlock.WorldDataIndexZ;
-            if(bCreate == true)
+
+            Vector3 offset = Vector3.zero;
+            if (bCreate == true)
             {
-                blockX += Mathf.RoundToInt(dir.x);
-                blockY += Mathf.RoundToInt(dir.y);
-                blockZ += Mathf.RoundToInt(dir.z);
+                offset = CalcBlockCreateOffset(hitBlock, ray);
+                blockX += Mathf.RoundToInt(offset.x);
+                blockY += Mathf.RoundToInt(offset.y);
+                blockZ += Mathf.RoundToInt(offset.z);
             }
-            KojeomLogger.DebugLog(string.Format("RayCasting blockX : {0} blockY : {1} blockZ : {2}, dir :{3} rayOrigin : {4}", blockX, blockY, blockZ, dir, ray.origin));
+            
+            KojeomLogger.DebugLog(string.Format("RayCasting blockX : {0} blockY : {1} blockZ : {2} offset : {3}", blockX, blockY, blockZ, offset));
             ProcessBlockData_Internal processData = new ProcessBlockData_Internal();
             processData.collideInfo = collideInfo;
             processData.bCreate = bCreate;
@@ -164,6 +165,23 @@ public class ModifyWorldManager : MonoBehaviour
                 });
             }
         }
+    }
+
+    private Vector3 CalcBlockCreateOffset(Block block, Ray ray)
+    {
+        foreach(var group in block.PlaneGroup)
+        {
+            PlaneType type = group.Key;
+            PlaneData data = group.Value;
+            Vector3 pointOnPlane = new Vector3(data.Points[0].x, data.Points[0].y, data.Points[0].z);
+            Vector3 planeNormal = new Vector3(data.SurfaceNormal.x, data.SurfaceNormal.y, data.SurfaceNormal.z);
+            bool bIntersect = KojeomUtility.IntersectRayWithPlane(ray, pointOnPlane, planeNormal);
+            if(bIntersect == true)
+            {
+                return planeNormal;
+            }
+        }
+        return Vector3.zero;
     }
 
     private void ProcessBlockCreateOrDelete(ProcessBlockData_Internal processData)

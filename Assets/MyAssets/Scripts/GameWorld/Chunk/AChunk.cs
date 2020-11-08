@@ -83,9 +83,10 @@ public abstract class AChunk : MonoBehaviour {
         planePoints.Add(new CustomVector3(point4.x, point4.y, point4.z));
         PlaneData planeInfo;
         planeInfo.Points = planePoints;
-        Vector3 vec1onPlane = point1 - point2;
-        Vector3 vec2onPlane = point1 - point3;
+        Vector3 vec1onPlane = point4 - point2;
+        Vector3 vec2onPlane = point4 - point3;
         Vector3 surfaceNormal = Vector3.Cross(vec1onPlane, vec2onPlane);
+        surfaceNormal.Normalize();
         planeInfo.SurfaceNormal = new CustomVector3(surfaceNormal.x, surfaceNormal.y, surfaceNormal.z);
 
         NewVertices.Add(point1);
