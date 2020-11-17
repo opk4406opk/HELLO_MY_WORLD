@@ -116,23 +116,19 @@ public class ModifyWorldManager : MonoBehaviour
             int blockX = hitBlock.WorldDataIndexX;
             int blockY = hitBlock.WorldDataIndexY;
             int blockZ = hitBlock.WorldDataIndexZ;
-
+           
             Vector3 offset = Vector3.zero;
             if (bCreate == true)
             {
-                offset = ray.origin - collideInfo.HitBlockCenter;
-                offset.Normalize();
-
-                offset.x = Mathf.Round(offset.x);
-                offset.y = Mathf.Round(offset.y);
-                offset.z = Mathf.Round(offset.z);
+                RaycastHit hitInfo;
+                Physics.Raycast(ray, out hitInfo);
+                offset = hitInfo.normal;
 
                 blockX += (int)offset.x;
                 blockY += (int)offset.y;
                 blockZ += (int)offset.z;
-
-                KojeomLogger.DebugLog(string.Format("Create blockX : {0} blockY : {1} blockZ : {2} offset : {3}", blockX, blockY, blockZ, offset));
             }
+
             ProcessBlockData_Internal processData = new ProcessBlockData_Internal();
             processData.collideInfo = collideInfo;
             processData.bCreate = bCreate;
@@ -168,7 +164,6 @@ public class ModifyWorldManager : MonoBehaviour
 
     private Vector3 CalcBlockCreateOffset(Block block, Ray ray)
     {
-        //Dictionary<PlaneType, Vector3> test = new Dictionary<PlaneType, Vector3>();
         foreach(var group in block.PlaneGroup)
         {
             PlaneType type = group.Key;
@@ -178,6 +173,7 @@ public class ModifyWorldManager : MonoBehaviour
             bool bIntersect = KojeomUtility.IntersectRayWithPlane(ray, pointOnPlane, planeNormal);
             if(bIntersect == true)
             {
+                KojeomLogger.DebugLog(string.Format("Collided Plane Type : {0}, Normal : {1}", type, planeNormal));
                 return planeNormal;
             }
         }

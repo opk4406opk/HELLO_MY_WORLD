@@ -300,7 +300,7 @@ public class KojeomUtility
         {
             Vector3 rayOriginToPoint = pointOnPlane - rayOrigin;
             float t = Vector3.Dot(rayOriginToPoint, planeNormal) / denorminator;
-            return (t >= 0);
+            return (t >= 0.0f);
         }
         return false;
     }

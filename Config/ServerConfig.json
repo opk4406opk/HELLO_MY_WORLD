@@ -1,0 +1,12 @@
+{
+  "WorldAreaRow": 1,
+  "WorldAreaColumn": 1,
+  "WorldAreaLayer": 1,
+  "SubWorldRow": 2,
+  "SubWorldColumn": 2,
+  "SubWorldLayer": 2,
+  "SubWorldSizeX": 32,
+  "SubWorldSizeY": 32,
+  "SubWorldSizeZ": 32,
+  "ChunkSize": 8
+}

@@ -153,7 +153,7 @@ public class WorldArea : MonoBehaviour
             }
             catch(Exception e)
             {
-
+                KojeomLogger.DebugLog(e.ToString(), LOG_TYPE.ERROR);
             }
             finally
             {
