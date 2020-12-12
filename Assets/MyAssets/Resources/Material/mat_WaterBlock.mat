@@ -11,7 +11,7 @@ Material:
   m_Shader: {fileID: 4800000, guid: 845142aa22e0e6241bdac0932a9413d0, type: 3}
   m_ShaderKeywords: _ALPHATEST_ON
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -105,3 +105,4 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _WaterFogColor: {r: 0.37304202, g: 0.75312614, b: 0.7830189, a: 0}
+  m_BuildTextureStacks: []
