@@ -3,15 +3,13 @@ using UnityEngine;
 
 public class PlayerJumpState : APlayerState, IState
 {
-    private float JumpScale;
     private float JumpSpeed;
 
     public PlayerJumpState(GamePlayer player, InputData inputData)
     {
         GamePlayer = player;
         InputData = inputData;
-        JumpSpeed = 15.0f;
-        JumpScale = 25.0f;
+        JumpSpeed = 60.0f;
     }
     public void InitState()
     {
@@ -24,7 +22,7 @@ public class PlayerJumpState : APlayerState, IState
         if(GamePlayer.Controller.CharacterInstance.RigidBodyInstance != null)
         {
             Vector3 dir = GamePlayer.Controller.CharacterInstance.transform.up;
-            GamePlayer.Controller.CharacterInstance.RigidBodyInstance.AddForce(dir * JumpSpeed * JumpScale);
+            GamePlayer.Controller.CharacterInstance.RigidBodyInstance.AddForce(dir * JumpSpeed * Time.deltaTime);
         }
     }
 

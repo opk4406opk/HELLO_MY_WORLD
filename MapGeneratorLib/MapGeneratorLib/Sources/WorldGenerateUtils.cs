@@ -45,21 +45,6 @@ namespace MapGenLib
             Y = (int)point.y;
         }
     }
-
-    public struct SubWorldSize
-    {
-        public int SizeX;
-        public int SizeY;
-        public int SizeZ;
-
-        public SubWorldSize(int x, int y, int z)
-        {
-            SizeX = x;
-            SizeY = y;
-            SizeZ = z;
-        }
-    }
-
     /// <summary>
     /// 월드, 환경 생성에 사용되는 공용 유틸리티 클래스.
     /// </summary>

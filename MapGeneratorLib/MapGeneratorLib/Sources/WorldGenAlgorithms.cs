@@ -44,6 +44,14 @@ namespace MapGenLib
         RIGHT,
     }
 
+    public enum WorldGenTypes
+    {
+        NONE = 0,
+        GEN_NORMAL = 1,
+        GEN_WITH_PERLIN = 2,
+    }
+
+
     public struct PlaneData
     {
         public List<CustomVector3> Points;
@@ -103,6 +111,20 @@ namespace MapGenLib
         public struct MakeWorldParam
         {
             public int BaseOffset;
+            public bool bSurface;
+        }
+        public struct SubWorldSize
+        {
+            public int SizeX;
+            public int SizeY;
+            public int SizeZ;
+
+            public SubWorldSize(int x, int y, int z)
+            {
+                SizeX = x;
+                SizeY = y;
+                SizeZ = z;
+            }
         }
 
         public static TerrainValue[,] GenerateUndergroundTerrain(int areaSizeX, int areaSizeZ, int subWorldLayerNum, int subWorldSizeY, int randomSeed)
@@ -223,6 +245,32 @@ namespace MapGenLib
             return terrainValues;
         }
 
+        public static void GenerateUnderSubWorldWithPerlinNoise(Block[,,] subWorldBlockData, MakeWorldParam param, SubWorldSize subWorldSize)
+        {
+            for (int x = 0; x < subWorldSize.SizeX; x++)
+            {
+                for (int z = 0; z < subWorldSize.SizeZ; z++)
+                {
+                    int internalTerrain = WorldGenerateUtils.PerlinNoise(x, 20, z, 3, Utilitys.RandomInteger(1, 3), 2);
+                    internalTerrain += param.BaseOffset;
+
+                    for (int y = 0; y < subWorldSize.SizeY; y++)
+                    {
+                        if (y <= internalTerrain)
+                        {
+                            subWorldBlockData[x, y, z].CurrentType = (byte)Utilitys.RandomInteger((int)BlockTileType.STONE_BIG, (int)BlockTileType.STONE_SILVER);
+                        }
+                        else
+                        {
+                            subWorldBlockData[x, y, z].CurrentType = (byte)BlockTileType.STONE_BIG;
+                        }
+                    }
+                }
+            }
+            // caves
+            GenerateSphereCaves(subWorldBlockData, subWorldSize);
+        }
+
         public static void GenerateSubWorldWithPerlinNoise(Block[,,] subWorldBlockData, MakeWorldParam param, SubWorldSize subWorldSize)
         {
             CustomVector3 highestPoint = CustomVector3.zero;
@@ -259,7 +307,7 @@ namespace MapGenLib
             }
             // caves
             GenerateSphereCaves(subWorldBlockData, subWorldSize);
-            // various trees.
+            // tree
             int treeSpawnCount = Utilitys.RandomInteger(3, 7);
             for (int spawnCnt = 0; spawnCnt < treeSpawnCount; spawnCnt++)
             {
@@ -274,6 +322,7 @@ namespace MapGenLib
                         break;
                 }
             }
+            // water
             EnviromentGenAlgorithms.MakeDefaultWaterArea(highestPoint, subWorldBlockData, subWorldSize);
         }
 

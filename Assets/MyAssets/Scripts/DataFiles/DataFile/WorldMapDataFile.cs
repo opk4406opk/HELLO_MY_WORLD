@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using MapGenLib;
 
 public class WorldMapData
 {
@@ -20,6 +21,7 @@ public class WorldAreaTerrainData
     public int OffsetX, OffsetY, OffsetZ;
     public string AreaName;
     public bool bSurface;
+    public WorldGenTypes GenerateType = WorldGenTypes.NONE;
     public List<SubWorldData> SubWorldDatas = new List<SubWorldData>();
 }
 
@@ -116,7 +118,8 @@ public class WorldMapDataFile : BaseDataFile
             {
                 worldAreaData.bSurface = true;
             }
-            
+            data.TryGetValue("GenerateType", out val);
+            worldAreaData.GenerateType = KojeomUtility.StringToEnum<WorldGenTypes>(val);
             // 데이터 리스트에 마지막 원소가 SubWorld 데이터 리스트임.
             var subWorldDataList = worldArea.list[worldArea.list.Count - 1].list;
             foreach (var subWorld in subWorldDataList)

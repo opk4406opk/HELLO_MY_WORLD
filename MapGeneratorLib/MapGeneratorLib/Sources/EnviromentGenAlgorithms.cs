@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using MapGenLib;
+using static MapGenLib.WorldGenAlgorithms;
+
 namespace MapGenLib
 {
     public enum TreeType

@@ -94,9 +94,17 @@ namespace MapTool.Source
             public string OffsetZ;
             public string AreaName;
             public string bSurface;
+            public string GenerateType;
             public List<SubWorldData> SubWorldDatas = new List<SubWorldData>();
         }
-       
+
+        private enum WorldGenTypes // MapGeneratorLib의 enum과 동일.
+        {
+            NONE = 0,
+            GEN_NORMAL = 1,
+            GEN_WITH_PERLIN = 2,
+        }
+
         private struct SubWorldData
         {
             public string UniqueID;
@@ -180,6 +188,7 @@ namespace MapTool.Source
                             OffsetY = y.ToString(),
                             OffsetZ = z.ToString(),
                             AreaName = string.Format("WORLD_AREA_{0}", areaIndex),
+                            GenerateType = MapToolUtils.RandomBool() ? WorldGenTypes.GEN_NORMAL.ToString() : WorldGenTypes.GEN_WITH_PERLIN.ToString(),
                         };
                         if(y == WorldMapDataInstance.WorldAreaLayer -1)
                         {
@@ -188,6 +197,7 @@ namespace MapTool.Source
                         else
                         {
                             worldArea.bSurface = false.ToString();
+
                         }
                         jsonFileData.WorldAreaDatas.Add(worldArea);
                         CreateSubWorlds(jsonFileData, areaIndex);

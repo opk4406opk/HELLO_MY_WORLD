@@ -1,8 +1,8 @@
 {
   "Properties": {
-    "WorldAreaRow": 2,
-    "WorldAreaColumn": 2,
-    "WorldAreaLayer": 1,
+    "WorldAreaRow": 3,
+    "WorldAreaColumn": 3,
+    "WorldAreaLayer": 3,
     "SubWorldRow": 2,
     "SubWorldColumn": 2,
     "SubWorldLayer": 2
@@ -14,7 +14,8 @@
       "OffsetY": "0",
       "OffsetZ": "0",
       "AreaName": "WORLD_AREA_0",
-      "bSurface": "True",
+      "bSurface": "False",
+      "GenerateType": "GEN_NORMAL",
       "SubWorldDatas": [
         {
           "UniqueID": "unique_0:0:0",
@@ -88,7 +89,8 @@
       "OffsetY": "0",
       "OffsetZ": "1",
       "AreaName": "WORLD_AREA_1",
-      "bSurface": "True",
+      "bSurface": "False",
+      "GenerateType": "GEN_NORMAL",
       "SubWorldDatas": [
         {
           "UniqueID": "unique_0:0:0",
@@ -157,12 +159,13 @@
       ]
     },
     {
-      "UniqueID": "unique_1:0:0",
-      "OffsetX": "1",
+      "UniqueID": "unique_0:0:2",
+      "OffsetX": "0",
       "OffsetY": "0",
-      "OffsetZ": "0",
+      "OffsetZ": "2",
       "AreaName": "WORLD_AREA_2",
-      "bSurface": "True",
+      "bSurface": "False",
+      "GenerateType": "GEN_NORMAL",
       "SubWorldDatas": [
         {
           "UniqueID": "unique_0:0:0",
@@ -231,12 +234,13 @@
       ]
     },
     {
-      "UniqueID": "unique_1:0:1",
-      "OffsetX": "1",
-      "OffsetY": "0",
-      "OffsetZ": "1",
+      "UniqueID": "unique_0:1:0",
+      "OffsetX": "0",
+      "OffsetY": "1",
+      "OffsetZ": "0",
       "AreaName": "WORLD_AREA_3",
-      "bSurface": "True",
+      "bSurface": "False",
+      "GenerateType": "GEN_NORMAL",
       "SubWorldDatas": [
         {
           "UniqueID": "unique_0:0:0",
@@ -300,6 +304,1731 @@
           "OffsetY": "1",
           "OffsetZ": "1",
           "WorldName": "AREA_3_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_0:1:1",
+      "OffsetX": "0",
+      "OffsetY": "1",
+      "OffsetZ": "1",
+      "AreaName": "WORLD_AREA_4",
+      "bSurface": "False",
+      "GenerateType": "GEN_WITH_PERLIN",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_4_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_4_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_4_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_4_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_4_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_4_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_4_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_4_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_0:1:2",
+      "OffsetX": "0",
+      "OffsetY": "1",
+      "OffsetZ": "2",
+      "AreaName": "WORLD_AREA_5",
+      "bSurface": "False",
+      "GenerateType": "GEN_NORMAL",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_5_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_5_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_5_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_5_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_5_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_5_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_5_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_5_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_0:2:0",
+      "OffsetX": "0",
+      "OffsetY": "2",
+      "OffsetZ": "0",
+      "AreaName": "WORLD_AREA_6",
+      "bSurface": "True",
+      "GenerateType": "GEN_NORMAL",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_6_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_6_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_6_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_6_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_6_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_6_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_6_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_6_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_0:2:1",
+      "OffsetX": "0",
+      "OffsetY": "2",
+      "OffsetZ": "1",
+      "AreaName": "WORLD_AREA_7",
+      "bSurface": "True",
+      "GenerateType": "GEN_WITH_PERLIN",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_7_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_7_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_7_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_7_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_7_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_7_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_7_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_7_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_0:2:2",
+      "OffsetX": "0",
+      "OffsetY": "2",
+      "OffsetZ": "2",
+      "AreaName": "WORLD_AREA_8",
+      "bSurface": "True",
+      "GenerateType": "GEN_NORMAL",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_8_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_8_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_8_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_8_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_8_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_8_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_8_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_8_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_1:0:0",
+      "OffsetX": "1",
+      "OffsetY": "0",
+      "OffsetZ": "0",
+      "AreaName": "WORLD_AREA_9",
+      "bSurface": "False",
+      "GenerateType": "GEN_WITH_PERLIN",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_9_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_9_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_9_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_9_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_9_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_9_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_9_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_9_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_1:0:1",
+      "OffsetX": "1",
+      "OffsetY": "0",
+      "OffsetZ": "1",
+      "AreaName": "WORLD_AREA_10",
+      "bSurface": "False",
+      "GenerateType": "GEN_WITH_PERLIN",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_10_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_10_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_10_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_10_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_10_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_10_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_10_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_10_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_1:0:2",
+      "OffsetX": "1",
+      "OffsetY": "0",
+      "OffsetZ": "2",
+      "AreaName": "WORLD_AREA_11",
+      "bSurface": "False",
+      "GenerateType": "GEN_WITH_PERLIN",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_11_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_11_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_11_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_11_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_11_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_11_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_11_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_11_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_1:1:0",
+      "OffsetX": "1",
+      "OffsetY": "1",
+      "OffsetZ": "0",
+      "AreaName": "WORLD_AREA_12",
+      "bSurface": "False",
+      "GenerateType": "GEN_NORMAL",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_12_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_12_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_12_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_12_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_12_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_12_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_12_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_12_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_1:1:1",
+      "OffsetX": "1",
+      "OffsetY": "1",
+      "OffsetZ": "1",
+      "AreaName": "WORLD_AREA_13",
+      "bSurface": "False",
+      "GenerateType": "GEN_WITH_PERLIN",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_13_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_13_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_13_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_13_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_13_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_13_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_13_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_13_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_1:1:2",
+      "OffsetX": "1",
+      "OffsetY": "1",
+      "OffsetZ": "2",
+      "AreaName": "WORLD_AREA_14",
+      "bSurface": "False",
+      "GenerateType": "GEN_NORMAL",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_14_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_14_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_14_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_14_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_14_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_14_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_14_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_14_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_1:2:0",
+      "OffsetX": "1",
+      "OffsetY": "2",
+      "OffsetZ": "0",
+      "AreaName": "WORLD_AREA_15",
+      "bSurface": "True",
+      "GenerateType": "GEN_WITH_PERLIN",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_15_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_15_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_15_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_15_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_15_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_15_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_15_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_15_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_1:2:1",
+      "OffsetX": "1",
+      "OffsetY": "2",
+      "OffsetZ": "1",
+      "AreaName": "WORLD_AREA_16",
+      "bSurface": "True",
+      "GenerateType": "GEN_NORMAL",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_16_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_16_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_16_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_16_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_16_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_16_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_16_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_16_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_1:2:2",
+      "OffsetX": "1",
+      "OffsetY": "2",
+      "OffsetZ": "2",
+      "AreaName": "WORLD_AREA_17",
+      "bSurface": "True",
+      "GenerateType": "GEN_NORMAL",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_17_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_17_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_17_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_17_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_17_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_17_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_17_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_17_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_2:0:0",
+      "OffsetX": "2",
+      "OffsetY": "0",
+      "OffsetZ": "0",
+      "AreaName": "WORLD_AREA_18",
+      "bSurface": "False",
+      "GenerateType": "GEN_NORMAL",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_18_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_18_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_18_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_18_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_18_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_18_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_18_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_18_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_2:0:1",
+      "OffsetX": "2",
+      "OffsetY": "0",
+      "OffsetZ": "1",
+      "AreaName": "WORLD_AREA_19",
+      "bSurface": "False",
+      "GenerateType": "GEN_WITH_PERLIN",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_19_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_19_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_19_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_19_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_19_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_19_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_19_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_19_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_2:0:2",
+      "OffsetX": "2",
+      "OffsetY": "0",
+      "OffsetZ": "2",
+      "AreaName": "WORLD_AREA_20",
+      "bSurface": "False",
+      "GenerateType": "GEN_NORMAL",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_20_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_20_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_20_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_20_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_20_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_20_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_20_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_20_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_2:1:0",
+      "OffsetX": "2",
+      "OffsetY": "1",
+      "OffsetZ": "0",
+      "AreaName": "WORLD_AREA_21",
+      "bSurface": "False",
+      "GenerateType": "GEN_NORMAL",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_21_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_21_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_21_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_21_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_21_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_21_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_21_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_21_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_2:1:1",
+      "OffsetX": "2",
+      "OffsetY": "1",
+      "OffsetZ": "1",
+      "AreaName": "WORLD_AREA_22",
+      "bSurface": "False",
+      "GenerateType": "GEN_NORMAL",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_22_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_22_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_22_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_22_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_22_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_22_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_22_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_22_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_2:1:2",
+      "OffsetX": "2",
+      "OffsetY": "1",
+      "OffsetZ": "2",
+      "AreaName": "WORLD_AREA_23",
+      "bSurface": "False",
+      "GenerateType": "GEN_WITH_PERLIN",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_23_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_23_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_23_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_23_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_23_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_23_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_23_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_23_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_2:2:0",
+      "OffsetX": "2",
+      "OffsetY": "2",
+      "OffsetZ": "0",
+      "AreaName": "WORLD_AREA_24",
+      "bSurface": "True",
+      "GenerateType": "GEN_NORMAL",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_24_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_24_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_24_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_24_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_24_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_24_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_24_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_24_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_2:2:1",
+      "OffsetX": "2",
+      "OffsetY": "2",
+      "OffsetZ": "1",
+      "AreaName": "WORLD_AREA_25",
+      "bSurface": "True",
+      "GenerateType": "GEN_NORMAL",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_25_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_25_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_25_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_25_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_25_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_25_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_25_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_25_SUB_WORLD_7",
+          "bSurface": "True"
+        }
+      ]
+    },
+    {
+      "UniqueID": "unique_2:2:2",
+      "OffsetX": "2",
+      "OffsetY": "2",
+      "OffsetZ": "2",
+      "AreaName": "WORLD_AREA_26",
+      "bSurface": "True",
+      "GenerateType": "GEN_NORMAL",
+      "SubWorldDatas": [
+        {
+          "UniqueID": "unique_0:0:0",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_26_SUB_WORLD_0",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:0:1",
+          "OffsetX": "0",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_26_SUB_WORLD_1",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_0:1:0",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_26_SUB_WORLD_2",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_0:1:1",
+          "OffsetX": "0",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_26_SUB_WORLD_3",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:0:0",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "0",
+          "WorldName": "AREA_26_SUB_WORLD_4",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:0:1",
+          "OffsetX": "1",
+          "OffsetY": "0",
+          "OffsetZ": "1",
+          "WorldName": "AREA_26_SUB_WORLD_5",
+          "bSurface": "False"
+        },
+        {
+          "UniqueID": "unique_1:1:0",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "0",
+          "WorldName": "AREA_26_SUB_WORLD_6",
+          "bSurface": "True"
+        },
+        {
+          "UniqueID": "unique_1:1:1",
+          "OffsetX": "1",
+          "OffsetY": "1",
+          "OffsetZ": "1",
+          "WorldName": "AREA_26_SUB_WORLD_7",
           "bSurface": "True"
         }
       ]

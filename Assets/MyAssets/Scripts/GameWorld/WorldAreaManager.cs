@@ -3,12 +3,21 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using MapGenLib;
+
+public struct WorldTerrainGenerateStruct
+{
+    public WorldGenAlgorithms.TerrainValue[,] NormalGenData;
+    public Dictionary<string ,Block[,,]> PerlinGenData;
+}
 public class WorldAreaManager : MonoBehaviour
 {
     private struct WorldAreaGenerateParam
     {
         public int AreaSizeX;
         public int AreaSizeZ;
+        public bool bSurface;
+        public WorldGenTypes GenType;
+        public List<SubWorldData> SubWorldDatas;
     }
     public Dictionary<string, WorldArea> WorldAreas { get; private set; } = new Dictionary<string, WorldArea>();
     public static WorldAreaManager Instance { get; private set; }
@@ -30,6 +39,9 @@ public class WorldAreaManager : MonoBehaviour
             WorldAreaGenerateParam param;
             param.AreaSizeX = worldAreaSizeX;
             param.AreaSizeZ = worldAreaSizeZ;
+            param.bSurface = worldAreaData.bSurface;
+            param.GenType = worldAreaData.GenerateType;
+            param.SubWorldDatas = worldAreaData.SubWorldDatas;
             worldAreaGenParamGroup.Add(param);
         }
 
@@ -41,7 +53,7 @@ public class WorldAreaManager : MonoBehaviour
         StartCoroutine(PostInitProcess(mapData));
     }
 
-    private IEnumerator PostInitProcess(List<WorldGenAlgorithms.TerrainValue[,]> mapData)
+    private IEnumerator PostInitProcess(List<WorldTerrainGenerateStruct> mapData)
     {
         KojeomLogger.DebugLog(string.Format("WorldAreaManager PostInit Start"));
         // 완료되면, 월드 아레아를 생성하며 해당 맵 데이터를 설정.
@@ -109,13 +121,17 @@ public class WorldAreaManager : MonoBehaviour
                                         updatePacket.AreaID, updatePacket.SubWorldID, updateBlockX, updateBlockY, updateBlockZ), LOG_TYPE.INFO);
                                 }
                             }
-                            if (GamePlayerManager.Instance.bInitialize == false)
+                            if(subWorldState.SubWorldInstance.bSurfaceWorld == true && subWorldState.SubWorldInstance.OwnerWorldAreaInstance.bSurface == true)
                             {
-                                Vector3 randPos = subWorldState.SubWorldInstance.GetRandomRealPositionAtSurface();
-                                GamePlayerManager.Instance.Make(randPos, () => {
-                                    SwitchAllAreaDynamicWorldLoader(true);
-                                });
+                                if (GamePlayerManager.Instance.bInitialize == false)
+                                {
+                                    Vector3 centerPos = subWorldState.SubWorldInstance.GetCenterRealPositionAtSurface();
+                                    GamePlayerManager.Instance.Make(centerPos, () => {
+                                        SwitchAllAreaDynamicWorldLoader(true);
+                                    });
+                                }
                             }
+                           
                         });
                     }
                     yield return new WaitForSeconds(0.1f);
@@ -145,17 +161,77 @@ public class WorldAreaManager : MonoBehaviour
         }
     }
 
-    private async Task<List<WorldGenAlgorithms.TerrainValue[,]>> AsyncGenerateAreaMapDatas(List<WorldAreaGenerateParam> paramGroup)
+    private async Task<List<WorldTerrainGenerateStruct>> AsyncGenerateAreaMapDatas(List<WorldAreaGenerateParam> paramGroup)
     {
         return await Task.Run(() => {
-            List<WorldGenAlgorithms.TerrainValue[,]> mapDatas = new List<WorldGenAlgorithms.TerrainValue[,]>();
-            foreach(var param in paramGroup)
+            lock(GameSupervisor.LockObject)
             {
-                mapDatas.Add(WorldGenAlgorithms.GenerateNormalTerrain(param.AreaSizeX, param.AreaSizeZ,
-                             WorldMapDataFile.Instance.MapData.SubWorldLayer,
-                             WorldConfigFile.Instance.GetConfig().SubWorldSizeY, KojeomUtility.GetSeed()));
+                List<WorldTerrainGenerateStruct> mapDatas = new List<WorldTerrainGenerateStruct>();
+                foreach (var param in paramGroup)
+                {
+                    WorldTerrainGenerateStruct genStruct;
+                    genStruct.NormalGenData = null;
+                    genStruct.PerlinGenData = null;
+                    switch (param.GenType)
+                    {
+                        case WorldGenTypes.GEN_NORMAL:
+                            if (param.bSurface == true)
+                            {
+                                WorldGenAlgorithms.TerrainValue[,] terrainValue = WorldGenAlgorithms.GenerateNormalTerrain(param.AreaSizeX, param.AreaSizeZ,
+                                                                                  WorldMapDataFile.Instance.MapData.SubWorldLayer,
+                                                                                  WorldConfigFile.Instance.GetConfig().SubWorldSizeY, KojeomUtility.GetSeed());
+                                genStruct.NormalGenData = terrainValue;
+                                mapDatas.Add(genStruct);
+                            }
+                            else
+                            {
+                                WorldGenAlgorithms.TerrainValue[,] underTerrainValue = WorldGenAlgorithms.GenerateUndergroundTerrain(param.AreaSizeX, param.AreaSizeZ,
+                                                                                       WorldMapDataFile.Instance.MapData.SubWorldLayer,
+                                                                                       WorldConfigFile.Instance.GetConfig().SubWorldSizeY, KojeomUtility.GetSeed());
+                                genStruct.NormalGenData = underTerrainValue;
+                                mapDatas.Add(genStruct);
+                            }
+                            break;
+                        case WorldGenTypes.GEN_WITH_PERLIN:
+                            genStruct.PerlinGenData = new Dictionary<string, Block[,,]>();
+                            foreach (SubWorldData subData in param.SubWorldDatas)
+                            {
+                                WorldConfig config = WorldConfigFile.Instance.GetConfig();
+                                Block[,,] blocks = new Block[config.SubWorldSizeX, config.SubWorldSizeY, config.SubWorldSizeZ];
+                                for (int x = 0; x < config.SubWorldSizeX; ++x)
+                                {
+                                    for (int y = 0; y < config.SubWorldSizeY; ++y)
+                                    {
+                                        for (int z = 0; z < config.SubWorldSizeZ; ++z)
+                                        {
+                                            blocks[x, y, z] = new Block();
+                                        }
+                                    }
+                                }
+                                WorldGenAlgorithms.MakeWorldParam makeSubParam;
+                                makeSubParam.BaseOffset = KojeomUtility.RandomInteger(1, 10);
+                                makeSubParam.bSurface = subData.bSurface;
+                                WorldGenAlgorithms.SubWorldSize subWorldSize;
+                                subWorldSize.SizeX = config.SubWorldSizeX;
+                                subWorldSize.SizeY = config.SubWorldSizeY;
+                                subWorldSize.SizeZ = config.SubWorldSizeZ;
+                                if (param.bSurface == true)
+                                {
+                                    WorldGenAlgorithms.GenerateSubWorldWithPerlinNoise(blocks, makeSubParam, subWorldSize);
+                                }
+                                else
+                                {
+                                    WorldGenAlgorithms.GenerateUnderSubWorldWithPerlinNoise(blocks, makeSubParam, subWorldSize);
+                                }
+                                genStruct.PerlinGenData.Add(subData.UniqueID, blocks);
+                            }
+                            mapDatas.Add(genStruct);
+                            break;
+                    }
+
+                }
+                return mapDatas;
             }
-            return mapDatas;    
         });
     }
 

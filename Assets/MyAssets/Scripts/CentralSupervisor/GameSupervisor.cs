@@ -81,6 +81,7 @@ public class GameSupervisor : MonoBehaviour
     public static GameSupervisor Instance { get; private set; }
     public AGameModeBase[] GameModeGroup = new AGameModeBase[(int)GameModeState.COUNT];
     private GameDataManager GameDataManagerInstance = new GameDataManager();
+    public static object LockObject { get; private set; } = new object();
     private void Start ()
     {
 #if UNITY_EDITOR

@@ -50,7 +50,7 @@ public class SubWorld : MonoBehaviour
     public CustomOctree CustomOctreeInstance { get; private set; } = new CustomOctree();
 
     private InGameObjectRegister InGameObjRegister;
-    private WorldArea OwnerWorldAreaInstance;
+    public WorldArea OwnerWorldAreaInstance { get; private set; }
     private IEnumerator TickEnumerator;
 
     public void Init(SubWorldData subWorldData, WorldArea ownerArea)
@@ -75,8 +75,8 @@ public class SubWorld : MonoBehaviour
         gameObject.name = WorldName;
         // Octree init.
         CustomOctreeInstance.Init(RealCoordinate, new Vector3(configData.SubWorldSizeX + RealCoordinate.x,
-            configData.SubWorldSizeY + RealCoordinate.y,
-            configData.SubWorldSizeZ + RealCoordinate.z));
+                                                              configData.SubWorldSizeY + RealCoordinate.y,
+                                                              configData.SubWorldSizeZ + RealCoordinate.z));
         // setting tick enumerator.
         TickEnumerator = Tick();
     }
@@ -128,7 +128,7 @@ public class SubWorld : MonoBehaviour
 
         if(bUpdateRender == true)
         {
-            // 렌더링 리프레쉬.\
+            // 렌더링 리프레쉬.
             foreach(ChunkSlot slot in ChunkSlots)
             {
                 foreach(var chunk in slot.Chunks)
@@ -228,92 +228,112 @@ public class SubWorld : MonoBehaviour
     public async void AsyncLoading(Block[,,] newBlockData, bool bSave, Action finishCallBack = null)
     {
         var bSuccessLoad = await TaskLoadSubWorldTerrain(newBlockData);
-        if(bSave == true)
+        if(bSuccessLoad == true)
         {
-            var bSuccessSave = await OwnerWorldAreaInstance.TaskSaveSpecificSubWorld(UniqueID);
+            if (bSave == true)
+            {
+                var bSuccessSave = await OwnerWorldAreaInstance.TaskSaveSpecificSubWorld(UniqueID);
+            }
+            StartCoroutine(LoadTerrainChunks(finishCallBack));
         }
-        StartCoroutine(LoadTerrainChunks(finishCallBack));
     }
 
     private async Task<bool> TaskLoadSubWorldTerrain(Block[,,] newBlockData = null)
     {
         return await Task.Run(() => {
-            var gameWorldConfig = WorldConfigFile.Instance.GetConfig();
-            // init world data.
-            if (newBlockData == null)
+            lock(GameSupervisor.LockObject)
             {
-                WorldBlockData = new Block[gameWorldConfig.SubWorldSizeX, gameWorldConfig.SubWorldSizeY, gameWorldConfig.SubWorldSizeZ];
-                for (int x = 0; x < gameWorldConfig.SubWorldSizeX; x++)
+                if (newBlockData != null)
                 {
-                    for (int z = 0; z < gameWorldConfig.SubWorldSizeZ; z++)
+                    WorldBlockData = newBlockData;
+                }
+                else // create new blocks.
+                {
+                    var worldConfig = WorldConfigFile.Instance.GetConfig();
+                    WorldBlockData = new Block[worldConfig.SubWorldSizeX, worldConfig.SubWorldSizeY, worldConfig.SubWorldSizeZ];
+                    for (int x = 0; x < worldConfig.SubWorldSizeX; x++)
                     {
-                        for (int y = 0; y < gameWorldConfig.SubWorldSizeY; y++)
+                        for (int z = 0; z < worldConfig.SubWorldSizeZ; z++)
                         {
-                            WorldBlockData[x, y, z] = new Block
+                            for (int y = 0; y < worldConfig.SubWorldSizeY; y++)
                             {
-                                CurrentType = (byte)BlockTileType.EMPTY,
-                                bRendered = false,
-                                WorldDataIndexX = x,
-                                WorldDataIndexY = y,
-                                WorldDataIndexZ = z,
-                                Durability = 0
-                            };
+                                WorldBlockData[x, y, z] = new Block
+                                {
+                                    CurrentType = (byte)BlockTileType.EMPTY,
+                                    bRendered = false,
+                                    WorldDataIndexX = x,
+                                    WorldDataIndexY = y,
+                                    WorldDataIndexZ = z,
+                                    Durability = 0
+                                };
+                            }
                         }
                     }
-                }
-            }
-            else
-            {
-                WorldBlockData = newBlockData;
-            }
-
-            // init chunk group.
-            ChunkSlots = new ChunkSlot[Mathf.FloorToInt(gameWorldConfig.SubWorldSizeX / ChunkSize),
-                Mathf.FloorToInt(gameWorldConfig.SubWorldSizeY / ChunkSize),
-                Mathf.FloorToInt(gameWorldConfig.SubWorldSizeZ / ChunkSize)];
-            for (int x = 0; x < ChunkSlots.GetLength(0); x++)
-            {
-                for (int z = 0; z < ChunkSlots.GetLength(2); z++)
-                {
-                    for (int y = 0; y < ChunkSlots.GetLength(1); y++)
+                    // init chunk group.
+                    ChunkSlots = new ChunkSlot[Mathf.FloorToInt(worldConfig.SubWorldSizeX / ChunkSize),
+                                               Mathf.FloorToInt(worldConfig.SubWorldSizeY / ChunkSize),
+                                               Mathf.FloorToInt(worldConfig.SubWorldSizeZ / ChunkSize)];
+                    for (int x = 0; x < ChunkSlots.GetLength(0); x++)
                     {
-                        ChunkSlots[x, y, z] = new ChunkSlot();
+                        for (int z = 0; z < ChunkSlots.GetLength(2); z++)
+                        {
+                            for (int y = 0; y < ChunkSlots.GetLength(1); y++)
+                            {
+                                ChunkSlots[x, y, z] = new ChunkSlot();
+                            }
+                        }
+                    }
+
+                    switch (OwnerWorldAreaInstance.WorldGenerateType)
+                    {
+                        case WorldGenTypes.GEN_NORMAL:
+                            for (int x = 0; x < worldConfig.SubWorldSizeX; x++)
+                            {
+                                for (int z = 0; z < worldConfig.SubWorldSizeZ; z++)
+                                {
+                                    int mapX = ((int)OffsetCoordinate.x * worldConfig.SubWorldSizeX) + x;
+                                    int mapZ = ((int)OffsetCoordinate.z * worldConfig.SubWorldSizeZ) + z;
+                                    //
+                                    WorldGenAlgorithms.TerrainValue terrainValue = OwnerWorldAreaInstance.XZPlaneDataArray[mapX, mapZ];
+                                    int rangeY = terrainValue.Layers[(int)OffsetCoordinate.y];
+                                    byte blockType = (byte)terrainValue.BlockType;
+                                    for (int y = 0; y < rangeY; y++)
+                                    {
+                                        WorldBlockData[x, y, z].CurrentType = blockType;
+                                        WorldBlockData[x, y, z].OriginalType = blockType;
+                                        WorldBlockData[x, y, z].Durability = BlockTileDataFile.Instance.GetBlockTileInfo((BlockTileType)blockType).Durability;
+                                    }
+                                }
+                            }
+                            break;
+                        case WorldGenTypes.GEN_WITH_PERLIN:
+                            Block[,,] outBlocks;
+                            OwnerWorldAreaInstance.SubWorldBlocksWithPerlinNoise.TryGetValue(UniqueID, out outBlocks);
+                            for (int x = 0; x < worldConfig.SubWorldSizeX; ++x)
+                            {
+                                for (int y = 0; y < worldConfig.SubWorldSizeZ; ++y)
+                                {
+                                    for(int z = 0; z < worldConfig.SubWorldSizeZ; ++z)
+                                    {
+                                        WorldBlockData[x, y, z].CurrentType = outBlocks[x, y, z].CurrentType;
+                                        WorldBlockData[x, y, z].OriginalType = outBlocks[x, y, z].OriginalType;
+                                        WorldBlockData[x, y, z].Durability = BlockTileDataFile.Instance.GetBlockTileInfo((BlockTileType)outBlocks[x, y, z].CurrentType).Durability;
+                                    }
+                                }
+                            }
+                            break;
                     }
                 }
+                return true;
             }
-
-            var worldConfig = WorldConfigFile.Instance.GetConfig();
-            for (int x = 0; x < worldConfig.SubWorldSizeX; x++)
-            {
-                for (int z = 0; z < worldConfig.SubWorldSizeZ; z++)
-                {
-                    int mapX = ((int)OffsetCoordinate.x * worldConfig.SubWorldSizeX) + x;
-                    int mapZ = ((int)OffsetCoordinate.z * worldConfig.SubWorldSizeZ) + z;
-                    //
-                    WorldGenAlgorithms.TerrainValue terrainValue = OwnerWorldAreaInstance.XZPlaneDataArray[mapX, mapZ];
-                    int rangeY = terrainValue.Layers[(int)OffsetCoordinate.y];
-                    byte blockType = (byte)terrainValue.BlockType;
-                    for (int y = 0; y < rangeY; y++)
-                    {
-                        // 블록 타입 세팅.
-                        WorldBlockData[x, y, z].CurrentType = blockType;
-                        WorldBlockData[x, y, z].OriginalType = blockType;
-                        // 블록 내구도 세팅.
-                        BlockTileInfo blockTypeInfo = BlockTileDataFile.Instance.GetBlockTileInfo((BlockTileType)blockType);
-                        WorldBlockData[x, y, z].Durability = blockTypeInfo.Durability;
-                    }
-                }
-            }
-            //
-            return true;
         });
     }
-//#if UNITY_EDITOR
-//    void OnDrawGizmos()
-//    {
-//        CustomOctreeInstance.DrawFullTree();
-//    }
-//#endif
+    //#if UNITY_EDITOR
+    //    void OnDrawGizmos()
+    //    {
+    //        CustomOctreeInstance.DrawFullTree();
+    //    }
+    //#endif
     private IEnumerator LoadTerrainChunks(Action finishCallBack = null)
     {
         CurrentState = SubWorldRealTimeStatus.Loading;
@@ -432,6 +452,24 @@ public class SubWorld : MonoBehaviour
                     bFind = true;
                     break;
                 }
+            }
+        }
+        return position;
+    }
+
+    public Vector3 GetCenterRealPositionAtSurface()
+    {
+        Vector3 position = Vector3.zero;
+        var worldConfig = WorldConfigFile.Instance.GetConfig();
+        for (int indexY = 1; indexY < worldConfig.SubWorldSizeY; indexY++)
+        {
+            Block block = WorldBlockData[worldConfig.SubWorldSizeX / 2, indexY, worldConfig.SubWorldSizeZ / 2];
+            if ((BlockTileType)block.CurrentType == BlockTileType.EMPTY)
+            {
+                position.x = block.CenterX;
+                position.y = block.CenterY;
+                position.z = block.CenterZ;
+                break;
             }
         }
         return position;
