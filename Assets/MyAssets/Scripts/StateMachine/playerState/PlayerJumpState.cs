@@ -18,12 +18,6 @@ public class PlayerJumpState : APlayerState, IState
         {
             GamePlayer.Controller.CharacterInstance.QueryMecanimController.ChangeAnimation(QuerySDMecanimController.QueryChanSDAnimationType.NORMAL_FLY_UP);
         }
-        // jump
-        if(GamePlayer.Controller.CharacterInstance.RigidBodyInstance != null)
-        {
-            Vector3 dir = GamePlayer.Controller.CharacterInstance.transform.up;
-            GamePlayer.Controller.CharacterInstance.RigidBodyInstance.AddForce(dir * JumpSpeed * Time.deltaTime);
-        }
     }
 
     public void ReleaseState()

@@ -102,7 +102,12 @@ public abstract class ActorController : MonoBehaviour
         {
             bContactActor = true;
         }
-        ContainedWorld = collision.gameObject.GetComponent<AChunk>().SubWorldInstance;
+        AChunk chunkComp = collision.gameObject.GetComponent<AChunk>();
+        if (chunkComp != null)
+        {
+            SubWorld world = collision.gameObject.GetComponent<AChunk>().SubWorldInstance;
+            ContainedWorld = world;
+        }
     }
 
     protected void OnCollisionExit(Collision collision)
@@ -147,7 +152,12 @@ public abstract class ActorController : MonoBehaviour
         {
             bContactActor = true;
         }
-        ContainedWorld = collision.gameObject.GetComponent<AChunk>().SubWorldInstance;
+        AChunk chunkComp = collision.gameObject.GetComponent<AChunk>();
+        if (chunkComp != null)
+        {
+            SubWorld world = collision.gameObject.GetComponent<AChunk>().SubWorldInstance;
+            ContainedWorld = world;
+        }
     }
     public void Teleport(Vector3 toPosition)
     {

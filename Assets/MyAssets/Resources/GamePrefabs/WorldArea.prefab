@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 459786}
   - component: {fileID: 8310236320299504267}
-  m_Layer: 18
+  m_Layer: 10
   m_Name: WorldArea
   m_TagString: WorldArea
   m_Icon: {fileID: 0}
@@ -43,3 +43,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b65e03733796c14c8096e496c727997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AreaUniqueID: 

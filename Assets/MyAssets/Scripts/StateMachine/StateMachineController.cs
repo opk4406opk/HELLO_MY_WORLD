@@ -1,13 +1,14 @@
-﻿public class StateMachineController {
+﻿public class StateMachineController
+{
 
     private IState curState;
-    public void SetState(IState state)
+    public void ChangeState(IState toState)
     {
         if(curState != null)
         {
             curState.ReleaseState();
         }
-        curState = state;
+        curState = toState;
         curState.InitState();
     }
 

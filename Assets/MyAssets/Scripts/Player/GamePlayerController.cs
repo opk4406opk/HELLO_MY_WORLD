@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using ECM.Controllers;
 
 // ref # 1 : http://wiki.unity3d.com/index.php/SmoothMouseLook
 
@@ -19,7 +20,6 @@ public class GamePlayerController : MonoBehaviour
     [Range(3.5f, 15.5f)]
     public float MoveSpeed;
     public bool bControllProcessOn { get; private set; }
-    private Quaternion PlayerOriginRotation;
 
     private PlayerMoveState MoveState;
     private PlayerIdleState IdleState;
@@ -35,18 +35,11 @@ public class GamePlayerController : MonoBehaviour
     {
         GamePlayerInstance = gamePlayer;
         CharacterInstance = characterInstance;
-        // 게임 플레이어가 아닌, 하위 오브젝트인 캐릭터 인스턴스 방향을 변경해야한다.
-        PlayerOriginRotation = CharacterInstance.transform.localRotation;
         //
         MoveStateController = new StateMachineController();
         JumpStateController = new StateMachineController();
         PoseStateController = new StateMachineController();
         CurPlayerState = GamePlayerState.IDLE;
-        //
-        if(GamePlayerCameraManager.Instance != null)
-        {
-            GamePlayerCameraManager.Instance.AttachTo(CharacterInstance.transform);
-        }
     }
 
     public Vector3 GetPosition()
@@ -57,18 +50,6 @@ public class GamePlayerController : MonoBehaviour
     public void SetPosition(Vector3 newPos)
     {
         CharacterInstance.transform.position = newPos;
-    }
-
-    public void LerpPosition(Vector3 addPos)
-    {
-        Vector3 newPos = Vector3.Lerp(CharacterInstance.transform.position, CharacterInstance.transform.position + addPos, Time.deltaTime);
-        CharacterInstance.transform.position = newPos;
-    }
-
-    public void Move(Vector3 addPos)
-    {
-        Vector3 newPos = Vector3.Lerp(CharacterInstance.transform.position, CharacterInstance.transform.position + addPos, Time.deltaTime);
-        CharacterInstance.RigidBodyInstance.MovePosition(newPos);
     }
 
     public Vector3 GetLerpValue(Vector3 addPos)
@@ -86,15 +67,19 @@ public class GamePlayerController : MonoBehaviour
         bControllProcessOn = bEnable;
     }
 
+    private void Update()
+    {
+        if(CharacterInstance != null && GamePlayerCameraManager.Instance != null)
+        {
+            CharacterInstance.ECM_MouseLookComp.LookRotation(CharacterInstance.ECM_BaseCharController.movement, GamePlayerCameraManager.Instance.GetPlayerCamera().transform);
+        }
+    }
+
     private void FixedUpdate()
     {
         if (bControllProcessOn == false) return;
         if (CharacterInstance == null || WorldAreaManager.Instance == null || GamePlayerCameraManager.Instance == null) return;
-        //
-        Vector3 camPosition = CharacterInstance.transform.position;
-        camPosition.y += 2.0f;
-        GamePlayerCameraManager.Instance.SetPosition(camPosition);
-
+       
         SubWorld containWorld = WorldAreaManager.Instance.ContainedSubWorld(CharacterInstance.transform.position);
         if (containWorld == null)
         {
@@ -138,32 +123,29 @@ public class GamePlayerController : MonoBehaviour
                 {
                     case GamePlayerState.MOVE:
                         MoveState = new PlayerMoveState(GamePlayerInstance, inputData);
-                        MoveStateController.SetState(MoveState);
+                        MoveStateController.ChangeState(MoveState);
                         MoveStateController.Tick(Time.deltaTime);
                         break;
                     case GamePlayerState.JUMP:
                         JumpState = new PlayerJumpState(GamePlayerInstance, inputData);
-                        JumpStateController.SetState(JumpState);
+                        JumpStateController.ChangeState(JumpState);
                         JumpStateController.Tick(Time.deltaTime);
                         break;
                     case GamePlayerState.IDLE:
                         IdleState = new PlayerIdleState(GamePlayerInstance, inputData);
-                        PoseStateController.SetState(IdleState);
+                        PoseStateController.ChangeState(IdleState);
                         PoseStateController.Tick(Time.deltaTime);
                         break;
                     case GamePlayerState.MOVING_JUMP:
                         JumpState = new PlayerJumpState(GamePlayerInstance, inputData);
-                        JumpStateController.SetState(JumpState);
+                        JumpStateController.ChangeState(JumpState);
                         JumpStateController.Tick(Time.deltaTime);
                         //
                         MoveState = new PlayerMoveState(GamePlayerInstance, inputData);
-                        MoveStateController.SetState(MoveState);
+                        MoveStateController.ChangeState(MoveState);
                         MoveStateController.Tick(Time.deltaTime);
                         break;
                 }
-
-                // 캐릭터 좌우 회전.
-                CharacterInstance.transform.localRotation *= GamePlayerCameraManager.Instance.CameraXQuaternion;
             }
         }
     }

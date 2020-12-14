@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2300000}
   - component: {fileID: 4437368179348041530}
   - component: {fileID: 7272769017224701515}
-  m_Layer: 17
+  m_Layer: 10
   m_Name: EnviromentChunk
   m_TagString: EnviromentChunk
   m_Icon: {fileID: 0}

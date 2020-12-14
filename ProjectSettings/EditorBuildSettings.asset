@@ -4,53 +4,5 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes:
-  - enabled: 1
-    path: Assets/MyAssets/Scene/MainMenu.unity
-    guid: 97803fb4f8e480541ae6adfaa54cdd55
-  - enabled: 1
-    path: Assets/MyAssets/Scene/SelectCharacter.unity
-    guid: d72856a6e6022644884ccdfb70fe5111
-  - enabled: 1
-    path: Assets/MyAssets/Scene/InGame.unity
-    guid: 6304fb94987aedd44812ac1f52c3d7f8
-  - enabled: 1
-    path: Assets/MyAssets/Scene/GameLoading.unity
-    guid: 06262f82e9bc3c748a8359367452fc96
-  - enabled: 1
-    path: Assets/MyAssets/Scene/UI_Popup/chData/popup_chInfo.unity
-    guid: 247f5ab304ac17943988d5a49721ba31
-  - enabled: 1
-    path: Assets/MyAssets/Scene/UI_Popup/inven/popup_inventory.unity
-    guid: 3a189ba71a7f6ff44840da93e2003fbf
-  - enabled: 1
-    path: Assets/MyAssets/Scene/UI_Popup/menu/popup_menu.unity
-    guid: b725297506b31ec418c46de285c3315b
-  - enabled: 1
-    path: Assets/MyAssets/Scene/UI_Popup/message/popup_message.unity
-    guid: 749418ee7db70654ebb4a6518ffe3cb9
-  - enabled: 1
-    path: Assets/MyAssets/Scene/UI_Popup/itemData/popup_ItemData.unity
-    guid: 07b7958ed5c1cbd4ea986bde00645d94
-  - enabled: 1
-    path: Assets/MyAssets/Scene/UI_Popup/craftItem/popup_craftItem.unity
-    guid: 734f330476bb03441b5b7df27cae0d18
-  - enabled: 1
-    path: Assets/MyAssets/Scene/UI_Popup/shop/popup_purChaseItem.unity
-    guid: 8f21a120a90fbee4aa02c8de3c1ae61b
-  - enabled: 1
-    path: Assets/MyAssets/Scene/UI_Popup/shop/popup_shop.unity
-    guid: f0358fd9a5add314bafa09faa82ed263
-  - enabled: 1
-    path: Assets/MyAssets/Scene/UI_Popup/shop/popup_sellItem.unity
-    guid: e6d30443c599fa545b1acb6225196d72
-  - enabled: 1
-    path: Assets/MyAssets/Scene/MultiPlayGameLobby.unity
-    guid: 8f2ab40b84a2b0d4bb91c8978d3a760f
-  - enabled: 1
-    path: Assets/MyAssets/Scene/UI_Popup/network/popup_waitingConnect.unity
-    guid: 3bf08bfecadc3d24986f909d095f9645
-  - enabled: 1
-    path: Assets/MyAssets/Scene/UI_Popup/network/popup_prompt_server_ip.unity
-    guid: c9bc1a7d1a194454393341e5f06d45ab
+  m_Scenes: []
   m_configObjects: {}

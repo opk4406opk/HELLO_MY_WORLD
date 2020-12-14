@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace ServerCore
+namespace CustomThreadLock
 {
     // Spin lock policy ( 5000번 이후, yield 방식으로 전환 )
     class CLock

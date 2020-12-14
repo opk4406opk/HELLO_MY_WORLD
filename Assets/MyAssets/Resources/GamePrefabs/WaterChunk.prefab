@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2300000}
   - component: {fileID: 114501247627792802}
   - component: {fileID: -8351176200538886837}
-  m_Layer: 16
+  m_Layer: 9
   m_Name: WaterChunk
   m_TagString: WaterChunk
   m_Icon: {fileID: 0}

@@ -4,17 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - SubWorld
-  - NetworkManager
-  - UserBeltCollider
-  - OtherPlayerCharacter
-  - ACTOR_NPC
-  - ACTOR_ANIMAL
-  - ACTOR_MONSTER
-  - WaterChunk
-  - EnviromentChunk
   - TerrainChunk
+  - SubWorld
+  - WaterChunk
   - WorldArea
+  - UserBeltCollider
+  - EnviromentChunk
   layers:
   - Default
   - TransparentFX
@@ -25,16 +20,16 @@ TagManager:
   - 
   - 
   - TerrainChunk
-  - SubWorld
-  - PlayerCharacter
-  - OtherPlayerCharacter
-  - ACTOR_NPC
-  - ACTOR_ANIMAL
-  - ACTOR_MONSTER
-  - PostProcessVolume
   - WaterChunk
   - EnviromentChunk
-  - WorldArea
+  - PlayerCharacter
+  - OtherPlayerCharacter
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 

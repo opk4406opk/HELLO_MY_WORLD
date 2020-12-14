@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using ECM.Components;
+using ECM.Controllers;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,7 +20,6 @@ public class GamePlayerCameraManager : MonoBehaviour
     public float CamSensitivityY = 1.0f;
     [Range(1.0f, 100.0f)]
     public float CamSensitivityX = 1.0f;
-    private Quaternion CameraOrigRotation;
     #endregion
 
     public Quaternion CameraYQuaternion { get; private set; }
@@ -31,36 +32,42 @@ public class GamePlayerCameraManager : MonoBehaviour
         Instance = this;
         var camInstance = Instantiate<GameObject>(GameResourceSupervisor.GetInstance().GamePlayerCameraPrefab.LoadSynchro());
         PlayerCamera = camInstance.GetComponent<Camera>();
-        CameraOrigRotation = PlayerCamera.transform.localRotation;
         //
         bInitialzed = true;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (bInitialzed == false) return;
         //
-        float camRotationX = 0f, camRotationY = 0f;
-        float camRotAverageY = 0f, camRotAverageX = 0f;
+
         bool bMobilePlatform = Application.platform == RuntimePlatform.Android ||
                                Application.platform == RuntimePlatform.IPhonePlayer;
-        bool bPCPlatform = Application.platform == RuntimePlatform.WindowsEditor ||
-                           Application.platform == RuntimePlatform.WindowsPlayer ||
-                           Application.platform == RuntimePlatform.LinuxEditor ||
-                           Application.platform == RuntimePlatform.LinuxPlayer;
-        if (bPCPlatform == true)
+        if (bMobilePlatform == true)
         {
-            camRotationY += Input.GetAxis("Mouse Y") * CamSensitivityY;
-            camRotationX += Input.GetAxis("Mouse X") * CamSensitivityX;
+            ProcessInMobile();
         }
-        else if (bMobilePlatform == true)
+        else
         {
-            var virtualJoystick = VirtualJoystickManager.singleton;
-            if (virtualJoystick != null)
-            {
-                camRotationY += virtualJoystick.GetLookDirection().y * CamSensitivityY;
-                camRotationX += virtualJoystick.GetLookDirection().x * CamSensitivityX;
-            }
+            ProcessInPC();
+        }
+    }
+
+    private void ProcessInPC()
+    {
+       
+    }
+
+    private void ProcessInMobile()
+    {
+        float camRotationX = 0f, camRotationY = 0f;
+        float camRotAverageY = 0f, camRotAverageX = 0f;
+
+        var virtualJoystick = VirtualJoystickManager.singleton;
+        if (virtualJoystick != null)
+        {
+            camRotationY += virtualJoystick.GetLookDirection().y * CamSensitivityY;
+            camRotationX += virtualJoystick.GetLookDirection().x * CamSensitivityX;
         }
         CamRotArrayY.Add(camRotationY);
         CamRotArrayX.Add(camRotationX);
@@ -88,19 +95,6 @@ public class GamePlayerCameraManager : MonoBehaviour
 
         CameraYQuaternion = Quaternion.AngleAxis(camRotAverageY, Vector3.left);
         CameraXQuaternion = Quaternion.AngleAxis(camRotAverageX, Vector3.up);
-
-
-
-        Quaternion newCamQuaternion = PlayerCamera.transform.localRotation;
-        newCamQuaternion *= CameraYQuaternion;
-        float rotationXValue = newCamQuaternion.eulerAngles.x;
-        //if (rotationXValue > 360.0f) rotationXValue -= 360.0f;
-        //KojeomLogger.DebugLog(string.Format("x rotation : {0}", rotationXValue));
-        //if (rotationXValue >= MaximumAngleX || rotationXValue <= MinimumAngleX) return;
-
-        // rotation camera. ( Y )
-        PlayerCamera.transform.localRotation = newCamQuaternion;
-        //KojeomLogger.DebugLog(string.Format("euler angle : {0}", PlayerCamera.transform.localRotation.eulerAngles));
     }
 
     public Camera GetPlayerCamera()

@@ -27,8 +27,13 @@ public class GamePlayerManager : MonoBehaviour {
         MyGamePlayer.transform.parent = gameObject.transform;
         // call back.
         finishCallBack?.Invoke();
-        //
+
         KojeomLogger.DebugLog(string.Format("[GamePlayerManager] Finish Make"), LOG_TYPE.INFO);
         bInitialize = true;
+    }
+
+    public bool IsValidPlayer()
+    {
+        return bInitialize == true;
     }
 }

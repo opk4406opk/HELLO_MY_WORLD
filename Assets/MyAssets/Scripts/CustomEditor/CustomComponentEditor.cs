@@ -1,6 +1,9 @@
 ﻿#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
+using ECM.Controllers;
+using ECM.Components;
+
 public class CustomComponentEditor : EditorWindow
 {
     [MenuItem("CustomEditor/CustomComponentEditor Menu")]
@@ -16,10 +19,26 @@ public class CustomComponentEditor : EditorWindow
         if (GUILayout.Button("Add GameCharacter to CharPrefabs")) AddGameCharComponentToCharPrefabs();
         if (GUILayout.Button("Add BoxCollider to CharPrefabs")) AddBoxColliderToCharPerfabs();
         if (GUILayout.Button("Add CharacterController to CharPrefabs")) AddCharControllerToCharPrefabs();
+        if (GUILayout.Button("Add ECM Component to CharPrefabs")) AddECMComponentToCharPrefabs();
         if (GUILayout.Button("Add RigidBody to CharPrefabs")) AddRigidBodyToCharPrefabs();
         if (GUILayout.Button("Add Components to NPCPrefabs")) AddComponentsToNPCPrefabs();
         if (GUILayout.Button("Add Components to AnimalPrefabs")) AddComponentsToAnimalPrefabs();
         EditorGUILayout.EndToggleGroup();
+    }
+
+    private void AddECMComponentToCharPrefabs()
+    {
+        KojeomLogger.DebugLog("GameCharacter 컴포넌트 할당 작업 시작.");
+        GameObject[] charPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER_RESOURCE_PATH);
+        foreach (var charPrefab in charPrefabs)
+        {
+            if (charPrefab.GetComponent<BaseFirstPersonController>() == null) charPrefab.AddComponent<BaseFirstPersonController>();
+            if (charPrefab.GetComponent<GroundDetection>() == null) charPrefab.AddComponent<GroundDetection>();
+            if (charPrefab.GetComponent<CharacterMovement>() == null) charPrefab.AddComponent<CharacterMovement>();
+            if (charPrefab.GetComponent<MouseLook>() == null) charPrefab.AddComponent<MouseLook>();
+            PrefabUtility.SavePrefabAsset(charPrefab);
+        }
+        KojeomLogger.DebugLog("GameCharacter 컴포넌트 할당 작업 완료.");
     }
 
     private void AddGameCharComponentToCharPrefabs()
