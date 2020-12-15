@@ -1,6 +1,5 @@
 ﻿public class StateMachineController
 {
-
     private IState curState;
     public void ChangeState(IState toState)
     {

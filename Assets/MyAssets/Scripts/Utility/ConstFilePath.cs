@@ -50,9 +50,18 @@ public class ConstFilePath
     /// </summary>
     public readonly static string SAVE_PATH_FOR_SELECT_CHARS_PREFAB = "Assets/MyAssets/Resources/GamePrefabs/SelectChars/{0}.prefab";
     /// <summary>
-    /// 렌더텍스처 생성에 사용되는 SelectChara 프리팹 리소스 path. 
+    /// 렌더텍스처 생성에 사용되는 SelectCharacters 프리팹 리소스 path. 
     /// </summary>
     public readonly static string SELECT_CHARS_PREFAB_RESOURCE_PATH = "GamePrefabs/SelectChars/SelectCharacters";
+    /// <summary>
+    /// SelectCharacters 템플릿 프리팹.
+    /// </summary>
+    public readonly static string SELECT_CHARS_TEMPLATE_PREFAB = "GamePrefabs/SelectChars/TemplatePrefab";
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public readonly static string EDITOR_SCENE_ENV_LIGHT_PREFAB = "Editor/EditorSceneEnvLight";
 
     /// <summary>
     /// N개의 서브월드 block 데이터가 저장될 path.
