@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class StartGameState : AGameState
 {
+    public StartGameState(GameStateManager stateManager)
+    {
+        StateManagerInstance = stateManager;
+    }
     public override bool Equals(object obj)
     {
         return base.Equals(obj);
@@ -18,6 +22,8 @@ public class StartGameState : AGameState
     {
         StateType = GameStateType.Start;
         base.StartState();
+
+        StateManagerInstance.ChangeState(GameStateType.InGame);
     }
 
     public override void EndState()

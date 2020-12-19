@@ -10,6 +10,7 @@ TagManager:
   - WorldArea
   - UserBeltCollider
   - EnviromentChunk
+  - InPrepareState
   layers:
   - Default
   - TransparentFX

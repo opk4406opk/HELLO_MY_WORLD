@@ -182,6 +182,15 @@ public class ModifyWorldManager : MonoBehaviour
 
     private void ProcessBlockCreateOrDelete(ProcessBlockData_Internal processData)
     {
+        bool bOverX = SelectWorldInstance.WorldBlockData.GetLength(0) <= processData.BlockX;
+        bool bOverY = SelectWorldInstance.WorldBlockData.GetLength(1) <= processData.BlockY;
+        bool bOverZ = SelectWorldInstance.WorldBlockData.GetLength(2) <= processData.BlockZ;
+        if(bOverX == true || bOverY == true || bOverZ == true)
+        {
+            KojeomLogger.DebugLog("ProcessBlockCreateOrDelete() -> Over Block Index X or Y or Z", LOG_TYPE.ERROR);
+            return;
+        }
+
         if (processData.bCreate == true)
         {
             // 임시코드

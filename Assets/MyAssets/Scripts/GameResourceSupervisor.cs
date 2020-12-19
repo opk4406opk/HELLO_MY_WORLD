@@ -69,6 +69,10 @@ public class GameResourceSupervisor
     public SoftObjectPtr GamePlayerCameraPrefab { get; private set; }
     #endregion
 
+    #region StateCamera
+    public SoftObjectPtr InPrepareCameraPrefab { get; private set; }
+    #endregion
+
     #region ParticleSystem
     public ParticleEffectCategoryContainer[] ParticleEffectPrefabs { get; private set; } = new ParticleEffectCategoryContainer[(int)GameParticeEffectCategory.COUNT];
     #endregion
@@ -84,6 +88,8 @@ public class GameResourceSupervisor
         GamePlayerCameraPrefab = new SoftObjectPtr(ConstFilePath.PLAYER_CAMERA_PREFAB);
         //
         CharacterPrefabs = Resources.LoadAll<GameObject>(ConstFilePath.PREFAB_CHARACTER_RESOURCE_PATH);
+        //
+        InPrepareCameraPrefab = new SoftObjectPtr(ConstFilePath.IN_PREPARE_STATE_CAMERA_PREFAB);
         //
         WorldAreaPrefab = new SoftObjectPtr(ConstFilePath.WORLD_AREA_PREFAB);
         TerrainChunkPrefab = new SoftObjectPtr(ConstFilePath.TERRAIN_CHUNK_PREFAB_RESOURCE_PATH);

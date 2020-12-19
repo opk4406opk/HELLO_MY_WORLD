@@ -9,7 +9,7 @@ public class MultiGameMode : AGameModeBase
         ModeState = GameModeState.MULTI;
     }
 
-    public override void Tick(float DeltaTime)
+    public override void UpdateProcess(float DeltaTime)
     {
     }
 }

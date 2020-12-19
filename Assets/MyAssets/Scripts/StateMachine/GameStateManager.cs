@@ -26,16 +26,16 @@ public class GameStateManager
         switch (newStateType)
         {
             case GameStateType.Prepare:
-                CurrentStateInstance = new PrepareGameState();
+                CurrentStateInstance = new PrepareGameState(this);
                 break;
             case GameStateType.Start:
-                CurrentStateInstance = new StartGameState();
+                CurrentStateInstance = new StartGameState(this);
                 break;
             case GameStateType.InGame:
-                CurrentStateInstance = new InGameGameState();
+                CurrentStateInstance = new InGameGameState(this);
                 break;
             case GameStateType.End:
-                CurrentStateInstance = new EndGameState();
+                CurrentStateInstance = new EndGameState(this);
                 break;
         }
         CurrentStateType = newStateType;

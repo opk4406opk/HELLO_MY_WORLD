@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class InGameGameState : AGameState
 {
+    public InGameGameState(GameStateManager stateManager)
+    {
+        StateManagerInstance = stateManager;
+    }
     public override bool Equals(object obj)
     {
         return base.Equals(obj);

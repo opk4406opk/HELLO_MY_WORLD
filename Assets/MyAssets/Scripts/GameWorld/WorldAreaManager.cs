@@ -123,7 +123,7 @@ public class WorldAreaManager : MonoBehaviour
                             }
                             if(subWorldState.SubWorldInstance.bSurfaceWorld == true && subWorldState.SubWorldInstance.OwnerWorldAreaInstance.bSurface == true)
                             {
-                                if (GamePlayerManager.Instance.bInitialize == false)
+                                if (GamePlayerManager.Instance.bFinishMake == false)
                                 {
                                     Vector3 centerPos = subWorldState.SubWorldInstance.GetCenterRealPositionAtSurface();
                                     GamePlayerManager.Instance.Make(centerPos, () => {

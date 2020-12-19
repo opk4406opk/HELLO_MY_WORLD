@@ -8,11 +8,11 @@ public class GamePlayerManager : MonoBehaviour {
 
     public GamePlayer MyGamePlayer { get; private set; }
     public static GamePlayerManager Instance { get; private set; }
-    public bool bInitialize { get; private set; }
+    public bool bFinishMake { get; private set; }
 
     public void Init()
     {
-        bInitialize = false;
+        bFinishMake = false;
         Instance = this;
     }
 
@@ -29,11 +29,11 @@ public class GamePlayerManager : MonoBehaviour {
         finishCallBack?.Invoke();
 
         KojeomLogger.DebugLog(string.Format("[GamePlayerManager] Finish Make"), LOG_TYPE.INFO);
-        bInitialize = true;
+        bFinishMake = true;
     }
 
     public bool IsValidPlayer()
     {
-        return bInitialize == true;
+        return bFinishMake == true;
     }
 }

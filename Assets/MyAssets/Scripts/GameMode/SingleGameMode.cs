@@ -9,7 +9,7 @@ public class SingleGameMode : AGameModeBase
         ModeState = GameModeState.SINGLE;
     }
 
-    public override void Tick(float DeltaTime)
+    public override void UpdateProcess(float DeltaTime)
     {
     }
 }

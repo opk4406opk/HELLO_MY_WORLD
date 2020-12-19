@@ -53,4 +53,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/MyAssets/Scene/UI_Popup/chData/popup_chInfo.unity
     guid: 247f5ab304ac17943988d5a49721ba31
+  - enabled: 1
+    path: Assets/MyAssets/Scene/UI_Popup/message/popup_map_load_message.unity
+    guid: 096d9685a08590b46a7724fba67655cc
   m_configObjects: {}

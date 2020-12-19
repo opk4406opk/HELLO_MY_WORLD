@@ -5,19 +5,20 @@ using UnityEngine.SceneManagement;
 public enum UI_POPUP_TYPE
 {
     Inventory = 0,
-    CraftItem = 1,
-    Shop = 2,
+    CraftItem,
+    Shop,
     //
-    GameMenu = 3,
-    GameMessage = 4,
+    GameMenu,
+    GameMessage,
+    LoadMapGameMessage,
     //
-    ItemData = 5,
-    PurchaseItem = 6,
-    SellItem = 7,
-    CharInfo = 8,
+    ItemData,
+    PurchaseItem,
+    SellItem,
+    CharInfo,
     // network.
-    WaitingConnect = 9,
-    PromptServerIP = 10
+    WaitingConnect,
+    PromptServerIP
 }
 
 /// <summary>
@@ -29,6 +30,7 @@ public class UIPopupSupervisor : MonoBehaviour {
     public static bool bInvenOpen { get; private set; } = false;
     public static bool bGameMenuOpen { get; private set; } = false;
     public static bool bGameMessageOpen { get; private set; } = false;
+    public static bool bLoadGameMessageOpen { get; private set; } = false;
     public static bool bItemDataOpen { get; private set; } = false;
     public static bool bCraftItemOpen { get; private set; } = false;
     public static bool bShopOpen { get; private set; } = false;
@@ -54,7 +56,8 @@ public class UIPopupSupervisor : MonoBehaviour {
                (bPurchaseItemOpen == false) &&
                (bSellItemOpen == false) &&
                (bWaitingConnectOpen == false) &&
-               (bPromptServerIPOpen == false))
+               (bPromptServerIPOpen == false) &&
+               (bLoadGameMessageOpen == false))
             {
                 _bAllPopupClose = true;
                 return _bAllPopupClose;
@@ -110,6 +113,15 @@ public class UIPopupSupervisor : MonoBehaviour {
                 {
                     SceneManager.LoadSceneAsync("popup_message", LoadSceneMode.Additive);
                     bGameMessageOpen = true;
+                    _bAllPopupClose = false;
+                    bOpenPopup = true;
+                }
+                break;
+            case UI_POPUP_TYPE.LoadMapGameMessage:
+                if (bLoadGameMessageOpen == false)
+                {
+                    SceneManager.LoadSceneAsync("popup_map_load_message", LoadSceneMode.Additive);
+                    bLoadGameMessageOpen = true;
                     _bAllPopupClose = false;
                     bOpenPopup = true;
                 }
@@ -200,6 +212,11 @@ public class UIPopupSupervisor : MonoBehaviour {
             case UI_POPUP_TYPE.GameMessage:
                 SceneManager.UnloadSceneAsync("popup_message");
                 bGameMessageOpen = false;
+                bClosePopup = true;
+                break;
+            case UI_POPUP_TYPE.LoadMapGameMessage:
+                SceneManager.UnloadSceneAsync("popup_map_load_message");
+                bLoadGameMessageOpen = false;
                 bClosePopup = true;
                 break;
             case UI_POPUP_TYPE.ItemData:

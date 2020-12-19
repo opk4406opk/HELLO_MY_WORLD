@@ -169,7 +169,7 @@ public class SubWorld : MonoBehaviour
     {
         while(bTicking)
         {
-            if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.bInitialize == true)
+            if(GamePlayerManager.Instance != null && GamePlayerManager.Instance.bFinishMake == true)
             {
                 var curPlayerWorld = OwnerWorldAreaInstance.ContainedSubWorld(GamePlayerManager.Instance.MyGamePlayer.Controller.GetPosition());
                 if (curPlayerWorld != null)

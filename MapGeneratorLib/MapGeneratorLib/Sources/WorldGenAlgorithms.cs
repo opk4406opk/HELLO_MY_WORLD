@@ -8,6 +8,7 @@ namespace MapGenLib
     /// <summary>
     /// 블록 tile의 type 클래스.
     /// </summary>
+    [Serializable]
     public enum BlockTileType
     {
         NONE = 0,
@@ -25,6 +26,7 @@ namespace MapGenLib
         SQAURE_TREE_LEAF = 12,
         WATER = 13
     }
+    [Serializable]
     public enum ChunkType
     {
         TERRAIN = 0, // 지형 ( 동굴, 땅..)
@@ -33,7 +35,7 @@ namespace MapGenLib
         NONE = 3,
         COUNT = NONE
     }
-    
+    [Serializable]
     public enum PlaneType
     {
         TOP,
@@ -43,7 +45,7 @@ namespace MapGenLib
         LEFT,
         RIGHT,
     }
-
+    [Serializable]
     public enum WorldGenTypes
     {
         NONE = 0,
@@ -51,7 +53,7 @@ namespace MapGenLib
         GEN_WITH_PERLIN = 2,
     }
 
-
+    [Serializable]
     public struct PlaneData
     {
         public List<CustomVector3> Points;

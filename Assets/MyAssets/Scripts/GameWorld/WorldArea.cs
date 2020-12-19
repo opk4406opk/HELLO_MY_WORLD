@@ -362,7 +362,7 @@ public class WorldArea : MonoBehaviour
             if (bInitFinish == false) yield return null;
             if (bRunningLoader == false) yield return null;
 
-            if (GamePlayerManager.Instance != null && GamePlayerManager.Instance.bInitialize == true)
+            if (GamePlayerManager.Instance != null && GamePlayerManager.Instance.bFinishMake == true)
             {
                 Vector3 playerPos = GamePlayerManager.Instance.MyGamePlayer.GetPosition();
                 string containedAreaID = WorldAreaManager.GetWorldAreaUniqueID(playerPos);

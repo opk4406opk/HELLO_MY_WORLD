@@ -18,7 +18,7 @@ public enum DetailSingleMode
 public abstract class AGameModeBase
 {
     public abstract void Init();
-    public abstract void Tick(float DeltaTime);
+    public abstract void UpdateProcess(float DeltaTime);
 
     //
     protected GameModeState ModeState = GameModeState.NONE;

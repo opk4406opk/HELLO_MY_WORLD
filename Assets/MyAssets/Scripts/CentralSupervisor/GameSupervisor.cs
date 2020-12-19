@@ -77,10 +77,13 @@ public class GameSupervisor : MonoBehaviour
     private GameParticleEffectManager GameParticleManagerInstance;
     [SerializeField]
     private GamePlayerCameraManager PlayerCameraManagerInstance;
+    [SerializeField]
+    private InstancingHelper InstancingHelperInstance;
     #endregion
     public static GameSupervisor Instance { get; private set; }
     public AGameModeBase[] GameModeGroup = new AGameModeBase[(int)GameModeState.COUNT];
     private GameDataManager GameDataManagerInstance = new GameDataManager();
+    private GameStateManager GameStateManagerInstance = new GameStateManager();
     public static object LockObject { get; private set; } = new object();
     private void Start ()
     {
@@ -115,32 +118,16 @@ public class GameSupervisor : MonoBehaviour
         }
         // 게임 데이터 파일 초기화.
         GameDataManagerInstance.Initialize();
-        // 게임 플레이 초기화 코루틴 시작.
-        StartCoroutine(InitializeManagersProcess());
-        // 테스트 코드.
-        Cursor.lockState = CursorLockMode.Locked;
-    }
-
-    private IEnumerator InitializeManagersProcess()
-    {
-        if (GameStatusManager.GetNetType() == GameUserNetType.Client)
-        {
-            while (true)
-            {
-                if (GameStatusManager.IsAllSubWorldDataReceived() == true) break;
-                yield return null;
-            }
-        }
         // 게임 플레이 관련 초기화.
         InitializeManagers();
+        // 게임 스테이트 시작.
+        GameStateManagerInstance.ChangeState(GameStateType.Prepare);
     }
 
-    private void Update()
+    void Update()
     {
-        if(GameModeGroup[(int)GameStatusManager.CurrentGameModeState] != null)
-        {
-            GameModeGroup[(int)GameStatusManager.CurrentGameModeState].Tick(Time.deltaTime);
-        }
+        if(GameModeGroup[(int)GameStatusManager.CurrentGameModeState] != null) GameModeGroup[(int)GameStatusManager.CurrentGameModeState].UpdateProcess(Time.deltaTime);
+        if (GameStateManagerInstance != null) GameStateManagerInstance.UpdateProcess();
     }
 
     /// <summary>
@@ -150,10 +137,9 @@ public class GameSupervisor : MonoBehaviour
     {
         KojeomLogger.DebugLog("게임매니저 클래스들을 초기화 합니다.");
         // sound init.
-        if(IsSoundOn == true)
-        {
-            GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_InGame);
-        }
+        if(IsSoundOn == true) GameSoundManager.GetInstnace().PlaySound(GAME_SOUND_TYPE.BGM_InGame);
+        //
+        InstancingHelperInstance.Init();
         //
         kojeomCoroutineHelper.Init();
         inputManager.Init();
@@ -179,10 +165,6 @@ public class GameSupervisor : MonoBehaviour
         // 프로토타입의 수준으로 기능이 매우 미흡한 수준임.
         WeatherManager.Init();
 
-        if (GameStatusManager.DetailSingleMode == DetailSingleMode.LOAD_GAME)
-        {
-            // 게임을 로드?.
-        }
         KojeomLogger.DebugLog("게임매니저 클래스 초기화 완료.");
     }
 

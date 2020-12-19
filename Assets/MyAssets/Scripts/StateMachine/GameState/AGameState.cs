@@ -18,4 +18,5 @@ public abstract class AGameState
     }
 
     protected GameStateType StateType = GameStateType.None;
+    protected GameStateManager StateManagerInstance = null;
 }
