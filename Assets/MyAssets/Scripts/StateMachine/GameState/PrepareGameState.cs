@@ -24,9 +24,15 @@ public class PrepareGameState : AGameState
         StateType = GameStateType.Prepare;
         base.StartState();
 
+        GamePlayerCameraManager.Instance.TriggerActive(false);
+        InputManager.Instance.TriggerActive(false);
+        // state camera on.
         var newCamera = InstancingHelper.Instance.GetNewInstance(GameResourceSupervisor.GetInstance().InPrepareCameraPrefab.LoadSynchro());
         CameraInstance = newCamera.GetComponent<Camera>();
         CameraInstance.name = "PrepareState Camera";
+
+        CameraInstance.transform.position = new Vector3(0, 200.0f, -100.0f);
+        CameraInstance.transform.LookAt(new Vector3(0, 0, 0), Vector3.up);
 
         UIPopupSupervisor.OpenPopupUI(UI_POPUP_TYPE.LoadMapGameMessage);
     }
@@ -51,6 +57,8 @@ public class PrepareGameState : AGameState
             if(playerManager.bFinishMake == true)
             {
                 UIPopupSupervisor.ClosePopupUI(UI_POPUP_TYPE.LoadMapGameMessage);
+                InputManager.Instance.TriggerActive(true);
+                GamePlayerCameraManager.Instance.TriggerActive(true);
                 // 스테이트 전환.
                 StateManagerInstance.ChangeState(GameStateType.Start);
             }

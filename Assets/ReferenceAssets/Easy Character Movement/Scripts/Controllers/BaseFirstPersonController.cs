@@ -100,6 +100,9 @@ namespace ECM.Controllers
 
         public bool run { get; set; }
 
+        // 수동으로 Awake할건지?
+        public bool IsManualAwake = false;
+
         #endregion
 
         #region METHODS
@@ -249,6 +252,8 @@ namespace ECM.Controllers
 
             base.Awake();
 
+            if (IsManualAwake == true) return;
+
             // Cache and initialize this components
 
             mouseLook = GetComponent<Components.MouseLook>();
@@ -280,6 +285,40 @@ namespace ECM.Controllers
                 cameraTransform = cam.transform;
                 mouseLook.Init(transform, cameraTransform);
             }
+        }
+
+        public void ManualAwake(Camera playerCamera)
+        {
+            // Cache and initialize this components
+
+            mouseLook = GetComponent<Components.MouseLook>();
+            if (mouseLook == null)
+            {
+                Debug.LogError(
+                    string.Format(
+                        "BaseFPSController: No 'MouseLook' found. Please add a 'MouseLook' component to '{0}' game object",
+                        name));
+            }
+
+            cameraPivotTransform = transform.Find("Camera_Pivot");
+            if (cameraPivotTransform == null)
+            {
+                Debug.LogError(string.Format(
+                    "BaseFPSController: No 'Camera_Pivot' found. Please parent a transform gameobject to '{0}' game object.",
+                   name));
+            }
+
+            var cam = GetComponentInChildren<Camera>();
+            if (cam == null)
+            {
+                cam = playerCamera;
+                //Debug.LogError(
+                //    string.Format(
+                //        "BaseFPSController: No 'Camera' found. Please parent a camera to '{0}' game object.", name));
+            }
+
+            cameraTransform = cam.transform;
+            mouseLook.Init(transform, cameraTransform);
         }
 
         public virtual void LateUpdate()

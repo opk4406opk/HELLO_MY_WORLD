@@ -69,10 +69,10 @@ public class GamePlayerController : MonoBehaviour
 
     private void Update()
     {
-        if(CharacterInstance != null && GamePlayerCameraManager.Instance != null)
-        {
-            CharacterInstance.ECM_MouseLookComp.LookRotation(CharacterInstance.ECM_BaseCharController.movement, GamePlayerCameraManager.Instance.GetPlayerCamera().transform);
-        }
+        //if(CharacterInstance != null && GamePlayerCameraManager.Instance != null)
+        //{
+        //    CharacterInstance.ECM_MouseLookComp.LookRotation(CharacterInstance.ECM_BaseCharController.movement, GamePlayerCameraManager.Instance.GetPlayerCamera().transform);
+        //}
     }
 
     private void FixedUpdate()

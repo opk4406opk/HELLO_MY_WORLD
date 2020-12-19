@@ -34,8 +34,8 @@ public class GameCharacterInstance : MonoBehaviour
         AnimatorInstance = gameObject.GetComponentInChildren<Animator>();
         RigidBodyInstance = gameObject.GetComponent<Rigidbody>();
 
-        ECM_CharacterMovmentComp = gameObject.GetComponent<CharacterMovement>();
         ECM_GroundDetectionComp = gameObject.GetComponent<GroundDetection>();
+        ECM_CharacterMovmentComp = gameObject.GetComponent<CharacterMovement>();
         ECM_BaseCharController = gameObject.GetComponent<BaseFirstPersonController>();
         ECM_MouseLookComp = gameObject.GetComponent<MouseLook>();
 
@@ -51,6 +51,13 @@ public class GameCharacterInstance : MonoBehaviour
 
         ECM_GroundDetectionComp.groundMask = LayerMask.GetMask(new string[] { "WaterChunk", "EnviromentChunk", "TerrainChunk"});
         ECM_CharacterMovmentComp.snapToGround = false;
+
+        EnableComponents(false);
+    }
+
+    public void TriggerActive(bool bActive)
+    {
+        gameObject.SetActive(bActive);
     }
 
     public void EnableComponents(bool bEnable)

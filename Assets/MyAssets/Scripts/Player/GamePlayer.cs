@@ -34,7 +34,7 @@ public class GamePlayer : MonoBehaviour
         GamePlayerCameraManager.Instance.GetPlayerCamera().transform.position = CharacterInstance.GetPosition() + new Vector3(0.0f, 2.0f, 0.0f);
         // ECM 컴포넌트에서 Awake() 타이밍에 하위 컴포넌트들을 통해 초기화 하는 작업이 있음.
         // 따라서, 여기서에서 다시한번 호출해서 제대로 정상 동작하도록 한다.
-        CharacterInstance.ECM_BaseCharController.Awake();
+        CharacterInstance.ECM_BaseCharController.ManualAwake(GamePlayerCameraManager.Instance.GetPlayerCamera());
         //
         Controller = gameObject.GetComponent<GamePlayerController>();
         Controller.Init(this, CharacterInstance);

@@ -53,6 +53,11 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    public void TriggerActive(bool bActive)
+    {
+        gameObject.SetActive(bActive);
+    }
+
     public void Init()
     {
         _Instance = this;

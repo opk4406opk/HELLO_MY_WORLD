@@ -30,10 +30,17 @@ public class GamePlayerCameraManager : MonoBehaviour
     public void Init()
     {
         Instance = this;
+
         var camInstance = Instantiate<GameObject>(GameResourceSupervisor.GetInstance().GamePlayerCameraPrefab.LoadSynchro());
         PlayerCamera = camInstance.GetComponent<Camera>();
-        //
+        TriggerActive(false);
+
         bInitialzed = true;
+    }
+
+    public void TriggerActive(bool bActive)
+    {
+        PlayerCamera.gameObject.SetActive(bActive);
     }
 
     private void Update()
