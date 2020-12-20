@@ -328,12 +328,12 @@ public class SubWorld : MonoBehaviour
             }
         });
     }
-    //#if UNITY_EDITOR
-    //    void OnDrawGizmos()
-    //    {
-    //        CustomOctreeInstance.DrawFullTree();
-    //    }
-    //#endif
+#if UNITY_EDITOR
+    //void OnDrawGizmos()
+    //{
+    //    CustomOctreeInstance.DrawFullTree();
+    //}
+#endif
     private IEnumerator LoadTerrainChunks(Action finishCallBack = null)
     {
         CurrentState = SubWorldRealTimeStatus.Loading;

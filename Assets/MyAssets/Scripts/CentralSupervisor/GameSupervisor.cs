@@ -87,6 +87,7 @@ public class GameSupervisor : MonoBehaviour
     public static object LockObject { get; private set; } = new object();
     private void Start ()
     {
+        Application.targetFrameRate = 60;
 #if UNITY_EDITOR
         bool bEditor = GameStatusManager.CurrentGameModeState == GameModeState.NONE &&
                        GameStatusManager.DetailSingleMode == DetailSingleMode.NONE;

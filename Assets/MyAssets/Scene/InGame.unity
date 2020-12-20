@@ -2298,7 +2298,7 @@ MonoBehaviour:
   thumb: {fileID: 0}
   mBG: {fileID: 1574301343}
   mFG: {fileID: 1741513476}
-  mValue: 0.61111194
+  mValue: 0.48484832
   mFill: 0
   numberOfSteps: 0
   onChange: []
@@ -2306,7 +2306,7 @@ MonoBehaviour:
   rawValue: 1
   direction: 2
   mInverted: 0
-  mSize: 0.99993134
+  mSize: 0.7421875
   mScroll: 0
   mDir: 2
 --- !u!1 &1050669997
@@ -2687,7 +2687,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1235772243}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -512, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1453812588}
@@ -2723,14 +2723,14 @@ MonoBehaviour:
     absolute: 0
   updateAnchors: 1
   mColor: {r: 1, g: 1, b: 1, a: 1}
-  mPivot: 4
-  mWidth: 724
+  mPivot: 3
+  mWidth: 1024
   mHeight: 64
   mDepth: 0
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 11.3125
+  aspectRatio: 16
   mType: 1
   mFillDirection: 4
   mFillAmount: 1
@@ -4041,8 +4041,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 47.996704, y: 16, z: 0}
-  m_Center: {x: 0.00036621094, y: 0, z: 0}
+  m_Size: {x: 35.625, y: 16, z: 0}
+  m_Center: {x: -0.18750095, y: 0, z: 0}
 --- !u!114 &1741513476
 MonoBehaviour:
   m_ObjectHideFlags: 0

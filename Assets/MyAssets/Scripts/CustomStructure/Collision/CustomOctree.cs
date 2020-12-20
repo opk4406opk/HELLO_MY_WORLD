@@ -262,9 +262,7 @@ public class CustomOctree
             root.bCanDelete = true;
             return;
         }
-        else if ((root.Center.x > pos.x) &&
-            (root.Center.y > pos.y) &&
-            (root.Center.z > pos.z))
+        else if ((root.Center.x > pos.x) && (root.Center.y > pos.y) && (root.Center.z > pos.z))
         {
             // 0번 노드.
             if (root.Childs[0] != null)
@@ -273,9 +271,7 @@ public class CustomOctree
                 if (root.Childs[0].bCanDelete) root.Childs[0] = null;
             }
         }
-        else if ((root.Center.x < pos.x) &&
-            (root.Center.y > pos.y) &&
-            (root.Center.z > pos.z))
+        else if ((root.Center.x < pos.x) && (root.Center.y > pos.y) && (root.Center.z > pos.z))
         {
             // 1번 노드.
             if (root.Childs[1] != null)
@@ -284,9 +280,7 @@ public class CustomOctree
                 if (root.Childs[1].bCanDelete) root.Childs[1] = null;
             }
         }
-        else if ((root.Center.x < pos.x) &&
-            (root.Center.y < pos.y) &&
-            (root.Center.z > pos.z))
+        else if ((root.Center.x < pos.x) && (root.Center.y < pos.y) && (root.Center.z > pos.z))
         {
             // 2번 노드.
             if (root.Childs[2] != null)
@@ -295,9 +289,7 @@ public class CustomOctree
                 if (root.Childs[2].bCanDelete) root.Childs[2] = null;
             }
         }
-        else if ((root.Center.x > pos.x) &&
-            (root.Center.y < pos.y) &&
-            (root.Center.z > pos.z))
+        else if ((root.Center.x > pos.x) && (root.Center.y < pos.y) && (root.Center.z > pos.z))
         {
             // 3번 노드.
             if (root.Childs[3] != null)
@@ -306,9 +298,7 @@ public class CustomOctree
                 if (root.Childs[3].bCanDelete) root.Childs[3] = null;
             }
         }
-        else if ((root.Center.x > pos.x) &&
-            (root.Center.y > pos.y) &&
-            (root.Center.z < pos.z))
+        else if ((root.Center.x > pos.x) && (root.Center.y > pos.y) && (root.Center.z < pos.z))
         {
             // 4번 노드.
             if (root.Childs[4] != null)
@@ -317,9 +307,7 @@ public class CustomOctree
                 if (root.Childs[4].bCanDelete) root.Childs[4] = null;
             }
         }
-        else if ((root.Center.x < pos.x) &&
-            (root.Center.y > pos.y) &&
-            (root.Center.z < pos.z))
+        else if ((root.Center.x < pos.x) && (root.Center.y > pos.y) && (root.Center.z < pos.z))
         {
             //5번 노드.
             if (root.Childs[5] != null)
@@ -328,9 +316,7 @@ public class CustomOctree
                 if (root.Childs[5].bCanDelete) root.Childs[5] = null;
             }
         }
-        else if ((root.Center.x < pos.x) &&
-            (root.Center.y < pos.y) &&
-            (root.Center.z < pos.z))
+        else if ((root.Center.x < pos.x) && (root.Center.y < pos.y) && (root.Center.z < pos.z))
         {
             // 6번 노드.
             if (root.Childs[6] != null)
@@ -339,9 +325,7 @@ public class CustomOctree
                 if (root.Childs[6].bCanDelete) root.Childs[6] = null;
             }
         }
-        else if ((root.Center.x > pos.x) &&
-            (root.Center.y < pos.y) &&
-            (root.Center.z < pos.z))
+        else if ((root.Center.x > pos.x) && (root.Center.y < pos.y) && (root.Center.z < pos.z))
         {
             // 7번 노드.
             if (root.Childs[7] != null)
@@ -364,20 +348,17 @@ public class CustomOctree
         {
             return;
         }
-        else if ((root.Center.x > pos.x) &&
-            (root.Center.y > pos.y) && 
-            (root.Center.z > pos.z))
+        else if ((root.Center.x > pos.x) && (root.Center.y > pos.y) &&  (root.Center.z > pos.z))
         {
             // 0번 노드.
             if(root.Childs[0] != null)
             {
                 AddNode(pos, ref root.Childs[0]);
-            }else
+            }
+            else
             {
                 root.Childs[0] = new COTNode();
-                minExtent = new Vector3(parentCenter.x - parentHalfWidth,
-                    parentCenter.y - parentHalfHeight,
-                    parentCenter.z - parentHalfDepth);
+                minExtent = new Vector3(parentCenter.x - parentHalfWidth, parentCenter.y - parentHalfHeight, parentCenter.z - parentHalfDepth);
                 maxExtent = parentCenter;
                 root.Childs[0].Center = (maxExtent + minExtent) / 2;
                 root.Childs[0].Size = maxExtent - minExtent;
@@ -385,9 +366,7 @@ public class CustomOctree
                 AddNode(pos, ref root.Childs[0]);
             }
         }
-        else if ((root.Center.x < pos.x) &&
-            (root.Center.y > pos.y) &&
-            (root.Center.z > pos.z))
+        else if ((root.Center.x < pos.x) && (root.Center.y > pos.y) && (root.Center.z > pos.z))
         {
             // 1번 노드.
             if (root.Childs[1] != null)
@@ -397,21 +376,15 @@ public class CustomOctree
             else
             {
                 root.Childs[1] = new COTNode();
-                minExtent = new Vector3(parentCenter.x,
-                    parentCenter.y - parentHalfHeight,
-                    parentCenter.z - parentHalfDepth);
-                maxExtent = new Vector3(parentCenter.x + parentHalfWidth,
-                    parentCenter.y,
-                    parentCenter.z);
+                minExtent = new Vector3(parentCenter.x, parentCenter.y - parentHalfHeight, parentCenter.z - parentHalfDepth);
+                maxExtent = new Vector3(parentCenter.x + parentHalfWidth, parentCenter.y, parentCenter.z);
                 root.Childs[1].Center = (maxExtent + minExtent) / 2;
                 root.Childs[1].Size = maxExtent - minExtent;
                 root.Childs[1].aabb.MakeAABB(minExtent, maxExtent);
                 AddNode(pos, ref root.Childs[1]);
             }
         }
-        else if ((root.Center.x < pos.x) &&
-            (root.Center.y < pos.y) &&
-            (root.Center.z > pos.z))
+        else if ((root.Center.x < pos.x) && (root.Center.y < pos.y) && (root.Center.z > pos.z))
         {
             // 2번 노드.
             if (root.Childs[2] != null)
@@ -421,21 +394,15 @@ public class CustomOctree
             else
             {
                 root.Childs[2] = new COTNode();
-                minExtent = new Vector3(parentCenter.x,
-                    parentCenter.y,
-                    parentCenter.z - parentHalfDepth);
-                maxExtent = new Vector3(parentCenter.x + parentHalfWidth,
-                    parentCenter.y + parentHalfHeight,
-                    parentCenter.z);
+                minExtent = new Vector3(parentCenter.x, parentCenter.y, parentCenter.z - parentHalfDepth);
+                maxExtent = new Vector3(parentCenter.x + parentHalfWidth, parentCenter.y + parentHalfHeight, parentCenter.z);
                 root.Childs[2].Center = (maxExtent + minExtent) / 2;
                 root.Childs[2].Size = maxExtent - minExtent;
                 root.Childs[2].aabb.MakeAABB(minExtent, maxExtent);
                 AddNode(pos, ref root.Childs[2]);
             }
         }
-        else if ((root.Center.x > pos.x) &&
-            (root.Center.y < pos.y) &&
-            (root.Center.z > pos.z))
+        else if ((root.Center.x > pos.x) && (root.Center.y < pos.y) && (root.Center.z > pos.z))
         {
             // 3번 노드.
             if (root.Childs[3] != null)
@@ -445,21 +412,15 @@ public class CustomOctree
             else
             {
                 root.Childs[3] = new COTNode();
-                minExtent = new Vector3(parentCenter.x - parentHalfWidth,
-                    parentCenter.y,
-                    parentCenter.z - parentHalfDepth);
-                maxExtent = new Vector3(parentCenter.x,
-                    parentCenter.y + parentHalfHeight,
-                    parentCenter.z);
+                minExtent = new Vector3(parentCenter.x - parentHalfWidth, parentCenter.y, parentCenter.z - parentHalfDepth);
+                maxExtent = new Vector3(parentCenter.x, parentCenter.y + parentHalfHeight, parentCenter.z);
                 root.Childs[3].Center = (maxExtent + minExtent) / 2;
                 root.Childs[3].Size = maxExtent - minExtent;
                 root.Childs[3].aabb.MakeAABB(minExtent, maxExtent);
                 AddNode(pos, ref root.Childs[3]);
             }
         }
-        else if ((root.Center.x > pos.x) &&
-            (root.Center.y > pos.y) &&
-            (root.Center.z < pos.z))
+        else if ((root.Center.x > pos.x) && (root.Center.y > pos.y) && (root.Center.z < pos.z))
         {
             // 4번 노드.
             if (root.Childs[4] != null)
@@ -469,21 +430,15 @@ public class CustomOctree
             else
             {
                 root.Childs[4] = new COTNode();
-                minExtent = new Vector3(parentCenter.x - parentHalfWidth,
-                    parentCenter.y - parentHalfHeight,
-                    parentCenter.z);
-                maxExtent = new Vector3(parentCenter.x,
-                    parentCenter.y,
-                    parentCenter.z + parentHalfDepth);
+                minExtent = new Vector3(parentCenter.x - parentHalfWidth, parentCenter.y - parentHalfHeight, parentCenter.z);
+                maxExtent = new Vector3(parentCenter.x, parentCenter.y, parentCenter.z + parentHalfDepth);
                 root.Childs[4].Center = (maxExtent + minExtent) / 2;
                 root.Childs[4].Size = maxExtent - minExtent;
                 root.Childs[4].aabb.MakeAABB(minExtent, maxExtent);
                 AddNode(pos, ref root.Childs[4]);
             }
         }
-        else if ((root.Center.x < pos.x) &&
-            (root.Center.y > pos.y) &&
-            (root.Center.z < pos.z))
+        else if ((root.Center.x < pos.x) && (root.Center.y > pos.y) && (root.Center.z < pos.z))
         {
             //5번 노드.
             if (root.Childs[5] != null)
@@ -493,21 +448,15 @@ public class CustomOctree
             else
             {
                 root.Childs[5] = new COTNode();
-                minExtent = new Vector3(parentCenter.x,
-                    parentCenter.y - parentHalfHeight,
-                    parentCenter.z);
-                maxExtent = new Vector3(parentCenter.x + parentHalfWidth,
-                    parentCenter.y,
-                    parentCenter.z + parentHalfDepth);
+                minExtent = new Vector3(parentCenter.x, parentCenter.y - parentHalfHeight, parentCenter.z);
+                maxExtent = new Vector3(parentCenter.x + parentHalfWidth, parentCenter.y, parentCenter.z + parentHalfDepth);
                 root.Childs[5].Center = (maxExtent + minExtent) / 2;
                 root.Childs[5].Size = maxExtent - minExtent;
                 root.Childs[5].aabb.MakeAABB(minExtent, maxExtent);
                 AddNode(pos, ref root.Childs[5]);
             }
         }
-        else if ((root.Center.x < pos.x) &&
-            (root.Center.y < pos.y) &&
-            (root.Center.z < pos.z))
+        else if ((root.Center.x < pos.x) && (root.Center.y < pos.y) && (root.Center.z < pos.z))
         {
             // 6번 노드.
             if (root.Childs[6] != null)
@@ -517,21 +466,15 @@ public class CustomOctree
             else
             {
                 root.Childs[6] = new COTNode();
-                minExtent = new Vector3(parentCenter.x,
-                    parentCenter.y,
-                    parentCenter.z);
-                maxExtent = new Vector3(parentCenter.x + parentHalfWidth,
-                    parentCenter.y + parentHalfHeight,
-                    parentCenter.z + parentHalfDepth);
+                minExtent = new Vector3(parentCenter.x, parentCenter.y, parentCenter.z);
+                maxExtent = new Vector3(parentCenter.x + parentHalfWidth, parentCenter.y + parentHalfHeight, parentCenter.z + parentHalfDepth);
                 root.Childs[6].Center = (maxExtent + minExtent) / 2;
                 root.Childs[6].Size = maxExtent - minExtent;
                 root.Childs[6].aabb.MakeAABB(minExtent, maxExtent);
                 AddNode(pos, ref root.Childs[6]);
             }
         }
-        else if ((root.Center.x > pos.x) &&
-            (root.Center.y < pos.y) &&
-            (root.Center.z < pos.z))
+        else if ((root.Center.x > pos.x) && (root.Center.y < pos.y) && (root.Center.z < pos.z))
         {
             // 7번 노드.
             if (root.Childs[7] != null)
@@ -541,12 +484,8 @@ public class CustomOctree
             else
             {
                 root.Childs[7] = new COTNode();
-                minExtent = new Vector3(parentCenter.x - parentHalfWidth,
-                    parentCenter.y,
-                    parentCenter.z);
-                maxExtent = new Vector3(parentCenter.x,
-                    parentCenter.y + parentHalfHeight,
-                    parentCenter.z + parentHalfDepth);
+                minExtent = new Vector3(parentCenter.x - parentHalfWidth, parentCenter.y, parentCenter.z);
+                maxExtent = new Vector3(parentCenter.x, parentCenter.y + parentHalfHeight, parentCenter.z + parentHalfDepth);
                 root.Childs[7].Center = (maxExtent + minExtent) / 2;
                 root.Childs[7].Size = maxExtent - minExtent;
                 root.Childs[7].aabb.MakeAABB(minExtent, maxExtent);

@@ -16,8 +16,8 @@ public class ModifyWorldManager : MonoBehaviour
 {
     private struct ProcessBlockData_Internal
     {
-        public CollideInfo collideInfo;
-        public Vector3 updatePosition;
+        public CollideInfo CollideInfo;
+        public Vector3 UpdatePosition;
         public bool bCreate;
         public int BlockX;
         public int BlockY;
@@ -82,12 +82,10 @@ public class ModifyWorldManager : MonoBehaviour
 
     private void DeleteBlockAt(Ray ray, Vector3 clickWorldPos, byte blockType)
     {
-        SelectWorld(clickWorldPos);
         RayCastingProcess(ray, blockType, false);
     }
     private void AddBlockAt(Ray ray, Vector3 clickWorldPos, byte blockType)
     {
-        SelectWorld(clickWorldPos);
         RayCastingProcess(ray, blockType, true);
     }
     private void SelectWorld(Vector3 clickWorldPos)
@@ -95,7 +93,7 @@ public class ModifyWorldManager : MonoBehaviour
         foreach (var element in WorldAreaManager.Instance.ContainedWorldArea(clickWorldPos).SubWorldStates)
         {
             if (CustomAABB.IsInterSectPoint(element.Value.SubWorldInstance.CustomOctreeInstance.RootMinBound,
-                element.Value.SubWorldInstance.CustomOctreeInstance.RootMaxBound, clickWorldPos))
+                                            element.Value.SubWorldInstance.CustomOctreeInstance.RootMaxBound, clickWorldPos))
             {
                 SelectWorldInstance = element.Value.SubWorldInstance;
                 break;
@@ -105,38 +103,36 @@ public class ModifyWorldManager : MonoBehaviour
 
     private void RayCastingProcess(Ray ray, byte blockType, bool bCreate)
     {
-        if (SelectWorldInstance == null) return;
-        if (SelectWorldInstance.CustomOctreeInstance == null) return;
-
-        CollideInfo collideInfo = SelectWorldInstance.CustomOctreeInstance.Collide(ray);
-        if (collideInfo.bCollide == true)
+        RaycastHit hitInfo;
+        bool hit = Physics.Raycast(ray, out hitInfo);
+        if (hit == true)
         {
-            Block hitBlock = collideInfo.GetBlock();
+            Vector3 offset = Vector3.zero; 
 
+            AChunk chunk = hitInfo.collider.gameObject.GetComponent<AChunk>();
+            SelectWorldInstance = chunk.SubWorldInstance;
+            CollideInfo collideInfo = SelectWorldInstance.CustomOctreeInstance.Collide(ray);
+
+            Block hitBlock = collideInfo.GetBlock();
             int blockX = hitBlock.WorldDataIndexX;
             int blockY = hitBlock.WorldDataIndexY;
             int blockZ = hitBlock.WorldDataIndexZ;
-           
-            Vector3 offset = Vector3.zero;
             if (bCreate == true)
             {
-                RaycastHit hitInfo;
-                Physics.Raycast(ray, out hitInfo);
                 offset = hitInfo.normal;
-
                 blockX += (int)offset.x;
                 blockY += (int)offset.y;
                 blockZ += (int)offset.z;
             }
 
             ProcessBlockData_Internal processData = new ProcessBlockData_Internal();
-            processData.collideInfo = collideInfo;
+            processData.CollideInfo = collideInfo;
             processData.bCreate = bCreate;
             processData.BlockX = blockX;
             processData.BlockY = blockY;
             processData.BlockZ = blockZ;
             processData.BlockType = blockType;
-            processData.updatePosition = collideInfo.HitBlockCenter + offset;
+            processData.UpdatePosition = collideInfo.HitBlockCenter + offset;
             if (GameStatusManager.CurrentGameModeState == GameModeState.SINGLE)
             {
                 ProcessBlockCreateOrDelete(processData);
@@ -182,19 +178,19 @@ public class ModifyWorldManager : MonoBehaviour
 
     private void ProcessBlockCreateOrDelete(ProcessBlockData_Internal processData)
     {
-        bool bOverX = SelectWorldInstance.WorldBlockData.GetLength(0) <= processData.BlockX;
-        bool bOverY = SelectWorldInstance.WorldBlockData.GetLength(1) <= processData.BlockY;
-        bool bOverZ = SelectWorldInstance.WorldBlockData.GetLength(2) <= processData.BlockZ;
-        if(bOverX == true || bOverY == true || bOverZ == true)
+        bool bValidX = SelectWorldInstance.WorldBlockData.GetLength(0) > processData.BlockX && 0 <= processData.BlockX;
+        bool bValidY = SelectWorldInstance.WorldBlockData.GetLength(1) > processData.BlockY && 0 <= processData.BlockY;
+        bool bValidZ = SelectWorldInstance.WorldBlockData.GetLength(2) > processData.BlockZ && 0 <= processData.BlockZ;
+        if (bValidX == false || bValidY == false || bValidZ == false)
         {
-            KojeomLogger.DebugLog("ProcessBlockCreateOrDelete() -> Over Block Index X or Y or Z", LOG_TYPE.ERROR);
+            KojeomLogger.DebugLog("ProcessBlockCreateOrDelete() -> InValid Block Index X or Y or Z", LOG_TYPE.ERROR);
             return;
         }
 
         if (processData.bCreate == true)
         {
             // 임시코드
-            SelectWorldInstance.CustomOctreeInstance.Add(processData.updatePosition);
+            SelectWorldInstance.CustomOctreeInstance.Add(processData.UpdatePosition);
             SetBlockForAdd(processData.BlockX, processData.BlockY, processData.BlockZ, processData.BlockType);
             SelectWorldInstance.WorldBlockData[processData.BlockX, processData.BlockY, processData.BlockZ].bRendered = true;
         }
@@ -203,13 +199,13 @@ public class ModifyWorldManager : MonoBehaviour
             // 파티클 테스트.
             ParticleEffectSpawnParams spawnParams;
             spawnParams.ParticleType = GameParticleType.FireworksGreenSmall;
-            spawnParams.SpawnLocation = processData.collideInfo.CollisionPoint;
+            spawnParams.SpawnLocation = processData.CollideInfo.CollisionPoint;
             spawnParams.SpawnRotation = Quaternion.identity;
             spawnParams.bLooping = false;
             spawnParams.bStart = true;
             GameParticleEffectManager.Instance.SpawnParticleEffect(spawnParams);
 
-            SelectWorldInstance.CustomOctreeInstance.Delete(processData.updatePosition);
+            SelectWorldInstance.CustomOctreeInstance.Delete(processData.UpdatePosition);
             SetBlockForDelete(processData.BlockX, processData.BlockY, processData.BlockZ, processData.BlockType);
             SelectWorldInstance.WorldBlockData[processData.BlockX, processData.BlockY, processData.BlockZ].bRendered = false;
         }

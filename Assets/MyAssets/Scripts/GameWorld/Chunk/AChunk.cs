@@ -285,14 +285,15 @@ public abstract class AChunk : MonoBehaviour {
 		MeshInstance.vertices = NewVertices.ToArray();
 		MeshInstance.uv = NewUV.ToArray();
 		MeshInstance.triangles = NewTriangles.ToArray();
-		MeshInstance.RecalculateNormals();
-		//
-		switch(ChunkType)
+		MeshInstance.RecalculateNormals(); 
+        MeshInstance.RecalculateBounds();
+        //
+        switch (ChunkType)
 		{
             case ChunkType.WATER:
 			case ChunkType.TERRAIN:
 				MeshColliderComponent.sharedMesh = MeshInstance;
-				break;
+                break;
 		}
 		//
 		NewVertices.Clear();
