@@ -189,6 +189,7 @@ namespace MapTool.Source
                             OffsetZ = z.ToString(),
                             AreaName = string.Format("WORLD_AREA_{0}", areaIndex),
                             GenerateType = MapToolUtils.RandomBool() ? WorldGenTypes.GEN_NORMAL.ToString() : WorldGenTypes.GEN_WITH_PERLIN.ToString(),
+                            //GenerateType = WorldGenTypes.GEN_WITH_PERLIN.ToString(),
                         };
                         if(y == WorldMapDataInstance.WorldAreaLayer -1)
                         {
