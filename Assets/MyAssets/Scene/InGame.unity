@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1025651491}
-  m_IndirectSpecularColor: {r: 0.30567032, g: 0.6528975, b: 1.0233607, a: 1}
+  m_IndirectSpecularColor: {r: 0.33028284, g: 0.68063223, b: 1.0209174, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -1492,6 +1492,10 @@ PrefabInstance:
       value: btn_beltItemBlock(origin)
       objectReference: {fileID: 0}
     - target: {fileID: 4355375611951362, guid: c2e849a15dc5e7045a1c21cd41174d34, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4355375611951362, guid: c2e849a15dc5e7045a1c21cd41174d34, type: 3}
       propertyPath: m_LocalPosition.x
       value: -348
       objectReference: {fileID: 0}
@@ -1504,6 +1508,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4355375611951362, guid: c2e849a15dc5e7045a1c21cd41174d34, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4355375611951362, guid: c2e849a15dc5e7045a1c21cd41174d34, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -1514,14 +1522,6 @@ PrefabInstance:
     - target: {fileID: 4355375611951362, guid: c2e849a15dc5e7045a1c21cd41174d34, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4355375611951362, guid: c2e849a15dc5e7045a1c21cd41174d34, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4355375611951362, guid: c2e849a15dc5e7045a1c21cd41174d34, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4355375611951362, guid: c2e849a15dc5e7045a1c21cd41174d34, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2028,6 +2028,7 @@ Light:
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!1 &873709052
@@ -2234,6 +2235,7 @@ Light:
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!4 &1025651492
@@ -3135,7 +3137,7 @@ MonoBehaviour:
   anchorOffset: 0
   softBorderPadding: 1
   renderQueue: 0
-  startingRenderQueue: 3006
+  startingRenderQueue: 3000
   mClipTexture: {fileID: 0}
   mAlpha: 1
   mClipping: 3
