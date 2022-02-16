@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MapGenLib;
-public class AIUtils : MonoBehaviour
+public class AIUtils
 {
     public static bool GetRandomWorldPositionFromActorPos(out Vector3 outResult, ActorController actorController)
     {
