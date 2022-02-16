@@ -6,10 +6,10 @@ This project is an open source project aimed at mimicking MineCraft. You can use
 ![hmw_git_main_img](https://user-images.githubusercontent.com/9248400/102211930-b47fbc80-3f17-11eb-8d7a-53281bb826ce.png)
 <b><Project Overview></b><br>
 	<b>Development period:</b> 2016/01 ~ 2021/12 (hold) <br>
-	<b>Usage engine:</b> Unity3D(2020)<br>
+	<b>Usage engine:</b> Unity3D(2020.3.24f1 (LTS))<br>
 	<b>Usage library: NGUI</b> (3.x), Sqlite3, JSonObject, NewtonSoft.json, ITween, FMOD, UniRx, FreeNet, ECM, etc...<br>
 	<b>Language used:</b> C #<br>
-	<b>Platforms:</b> Android, IOS, PC (windows)<br>
+	<b>Platforms:</b> PC (windows) / AOS (future)<br>
 	
 p.s. There is a tutorial that I used when I first started the project. I think it would be helpful if you look at the link.<br>
 -> link : http://studentgamedev.blogspot.kr/2013/08/unity-voxel-tutorial-part-1-generating.html
